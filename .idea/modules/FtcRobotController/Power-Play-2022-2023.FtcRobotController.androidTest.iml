@@ -73,5 +73,4 @@
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.drawerlayout:drawerlayout:1.0.0@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.firstinspires.ftc:gameAssets-FreightFrenzy:1.0.0@aar" level="project" />
   </component>
-  <component name="TestModuleProperties" production-module="Power-Play-2022-2023.FtcRobotController.main" />
 </module>

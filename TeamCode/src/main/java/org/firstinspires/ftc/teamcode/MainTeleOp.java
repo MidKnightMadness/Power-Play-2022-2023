@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 
-@TeleOp(name="Main")
-public class Main extends OpMode {
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Main")
+public class MainTeleOp extends OpMode {
     MecanumDrive mecanum;
 
     @Override
@@ -25,7 +25,7 @@ public class Main extends OpMode {
 
     @Override
     public void loop() {
-        mecanum.drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_y);
+        mecanum.drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
         mecanum.telemetry(telemetry);
     }
 }
