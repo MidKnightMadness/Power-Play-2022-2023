@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.practicerobots.FreightFrenzy15385;
+package org.firstinspires.ftc.teamcode.practicerobots.FreightFrenzy15385_WestCoast;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -6,13 +6,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class SampleDrive {
+public class WestCoastDrive {
     DcMotorEx FRMotor;
     DcMotorEx FLMotor;
     DcMotorEx BRMotor;
     DcMotorEx BLMotor;
 
-    public SampleDrive(HardwareMap hardwareMap) {
+    public WestCoastDrive(HardwareMap hardwareMap) {
         FRMotor = hardwareMap.get(DcMotorEx.class, "FR");
         FLMotor = hardwareMap.get(DcMotorEx.class, "FL");
         BRMotor = hardwareMap.get(DcMotorEx.class, "BR");
@@ -45,10 +45,10 @@ public class SampleDrive {
     }
 
     public void drive(double x, double y, double rotation) {
-        FRMotor.setPower(-x - y - rotation);
-        FLMotor.setPower(-x + y - rotation);
-        BRMotor.setPower(-x + y + rotation);
-        BLMotor.setPower(-x - y + rotation);
+        FRMotor.setPower(-y - rotation);
+        FLMotor.setPower( y - rotation);
+        BRMotor.setPower( y + rotation);
+        BLMotor.setPower(-y + rotation);
     }
 
     public void telemetry(Telemetry telemetry) {
@@ -56,5 +56,14 @@ public class SampleDrive {
         telemetry.addData("FL Motor Position", FLMotor.getCurrentPosition());
         telemetry.addData("BR Motor Position", BRMotor.getCurrentPosition());
         telemetry.addData("BL Motor Position", BLMotor.getCurrentPosition());
+        telemetry.addData("FR Motor Velocity", FRMotor.getVelocity());
+        telemetry.addData("FL Motor Velocity", FLMotor.getVelocity());
+        telemetry.addData("BR Motor Velocity", BRMotor.getVelocity());
+        telemetry.addData("BL Motor Velocity", BLMotor.getVelocity());
+        telemetry.addData("FR Motor Power", FRMotor.getPower());
+        telemetry.addData("FL Motor Power", FLMotor.getPower());
+        telemetry.addData("BR Motor Power", BRMotor.getPower());
+        telemetry.addData("BL Motor Power", BLMotor.getPower());
+        telemetry.update();
     }
 }

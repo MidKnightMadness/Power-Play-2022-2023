@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class SampleDrive {
+public class DemoDrive {
     // create motors
     DcMotorEx FRMotor;
     DcMotorEx FLMotor;
@@ -14,7 +14,7 @@ public class SampleDrive {
     DcMotorEx BLMotor;
 
     //constructor
-    public SampleDrive(HardwareMap hardwareMap) {
+    public DemoDrive(HardwareMap hardwareMap) {
         // this gets the device with the same name in the configuration
         FRMotor = hardwareMap.get(DcMotorEx.class, "FR");
         FLMotor = hardwareMap.get(DcMotorEx.class, "FL");

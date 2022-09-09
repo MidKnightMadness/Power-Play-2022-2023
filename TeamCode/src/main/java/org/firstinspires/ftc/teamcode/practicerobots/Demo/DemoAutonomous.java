@@ -9,10 +9,10 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 @Autonomous
 public class DemoAutonomous extends LinearOpMode { //uses LinearOpMode for autonomous
-    SampleDrive drive;
-    Servo servo;
-    Intake intake;
-    Lift lift;
+    DemoDrive drive;
+    DemoServo demoServo;
+    DemoIntake demoIntake;
+    DemoLift demoLift;
 
     private DistanceSensor sensorDistance;
     private ModernRoboticsI2cRangeSensor sensorRange;
@@ -28,10 +28,10 @@ public class DemoAutonomous extends LinearOpMode { //uses LinearOpMode for auton
         parameters.loggingTag          = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
-        drive = new SampleDrive(hardwareMap);
-        servo = new Servo(hardwareMap);
-        intake = new Intake(hardwareMap);
-        lift = new Lift(hardwareMap);
+        drive = new DemoDrive(hardwareMap);
+        demoServo = new DemoServo(hardwareMap);
+        demoIntake = new DemoIntake(hardwareMap);
+        demoLift = new DemoLift(hardwareMap);
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_distance");
         sensorRange = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");

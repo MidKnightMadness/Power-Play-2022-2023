@@ -5,10 +5,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class Intake {
+public class DemoIntake {
     private DcMotor intakeMotor; //intake
 
-    public Intake(HardwareMap hardwareMap){
+    public DemoIntake(HardwareMap hardwareMap){
         intakeMotor = hardwareMap.get(DcMotor.class, "intake_motor");
     }
 

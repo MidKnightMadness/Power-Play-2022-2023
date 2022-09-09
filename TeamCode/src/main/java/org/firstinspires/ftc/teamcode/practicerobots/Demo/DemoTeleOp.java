@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.practicerobots.FreightFrenzy15385.Carousel;
 
 // goofy ahh demo
 // start by looking at this class then look at other subassembly classes
@@ -15,10 +14,10 @@ import org.firstinspires.ftc.teamcode.practicerobots.FreightFrenzy15385.Carousel
 @TeleOp(name="Demo", group="Practice Robots") // signifies this is driver controlled
 @Disabled // disables it from appearing in the menu (on the controller)
 public class DemoTeleOp extends OpMode { // Uses OpMode for driver-controlled
-    SampleDrive wheels; // create object of classes for subassemblies
-    Intake intake;
-    Lift lift;
-    Servo servo;
+    DemoDrive wheels; // create object of classes for subassemblies
+    DemoIntake demoIntake;
+    DemoLift demoLift;
+    DemoServo demoServo;
 
     private DistanceSensor sensorDistance;
     private ModernRoboticsI2cRangeSensor sensorRange;
@@ -32,10 +31,10 @@ public class DemoTeleOp extends OpMode { // Uses OpMode for driver-controlled
     // This method runs once after pressing INIT
     @Override // overrides a previous init method from OpMode
     public void init() {
-        wheels = new SampleDrive(hardwareMap); // initialize objects
-        intake = new Intake(hardwareMap);
-        lift = new Lift(hardwareMap);
-        servo = new Servo(hardwareMap);
+        wheels = new DemoDrive(hardwareMap); // initialize objects
+        demoIntake = new DemoIntake(hardwareMap);
+        demoLift = new DemoLift(hardwareMap);
+        demoServo = new DemoServo(hardwareMap);
 
         //distance sensors
         sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_distance"); // 2 meter distance sensor
@@ -74,9 +73,9 @@ public class DemoTeleOp extends OpMode { // Uses OpMode for driver-controlled
             liftMotorToggle = !liftMotorToggle;
         }
         if (liftMotorToggle) {
-            lift.lift();
+            demoLift.lift();
         } else {
-            lift.lower();
+            demoLift.lower();
         }
         lastPressedLiftMotor = gamepad2.left_bumper;
 
@@ -87,27 +86,27 @@ public class DemoTeleOp extends OpMode { // Uses OpMode for driver-controlled
             intakeMotorToggle = !intakeMotorToggle;
         }
         if (intakeMotorToggle) {
-            intake.surgicalTubingOn();
+            demoIntake.surgicalTubingOn();
         } else {
-            intake.surgicalTubingOff();
+            demoIntake.surgicalTubingOff();
         }
         lastPressedIntakeMotor = gamepad2.left_bumper || gamepad1.left_bumper;
 
         //SERVO EXAMPLE - a continuous rotation servo that spins when the button is held
         if(gamepad2.dpad_left || gamepad1.dpad_left) {
-            servo.spinRed(); // spins counter clockwise
+            demoServo.spinRed(); // spins counter clockwise
         } else if(gamepad2.dpad_right || gamepad1.dpad_right) {
-            servo.spinBlue(); // spins clockwise
+            demoServo.spinBlue(); // spins clockwise
         } else {
-            servo.spinOff(); // else do nothing
+            demoServo.spinOff(); // else do nothing
         }
 
 
         //TELEMETRY
         sensorTelemetry();
         wheels.telemetry(telemetry);
-        intake.telemetry(telemetry);
-        lift.telemetry(telemetry);
+        demoIntake.telemetry(telemetry);
+        demoLift.telemetry(telemetry);
         telemetry.update();
     }
 

@@ -26,7 +26,7 @@ dpad right      (hold)      spin carousel right
 */
 
 @TeleOp(name="Freight Frenzy - 15385 Mayhem", group="Practice Robots")
-public class TestOpMode extends OpMode {
+public class FF15385_TestOpMode extends OpMode {
     SampleDrive drive;
     Catapult catapult;
     Carousel carousel;

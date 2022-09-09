@@ -6,11 +6,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class Lift {
+public class DemoLift {
     private DcMotorEx liftMotor;
     private int motorStartPosition;
 
-    public Lift(HardwareMap hardwareMap) {
+    public DemoLift(HardwareMap hardwareMap) {
         liftMotor = hardwareMap.get(DcMotorEx.class, "lift_motor");
         motorStartPosition = liftMotor.getCurrentPosition();
     }

@@ -5,10 +5,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class Servo {
+public class DemoServo {
     CRServo servo;
 
-    public Servo(HardwareMap hardwareMap){
+    public DemoServo(HardwareMap hardwareMap){
         servo = hardwareMap.get(CRServo.class, "servo");
     }
 

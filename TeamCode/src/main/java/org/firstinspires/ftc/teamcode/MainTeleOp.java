@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Main")
+@TeleOp(name="Main")
 public class MainTeleOp extends OpMode {
     MecanumDrive mecanum;
 
