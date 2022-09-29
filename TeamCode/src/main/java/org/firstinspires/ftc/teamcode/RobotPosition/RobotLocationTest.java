@@ -38,7 +38,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.util.ArrayList;
 
-@TeleOp(name = "Sensor: MR range sensor", group = "Sensor")
+@TeleOp
+
+//import drivetrain class
+
+
 public class RobotLocationTest extends LinearOpMode {
     static ArrayList<Pair> robotPosition = new ArrayList<>();
     static int robotXPosition = 2;
