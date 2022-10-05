@@ -36,7 +36,7 @@ public class Vector {
 
     public Vector add(Vector vector){
         if(vector.get().length == this.get().length){
-            for(int i = 0; i < vector.get().length; i++){
+            for(int i = 0; i < vector.get().length; i++) {
                 this.set(i, this.get()[i] + vector.get()[i]);
             }
         }
