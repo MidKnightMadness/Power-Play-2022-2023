@@ -19,9 +19,6 @@ interface OdometryVariables {
     Vector2 leftWheeelPosition = new Vector2(-3, 0);
     Vector2 rightWheelPosition = new Vector2(3, 0);
     Vector2 topWheelPosition = new Vector2(0, 5);
-
-    double distanceBetweenWheels = leftWheeelPosition.x - rightWheelPosition.x;
-
 }
 
 @TeleOp
@@ -73,7 +70,6 @@ public class Odometry extends OpMode implements OdometryVariables {
     public void loop() {
         updateTime();
         updatePosition();
-        getVelocity();
 
         telemetry.update();
     }
@@ -98,41 +94,41 @@ public class Odometry extends OpMode implements OdometryVariables {
 
         lastLeftTicks = leftTicks;
         lastRightTicks = rightTicks;
+        lastTopTicks = topTicks;
 
+        // raw distance from each encoder
         leftDistanceMoved = inPerTick * deltaLeftTicks;
         rightDistanceMoved = inPerTick * deltaRightTicks;
+        topDistanceMoved = inPerTick * deltaTopTicks;
 
+        // angles
+        double deltaRadians = getDeltaRotation(leftDistanceMoved, rightDistanceMoved);
+        rotationRadians += deltaRadians;
+
+        // true movement
         double forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0d;
-        double lateralMovement = (topDistanceMoved);
 
-        double angleRadians = getDeltaRotation(leftTicks, rightTicks);
-
-        rotationRadians = angleRadians;
+        double lateralMovementAdjustor = rotationRadians * topWheelPosition.y;
+        double trueLateralMovement = topDistanceMoved - (lateralMovementAdjustor);
 
         double sin = Math.sin(rotationRadians);
         double cosine = Math.cos(rotationRadians);
-        position.x += forwardMovement * sin + lateralMovement * cosine;
-        position.y += forwardMovement * cosine + lateralMovement * sin;
 
-//
-//        position.x += rightDistanceMoved;
-//        position.y += leftDistanceMoved;
+        double netX = forwardMovement * cosine + trueLateralMovement * sin;
+        double netY = forwardMovement * sin + trueLateralMovement * cosine;
 
-//        telemetry.addLine(String.format("X encoder: %d", XTicks));
-//        telemetry.addLine(String.format("Y encoder: %d", YTicks));
-//        telemetry.addLine(String.format("%f, %f", xDistanceMoved, yDistanceMoved));
-//        telemetry.addLine("Position " + position.toString());
-    }
+        position.x += netX;
+        position.y += netY;
 
-    void getVelocity() {
-//        velocity.x = xDistanceMoved / deltaTime;
-//        velocity.y = yDistanceMoved / deltaTime;
+        velocity.x = netX / deltaTime;
+        velocity.y = netY / deltaTime;
+
+        telemetry.addLine("Position " + position.toString());
         telemetry.addLine("Velocity " + velocity.toString());
     }
 
-
     double getDeltaRotation(double leftChange, double rightChange) {
-        return (leftChange - rightChange) / distanceBetweenWheels;
+        return (leftChange - rightChange) / rightWheelPosition.x;
     }
 
 }
