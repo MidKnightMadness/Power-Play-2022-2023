@@ -84,6 +84,11 @@ public class Vector {
         return this;
     }
 
+    public void rotate(double angleChange){ // Radians
+        this.set(0, Math.cos(angleChange) * this.get()[0] - Math.sin(angleChange) * this.get()[1]);
+        this.set(1, Math.sin(angleChange) * this.get()[0] + Math.cos(angleChange) * this.get()[1]);
+    }
+
     /*public Vector multiply(Matrix matrix){
         double [] newVector = new double [this.get().length];
 
