@@ -106,7 +106,7 @@ public class Odometry extends OpMode implements OdometryVariables {
         // true movement
         double forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0d;
 
-        double lateralMovementAdjustor = rotationRadians * topWheelPosition.y;
+        double lateralMovementAdjustor = deltaRadians * topWheelPosition.y;
         double trueLateralMovement = topDistanceMoved - (lateralMovementAdjustor);
 
         double sin = Math.sin(rotationRadians);
