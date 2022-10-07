@@ -8,21 +8,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.concurrent.TimeUnit;
 
-// final variables
-interface OdometryVariables {
-    double wheelRadius = 2.1232;
-    double wheelCircumference = wheelRadius * Math.PI * 2;
-
-    int ticksPerRotation = 8192;
-    double inPerTick = wheelCircumference / ticksPerRotation;
-
-    Vector2 leftWheeelPosition = new Vector2(-3, 0);
-    Vector2 rightWheelPosition = new Vector2(3, 0);
-    Vector2 topWheelPosition = new Vector2(0, 5);
-}
-
 @TeleOp
-public class Odometry extends OpMode implements OdometryVariables {
+public class OdometryTest extends OpMode implements OdometryVariables {
     double deltaTime = 0;
     double lastTime = 0;
 
@@ -46,7 +33,6 @@ public class Odometry extends OpMode implements OdometryVariables {
     ElapsedTime elapsedTime;
 
     DcMotorEx leftEncoder;
-    DcMotorEx horizontalEncoder;
     DcMotorEx rightEncoder;
 
     @Override
@@ -57,9 +43,6 @@ public class Odometry extends OpMode implements OdometryVariables {
 
         rightEncoder = hardwareMap.get(DcMotorEx.class, "rightEncoder");
         rightEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        horizontalEncoder = hardwareMap.get(DcMotorEx.class, "topEncoder");
-        horizontalEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     @Override
@@ -84,7 +67,7 @@ public class Odometry extends OpMode implements OdometryVariables {
     public void updatePosition() {
         int leftTicks = (leftEncoder.getCurrentPosition());
         int rightTicks = (rightEncoder.getCurrentPosition());
-        int topTicks = (horizontalEncoder.getCurrentPosition());
+        int topTicks = 0;
 
         deltaRightTicks = rightTicks - lastRightTicks;
         deltaLeftTicks = leftTicks - lastLeftTicks;
@@ -129,6 +112,5 @@ public class Odometry extends OpMode implements OdometryVariables {
     double getDeltaRotation(double leftChange, double rightChange) {
         return (leftChange - rightChange) / rightWheelPosition.x;
     }
-
 }
 
