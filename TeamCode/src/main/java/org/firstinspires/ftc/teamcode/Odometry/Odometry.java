@@ -19,6 +19,10 @@ interface OdometryVariables {
     Vector2 leftWheeelPosition = new Vector2(-3, 0);
     Vector2 rightWheelPosition = new Vector2(3, 0);
     Vector2 topWheelPosition = new Vector2(0, 5);
+
+    double lateralWheelDistance = 10;
+    double verticalWheelDistance = 5;
+
 }
 
 @TeleOp
@@ -106,7 +110,7 @@ public class Odometry extends OpMode implements OdometryVariables {
         // true movement
         double forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0d;
 
-        double lateralMovementAdjustor = deltaRadians * topWheelPosition.y;
+        double lateralMovementAdjustor = deltaRadians * verticalWheelDistance;
         double trueLateralMovement = topDistanceMoved - (lateralMovementAdjustor);
 
         double sin = Math.sin(rotationRadians);
@@ -127,7 +131,7 @@ public class Odometry extends OpMode implements OdometryVariables {
     }
 
     double getDeltaRotation(double leftChange, double rightChange) {
-        return (leftChange - rightChange) / rightWheelPosition.x;
+        return (rightChange - leftChange) / lateralWheelDistance;
     }
 
 }
