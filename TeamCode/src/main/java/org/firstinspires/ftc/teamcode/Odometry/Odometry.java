@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 // final variables
 interface OdometryVariables {
-    double wheelRadius = 2.1232;
+    double wheelRadius = 1.417325;
     double wheelCircumference = wheelRadius * Math.PI * 2;
 
     int ticksPerRotation = 8192;

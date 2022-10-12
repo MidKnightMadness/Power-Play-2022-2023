@@ -7,8 +7,11 @@
 //// Encoders
 //import com.qualcomm.robotcore.hardware.DcMotor;
 //import com.qualcomm.robotcore.hardware.DcMotorEx;
+//import com.qualcomm.robotcore.hardware.HardwareMap;
 //
 //public class TestingOdometryAlgorithm extends Master {
+//    HardwareMap hardwareMap;
+//
 //    DcMotor encoder1;
 //    DcMotor encoder2;
 //    DcMotor encoder3;

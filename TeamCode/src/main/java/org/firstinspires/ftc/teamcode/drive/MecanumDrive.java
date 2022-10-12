@@ -40,12 +40,13 @@ public class MecanumDrive {
 
     Vector position;
     Vector velocity;
-    Vector direction;
+    Vector drive;
 
     Vector translation;
     Vector rotation;
 
     int time;
+    double maxValue;
 
     private BNO055IMU imu;
 
@@ -94,7 +95,7 @@ public class MecanumDrive {
 
         position = new Vector(NULL_POSITION);
         velocity = new Vector(NULL_POSITION);
-        direction = new Vector(DEFAULT_DIRECTION);
+        drive = new Vector(DEFAULT_DIRECTION);
 
         time = 0;
 
@@ -115,12 +116,20 @@ public class MecanumDrive {
     public void VectorDrive(double right, double down, double rotateRight, Telemetry telemetry) {
         translation = new Vector(BACKWARDS.multiply(down).add(RIGHT.multiply(right)));
         rotation = new Vector(TURN_RIGHT.multiply(rotateRight));
+        drive = translation.add(rotation);
 
-        setVelocities(MOTORS, translation.add(rotation).normalize());
+        double maxValue = 0.0;
+        for(double thisNum : drive.get()){
+            if(Math.abs(thisNum) > maxValue){
+                maxValue = thisNum;
+            }
+        }
 
-        // Implement odometry here
-        position.set(0, position.get()[0] - down * MAX * 2.0 / (4000 * Math.sqrt(2)));
-        position.set(1, position.get()[1] + right * MAX * 2.0 / (4000 * Math.sqrt(2)));
+
+
+        setPowers(MOTORS, drive.multiply(1.0 / maxValue));
+
+
 
         telemetry.addLine("Right: " + (MAX * right) +  "Forwards: " + (MAX * -1 * down));
         telemetry.addLine(position.get()[0] + ", " + position.get()[1]);
