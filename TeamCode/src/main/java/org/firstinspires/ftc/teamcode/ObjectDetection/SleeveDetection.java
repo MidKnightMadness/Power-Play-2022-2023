@@ -36,6 +36,7 @@ import java.util.List;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
@@ -50,8 +51,15 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@TeleOp(name = "Sleeve Detection", group = "Concept")
-public class SleeveDetection extends LinearOpMode {
+
+interface TfodConfig {
+    float tfodConfidence = 0.7f;
+    int tfodInputSize = 500;
+
+}
+
+@TeleOp(name = "Sleeve Detection")
+public class SleeveDetection extends LinearOpMode implements TfodConfig {
 
     /*
      * Specify the source for the Tensor Flow Model.
@@ -133,6 +141,7 @@ public class SleeveDetection extends LinearOpMode {
                             telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100 );
                             telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
                             telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
+                            telemetry.addData("Orientation", recognition.estimateAngleToObject(AngleUnit.DEGREES));
                         }
                         telemetry.update();
                     }
@@ -156,6 +165,8 @@ public class SleeveDetection extends LinearOpMode {
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+        telemetry.addData("Camera info: ", vuforia.getCameraCalibration());
     }
 
     /**
@@ -165,10 +176,12 @@ public class SleeveDetection extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
             "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.75f;
+        tfodParameters.minResultConfidence = tfodConfidence;
         tfodParameters.isModelTensorFlow2 = true;
-        tfodParameters.inputSize = 300;
+        tfodParameters.inputSize = tfodInputSize;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+
+
 
         // Use loadModelFromAsset() if the TF Model is built in as an asset by Android Studio
         // Use loadModelFromFile() if you have downloaded a custom team model to the Robot Controller's FLASH.

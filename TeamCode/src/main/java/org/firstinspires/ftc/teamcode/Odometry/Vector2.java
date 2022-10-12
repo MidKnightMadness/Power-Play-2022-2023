@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode.Odometry;
 
-// todo get string repr
-
 public class Vector2 {
-    double x;
-    double y;
+    public double x;
+    public double y;
 
     public Vector2 plus(Vector2 vec) {
         return new Vector2(this.x + vec.x, this.y + vec.y);
