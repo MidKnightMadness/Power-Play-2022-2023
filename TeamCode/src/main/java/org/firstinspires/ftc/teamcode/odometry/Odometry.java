@@ -3,7 +3,10 @@ package org.firstinspires.ftc.teamcode.odometry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.concurrent.TimeUnit;
 
@@ -25,9 +28,7 @@ interface OdometryVariables {
 
 }
 
-// @TeleOp
-@Deprecated
-public class Odometry extends OpMode implements OdometryVariables {
+public class Odometry implements OdometryVariables {
     double deltaTime = 0;
     double lastTime = 0;
 
@@ -54,9 +55,9 @@ public class Odometry extends OpMode implements OdometryVariables {
     DcMotorEx horizontalEncoder;
     DcMotorEx rightEncoder;
 
-    @Override
-    public void init() {
+    public Odometry(HardwareMap hardwareMap) {
         elapsedTime = new ElapsedTime();
+
         leftEncoder = hardwareMap.get(DcMotorEx.class, "leftEncoder");
         leftEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -67,19 +68,6 @@ public class Odometry extends OpMode implements OdometryVariables {
         horizontalEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    @Override
-    public void start() {
-
-    }
-
-    @Override
-    public void loop() {
-        updateTime();
-        updatePosition();
-
-        telemetry.update();
-    }
-
     public void updateTime() {
         double currentTime = elapsedTime.time(TimeUnit.MICROSECONDS) / 1000000.0d;
         deltaTime = currentTime - lastTime;
@@ -87,12 +75,12 @@ public class Odometry extends OpMode implements OdometryVariables {
     }
 
     public void updatePosition() {
-        int leftTicks = (leftEncoder.getCurrentPosition());
-        int rightTicks = (rightEncoder.getCurrentPosition());
-        int topTicks = (horizontalEncoder.getCurrentPosition());
+        int leftTicks = leftEncoder.getCurrentPosition();
+        int rightTicks = rightEncoder.getCurrentPosition();
+        int topTicks = horizontalEncoder.getCurrentPosition();
 
-        deltaRightTicks = rightTicks - lastRightTicks;
         deltaLeftTicks = leftTicks - lastLeftTicks;
+        deltaRightTicks = rightTicks - lastRightTicks;
         deltaTopTicks = topTicks - lastTopTicks;
 
         lastLeftTicks = leftTicks;
@@ -125,14 +113,24 @@ public class Odometry extends OpMode implements OdometryVariables {
 
         velocity.x = netX / deltaTime;
         velocity.y = netY / deltaTime;
-
-        telemetry.addLine("Position " + position.toString());
-        telemetry.addLine("Velocity " + velocity.toString());
-        telemetry.addLine("Rotation " + (rotationRadians * 180 / Math.PI));
     }
 
     double getDeltaRotation(double leftChange, double rightChange) {
         return (rightChange - leftChange) / lateralWheelDistance;
+    }
+
+    public double getXCoordinate() {
+        return position.x;
+    }
+
+    public double getYCoordinate() {
+        return position.y;
+    }
+
+    public void telemetry(Telemetry telemetry) {
+        telemetry.addLine("Position " + position.toString());
+        telemetry.addLine("Velocity " + velocity.toString());
+        telemetry.addLine("Rotation " + (rotationRadians * 180 / Math.PI));
     }
 
 }
