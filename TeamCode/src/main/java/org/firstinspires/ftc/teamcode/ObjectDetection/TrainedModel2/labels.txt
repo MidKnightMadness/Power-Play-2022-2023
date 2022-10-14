@@ -1,0 +1,2 @@
+0 UprightCone
+1 FallenCone
