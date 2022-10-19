@@ -40,7 +40,7 @@ public class MainTeleOp extends OpMode {
         // DRIVER ASSIST
         //mecanum.drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_y); // normal drive
         //mecanum.vectorDrive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_y, telemetry);
-        mecanum.fieldOrientatedDrive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_y);
+        mecanum.fieldOrientatedDrive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_y, telemetry);
 
         // LIFT (LINEAR SLIDES)
         /*if (gamepad2.dpad_up && !lastPressedLiftMotor) {

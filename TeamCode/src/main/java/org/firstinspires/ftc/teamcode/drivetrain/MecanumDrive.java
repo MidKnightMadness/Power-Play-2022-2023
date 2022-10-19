@@ -163,36 +163,50 @@ public class MecanumDrive {
         }
     }
 
-    public void fieldOrientatedDrive(double x, double y, double rotate) {
+    //public void fieldOrientatedDrive(double x, double y, double rotate) {
 
+        //Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        //float pi = 3.1415926f;
+
+        //float gyro_degrees = angles.firstAngle;
+        //float gyro_radians = gyro_degrees * pi / 180;
+
+        //x = x * Math.cos(gyro_radians) - y * Math.sin(gyro_radians);
+        //y = x * Math.sin(gyro_radians) + y * Math.cos(gyro_radians);
+
+        //double[] speeds = {
+               // (x + y + rotate),
+                //x - y - rotate),
+                //(x - y + rotate),
+                //(x + y - rotate)
+        //};
+
+        //double max = Math.abs(speeds[0]);
+        //for (int i = 0; i < speeds.length; i++) {
+            //if (max < Math.abs(speeds[i])) {
+                //max = Math.abs(speeds[i]);
+            //}
+        //}
+
+        //FLMotor.setPower(speeds[0]);
+        //FRMotor.setPower(speeds[1]);
+        //BLMotor.setPower(speeds[2]);
+        //BRMotor.setPower(speeds[3]);
+    //}
+
+    public void fieldOrientatedDrive(double x, double y, double rotate, Telemetry telemetry) {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
         float pi = 3.1415926f;
-
         float gyro_degrees = angles.firstAngle;
         float gyro_radians = gyro_degrees * pi / 180;
 
-        x = x * Math.cos(gyro_radians) - y * Math.sin(gyro_radians);
-        y = x * Math.sin(gyro_radians) + y * Math.cos(gyro_radians);
-
-        double[] speeds = {
-                (x + y + rotate),
-                (x - y - rotate),
-                (x - y + rotate),
-                (x + y - rotate)
-        };
-
-        double max = Math.abs(speeds[0]);
-        for (int i = 0; i < speeds.length; i++) {
-            if (max < Math.abs(speeds[i])) {
-                max = Math.abs(speeds[i]);
-            }
-        }
-
-        FLMotor.setPower(speeds[0]);
-        FRMotor.setPower(speeds[1]);
-        BLMotor.setPower(speeds[2]);
-        BRMotor.setPower(speeds[3]);
+        y = -y;
+        double offAngle = Math.atan(y/x);
+        double correctedX = Math.cos(gyro_radians-offAngle);
+        double correctedY = Math.sin(gyro_radians-offAngle);
+        correctedY = -correctedY;
+        vectorDrive(correctedX , correctedY, rotate, telemetry);
     }
 
     /*public void driveTo(Vector target, Vector currentPosition){ // Probably run this every few ticks
