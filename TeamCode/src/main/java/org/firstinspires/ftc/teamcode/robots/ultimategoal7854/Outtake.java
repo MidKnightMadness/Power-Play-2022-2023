@@ -12,7 +12,7 @@ public class Outtake {
     Servo feedServo;
 
     public Outtake(HardwareMap hardwareMap){
-        shooterMotor = hardwareMap.get(DcMotorEx.class, "frontMotorIntake");
+        shooterMotor = hardwareMap.get(DcMotorEx.class, "shooterMotor");
         feedServo = hardwareMap.get(Servo.class, "feedServo");
 
         shooterMotor.setDirection(DcMotor.Direction.FORWARD);

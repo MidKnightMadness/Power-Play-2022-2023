@@ -55,8 +55,9 @@ public class FreightFrenzy7854 extends OpMode {
 
 
         // TELEMETRY
-        telemetry.addData("Left Trigger", gamepad1.left_trigger);
-        telemetry.addData("Right Trigger", gamepad1.right_trigger);
+        telemetry.addData("Left Joystick x", gamepad1.left_stick_x);
+        telemetry.addData("Left Joystick Y", gamepad1.left_stick_y);
+        telemetry.addData("Right Joystick X", gamepad1.right_stick_x);
         chassis.telemetry(telemetry);
         intake.telemetry(telemetry);
         telemetry.update();
