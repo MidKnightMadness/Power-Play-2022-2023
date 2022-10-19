@@ -15,8 +15,8 @@ public class DoubleReverse4Bar {
         motorStartPosition = liftMotor.getCurrentPosition();
 
         liftMotor.setDirection(DcMotor.Direction.FORWARD); // set direction
-        //linearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // set motor mode
-        //linearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        linearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // set motor mode
+//        linearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); // set zero power behavior
 
         liftMotor.setPower(0);

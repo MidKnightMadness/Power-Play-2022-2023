@@ -3,83 +3,62 @@ package org.firstinspires.ftc.teamcode.robots.freightfrenzy7854;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class Chassis {
     DcMotor fl;
     DcMotor fr;
     DcMotor bl;
     DcMotor br;
-    float slw;
-    boolean btToggle= false;
-    boolean smInput=false;
 
     public Chassis(HardwareMap hardwareMap){
-        fl = hardwareMap.dcMotor.get("fl");
         fr = hardwareMap.dcMotor.get("fr");
-        bl = hardwareMap.dcMotor.get("bl");
+        fl = hardwareMap.dcMotor.get("fl");
         br = hardwareMap.dcMotor.get("br");
+        bl = hardwareMap.dcMotor.get("bl");
 
+        // Set Directions
+        fr.setDirection(DcMotor.Direction.FORWARD);
+        fl.setDirection(DcMotor.Direction.REVERSE);
+        br.setDirection(DcMotor.Direction.FORWARD);
+        bl.setDirection(DcMotor.Direction.REVERSE);
+
+        // Set Motor Mode
+        fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        fr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // Set Zero Power Behavior
+        fr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        fl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        br.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        bl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // Stops Motors on INIT
+        fr.setPower(0);
+        fl.setPower(0);
+        br.setPower(0);
+        bl.setPower(0);
     }
 
-    public void slowMode(boolean bt){
-        if(bt && !smInput){
-            btToggle = !btToggle;
-            smInput = true;
-        }
-        smInput = bt;
-
-        if(btToggle) {
-            slw = 0.5f;
-        } else {
-            slw = 1.0f;
-        }
+    public void drive(double x, double y, double rotate) {
+        fr.setPower(-x - y - rotate);
+        fl.setPower(-x + y - rotate);
+        br.setPower(-x + y + rotate);
+        bl.setPower(-x - y + rotate);
     }
 
-    public float[] mecanumDr(float lx, float ly, float rx, float ry){
-        boolean lsDeadzone;
-        boolean rsDeadzone;
-        float[] power = new float[4];
-        /*
-        Deadzones | true = stick is near neutral position
-        Protects from drift
-        */
-        lsDeadzone = (Math.abs(lx) < 0.1) &&
-                (Math.abs(ly) < 0.1);
-        rsDeadzone = (Math.abs(rx) < 0.1) &&
-                (Math.abs(ry) < 0.1);
-
-        //reset
-        power[0]=0;
-        power[1]=0;
-        power[2]=0;
-        power[3]=0;
-
-        //translation
-        if(!lsDeadzone){
-            power[0]+=ly;
-            power[1]+=ly;
-            power[2]+=ly;
-            power[3]+=ly;
-
-            power[0]-=lx;
-            power[1]+=lx;
-            power[2]+=lx;
-            power[3]-=lx;
-        }
-
-        //rotation
-        if(!rsDeadzone){
-            power[0]-=rx;
-            power[1]+=rx;
-            power[2]-=rx;
-            power[3]+=rx;
-        }
-
-        //modifications
-        power[0]*=slw;
-        power[1]*=slw;
-        power[2]*=slw;
-        power[3]*=slw;
-
-        return power;
+    public void telemetry(Telemetry telemetry) {
+        telemetry.addData("FR Motor Position", fr.getCurrentPosition());
+        telemetry.addData("FL Motor Position", fl.getCurrentPosition());
+        telemetry.addData("BR Motor Position", br.getCurrentPosition());
+        telemetry.addData("BL Motor Position", bl.getCurrentPosition());
     }
+
 }
