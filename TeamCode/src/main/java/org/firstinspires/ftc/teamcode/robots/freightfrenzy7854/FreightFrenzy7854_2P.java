@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.robots.freightfrenzy7854;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp
-public class FreightFrenzy7854 extends OpMode {
+@TeleOp(name = "2 Player Carnival FF7854")
+public class FreightFrenzy7854_2P extends OpMode {
 
     Chassis chassis;
     Intake intake;
@@ -30,16 +30,17 @@ public class FreightFrenzy7854 extends OpMode {
     @Override
     public void loop() {
         // DRIVE
-        chassis.drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_y);
+        chassis.drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
 
         // INTAKE
         //intake surgical tubing
         if(gamepad2.dpad_up) {
             intake.forward();
-        }
-        if(gamepad2.dpad_down) {
+        } else if(gamepad2.dpad_down) {
             intake.reverse();
+        } else {
+            intake.stop();
         }
 
         //intake flap
@@ -58,6 +59,11 @@ public class FreightFrenzy7854 extends OpMode {
         telemetry.addData("Left Joystick x", gamepad1.left_stick_x);
         telemetry.addData("Left Joystick Y", gamepad1.left_stick_y);
         telemetry.addData("Right Joystick X", gamepad1.right_stick_x);
+        telemetry.addData("dpad up (forward)", gamepad1.dpad_up);
+        telemetry.addData("dpad down (reverse)", gamepad1.dpad_down);
+        telemetry.addData("x (flap)", gamepad1.x);
+        telemetry.addData("last pressed flap", lastPressedFlap);
+        telemetry.addData("flap toggle", flapToggle);
         chassis.telemetry(telemetry);
         intake.telemetry(telemetry);
         telemetry.update();

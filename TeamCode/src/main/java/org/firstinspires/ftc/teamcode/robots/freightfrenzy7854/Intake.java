@@ -23,11 +23,14 @@ public class Intake {
         backIntakeMotor.setDirection(DcMotor.Direction.FORWARD);
         intakeFlap.setDirection(Servo.Direction.FORWARD);
 
-        frontIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        frontIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        backIntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         frontIntakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontIntakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        frontIntakeMotor.setPower(0);
+        backIntakeMotor.setPower(0);
 
         flapStartPosition = intakeFlap.getPosition();
     }
@@ -42,12 +45,17 @@ public class Intake {
         backIntakeMotor.setPower(-1.0);
     }
 
+    public void stop() {
+        frontIntakeMotor.setPower(0);
+        backIntakeMotor.setPower(0);
+    }
+
     public void flapOpen() {
-        intakeFlap.setPosition(flapStartPosition - 0.8);
+        intakeFlap.setPosition(0);
     }
 
     public void flapClose() {
-        intakeFlap.setPosition(flapStartPosition);
+        intakeFlap.setPosition(1);
     }
 
     public void telemetry(Telemetry telemetry) {
