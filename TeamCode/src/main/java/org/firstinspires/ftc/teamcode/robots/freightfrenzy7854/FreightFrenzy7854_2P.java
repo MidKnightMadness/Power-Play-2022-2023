@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.robots.freightfrenzy7854;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name = "2 Player Carnival FF7854")
+@TeleOp(name = "2 Player Carnival FF7854", group = "Carnival")
 public class FreightFrenzy7854_2P extends OpMode {
 
     Chassis chassis;

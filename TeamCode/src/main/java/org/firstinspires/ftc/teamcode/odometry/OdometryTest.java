@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.concurrent.TimeUnit;
 
-@TeleOp
+@TeleOp(group = "test")
 public class OdometryTest extends OpMode implements OdometryVariables {
     double deltaTime = 0;
     double lastTime = 0;
