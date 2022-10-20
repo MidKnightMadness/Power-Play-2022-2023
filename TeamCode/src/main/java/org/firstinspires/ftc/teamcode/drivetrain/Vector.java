@@ -7,6 +7,9 @@ public class Vector {
         this.vector = vector;
     }
 
+    public Vector(double x, double y) {this.vector = new double[] {x, y}; }
+    public Vector() {this.vector = new double[] {0, 0}; }
+
     public Vector(Vector vector){
         this.set(0, vector.get()[0]);
         this.set(1, vector.get()[1]);
