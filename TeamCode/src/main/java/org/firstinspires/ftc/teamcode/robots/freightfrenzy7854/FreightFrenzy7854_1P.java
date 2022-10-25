@@ -30,14 +30,14 @@ public class FreightFrenzy7854_1P extends OpMode {
     @Override
     public void loop() {
         // DRIVE
-        chassis.drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+        chassis.drive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
 
         // INTAKE
         //intake surgical tubing
-        if(gamepad1.dpad_up) {
+        if(gamepad1.left_trigger > 0) {
             intake.forward();
-        } else if(gamepad1.dpad_down) {
+        } else if(gamepad1.right_trigger > 0) {
             intake.reverse();
         } else {
             intake.stop();
