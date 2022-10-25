@@ -28,7 +28,7 @@ public class GridSystem {
 
     Vector position = new Vector();
     double rotation;
-    
+
 
 
 
