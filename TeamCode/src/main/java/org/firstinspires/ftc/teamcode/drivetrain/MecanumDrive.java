@@ -140,14 +140,14 @@ public class MecanumDrive {
         BLMotor.setPower(-x - y + rotation);
     }
 
-    /*public void driveTo(Vector target, Vector currentPosition){ // Probably run this every few ticks
+    public void driveTo(Vector target, Vector currentPosition){ // Probably run this every few ticks
         displacement = target.add(currentPosition.multiply(-1)); // Normalize this when inputting for ratios
 
         drive = RIGHT.multiply(displacement.normalize().get()[0])
                 .add(BACKWARDS.multiply(displacement.normalize().get()[1]));
 
         setPowers(MOTORS, drive);
-    }*/
+    }
 
     @Deprecated
     public static void setVelocities(DcMotorEx [] motors, Vector vector){

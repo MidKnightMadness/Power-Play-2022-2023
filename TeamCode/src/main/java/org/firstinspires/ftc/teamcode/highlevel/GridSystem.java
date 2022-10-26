@@ -6,7 +6,7 @@ enum Junction {
     Ground,
     Low,
     Medium,
-    High
+    High,
 }
 
 public class GridSystem {
@@ -28,11 +28,6 @@ public class GridSystem {
 
     Vector position = new Vector();
     double rotation;
-
-
-
-
-
 
 
 }
