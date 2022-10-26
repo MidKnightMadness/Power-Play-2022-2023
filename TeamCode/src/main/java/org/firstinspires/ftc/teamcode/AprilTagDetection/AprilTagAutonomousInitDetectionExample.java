@@ -96,11 +96,6 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
 
         telemetry.setMsTransmissionInterval(50);
 
-        /*
-         * The INIT-loop:
-         * This REPLACES waitForStart!
-         */
-
         currentTime = elapsedTime.time(TimeUnit.MICROSECONDS) / 1000000.0d;
         telemetry.addLine("Start time: " + currentTime);
 
