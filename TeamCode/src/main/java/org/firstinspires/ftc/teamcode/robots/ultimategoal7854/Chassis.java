@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.robots.freightfrenzy7854;
+package org.firstinspires.ftc.teamcode.robots.ultimategoal7854;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -48,10 +48,10 @@ public class Chassis {
     }
 
     public void drive(double x, double y, double rotate) {
-        fr.setPower(-x - y + rotate);
-        fl.setPower( x - y - rotate);
-        br.setPower( x - y + rotate);
-        bl.setPower(-x - y - rotate);
+        fr.setPower(-x - y - rotate);
+        fl.setPower(-x + y - rotate);
+        br.setPower(-x + y + rotate);
+        bl.setPower(-x - y + rotate);
     }
 
     public void telemetry(Telemetry telemetry) {
