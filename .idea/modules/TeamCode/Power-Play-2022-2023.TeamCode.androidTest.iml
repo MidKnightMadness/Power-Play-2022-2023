@@ -72,6 +72,9 @@
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.interpolator:interpolator:1.0.0@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.drawerlayout:drawerlayout:1.0.0@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.firstinspires.ftc:gameAssets-PowerPlay:1.0.0@aar" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.openftc:easyopencv:1.5.2@aar" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.openftc:opencv-repackaged:4.5.3-B@aar" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.openftc:apriltag:1.1.0@aar" level="project" />
   </component>
   <component name="TestModuleProperties" production-module="Power-Play-2022-2023.TeamCode.main" />
 </module>
