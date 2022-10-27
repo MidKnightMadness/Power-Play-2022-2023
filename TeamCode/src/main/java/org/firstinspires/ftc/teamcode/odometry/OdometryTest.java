@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.Odometry.*;
 import java.util.concurrent.TimeUnit;
 
 @TeleOp
-public class OdometryTest extends OpMode implements org.firstinspires.ftc.teamcode.odometry.OdometryVariables {
+public class OdometryTest extends OpMode implements org.firstinspires.ftc.teamcode.Odometry.OdometryVariables {
     double deltaTime = 0;
     double lastTime = 0;
 
