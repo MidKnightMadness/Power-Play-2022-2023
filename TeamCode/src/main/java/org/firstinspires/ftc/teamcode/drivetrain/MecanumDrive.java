@@ -206,8 +206,8 @@ public class MecanumDrive {
     public static double sensitivity = 5.0; // "Steepness" of gradient vectors
     public Vector correct(){
         odometryAlg.updateOrientationAndLocation();
-        displacement.set(0, -sensitivity * ((currentPosition.get()[0] % 22.75) - 11.375));
-        displacement.set(1, -sensitivity * ((currentPosition.get()[1] % 22.75) - 11.375));
+        displacement.set(0, -sensitivity * ((currentPosition.get()[0] % 23.50) - 11.75));
+        displacement.set(1, -sensitivity * ((currentPosition.get()[1] % 23.50) - 11.75));
 
         return translation.add(displacement);
     }
