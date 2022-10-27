@@ -206,15 +206,15 @@ public class MecanumDrive {
     public static double sensitivity = 5.0; // "Steepness" of gradient vectors
     public Vector correct(){
         odometryAlg.updateOrientationAndLocation();
-        displacement.set(0, -sensitivity * ((currentPosition.get()[0] % 22.75) - 11.375));
-        displacement.set(1, -sensitivity * ((currentPosition.get()[1] % 22.75) - 11.375));
+        displacement.set(0, -sensitivity * ((currentPosition.get()[0] % 23.50) - 11.75));
+        displacement.set(1, -sensitivity * ((currentPosition.get()[1] % 23.50) - 11.75));
 
         return translation.add(displacement);
     }
 
-    public void driveTo(Vector target, Vector currentPosition){ // Probably run this every few ticks
-        odometryAlg.updateOrientationAndLocation();
-        displacement = target.add(currentPosition.multiply(-1)); // Normalize this when inputting for ratios
+    public void driveTo(double currentX, double currentY, double targetX, double targetY){ // Probably run this every few ticks
+        displacement.set(0, targetX - currentX);
+        displacement.set(1, targetY - currentY);
 
         drive = RIGHT.multiply(displacement.normalize().get()[0])
                 .add(BACKWARDS.multiply(displacement.normalize().get()[1]));

@@ -32,10 +32,10 @@ public class GridSystem {
         odometryAlg.updateOrientationAndLocation();
         double [] auxillaryArrayToSpeedUpStuff = position.get(); // Use currentPosition if needed, but should pre-calculate during transition
 
-        return new double [] {auxillaryArrayToSpeedUpStuff[0] - (22.75 * (Math.round(auxillaryArrayToSpeedUpStuff[0] / 22.75))),
-                auxillaryArrayToSpeedUpStuff[1] - (22.75 * (Math.round(auxillaryArrayToSpeedUpStuff[1] / 22.75))),
-                junctionHeights[(int) (6 - Math.round(auxillaryArrayToSpeedUpStuff[0] / 22.75))]
-                        [(int) (Math.round(auxillaryArrayToSpeedUpStuff[1] / 22.75) - 1)] - ROOT_HEIGHT};
+        return new double [] {auxillaryArrayToSpeedUpStuff[0] - (23.50 * (Math.round(auxillaryArrayToSpeedUpStuff[0] / 23.50))),
+                auxillaryArrayToSpeedUpStuff[1] - (23.50 * (Math.round(auxillaryArrayToSpeedUpStuff[1] / 23.50))),
+                junctionHeights[(int) (6 - Math.round(auxillaryArrayToSpeedUpStuff[0] / 23.50))]
+                        [(int) (Math.round(auxillaryArrayToSpeedUpStuff[1] / 23.50) - 1)] - ROOT_HEIGHT};
     }
 }
 
