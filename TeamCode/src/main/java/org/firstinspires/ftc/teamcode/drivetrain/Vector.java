@@ -7,9 +7,6 @@ public class Vector {
         this.vector = vector;
     }
 
-    public Vector(double x, double y) {this.vector = new double[] {x, y}; }
-    public Vector() {this.vector = new double[] {0, 0}; }
-
     public Vector(Vector vector){
         this.set(0, vector.get()[0]);
         this.set(1, vector.get()[1]);
@@ -87,9 +84,11 @@ public class Vector {
         return this;
     }
 
-    public void rotate(double angleChange){ // Radians
+    public Vector rotate(double angleChange){ // Radians
         this.set(0, Math.cos(angleChange) * this.get()[0] - Math.sin(angleChange) * this.get()[1]);
         this.set(1, Math.sin(angleChange) * this.get()[0] + Math.cos(angleChange) * this.get()[1]);
+
+        return this;
     }
 
     /*public Vector multiply(Matrix matrix){
@@ -102,3 +101,4 @@ public class Vector {
         return this;
     }*/
 }
+
