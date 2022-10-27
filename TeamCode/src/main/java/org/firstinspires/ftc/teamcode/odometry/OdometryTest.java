@@ -1,20 +1,20 @@
-package org.firstinspires.ftc.teamcode.odometry;
+package org.firstinspires.ftc.teamcode.Odometry;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
+import org.firstinspires.ftc.teamcode.Odometry.*;
 import java.util.concurrent.TimeUnit;
 
-@TeleOp(group = "test")
-public class OdometryTest extends OpMode implements OdometryVariables {
+@TeleOp
+public class OdometryTest extends OpMode implements org.firstinspires.ftc.teamcode.Odometry.OdometryVariables {
     double deltaTime = 0;
     double lastTime = 0;
 
-    public Vector2 position = new Vector2();
-    public Vector2 velocity = new Vector2();
+    public org.firstinspires.ftc.teamcode.odometry.Vector2 position = new org.firstinspires.ftc.teamcode.odometry.Vector2();
+    public org.firstinspires.ftc.teamcode.odometry.Vector2 velocity = new org.firstinspires.ftc.teamcode.odometry.Vector2();
 
     int lastLeftTicks = 0;
     int deltaLeftTicks = 0;

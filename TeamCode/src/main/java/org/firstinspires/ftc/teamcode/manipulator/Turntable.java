@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.manipulator;
 
+import static org.firstinspires.ftc.teamcode.highlevel.Master.hardwaremap;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -19,8 +20,8 @@ public class Turntable {
     // Internal use variables
     private int neededTicks; // Displacement or target position
 
-    public Turntable(HardwareMap hardwareMap) {
-        tableMotor = hardwareMap.get(DcMotorEx.class, "Turntable Motor"); // connect motor
+    public Turntable() {
+        tableMotor = hardwaremap.get(DcMotorEx.class, "Turntable Motor"); // connect motor
 
         tableMotor.setDirection(DcMotor.Direction.FORWARD); // set direction
         tableMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // set motor mode
@@ -78,4 +79,5 @@ public class Turntable {
     public void telemetry(Telemetry telemetry) {
         telemetry.addData("Carousel Power", tableMotor.getPower());
     }
+
 }

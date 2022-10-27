@@ -30,13 +30,19 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 @TeleOp
 public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
 {
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
+
+    double lastTime;
+    double currentTime;
 
     static final double FEET_PER_METER = 3.28084;
 
@@ -57,14 +63,20 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
     int MIDDLE = 2;
     int RIGHT = 3;
 
+    boolean end = false;
+
     AprilTagDetection tagOfInterest = null;
 
+    ElapsedTime elapsedTime;
     @Override
     public void runOpMode()
     {
+        elapsedTime = new ElapsedTime();
+
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
+        telemetry.setAutoClear(false);
 
         camera.setPipeline(aprilTagDetectionPipeline);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
@@ -84,12 +96,17 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
 
         telemetry.setMsTransmissionInterval(50);
 
-        /*
-         * The INIT-loop:
-         * This REPLACES waitForStart!
-         */
-        while (!isStarted() && !isStopRequested())
+        currentTime = elapsedTime.time(TimeUnit.MICROSECONDS) / 1000000.0d;
+        telemetry.addLine("Start time: " + currentTime);
+
+        int detectionNumber = 1;
+
+        lastTime = currentTime;
+
+        while (!isStarted() && !isStopRequested() && !end)
         {
+            currentTime = elapsedTime.time(TimeUnit.MICROSECONDS) / 1000000.0d;
+
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
             if(currentDetections.size() != 0)
@@ -98,10 +115,17 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
 
                 for(AprilTagDetection tag : currentDetections)
                 {
-                    if(tag.id == LEFT || tag.id == MIDDLE || tag.id == RIGHT)
+                    if(tag.id == 1 || tag.id == 2 || tag.id == 3)
                     {
+                        telemetry.addLine("-------------------------");
+                        telemetry.addLine("Found tag " + tag.id + " in " + (currentTime - lastTime) + " seconds");
+                        telemetry.addLine("-------------------------");
                         tagOfInterest = tag;
                         tagFound = true;
+                        detectionNumber++;
+                        detectionNumber = detectionNumber % 3;
+                        lastTime = currentTime;
+                        end = true;
                         break;
                     }
                 }
@@ -111,47 +135,13 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
                     telemetry.addLine("Tag of interest is in sight!\n\nLocation data:");
                     tagToTelemetry(tagOfInterest);
                 }
-                else
-                {
-                    telemetry.addLine("Don't see tag of interest :(");
-
-                    if(tagOfInterest == null)
-                    {
-                        telemetry.addLine("(The tag has never been seen)");
-                    }
-                    else
-                    {
-                        telemetry.addLine("\nBut we HAVE seen the tag before; last seen at:");
-                        tagToTelemetry(tagOfInterest);
-                    }
-                }
-
             }
-            else
-            {
-                telemetry.addLine("Don't see tag of interest :(");
 
-                if(tagOfInterest == null)
-                {
-                    telemetry.addLine("(The tag has never been seen)");
-                }
-                else
-                {
-                    telemetry.addLine("\nBut we HAVE seen the tag before; last seen at:");
-                    tagToTelemetry(tagOfInterest);
-                }
-
-            }
 
             telemetry.update();
-            sleep(20);
         }
 
-        /*
-         * The START command just came in: now work off the latest snapshot acquired
-         * during the init loop.
-         */
-
+        waitForStart();
         /* Update the telemetry */
         if(tagOfInterest != null)
         {
