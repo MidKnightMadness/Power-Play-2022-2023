@@ -10,12 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class TestingOdometryAlgorithm extends Master {
-    HardwareMap hardwareMap;
-
-    DcMotor encoder1;
-    DcMotor encoder2;
-    DcMotor encoder3;
-    // Use encoder objects encoder1, encorder2, encoder3 from Master
+    // Use encoder objects encoder1, encorder2, encoder3 from AuxillaryData
     // Encoder wheels are placed as follows:
     //    ________
     //   |   ==   |
@@ -30,6 +25,8 @@ public class TestingOdometryAlgorithm extends Master {
     public static final double TICKS_PER_ROTATION = 8192;
 
     // Input / Output, calculations
+    Vector orientation;
+    Vector normalOrientation;
     public static final double [] DEFAULT_STARTING_ORIENTATION = {0.0, 1.0};
     public static final double [] DEFAULT_STARTING_NORMAL_VECTOR = {-1.0, 0.0};
     public double orientationAngle = Math.PI / 2; // Front-facing angle relative to horizontal at start
@@ -41,12 +38,13 @@ public class TestingOdometryAlgorithm extends Master {
     private double encoder2Delta;
     private double encoder3Delta;
 
+
     // Constructor to start everything
-    public void initTestingOdometryAlgorithm(Vector startingPosition) {
+    public TestingOdometryAlgorithm(Vector startingPosition) {
         // Encoders
         encoder1 = hardwaremap.get(DcMotorEx.class, "encoder1");
         encoder2 = hardwaremap.get(DcMotorEx.class, "encoder2");
-        encoder3 = hardwareMap.get(DcMotorEx.class, "encoder3");
+        encoder3 = hardwaremap.get(DcMotorEx.class, "encoder3");
 
         encoder1.setDirection(DcMotor.Direction.REVERSE);
         encoder2.setDirection(DcMotor.Direction.REVERSE);
@@ -98,5 +96,7 @@ public class TestingOdometryAlgorithm extends Master {
         orientationAngle += angleChange / 2;
         orientation.rotate(angleChange / 2);
         normalOrientation.rotate(angleChange / 2);
+
+        Master.currentPosition.add(travel);
     }
 }
