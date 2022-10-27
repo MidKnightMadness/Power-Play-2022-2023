@@ -1,38 +1,24 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.highlevel.Master.drive;
+import static org.firstinspires.ftc.teamcode.highlevel.Master.initEverything;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
 import org.firstinspires.ftc.teamcode.manipulator.LinearSlides;
 import org.firstinspires.ftc.teamcode.manipulator.Turntable;
-import org.firstinspires.ftc.teamcode.Odometry.*;
+import org.firstinspires.ftc.teamcode.odometry.*;
+import org.firstinspires.ftc.teamcode.odometry.TestingOdometryAlgorithm;
+import org.firstinspires.ftc.teamcode.highlevel.Master;
 
 @TeleOp(name="Main")
 public class MainTeleOp extends OpMode {
-    MecanumDrive mecanum;
-    Odometry odometry;
-    LinearSlides lift;
-    Turntable turntable;
-
-    private boolean lastPressedLiftMotor = false;
-    private boolean liftMotorToggle = false;
 
     @Override
     public void init() {
-        mecanum = new MecanumDrive(hardwareMap);
-        odometry = new Odometry(hardwareMap);
-        //lift = new LinearSlides(hardwareMap);
-        //turntable = new Turntable(hardwareMap);
-    }
-
-    public void init_loop() {
-
-    }
-
-    public void start()
-    {
-
+        initEverything();
     }
 
     @Override
@@ -40,7 +26,7 @@ public class MainTeleOp extends OpMode {
         // DRIVER ASSIST
         //mecanum.drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_y); // normal drive
         //mecanum.vectorDrive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_y, telemetry);
-        mecanum.fieldOrientatedDrive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_y, telemetry);
+//        drive.fieldOrientatedDrive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_y, telemetry);
 
         // LIFT (LINEAR SLIDES)
         /*if (gamepad2.dpad_up && !lastPressedLiftMotor) {
@@ -70,12 +56,12 @@ public class MainTeleOp extends OpMode {
         }*/
 
 
-        odometry.updateTime();
-        odometry.updatePosition();
-
-        // TELEMETRY
-        odometry.telemetry(telemetry);
-        mecanum.telemetry(telemetry);
+//        odometry.updateTime();
+//        odometry.updatePosition();
+//
+//        // TELEMETRY
+//        odometry.telemetry(telemetry);
+//        mecanum.telemetry(telemetry);
         telemetry.update();
     }
 }
