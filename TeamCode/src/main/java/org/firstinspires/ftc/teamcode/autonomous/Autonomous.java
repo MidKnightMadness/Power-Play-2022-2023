@@ -1,10 +1,12 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.AprilTagDetection.AprilTagDetectionPipeline;
+import org.firstinspires.ftc.teamcode.Odometry.Odometry;
+import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -39,6 +41,8 @@ public class Autonomous extends OpMode implements cameraInfo
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
     Timer timer;
+    MecanumDrive mecanum;
+    Odometry odometry;
 
     @Override
     public void init() {
@@ -47,7 +51,8 @@ public class Autonomous extends OpMode implements cameraInfo
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
         telemetry.setAutoClear(false);
-
+        mecanum = new MecanumDrive(hardwareMap);
+        odometry = new Odometry(hardwareMap);
         camera.setPipeline(aprilTagDetectionPipeline);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
@@ -103,7 +108,9 @@ public class Autonomous extends OpMode implements cameraInfo
 
     @Override
     public void loop() {
+        while (Math.abs(odometry.getXCoordinate() - 23.5) < .2 && Math.abs(odometry.getYCoordinate() - 23.5) < .2) {
 
+        }
     }
 
     void tagToTelemetry(AprilTagDetection detection)
