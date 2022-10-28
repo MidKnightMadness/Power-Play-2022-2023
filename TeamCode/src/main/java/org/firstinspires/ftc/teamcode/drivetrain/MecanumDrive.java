@@ -16,13 +16,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.highlevel.Master.*;
 import org.firstinspires.ftc.teamcode.Odometry.Odometry;
+
+import java.lang.reflect.Modifier;
 //import org.firstinspires.ftc.teamcode.odometry.Odometry;
 
 public class MecanumDrive {
-    public DcMotorEx FRMotor;
-    public DcMotorEx FLMotor;
-    public DcMotorEx BRMotor;
-    public DcMotorEx BLMotor;
+    public static DcMotorEx FRMotor;
+    public static DcMotorEx FLMotor;
+    public static DcMotorEx BRMotor;
+    public static DcMotorEx BLMotor;
 
     Odometry odometry;
 
@@ -47,16 +49,16 @@ public class MecanumDrive {
 
     public static final double MAX = 3.1416; //Max speed
 
-    private Vector position;
-    private Vector velocity;
+    private double [] position;
     private Vector drive;
     private Vector displacement;
+    private Vector motorInputs;
 
     private Vector translation;
     private Vector rotation;
 
     int time;
-    double maxValue;
+    private double maxValue;
 
     private BNO055IMU imu;
 
@@ -103,12 +105,11 @@ public class MecanumDrive {
         BLMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.00, 0.05, 0.0, 0.0));*/
 
 
-
-        velocity = new Vector(NULL_POSITION);
         drive = new Vector(NULL);
         displacement = new Vector(new double [] {0.0, 0.0});
         translation = new Vector(NULL_POSITION);
         rotation = new Vector(NULL_POSITION);
+        motorInputs = new Vector(NULL);
 
         time = 0; // Ticks ig
 
@@ -141,7 +142,7 @@ public class MecanumDrive {
         rotation = TURN_RIGHT.multiply(rotate);
         drive = translation.add(rotation);
 
-        double maxValue = 0.0;
+        maxValue = 0.0;
         for(double thisNum : drive.get()){
             if(Math.abs(thisNum) > maxValue){
                 maxValue = thisNum;
@@ -180,6 +181,7 @@ public class MecanumDrive {
         float gyro_degrees = angles.firstAngle;
         float gyro_radians = gyro_degrees * pi / 180;
 
+        // Made changes so that angle takes basis vector [1, 0] as reference
         x = x * Math.cos(gyro_radians) - y * Math.sin(gyro_radians);
         y = x * Math.sin(gyro_radians) + y * Math.cos(gyro_radians);
 
@@ -190,21 +192,26 @@ public class MecanumDrive {
                 (x + y - rotate)
         };
 
-        double max = Math.abs(speeds[0]);
-        for (int i = 0; i < speeds.length; i++) {
-            if (max < Math.abs(speeds[i])) {
-                max = Math.abs(speeds[i]);
+        // This wasn't working before
+        maxValue = 0.0;
+        for(double thisNum : speeds){
+            if(Math.abs(thisNum) > maxValue){
+                maxValue = thisNum;
             }
         }
 
-        FLMotor.setPower(speeds[0]);
-        FRMotor.setPower(speeds[1]);
-        BLMotor.setPower(speeds[2]);
-        BRMotor.setPower(speeds[3]);
+        setVelocities(MOTORS, motorInputs);
+    }
+
+    public void perTickDrive(double [] target, double rotationAngle){
+        odometryAlg.updateOrientationAndLocation();
+
+        position = currentPosition.get();
+        fieldOrientatedDrive(target[0] - position[0], target[1] - position[1], rotationAngle);
     }
 
     public static double sensitivity = 5.0; // "Steepness" of gradient vectors
-    public Vector correct(){
+    public Vector correct(){ // Only for TeleOp
         odometryAlg.updateOrientationAndLocation();
         displacement.set(0, -sensitivity * ((currentPosition.get()[0] % 23.50) - 11.75));
         displacement.set(1, -sensitivity * ((currentPosition.get()[1] % 23.50) - 11.75));
@@ -217,12 +224,11 @@ public class MecanumDrive {
         displacement.set(1, targetY - currentY);
 
         drive = RIGHT.multiply(displacement.normalize().get()[0])
-                .add(BACKWARDS.multiply(displacement.normalize().get()[1]));
+                .add(BACKWARDS.multiply(displacement.normalize().get()[1])).rotate(-odometryAlg.orientationAngle);
 
         setPowers(MOTORS, drive);
     }
 
-    @Deprecated
     public static void setVelocities(DcMotorEx [] motors, Vector vector){
         for(int i = 0; i < vector.get().length; i++){
             motors[i].setVelocity(vector.get()[i] * MAX);
