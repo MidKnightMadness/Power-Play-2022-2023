@@ -6,7 +6,6 @@ import java.util.concurrent.TimeUnit;
 
 public class Timer {
     public ElapsedTime elapsedTime;
-
     private double lastTime = elapsedTime.startTime();
     private double deltaTime = 0;
     private double currentTime = lastTime;

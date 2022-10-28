@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.AprilTagDetection.AprilTagDetectionPipeline;
-import org.firstinspires.ftc.teamcode.Odometry.Odometry;
+import org.firstinspires.ftc.teamcode.odometry.Odometry;
 import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -13,8 +12,6 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import org.firstinspires.ftc.teamcode.common.Timer;
-
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.ArrayList;
 
@@ -35,18 +32,20 @@ interface cameraInfo {
 public class Autonomous extends OpMode implements cameraInfo
 {
     int[] signalFinds = new int[] {0, 0, 0};
+    int mostRecentDetection = 0;
 
     AprilTagDetection tagOfInterest = null;
 
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
-    Timer timer;
+    Timer coneTimer;
+
     MecanumDrive mecanum;
     Odometry odometry;
 
     @Override
     public void init() {
-        timer = new Timer();
+        coneTimer = new Timer();
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
@@ -72,11 +71,11 @@ public class Autonomous extends OpMode implements cameraInfo
 
     @Override
     public void init_loop() {
-        timer.getTime();
+        coneTimer.getTime();
 
         ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
-        if(currentDetections.size() != 0)
+        if (currentDetections.size() != 0)
         {
             boolean tagFound = false;
 
@@ -85,15 +84,13 @@ public class Autonomous extends OpMode implements cameraInfo
                 if(tag.id == 1 || tag.id == 2 || tag.id == 3)
                 {
                     signalFinds[tag.id - 1] += 1;
-                    telemetry.addLine("-------------------------");
-                    telemetry.addLine("Found tag " + tag.id + " in " + (timer.getDeltaTime()) + " seconds");
-                    telemetry.addLine("-------------------------");
+                    mostRecentDetection = tag.id;
                     tagOfInterest = tag;
                     tagFound = true;
                 }
             }
 
-            if(tagFound)
+            if (tagFound)
             {
                 telemetry.addLine("Tag of interest is in sight!\n\nLocation data:");
                 tagToTelemetry(tagOfInterest);
@@ -116,6 +113,9 @@ public class Autonomous extends OpMode implements cameraInfo
     void tagToTelemetry(AprilTagDetection detection)
     {
         telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
+        telemetry.addLine("-------------------------");
+        telemetry.addLine("Found tag " + detection.id + " in " + (coneTimer.getDeltaTime()) + " seconds");
+        telemetry.addLine("-------------------------");
     }
 }
 
