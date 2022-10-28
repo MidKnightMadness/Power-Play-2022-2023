@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.IrSeekerSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-@TeleOp
+@TeleOp(group = "test")
 @Disabled
 public class CoreRange extends OpMode{
     DistanceSensor distanceSensor;

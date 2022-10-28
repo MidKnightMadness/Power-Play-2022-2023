@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp
+@TeleOp(group = "test")
 @Disabled
 public class Motors extends LinearOpMode {
     Servo testServo;
