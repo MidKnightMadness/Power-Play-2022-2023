@@ -187,10 +187,10 @@ public class MecanumDrive {
         if (x <= 0){ // Getting displacement angle
             offAngle = Math.PI - offAngle; // Might wanna use taylor series to approximate atan later since calculation times are gonna be annoying
         }
-        double correctedX = Math.cos(gyro_radians - offAngle);
-        double correctedY = Math.sin(gyro_radians - offAngle);
+        double correctedX = Math.cos(-gyro_radians + offAngle);
+        double correctedY = Math.sin(-gyro_radians + offAngle);
 
-        correctedX = -correctedX;
+        correctedX = correctedX;
         correctedY = -correctedY;
 
         FRMotor.setPower(-correctedX + correctedY - rotate);

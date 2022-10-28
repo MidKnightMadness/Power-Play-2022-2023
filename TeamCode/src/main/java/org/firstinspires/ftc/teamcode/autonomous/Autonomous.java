@@ -1,4 +1,6 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.Autonomous;
+
+import static org.firstinspires.ftc.teamcode.highlevel.Master.odometryAlg;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -109,7 +111,8 @@ public class Autonomous extends OpMode implements cameraInfo
     @Override
     public void loop() {
         while (Math.abs(odometry.getXCoordinate() - 23.5) < .2 && Math.abs(odometry.getYCoordinate() - 23.5) < .2) {
-
+            //mecanum.driveTo(odometry.getXCoordinate(), odometry.getYCoordinate(),23.5, 23.5);
+            odometryAlg.updateOrientationAndLocation();
         }
     }
 
