@@ -32,9 +32,6 @@ public class Master {
     final static double robotLength = 15; // Change this to good notation pls
     final static double robotWidth = 15;
 
-    // Controller
-    public static Gamepad gamepad1;
-    public static Gamepad gamepad2;
 
     // Driver hub and Vuforia
     public static Telemetry telemetry;
@@ -92,10 +89,9 @@ public class Master {
 
 
     // Constructor to fully instantiate robot
-    public static void initEverything(){ // Lets finish this sometime lol
+    public Master(){ // Lets finish this sometime lol
         STARTING_POSITION = new Vector(DEFAULT_POSITION);
-        gamepad1 = hardwaremap.get(Gamepad.class, "Gamepad 1");
-        gamepad2 = hardwaremap.get(Gamepad.class, "Gamepad 2");
+
 
         drive = new MecanumDrive(hardwaremap);
         odometryAlg = new TestingOdometryAlgorithm(STARTING_POSITION);

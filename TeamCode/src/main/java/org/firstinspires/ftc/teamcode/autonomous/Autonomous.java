@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 
 import static org.firstinspires.ftc.teamcode.highlevel.Master.odometryAlg;
 
+/*
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -41,7 +42,7 @@ public class Autonomous extends OpMode implements cameraInfo
     AprilTagDetection tagOfInterest = null;
 
     OpenCvCamera camera;
-    AprilTagDetectionPipeline aprilTagDetectionPipeline;
+//    AprilTagDetectionPipeline aprilTagDetectionPipeline;
     Timer timer;
     MecanumDrive mecanum;
     Odometry odometry;
@@ -122,3 +123,4 @@ public class Autonomous extends OpMode implements cameraInfo
     }
 }
 
+*/
