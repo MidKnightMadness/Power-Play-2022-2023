@@ -97,12 +97,13 @@ public class MecanumDrive {
         BLMotor.setPower(0);
 
         //
-        /*FRMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.00, 0.05, 0.0, 0.0));
-        FLMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.00, 0.05, 0.0, 0.0));
-        BRMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.00, 0.05, 0.0, 0.0));
-        BLMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.00, 0.05, 0.0, 0.0));*/
+//        FRMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.00, 0.05, 0.0, 0.0));
+//        FLMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.00, 0.05, 0.0, 0.0));
+//        BRMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.00, 0.05, 0.0, 0.0));
+//        BLMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.00, 0.05, 0.0, 0.0));
 
 
+        MOTORS = new DcMotorEx[]{FLMotor, FRMotor, BLMotor, BRMotor};
 
         velocity = new Vector(NULL_POSITION);
         drive = new Vector(NULL);
@@ -127,17 +128,18 @@ public class MecanumDrive {
     }
 
     public void drive(double x, double y, double rotate) {
-        double max = Math.max((-x - y - rotate), Math.max((-x + y + rotate), Math.max((-x + y - rotate), (-x - y + rotate))));
-
-        FRMotor.setPower((-x - y - rotate) / max);
-        FLMotor.setPower((-x + y - rotate) / max);
-        BRMotor.setPower((-x + y + rotate) / max);
-        BLMotor.setPower((-x - y + rotate) /  max);
+        FRMotor.setPower(-x + y - rotate);
+        FLMotor.setPower( x + y + rotate);
+        BRMotor.setPower( x + y - rotate);
+        BLMotor.setPower(-x + y + rotate);
     }
 
     public void vectorDrive(double x, double y, double rotate, Telemetry telemetry) {
-//        odometryAlg.updateOrientationAndLocation();
-        translation = BACKWARDS.multiply(-y).add(RIGHT.multiply(x)).rotate(0.0); // -orientationAngle for rotation
+        telemetry.addData("backwards[0]", backwards[0]);
+        telemetry.addData("BACKWARDS.get()[0]", BACKWARDS.get()[0]);
+//        telemetry.addData("rightVector[0]", rightVector[0]);
+        telemetry.addData("RIGHT.get()[0", RIGHT.get()[0]);
+        translation = BACKWARDS.multiply(y).add(RIGHT.multiply(x));
         rotation = TURN_RIGHT.multiply(rotate);
         drive = translation.add(rotation);
 
@@ -148,11 +150,11 @@ public class MecanumDrive {
             }
         }
 
-        setPowers(MOTORS, drive.multiply(1.0 / maxValue));
+        setPowers(drive.multiply(1.0 / maxValue), telemetry);
 
-        telemetry.addLine("Right: " + (MAX * x) +  "Forwards: " + (MAX * -1 * -y));
-        //telemetry.addLine(position.get()[0] + ", " + position.get()[1]);
-        telemetry.update();
+        telemetry.addLine("Right: " + (MAX * x));
+        telemetry.addLine("Forwards: " + (MAX * -1 * -y));
+//        telemetry.addLine(position.get()[0] + ", " + position.get()[1]);
     }
 
 //    public void goToPosition(double targetXPosition, double targetYPosition, double power, double targetOrientation) {
@@ -171,37 +173,45 @@ public class MecanumDrive {
 //        }
 //    }
 
-    public void fieldOrientatedDrive(double x, double y, double rotate) {
-
+    public void fieldOrientatedDrive(double x, double y, double rotate, Telemetry telemetry) {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
         float pi = 3.1415926f;
-
         float gyro_degrees = angles.firstAngle;
         float gyro_radians = gyro_degrees * pi / 180;
 
-        x = x * Math.cos(gyro_radians) - y * Math.sin(gyro_radians);
-        y = x * Math.sin(gyro_radians) + y * Math.cos(gyro_radians);
+        y = -y;
+        double offAngle = 0;
 
-        double[] speeds = {
-                (x + y + rotate),
-                (x - y - rotate),
-                (x - y + rotate),
-                (x + y - rotate)
-        };
+        if (x != 0) offAngle = Math.atan(y / x);
 
-        double max = Math.abs(speeds[0]);
-        for (int i = 0; i < speeds.length; i++) {
-            if (max < Math.abs(speeds[i])) {
-                max = Math.abs(speeds[i]);
-            }
+        if (x <= 0){ // Getting displacement angle
+            offAngle = Math.PI - offAngle; // Might wanna use taylor series to approximate atan later since calculation times are gonna be annoying
         }
+        double correctedX = Math.cos(gyro_radians - offAngle);
+        double correctedY = Math.sin(gyro_radians - offAngle);
 
-        FLMotor.setPower(speeds[0]);
-        FRMotor.setPower(speeds[1]);
-        BLMotor.setPower(speeds[2]);
-        BRMotor.setPower(speeds[3]);
+        correctedX = -correctedX;
+        correctedY = -correctedY;
+
+        FRMotor.setPower(-correctedX + correctedY - rotate);
+        FLMotor.setPower( correctedX + correctedY + rotate);
+        BRMotor.setPower( correctedX + correctedY - rotate);
+        BLMotor.setPower(-correctedX + correctedY + rotate);
+
+        telemetry.addData("x2", correctedX);
+        telemetry.addData("y2", correctedY);
+        telemetry.addData("rotate", rotate);
+        telemetry.addData("First Angle", angles.firstAngle);
     }
+
+//    public void driveTo(Vector target, Vector currentPosition){ // Probably run this every few ticks
+//        displacement = target.add(currentPosition.multiply(-1)); // Normalize this when inputting for ratios
+//
+//        drive = RIGHT.multiply(displacement.normalize().get()[0])
+//                .add(BACKWARDS.multiply(displacement.normalize().get()[1]));
+//
+//        setPowers(MOTORS, drive);
+//    }
 
     public static double sensitivity = 5.0; // "Steepness" of gradient vectors
     public Vector correct(){
@@ -212,15 +222,15 @@ public class MecanumDrive {
         return translation.add(displacement);
     }
 
-    public void driveTo(double currentX, double currentY, double targetX, double targetY){ // Probably run this every few ticks
-        displacement.set(0, targetX - currentX);
-        displacement.set(1, targetY - currentY);
-
-        drive = RIGHT.multiply(displacement.normalize().get()[0])
-                .add(BACKWARDS.multiply(displacement.normalize().get()[1]));
-
-        setPowers(MOTORS, drive);
-    }
+//    public void driveTo(double currentX, double currentY, double targetX, double targetY){ // Probably run this every few ticks
+//        displacement.set(0, targetX - currentX);
+//        displacement.set(1, targetY - currentY);
+//
+//        drive = RIGHT.multiply(displacement.normalize().get()[0])
+//                .add(BACKWARDS.multiply(displacement.normalize().get()[1]));
+//
+//        setPowers(MOTORS, drive);
+//    }
 
     @Deprecated
     public static void setVelocities(DcMotorEx [] motors, Vector vector){
@@ -229,10 +239,17 @@ public class MecanumDrive {
         }
     }
 
-    public static void setPowers(DcMotorEx [] motors, Vector vector){
-        for(int i = 0; i < vector.get().length; i++){
-            motors[i].setPower(vector.get()[i]);
-        }
+    public void setPowers(Vector vector, Telemetry telemetry){
+//        for(int i = 0; i < motors.length; i++){
+//            motors[i].setPower(vector.get()[i]);
+//            telemetry.addData("powa", vector.get()[i]);
+//        }
+
+        FLMotor.setPower(vector.get()[0]);
+        FRMotor.setPower(vector.get()[1]);
+        BLMotor.setPower(vector.get()[2]);
+        BRMotor.setPower(vector.get()[3]);
+        telemetry.addData("powa", vector.get()[0]);
     }
 
     public void telemetry(Telemetry telemetry) {
