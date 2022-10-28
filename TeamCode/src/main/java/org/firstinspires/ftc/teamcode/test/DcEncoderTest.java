@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-@TeleOp(name="Dc Motor encoder", group="TeleOp")
+@TeleOp(name="Dc Motor encoder", group="Test")
 public class DcEncoderTest extends OpMode{
     DcMotorEx dcMotor;
     double vel;
