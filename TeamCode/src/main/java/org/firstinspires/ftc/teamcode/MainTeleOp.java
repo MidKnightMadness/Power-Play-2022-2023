@@ -35,7 +35,6 @@ public class MainTeleOp extends OpMode {
     @Override
     public void loop() {
         // DRIVER ASSIST
-
         if (gamepad1.right_bumper && !lastPressedDriveMode) {
             driveModeToggle = !driveModeToggle;
         }
