@@ -21,10 +21,10 @@ import java.lang.reflect.Modifier;
 //import org.firstinspires.ftc.teamcode.odometry.Odometry;
 
 public class MecanumDrive {
-    public static DcMotorEx FRMotor;
-    public static DcMotorEx FLMotor;
-    public static DcMotorEx BRMotor;
-    public static DcMotorEx BLMotor;
+    public DcMotorEx FRMotor;
+    public DcMotorEx FLMotor;
+    public DcMotorEx BRMotor;
+    public DcMotorEx BLMotor;
 
     Odometry odometry;
 

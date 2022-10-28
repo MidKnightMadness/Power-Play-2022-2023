@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.teamcode.highlevel.Master.drive;
-import static org.firstinspires.ftc.teamcode.highlevel.Master.initEverything;
+
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -18,7 +18,7 @@ public class MainTeleOp extends OpMode {
 
     @Override
     public void init() {
-        initEverything();
+
     }
 
     @Override
