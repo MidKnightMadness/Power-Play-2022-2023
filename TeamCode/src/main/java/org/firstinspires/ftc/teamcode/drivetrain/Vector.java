@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.drivetrain;
 
 public class Vector {
+    // Current issue: references for all objects within MecanumDrive not working
+    // Note that arrays are given by their reference address
+    
     private double [] vectorArray;
 
     public Vector(double [] vector){
