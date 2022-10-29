@@ -83,7 +83,7 @@ public class LinearSlideSeeSaw {
 
     public void goPointAt(Vector xyDisplacement){ // Make sure to input 3-Vector for targeted scoring position!!!!!!!! Will have to get angle of robot once it gets to junction, then correct a second time. This is not a one-time algorithm!!!
         // Actually does everything at the same time, will need to edit based on extension speed (want to minimize extended time for reliability purposes)
-        displacement = xyDisplacement.get(); // Screw it I don't wanna run the method over and over haha
+        displacement = xyDisplacement.getVector(); // Screw it I don't wanna run the method over and over haha
 
         // Move turntable, note that this will turn the turntable 180˚ back if target is behind the pivot, will need to account for ability to swing beyond 90˚ vertical (behind) later
         if(displacement[0] <= 0){ // Getting displacement angle

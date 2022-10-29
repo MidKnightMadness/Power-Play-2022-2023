@@ -134,15 +134,15 @@ public class MecanumDrive {
 
     public void vectorDrive(double x, double y, double rotate, Telemetry telemetry) {
         telemetry.addData("backwards[0]", backwards[0]);
-        telemetry.addData("BACKWARDS.get()[0]", BACKWARDS.get()[0]);
+        telemetry.addData("BACKWARDS.getVector()[0]", BACKWARDS.getVector()[0]);
 //        telemetry.addData("rightVector[0]", rightVector[0]);
-        telemetry.addData("RIGHT.get()[0", RIGHT.get()[0]);
+        telemetry.addData("RIGHT.getVector()[0", RIGHT.getVector()[0]);
         translation = BACKWARDS.multiply(y).add(RIGHT.multiply(x));
         rotation = TURN_RIGHT.multiply(rotate);
         drive = translation.add(rotation);
 
         double maxValue = 0.0;
-        for(double thisNum : drive.get()){
+        for(double thisNum : drive.getVector()){
             if(Math.abs(thisNum) > maxValue){
                 maxValue = thisNum;
             }
@@ -152,7 +152,7 @@ public class MecanumDrive {
 
         telemetry.addLine("Right: " + (MAX * x));
         telemetry.addLine("Forwards: " + (MAX * -1 * -y));
-//        telemetry.addLine(position.get()[0] + ", " + position.get()[1]);
+//        telemetry.addLine(position.getVector()[0] + ", " + position.getVector()[1]);
     }
 
 //    public void goToPosition(double targetXPosition, double targetYPosition, double power, double targetOrientation) {
@@ -203,8 +203,8 @@ public class MecanumDrive {
 //    public void driveTo(Vector target, Vector currentPosition){ // Probably run this every few ticks
 //        displacement = target.add(currentPosition.multiply(-1)); // Normalize this when inputting for ratios
 //
-//        drive = RIGHT.multiply(displacement.normalize().get()[0])
-//                .add(BACKWARDS.multiply(displacement.normalize().get()[1]));
+//        drive = RIGHT.multiply(displacement.normalize().getVector()[0])
+//                .add(BACKWARDS.multiply(displacement.normalize().getVector()[1]));
 //
 //        setPowers(MOTORS, drive);
 //    }
@@ -212,8 +212,8 @@ public class MecanumDrive {
     public static double sensitivity = 5.0; // "Steepness" of gradient vectors
     public Vector correct(){
         odometryAlg.updateOrientationAndLocation();
-        displacement.set(0, -sensitivity * ((currentPosition.get()[0] % 23.50) - 11.75));
-        displacement.set(1, -sensitivity * ((currentPosition.get()[1] % 23.50) - 11.75));
+        displacement.set(0, -sensitivity * ((currentPosition.getVector()[0] % 23.50) - 11.75));
+        displacement.set(1, -sensitivity * ((currentPosition.getVector()[1] % 23.50) - 11.75));
 
         return translation.add(displacement);
     }
@@ -222,30 +222,30 @@ public class MecanumDrive {
 //        displacement.set(0, targetX - currentX);
 //        displacement.set(1, targetY - currentY);
 //
-//        drive = RIGHT.multiply(displacement.normalize().get()[0])
-//                .add(BACKWARDS.multiply(displacement.normalize().get()[1]));
+//        drive = RIGHT.multiply(displacement.normalize().getVector()[0])
+//                .add(BACKWARDS.multiply(displacement.normalize().getVector()[1]));
 //
 //        setPowers(MOTORS, drive);
 //    }
 
     @Deprecated
     public static void setVelocities(DcMotorEx [] motors, Vector vector){
-        for(int i = 0; i < vector.get().length; i++){
-            motors[i].setVelocity(vector.get()[i] * MAX);
+        for(int i = 0; i < vector.getVector().length; i++){
+            motors[i].setVelocity(vector.getVector()[i] * MAX);
         }
     }
 
     public void setPowers(Vector vector, Telemetry telemetry){
 //        for(int i = 0; i < motors.length; i++){
-//            motors[i].setPower(vector.get()[i]);
-//            telemetry.addData("powa", vector.get()[i]);
+//            motors[i].setPower(vector.getVector()[i]);
+//            telemetry.addData("powa", vector.getVector()[i]);
 //        }
 
-        FLMotor.setPower(vector.get()[0]);
-        FRMotor.setPower(vector.get()[1]);
-        BLMotor.setPower(vector.get()[2]);
-        BRMotor.setPower(vector.get()[3]);
-        telemetry.addData("powa", vector.get()[0]);
+        FLMotor.setPower(vector.getVector()[0]);
+        FRMotor.setPower(vector.getVector()[1]);
+        BLMotor.setPower(vector.getVector()[2]);
+        BRMotor.setPower(vector.getVector()[3]);
+        telemetry.addData("powa", vector.getVector()[0]);
     }
 
     public void telemetry(Telemetry telemetry) {

@@ -124,7 +124,7 @@ public class Master {
             // if the back sensor reading is less than 24
             if (backDistance < 24) {
                 // if back sensor is pointing to bottom wall
-                if ((backDistance + 7.5) * Math.sin(currentOrientation - Math.PI/2) < 144 - currentPosition.get()[0])
+                if ((backDistance + 7.5) * Math.sin(currentOrientation - Math.PI/2) < 144 - currentPosition.getVector()[0])
                     y = (backDistance + 7.5) * Math.cos(currentOrientation - Math.PI/2);
                     // if back sensor is pointing to right wall
                 else
@@ -133,7 +133,7 @@ public class Master {
             // if right sensor reading is less than 24
             if (rightDistance < 24) {
                 // if right sensor is pointing to the right wall
-                if (x == -1 && (rightDistance + 7.5) * Math.sin(currentOrientation - Math.PI / 2) < 144 - currentPosition.get()[1])
+                if (x == -1 && (rightDistance + 7.5) * Math.sin(currentOrientation - Math.PI / 2) < 144 - currentPosition.getVector()[1])
                     x = 144 - (rightDistance + 7.5) * Math.cos(currentOrientation - Math.PI / 2);
                 else if (y == -1)
                     y = 144 - (rightDistance + 7.5) * Math.cos(Math.PI - currentOrientation);
@@ -141,7 +141,7 @@ public class Master {
             // if left sensor reading is less than 24
             if (leftDistance < 24) {
                 //if left sensor is pointing to bottom wall
-                if (y == -1 && (leftDistance + 7.5) * Math.sin(Math.PI - currentOrientation) < currentPosition.get()[0])
+                if (y == -1 && (leftDistance + 7.5) * Math.sin(Math.PI - currentOrientation) < currentPosition.getVector()[0])
                     y = (leftDistance + 7.5) * Math.cos(Math.PI - currentOrientation);
                 else if (x == -1)
                     x = (leftDistance + 7.5) * Math.cos(currentOrientation - Math.PI/2);
@@ -151,7 +151,7 @@ public class Master {
             // if back sensor reading is less than 24
             if (backDistance < 24) {
                 // if back sensor is pointing to right wall
-                if ((backDistance + 7.5) * Math.sin(currentOrientation - Math.PI) < 144 - currentPosition.get()[1])
+                if ((backDistance + 7.5) * Math.sin(currentOrientation - Math.PI) < 144 - currentPosition.getVector()[1])
                     x = 144 - (backDistance + 7.5) * Math.cos(currentOrientation - Math.PI);
                     // if back sensor is pointing to top wall
                 else
@@ -160,7 +160,7 @@ public class Master {
             //right sensor reading is less than 24
             if (rightDistance < 24) {
                 // if right sensor pointing to top wall
-                if (y == -1 && (rightDistance + 7.5) * Math.sin(currentOrientation - Math.PI) < currentPosition.get()[0])
+                if (y == -1 && (rightDistance + 7.5) * Math.sin(currentOrientation - Math.PI) < currentPosition.getVector()[0])
                     y = 144 - (rightDistance + 7.5) * Math.cos(currentOrientation - Math.PI);
                     // if right sensor is pointing to left wall
                 else if (x == -1)
@@ -169,7 +169,7 @@ public class Master {
             // if left sensor reading is less than 24
             if (leftDistance < 24) {
                 // if left sensor is pointing to right wall
-                if (x == -1 && (leftDistance + 7.5) * Math.sin(Math.PI * 3.0/2 - currentOrientation) < currentPosition.get()[1])
+                if (x == -1 && (leftDistance + 7.5) * Math.sin(Math.PI * 3.0/2 - currentOrientation) < currentPosition.getVector()[1])
                     x = 144 - (leftDistance + 7.5) * Math.cos(Math.PI * 3.0/2 - currentOrientation);
                     // if left sensor is pointing to bottom wall
                 else if (y == -1)
@@ -180,7 +180,7 @@ public class Master {
             // if back sensor reading is less than 24
             if (backDistance < 24) {
                 // if back sensor is pointing to top wall
-                if ((backDistance + 7.5) * Math.sin(currentOrientation - Math.PI * 3.0 / 2) < currentPosition.get()[0])
+                if ((backDistance + 7.5) * Math.sin(currentOrientation - Math.PI * 3.0 / 2) < currentPosition.getVector()[0])
                     y = 144 - (backDistance + 7.5) * Math.cos(currentOrientation - Math.PI * 3.0 / 2);
                     // if back sensor is pointing to left wall
                 else
@@ -189,7 +189,7 @@ public class Master {
             // right distance reading is less than 24
             if (rightDistance < 24) {
                 // if right sensor is pointing to left wall
-                if (x == -1 && (rightDistance + 7.5) * Math.sin(currentOrientation - Math.PI * 3.0/2) < currentPosition.get()[1])
+                if (x == -1 && (rightDistance + 7.5) * Math.sin(currentOrientation - Math.PI * 3.0/2) < currentPosition.getVector()[1])
                     x = (rightDistance + 7.5) * Math.cos(currentOrientation - Math.PI);
                     // if right sensor is pointing to bottom wall
                 else if (y == -1) {
@@ -199,7 +199,7 @@ public class Master {
             // if left sensor reading is less than 24
             if (leftDistance < 24) {
                 // if left sensor is pointing to top wall
-                if ( y == -1 && (leftDistance + 7.5) * Math.sin(2*Math.PI - currentOrientation) < 144 - currentPosition.get()[0])
+                if ( y == -1 && (leftDistance + 7.5) * Math.sin(2*Math.PI - currentOrientation) < 144 - currentPosition.getVector()[0])
                     y = 144 - (leftDistance + 7.5) * Math.cos(2*Math.PI - currentOrientation);
                     // if left sensor is pointing to right wall
                 else if (x == -1) {
@@ -211,7 +211,7 @@ public class Master {
             // if back distance reading is less than 24
             if (backDistance < 24) {
                 // if back sensor is pointing to left wall
-                if ((backDistance + 7.5) * Math.sin(currentOrientation) < currentPosition.get()[1])
+                if ((backDistance + 7.5) * Math.sin(currentOrientation) < currentPosition.getVector()[1])
                     x = (backDistance + 7.5) * Math.cos(currentOrientation);
                     // if back sensor is pointing to bottom wall
                 else
@@ -220,7 +220,7 @@ public class Master {
             // if right distance reading is less than 24
             if (rightDistance < 24) {
                 // if right sensor is pointing to bottom wall
-                if (y == -1 && (rightDistance + 7.5) * Math.sin(currentOrientation) < 144 - currentPosition.get()[0])
+                if (y == -1 && (rightDistance + 7.5) * Math.sin(currentOrientation) < 144 - currentPosition.getVector()[0])
                     y = (rightDistance + 7.5) * Math.cos(currentOrientation);
                     // if right sensor is pointing to right wall
                 else
@@ -230,7 +230,7 @@ public class Master {
             // if left sensor reading is less than 24
             if (leftDistance < 24) {
                 // if left sensor is pointing to left wall
-                if (x == -1 && (leftDistance + 7.5) * Math.sin(Math.PI/2 - currentOrientation) < 144 - currentPosition.get()[1])
+                if (x == -1 && (leftDistance + 7.5) * Math.sin(Math.PI/2 - currentOrientation) < 144 - currentPosition.getVector()[1])
                     x = (backDistance + 7.5) * Math.cos(Math.PI/2 - currentOrientation);
                 // if left sensor is pointing to top wall
                 if (y == -1) {
