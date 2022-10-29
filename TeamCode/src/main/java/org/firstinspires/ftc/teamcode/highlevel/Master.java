@@ -32,9 +32,6 @@ public class Master {
     final static double robotLength = 15; // Change this to good notation pls
     final static double robotWidth = 15;
 
-    // Controller
-    public static Gamepad gamepad1;
-    public static Gamepad gamepad2;
 
     // Driver hub and Vuforia
     public static Telemetry telemetry;
@@ -80,7 +77,7 @@ public class Master {
     private static final double [] DEFAULT_POSITION = {0, 0}; // Get actual robot starting coordinates in inches on Friday, bottom left relative to our starting side is origin
     // Probably write calibration method w/ tape and obj recognition
     public static Vector STARTING_POSITION;
-    public static MecanumDrive drive;
+
 
     // Manipulator
     GridSystem grid;
@@ -92,12 +89,11 @@ public class Master {
 
 
     // Constructor to fully instantiate robot
-    public static void initEverything(){ // Lets finish this sometime lol
+    public Master(){
         STARTING_POSITION = new Vector(DEFAULT_POSITION);
-        gamepad1 = hardwaremap.get(Gamepad.class, "Gamepad 1");
-        gamepad2 = hardwaremap.get(Gamepad.class, "Gamepad 2");
 
-        drive = new MecanumDrive(hardwaremap);
+
+
         odometryAlg = new TestingOdometryAlgorithm(STARTING_POSITION);
 
         manipulator1 = new LinearSlides();

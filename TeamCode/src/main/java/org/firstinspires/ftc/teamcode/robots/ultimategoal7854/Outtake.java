@@ -15,7 +15,7 @@ public class Outtake {
         shooterMotor = hardwareMap.get(DcMotorEx.class, "shooterMotor");
         feedServo = hardwareMap.get(Servo.class, "feedServo");
 
-        shooterMotor.setDirection(DcMotor.Direction.FORWARD);
+        shooterMotor.setDirection(DcMotor.Direction.REVERSE);
         shooterMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         shooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         shooterMotor.setVelocity(0);
@@ -24,7 +24,7 @@ public class Outtake {
     }
 
     public void start() {
-        shooterMotor.setVelocity(1800);
+        shooterMotor.setVelocity(2500);
     }
 
     public void stop() {
@@ -36,14 +36,15 @@ public class Outtake {
     }
 
     public void feed() {
-        feedServo.setPosition(0.6);
+        feedServo.setPosition(0.65);
+//        try {
+//            wait(2000);
+//        } catch (InterruptedException e) {
+////            e.printStackTrace();
+//        }
+    }
 
-        try {
-            wait(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
+    public void reset() {
         feedServo.setPosition(0.35);
     }
 
