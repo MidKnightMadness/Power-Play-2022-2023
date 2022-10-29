@@ -17,6 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.highlevel.Master.*;
 import org.firstinspires.ftc.teamcode.Odometry.Odometry;
 //import org.firstinspires.ftc.teamcode.odometry.Odometry;
+import static org.firstinspires.ftc.teamcode.highlevel.TeleOp1.*;
 
 public class MecanumDrive {
     public DcMotorEx FRMotor;
@@ -39,7 +40,6 @@ public class MecanumDrive {
     public static final double [] turnRight = {-1.0, -1.0, -1.0, -1.0};
     public Vector TURN_RIGHT = new Vector(turnRight);
 
-    public DcMotorEx [] MOTORS = {FLMotor, FRMotor, BLMotor, BRMotor};
 
     // Navigation
     public static final double [] NULL_POSITION = {0.0, 0.0};
@@ -61,7 +61,7 @@ public class MecanumDrive {
     private BNO055IMU imu;
 
     public MecanumDrive(HardwareMap hardwareMap) {
-        // Connect Motors
+//         Connect Motors
         FRMotor = hardwareMap.get(DcMotorEx.class, "FR");
         FLMotor = hardwareMap.get(DcMotorEx.class, "FL");
         BRMotor = hardwareMap.get(DcMotorEx.class, "BR");
@@ -102,8 +102,6 @@ public class MecanumDrive {
 //        BRMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.00, 0.05, 0.0, 0.0));
 //        BLMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.00, 0.05, 0.0, 0.0));
 
-
-        MOTORS = new DcMotorEx[]{FLMotor, FRMotor, BLMotor, BRMotor};
 
         velocity = new Vector(NULL_POSITION);
         drive = new Vector(NULL);
