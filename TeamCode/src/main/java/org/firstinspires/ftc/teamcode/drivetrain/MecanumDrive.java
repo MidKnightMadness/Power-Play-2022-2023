@@ -17,6 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.highlevel.Master.*;
 import org.firstinspires.ftc.teamcode.Odometry.Odometry;
 //import org.firstinspires.ftc.teamcode.odometry.Odometry;
+import static org.firstinspires.ftc.teamcode.highlevel.TeleOp1.*;
 
 public class MecanumDrive {
     public DcMotorEx FRMotor;
@@ -60,7 +61,7 @@ public class MecanumDrive {
     private BNO055IMU imu;
 
     public MecanumDrive(HardwareMap hardwareMap) {
-        // Connect Motors
+//         Connect Motors
         FRMotor = hardwareMap.get(DcMotorEx.class, "FR");
         FLMotor = hardwareMap.get(DcMotorEx.class, "FL");
         BRMotor = hardwareMap.get(DcMotorEx.class, "BR");
