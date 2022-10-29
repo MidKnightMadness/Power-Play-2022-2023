@@ -87,7 +87,7 @@ public class FF15385_TeleOp extends OpMode {
              gamepad1.dpad_up && sensorRangeM.getDistance(DistanceUnit.INCH) < 100) {
             drive.drive(0, (sensorRangeM.getDistance(DistanceUnit.INCH) - 12) / 10, 0);
         } else {
-            drive.drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x / 2); //drive function
+            drive.drive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x / 2); //drive function
         }
 
         //turns off surgical intake when catapult is moving back to the default position
@@ -125,78 +125,78 @@ public class FF15385_TeleOp extends OpMode {
         lastPressedCatapultLower = gamepad2.a || gamepad1.a;
 
         //CATAPULT FLAP
-        if (((gamepad2.left_trigger > 0) || (gamepad1.left_trigger > 0)) && !lastPressedFlap) {
-            flapToggle = !flapToggle;
-        }
-        if (flapToggle) {
-            catapult.flapOpen();
-        } else {
-            catapult.flapClose();
-        }
-        lastPressedFlap = (gamepad2.left_trigger > 0) || (gamepad1.left_trigger > 0);
+//        if (((gamepad2.left_trigger > 0) || (gamepad1.left_trigger > 0)) && !lastPressedFlap) {
+//            flapToggle = !flapToggle;
+//        }
+//        if (flapToggle) {
+//            catapult.flapOpen();
+//        } else {
+//            catapult.flapClose();
+//        }
+//        lastPressedFlap = (gamepad2.left_trigger > 0) || (gamepad1.left_trigger > 0);
 
         //CATAPULT HEAD
-        if ((gamepad2.dpad_down || gamepad1.dpad_down) && !lastPressedCatapultHeadLeft) {
-            catapultHeadLeftToggle = !catapultHeadLeftToggle;
-        }
-        if (catapultHeadLeftToggle) {
-            catapult.headFold();
-        } else {
-            catapult.headUnfold();
-        }
-        lastPressedCatapultHeadLeft = gamepad2.dpad_down || gamepad1.dpad_down;
+//        if ((gamepad2.dpad_down || gamepad1.dpad_down) && !lastPressedCatapultHeadLeft) {
+//            catapultHeadLeftToggle = !catapultHeadLeftToggle;
+//        }
+//        if (catapultHeadLeftToggle) {
+//            catapult.headFold();
+//        } else {
+//            catapult.headUnfold();
+//        }
+//        lastPressedCatapultHeadLeft = gamepad2.dpad_down || gamepad1.dpad_down;
 
         //TEAM SHIPPING ELEMENT LIFT
-        if (gamepad2.left_bumper && !lastPressedLiftMotor) {
-            liftMotorToggle = !liftMotorToggle;
-        }
-        if (liftMotorToggle) {
-            lift.lift();
-        } else {
-            lift.lower();
-        }
-        lastPressedLiftMotor = gamepad2.left_bumper;
-
-        if (gamepad2.left_trigger > 0 && !lastPressedLiftServo) {
-            liftServoToggle = !liftServoToggle;
-        }
-        if (liftMotorToggle) {
-            lift.open();
-        } else {
-            lift.close();
-        }
-        lastPressedLiftServo = (gamepad2.left_trigger > 0);
+//        if (gamepad2.left_bumper && !lastPressedLiftMotor) {
+//            liftMotorToggle = !liftMotorToggle;
+//        }
+//        if (liftMotorToggle) {
+//            lift.lift();
+//        } else {
+//            lift.lower();
+//        }
+//        lastPressedLiftMotor = gamepad2.left_bumper;
+//
+//        if (gamepad2.left_trigger > 0 && !lastPressedLiftServo) {
+//            liftServoToggle = !liftServoToggle;
+//        }
+//        if (liftMotorToggle) {
+//            lift.open();
+//        } else {
+//            lift.close();
+//        }
+//        lastPressedLiftServo = (gamepad2.left_trigger > 0);
 
         //SURGICAL TUBING INTAKE
-        if ((gamepad2.left_bumper || gamepad1.left_bumper) && !lastPressedSurgical) {
-            surgicalToggle = !surgicalToggle;
-        }
-        if (surgicalToggle) {
-            intake.surgicalTubingOn();
-        } else {
-            intake.surgicalTubingOff();
-        }
-        lastPressedSurgical = gamepad2.left_bumper || gamepad1.left_bumper;
+//        if ((gamepad2.left_bumper || gamepad1.left_bumper) && !lastPressedSurgical) {
+//            surgicalToggle = !surgicalToggle;
+//        }
+//        if (surgicalToggle) {
+//            intake.surgicalTubingOn();
+//        } else {
+//            intake.surgicalTubingOff();
+//        }
+//        lastPressedSurgical = gamepad2.left_bumper || gamepad1.left_bumper;
 
         //INTAKE HOLDER
-        if((gamepad2.right_trigger > 0 || gamepad1.right_trigger > 0) && !lastPressedIntakeHolder) {
-            intakeHolderToggle = !intakeHolderToggle;
-        }
-        if(intakeHolderToggle) {
-            intake.dropIntake();
-        } else {
-            intake.returnIntakeHolder();
-        }
-        lastPressedIntakeHolder = (gamepad2.right_trigger > 0 || gamepad1.right_trigger > 0);
+//        if((gamepad2.right_trigger > 0 || gamepad1.right_trigger > 0) && !lastPressedIntakeHolder) {
+//            intakeHolderToggle = !intakeHolderToggle;
+//        }
+//        if(intakeHolderToggle) {
+//            intake.dropIntake();
+//        } else {
+//            intake.returnIntakeHolder();
+//        }
+//        lastPressedIntakeHolder = (gamepad2.right_trigger > 0 || gamepad1.right_trigger > 0);
 
         //CAROUSEL SPINNER
-        if(gamepad2.dpad_left || gamepad1.dpad_left) {
-            carousel.spinRed();
-        } else if(gamepad2.dpad_right || gamepad1.dpad_right) {
-            carousel.spinBlue();
-        } else {
-            carousel.spinOff();
-        }
+//        if(gamepad2.dpad_left || gamepad1.dpad_left) {
+//            carousel.spinRed();
+//        } else if(gamepad2.dpad_right || gamepad1.dpad_right) {
+//            carousel.spinBlue();
+//        } else {
+//            carousel.spinOff();
+//        }
     }
 
     public void sensorTelemetry() {

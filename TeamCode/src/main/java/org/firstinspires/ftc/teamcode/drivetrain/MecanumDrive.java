@@ -70,8 +70,8 @@ public class MecanumDrive {
         // Set Directions
         FRMotor.setDirection(DcMotor.Direction.FORWARD);
         FLMotor.setDirection(DcMotor.Direction.REVERSE);
-        BRMotor.setDirection(DcMotor.Direction.FORWARD);
-        BLMotor.setDirection(DcMotor.Direction.REVERSE);
+        BRMotor.setDirection(DcMotor.Direction.REVERSE);
+        BLMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Set Motor Mode
         FRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -178,20 +178,18 @@ public class MecanumDrive {
         float pi = 3.1415926f;
         float gyro_degrees = angles.firstAngle;
         float gyro_radians = gyro_degrees * pi / 180;
-
-        y = -y;
         double offAngle = 0;
+//        y = -y;
+        offAngle = Math.atan(y / x);
 
-        if (x != 0) offAngle = Math.atan(y / x);
-
-        if (x <= 0){ // Getting displacement angle
+        if (x < 0){ // Getting displacement angle
             offAngle = Math.PI - offAngle; // Might wanna use taylor series to approximate atan later since calculation times are gonna be annoying
         }
         double correctedX = Math.cos(-gyro_radians + offAngle);
         double correctedY = Math.sin(-gyro_radians + offAngle);
 
         correctedX = correctedX;
-        correctedY = -correctedY;
+        correctedY = correctedY;
 
         FRMotor.setPower(-correctedX + correctedY - rotate);
         FLMotor.setPower( correctedX + correctedY + rotate);

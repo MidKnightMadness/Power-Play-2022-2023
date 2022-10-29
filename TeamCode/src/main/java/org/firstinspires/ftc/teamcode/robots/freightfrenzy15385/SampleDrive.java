@@ -45,10 +45,10 @@ public class SampleDrive {
     }
 
     public void drive(double x, double y, double rotation) {
-        FRMotor.setPower(-x - y - rotation);
-        FLMotor.setPower(-x + y - rotation);
-        BRMotor.setPower(-x + y + rotation);
-        BLMotor.setPower(-x - y + rotation);
+        FRMotor.setPower(-x + y - rotation);
+        FLMotor.setPower( x + y + rotation);
+        BRMotor.setPower( x + y - rotation);
+        BLMotor.setPower(-x + y + rotation);
     }
 
     public void telemetry(Telemetry telemetry) {
