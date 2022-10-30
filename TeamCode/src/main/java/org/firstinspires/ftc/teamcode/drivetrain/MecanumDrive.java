@@ -20,10 +20,10 @@ import org.firstinspires.ftc.teamcode.Odometry.Odometry;
 import static org.firstinspires.ftc.teamcode.highlevel.TeleOp1.*;
 
 public class MecanumDrive {
-    public DcMotorEx FRMotor;
-    public DcMotorEx FLMotor;
-    public DcMotorEx BRMotor;
-    public DcMotorEx BLMotor;
+//    public DcMotorEx FRMotor;
+//    public DcMotorEx FLMotor;
+//    public DcMotorEx BRMotor;
+//    public DcMotorEx BLMotor;
 
     Odometry odometry;
 
@@ -62,39 +62,39 @@ public class MecanumDrive {
 
     public MecanumDrive(HardwareMap hardwareMap) {
 //         Connect Motors
-        FRMotor = hardwareMap.get(DcMotorEx.class, "FR");
-        FLMotor = hardwareMap.get(DcMotorEx.class, "FL");
-        BRMotor = hardwareMap.get(DcMotorEx.class, "BR");
-        BLMotor = hardwareMap.get(DcMotorEx.class, "BL");
+//        FRMotor = hardwareMap.get(DcMotorEx.class, "FR");
+//        FLMotor = hardwareMap.get(DcMotorEx.class, "FL");
+//        BRMotor = hardwareMap.get(DcMotorEx.class, "BR");
+//        BLMotor = hardwareMap.get(DcMotorEx.class, "BL");
 
         // Set Directions
-        FRMotor.setDirection(DcMotor.Direction.FORWARD);
-        FLMotor.setDirection(DcMotor.Direction.REVERSE);
-        BRMotor.setDirection(DcMotor.Direction.REVERSE);
-        BLMotor.setDirection(DcMotor.Direction.FORWARD);
+//        FRMotor.setDirection(DcMotor.Direction.FORWARD);
+//        FLMotor.setDirection(DcMotor.Direction.REVERSE);
+//        BRMotor.setDirection(DcMotor.Direction.REVERSE);
+//        BLMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Set Motor Mode
-        FRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        FLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        BRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        BLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        FRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        FLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        BRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        BLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        FRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        FLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        FRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        FLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Set Zero Power Behavior
-        FRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        FLMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        BRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        BLMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        FRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        FLMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        BRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        BLMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Stops Motors on INIT
-        FRMotor.setPower(0);
-        FLMotor.setPower(0);
-        BRMotor.setPower(0);
-        BLMotor.setPower(0);
+//        FRMotor.setPower(0);
+//        FLMotor.setPower(0);
+//        BRMotor.setPower(0);
+//        BLMotor.setPower(0);
 
         //
 //        FRMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.00, 0.05, 0.0, 0.0));
@@ -126,17 +126,13 @@ public class MecanumDrive {
     }
 
     public void drive(double x, double y, double rotate) {
-        FRMotor.setPower(-x + y - rotate);
-        FLMotor.setPower( x + y + rotate);
-        BRMotor.setPower( x + y - rotate);
-        BLMotor.setPower(-x + y + rotate);
+//        FRMotor.setPower(-x + y - rotate);
+//        FLMotor.setPower( x + y + rotate);
+//        BRMotor.setPower( x + y - rotate);
+//        BLMotor.setPower(-x + y + rotate);
     }
 
     public void vectorDrive(double x, double y, double rotate, Telemetry telemetry) {
-        telemetry.addData("backwards[0]", backwards[0]);
-        telemetry.addData("BACKWARDS.getVector()[0]", BACKWARDS.getVector()[0]);
-//        telemetry.addData("rightVector[0]", rightVector[0]);
-        telemetry.addData("RIGHT.getVector()[0", RIGHT.getVector()[0]);
         translation = BACKWARDS.multiply(y).add(RIGHT.multiply(x));
         rotation = TURN_RIGHT.multiply(rotate);
         drive = translation.add(rotation);
@@ -149,9 +145,6 @@ public class MecanumDrive {
         }
 
         setPowers(drive.multiply(1.0 / maxValue), telemetry);
-
-        telemetry.addLine("Right: " + (MAX * x));
-        telemetry.addLine("Forwards: " + (MAX * -1 * -y));
 //        telemetry.addLine(position.getVector()[0] + ", " + position.getVector()[1]);
     }
 
@@ -189,10 +182,10 @@ public class MecanumDrive {
         correctedX = correctedX;
         correctedY = correctedY;
 
-        FRMotor.setPower(-correctedX + correctedY - rotate);
-        FLMotor.setPower( correctedX + correctedY + rotate);
-        BRMotor.setPower( correctedX + correctedY - rotate);
-        BLMotor.setPower(-correctedX + correctedY + rotate);
+//        FRMotor.setPower(-correctedX + correctedY - rotate);
+//        FLMotor.setPower( correctedX + correctedY + rotate);
+//        BRMotor.setPower( correctedX + correctedY - rotate);
+//        BLMotor.setPower(-correctedX + correctedY + rotate);
 
         telemetry.addData("x2", correctedX);
         telemetry.addData("y2", correctedY);
@@ -241,17 +234,16 @@ public class MecanumDrive {
 //            telemetry.addData("powa", vector.getVector()[i]);
 //        }
 
-        FLMotor.setPower(vector.getVector()[0]);
-        FRMotor.setPower(vector.getVector()[1]);
-        BLMotor.setPower(vector.getVector()[2]);
-        BRMotor.setPower(vector.getVector()[3]);
-        telemetry.addData("powa", vector.getVector()[0]);
+//        FLMotor.setPower(vector.getVector()[0]);
+//        FRMotor.setPower(vector.getVector()[1]);
+//        BLMotor.setPower(vector.getVector()[2]);
+//        BRMotor.setPower(vector.getVector()[3]);
     }
 
     public void telemetry(Telemetry telemetry) {
-        telemetry.addData("FR Motor Position", FRMotor.getCurrentPosition());
-        telemetry.addData("FL Motor Position", FLMotor.getCurrentPosition());
-        telemetry.addData("BR Motor Position", BRMotor.getCurrentPosition());
-        telemetry.addData("BL Motor Position", BLMotor.getCurrentPosition());
+//        telemetry.addData("FR Motor Position", FRMotor.getCurrentPosition());
+//        telemetry.addData("FL Motor Position", FLMotor.getCurrentPosition());
+//        telemetry.addData("BR Motor Position", BRMotor.getCurrentPosition());
+//        telemetry.addData("BL Motor Position", BLMotor.getCurrentPosition());
     }
 }
