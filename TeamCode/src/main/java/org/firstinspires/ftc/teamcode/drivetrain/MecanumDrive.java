@@ -51,6 +51,7 @@ public class MecanumDrive {
     private Vector velocity;
     private Vector drive;
     private Vector displacement;
+    private double [] auxillary;
 
     private Vector translation;
     private Vector rotation;
@@ -108,6 +109,7 @@ public class MecanumDrive {
         displacement = new Vector(new double [] {0.0, 0.0});
         translation = new Vector(NULL_POSITION);
         rotation = new Vector(NULL_POSITION);
+        auxillary = new double [4];
 
         time = 0; // Ticks ig
 
@@ -145,7 +147,12 @@ public class MecanumDrive {
         }
 
         setPowers(drive.multiply(1.0 / maxValue), telemetry);
-//        telemetry.addLine(position.getVector()[0] + ", " + position.getVector()[1]);
+
+        auxillary = drive.getVector();
+        // FLMotor.setPower(drive[0]);
+//        FRMotor.setPower(drive[1]);
+//        BLMotor.setPower(drive[2]);
+//        BRMotor.setPower(drive[3]);
     }
 
 //    public void goToPosition(double targetXPosition, double targetYPosition, double power, double targetOrientation) {
