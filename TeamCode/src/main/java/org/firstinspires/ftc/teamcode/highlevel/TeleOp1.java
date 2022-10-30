@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.drivetrain.*;
 // Encoders, Motors
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-@TeleOp
+@TeleOp(name = "main")
 public class TeleOp1 extends OpMode {
     MecanumDrive drive;
 
@@ -24,6 +24,7 @@ public class TeleOp1 extends OpMode {
         telemetry.addData("\"RIGHT\" reference: ", drive.RIGHT.getVector());
         telemetry.addData("\"BACKWARDS\" reference:\t\t[]", drive.BACKWARDS.getVector());
         telemetry.addData("\"TURN_RIGHT\" reference: \t[]", drive.TURN_RIGHT.getVector());
+        telemetry.update();
     }
 
     @Override
