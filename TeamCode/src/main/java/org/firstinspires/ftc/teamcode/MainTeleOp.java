@@ -10,11 +10,12 @@ import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
 import org.firstinspires.ftc.teamcode.manipulator.LinearSlides;
 import org.firstinspires.ftc.teamcode.manipulator.Turntable;
 import org.firstinspires.ftc.teamcode.Odometry.Odometry;
+import org.firstinspires.ftc.teamcode.odometry.TestingOdometryAlgorithm;
 
 @TeleOp(name="Main")
 public class MainTeleOp extends OpMode {
     MecanumDrive mecanum;
-    Odometry odometry;
+    TestingOdometryAlgorithm odometryAlg;
     LinearSlides lift;
     Turntable turntable;
 
