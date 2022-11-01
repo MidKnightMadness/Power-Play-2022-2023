@@ -9,6 +9,10 @@ public class Vector {
     public Vector(double [] vector){
         this.vectorArray = vector;
     }
+    
+    public Vector() {
+        this.vectorArray = new double[] {0, 0};
+    }
 
     public Vector(Vector vector){
         this.set(0, vector.getVector()[0]);

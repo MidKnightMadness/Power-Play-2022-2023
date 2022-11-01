@@ -15,19 +15,6 @@ import org.firstinspires.ftc.teamcode.common.Timer;
 
 import java.util.ArrayList;
 
-interface cameraInfo {
-    final double FEET_PER_METER = 3.28084;
-
-    final double fx = 578.272;
-    final double fy = 578.272;
-    final double cx = 402.145;
-    final double cy = 221.506;
-
-    // UNITS ARE METERS
-    double tagsize = 0.166;
-
-}
-
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
 public class Autonomous extends OpMode implements cameraInfo
 {
