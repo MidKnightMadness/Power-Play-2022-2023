@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.drivetrain;
 
+import static org.firstinspires.ftc.teamcode.highlevel.Master.invSqrt;
+
 public class Vector {
     // Current issue: references for all objects within MecanumDrive not working
     // Note that arrays are given by their reference address
@@ -81,7 +83,7 @@ public class Vector {
         double length = this.length();
 
         for(int i = 0; i < this.getVector().length; i++){
-            this.set(i, this.getVector()[i] / length);
+            this.set(i, invSqrt(this.getVector()[i]));
         }
 
         return this;
