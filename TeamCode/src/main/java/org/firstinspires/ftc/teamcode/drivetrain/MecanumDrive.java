@@ -8,6 +8,7 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -20,10 +21,10 @@ import org.firstinspires.ftc.teamcode.Odometry.Odometry;
 import static org.firstinspires.ftc.teamcode.highlevel.TeleOp1.*;
 
 public class MecanumDrive {
-//    public DcMotorEx FRMotor;
-//    public DcMotorEx FLMotor;
-//    public DcMotorEx BRMotor;
-//    public DcMotorEx BLMotor;
+    public DcMotorEx FRMotor;
+    public DcMotorEx FLMotor;
+    public DcMotorEx BRMotor;
+    public DcMotorEx BLMotor;
 
     Odometry odometry;
 
@@ -63,45 +64,45 @@ public class MecanumDrive {
 
     public MecanumDrive(HardwareMap hardwareMap) {
 //         Connect Motors
-//        FRMotor = hardwareMap.get(DcMotorEx.class, "FR");
-//        FLMotor = hardwareMap.get(DcMotorEx.class, "FL");
-//        BRMotor = hardwareMap.get(DcMotorEx.class, "BR");
-//        BLMotor = hardwareMap.get(DcMotorEx.class, "BL");
+        FRMotor = hardwareMap.get(DcMotorEx.class, "FR");
+        FLMotor = hardwareMap.get(DcMotorEx.class, "FL");
+        BRMotor = hardwareMap.get(DcMotorEx.class, "BR");
+        BLMotor = hardwareMap.get(DcMotorEx.class, "BL");
 
         // Set Directions
-//        FRMotor.setDirection(DcMotor.Direction.FORWARD);
-//        FLMotor.setDirection(DcMotor.Direction.REVERSE);
-//        BRMotor.setDirection(DcMotor.Direction.REVERSE);
-//        BLMotor.setDirection(DcMotor.Direction.FORWARD);
+        FRMotor.setDirection(DcMotor.Direction.FORWARD);
+        FLMotor.setDirection(DcMotor.Direction.REVERSE);
+        BRMotor.setDirection(DcMotor.Direction.REVERSE);
+        BLMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Set Motor Mode
-//        FRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        FLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        BRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        BLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        FRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        FLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        BRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        BLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-//        FRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        FLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        FRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        FLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Set Zero Power Behavior
-//        FRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        FLMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        BRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        BLMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FLMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BLMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Stops Motors on INIT
-//        FRMotor.setPower(0);
-//        FLMotor.setPower(0);
-//        BRMotor.setPower(0);
-//        BLMotor.setPower(0);
+        FRMotor.setPower(0);
+        FLMotor.setPower(0);
+        BRMotor.setPower(0);
+        BLMotor.setPower(0);
 
         //
-//        FRMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.00, 0.05, 0.0, 0.0));
-//        FLMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.00, 0.05, 0.0, 0.0));
-//        BRMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.00, 0.05, 0.0, 0.0));
-//        BLMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.00, 0.05, 0.0, 0.0));
+        FRMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.00, 0.05, 0.0, 0.0));
+        FLMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.00, 0.05, 0.0, 0.0));
+        BRMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.00, 0.05, 0.0, 0.0));
+        BLMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.00, 0.05, 0.0, 0.0));
 
 
         velocity = new Vector(NULL_POSITION);
@@ -146,13 +147,11 @@ public class MecanumDrive {
             }
         }
 
-        setPowers(drive.multiply(1.0 / maxValue), telemetry);
-
         auxillary = drive.getVector();
-        // FLMotor.setPower(drive[0]);
-//        FRMotor.setPower(drive[1]);
-//        BLMotor.setPower(drive[2]);
-//        BRMotor.setPower(drive[3]);
+        FLMotor.setPower(auxillary[0]);
+        FRMotor.setPower(auxillary[1]);
+        BLMotor.setPower(auxillary[2]);
+        BRMotor.setPower(auxillary[3]);
     }
 
 //    public void goToPosition(double targetXPosition, double targetYPosition, double power, double targetOrientation) {
