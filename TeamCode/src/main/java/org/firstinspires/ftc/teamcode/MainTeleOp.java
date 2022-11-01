@@ -1,15 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
-
-
-
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
 import org.firstinspires.ftc.teamcode.manipulator.LinearSlides;
 import org.firstinspires.ftc.teamcode.manipulator.Turntable;
-import org.firstinspires.ftc.teamcode.Odometry.Odometry;
+import org.firstinspires.ftc.teamcode.odometry.Odometry;
 import org.firstinspires.ftc.teamcode.odometry.TestingOdometryAlgorithm;
 
 @TeleOp(name="Main")
@@ -70,11 +67,12 @@ public class MainTeleOp extends OpMode {
 //
 //        // TELEMETRY
 //        odometry.telemetry(telemetry);
-        telemetry.addData("Left Stick X", gamepad1.left_stick_x);
+        if (driveModeToggle) telemetry.addLine("Drive Mode: Normal Drive");
+        else telemetry.addLine("Drive Mode: Field-Orientated Drive");
+        telemetry.addData("\nLeft Stick X", gamepad1.left_stick_x);
         telemetry.addData("Left Stick Y", gamepad1.left_stick_y);
         telemetry.addData("Right Stick X", gamepad1.right_stick_x);
         mecanum.telemetry(telemetry);
-        telemetry.addLine("Drive Mode: " + driveModeToggle);
         telemetry.update();
     }
 }

@@ -1,13 +1,12 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.odometry;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.odometry.Vector2;
 
 import java.util.concurrent.TimeUnit;
 
@@ -27,6 +26,7 @@ interface OdometryVariables {
 }
 
 @TeleOp
+@Disabled
 public class Odo extends OpMode implements OdometryVariables {
     double deltaTime = 0;
     double lastTime = 0;

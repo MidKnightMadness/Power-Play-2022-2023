@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.odometry;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -9,8 +8,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.concurrent.TimeUnit;
-import org.firstinspires.ftc.teamcode.odometry.OdometryVariables;
-
 
 
 public class Odometry implements OdometryVariables {
@@ -33,6 +30,8 @@ public class Odometry implements OdometryVariables {
     double topDistanceMoved;
 
     double rotationRadians;
+
+    double verticalWheelDistance = 0;
 
     ElapsedTime elapsedTime;
 
