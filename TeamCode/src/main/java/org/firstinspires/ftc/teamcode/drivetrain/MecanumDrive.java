@@ -54,6 +54,7 @@ public class MecanumDrive {
 
     private Orientation angles;
     private double gyro_degrees;
+    private double gyro_radians;
     private double correctedX;
     private double correctedY;
     private double offAngle;
@@ -127,8 +128,7 @@ public class MecanumDrive {
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        gyro_degrees = angles.firstAngle;
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
     }
 
     public void drive(double x, double y, double rotate) {
@@ -178,8 +178,14 @@ public class MecanumDrive {
 //    }
 
     public void fieldOrientatedDrive(double x, double y, double rotate, Telemetry telemetry) {
-        double gyro_radians = gyro_degrees * Math.PI / 180;
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+        gyro_degrees = angles.firstAngle;
+        gyro_radians = gyro_degrees * Math.PI / 180;
 //        y = -y;
+        if (x == 0 && y == 0) {
+            drive(0, 0, rotate);
+            return;
+        }
         offAngle = Math.atan(y / x);
 
         if (x < 0) { // Getting displacement angle
@@ -244,12 +250,14 @@ public class MecanumDrive {
     }
 
     public void telemetry(Telemetry telemetry) {
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
         telemetry.addData("FR Motor Position", FRMotor.getCurrentPosition());
         telemetry.addData("FL Motor Position", FLMotor.getCurrentPosition());
         telemetry.addData("BR Motor Position", BRMotor.getCurrentPosition());
         telemetry.addData("BL Motor Position", BLMotor.getCurrentPosition());
-        telemetry.addData("x2", correctedX);
-        telemetry.addData("y2", correctedY);
+        telemetry.addData("Corrected X", correctedX);
+        telemetry.addData("Corrected Y", correctedY);
         telemetry.addData("First Angle", angles.firstAngle);
+        telemetry.addData("Gyro radians", gyro_radians);
     }
 }

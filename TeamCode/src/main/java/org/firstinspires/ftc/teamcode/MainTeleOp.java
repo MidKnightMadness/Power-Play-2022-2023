@@ -67,8 +67,8 @@ public class MainTeleOp extends OpMode {
 //
 //        // TELEMETRY
 //        odometry.telemetry(telemetry);
-        if (driveModeToggle) telemetry.addLine("Drive Mode: Normal Drive");
-        else telemetry.addLine("Drive Mode: Field-Orientated Drive");
+        if (driveModeToggle) telemetry.addLine("Drive Mode: Field-Orientated Drive");
+        else telemetry.addLine("Drive Mode: Normal Drive");
         telemetry.addData("\nLeft Stick X", gamepad1.left_stick_x);
         telemetry.addData("Left Stick Y", gamepad1.left_stick_y);
         telemetry.addData("Right Stick X", gamepad1.right_stick_x);
