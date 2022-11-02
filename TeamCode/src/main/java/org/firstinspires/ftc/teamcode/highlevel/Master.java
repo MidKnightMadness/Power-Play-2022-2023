@@ -91,9 +91,6 @@ public class Master {
     // Constructor to fully instantiate robot
     public Master(){
         STARTING_POSITION = new Vector(DEFAULT_POSITION);
-
-
-
         odometryAlg = new TestingOdometryAlgorithm(STARTING_POSITION);
 
         manipulator1 = new LinearSlides();

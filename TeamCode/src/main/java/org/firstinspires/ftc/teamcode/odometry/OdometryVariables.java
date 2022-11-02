@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.odometry;
 
 // final variables
-@Deprecated
 public interface OdometryVariables {
     double wheelRadius = 1.417325;
     double wheelCircumference = wheelRadius * Math.PI * 2;

@@ -10,6 +10,7 @@ import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.firstinspires.ftc.teamcode.highlevel.Master;
 
 import org.firstinspires.ftc.teamcode.common.Timer;
 
@@ -28,17 +29,21 @@ public class Autonomous extends OpMode implements cameraInfo
     Timer coneTimer;
 
     MecanumDrive mecanum;
-    Odometry odometry;
+    // Odometry odometry;
+
+    // Master master;
 
     @Override
     public void init() {
         coneTimer = new Timer();
+        telemetry.addLine("Start time: " + coneTimer.getStartTime());
+
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
         telemetry.setAutoClear(false);
         mecanum = new MecanumDrive(hardwareMap);
-        odometry = new Odometry(hardwareMap);
+        // odometry = new Odometry(hardwareMap);
         camera.setPipeline(aprilTagDetectionPipeline);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
@@ -61,7 +66,6 @@ public class Autonomous extends OpMode implements cameraInfo
         coneTimer.getTime();
 
         ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
-
         if (currentDetections.size() != 0)
         {
             boolean tagFound = false;
@@ -79,7 +83,7 @@ public class Autonomous extends OpMode implements cameraInfo
 
             if (tagFound)
             {
-                telemetry.addLine("Tag of interest is in sight!\n\nLocation data:");
+                telemetry.addLine("Saw tag");
                 tagToTelemetry(tagOfInterest);
             }
         }
@@ -87,22 +91,34 @@ public class Autonomous extends OpMode implements cameraInfo
 
     @Override
     public void start() {
+        telemetry.setAutoClear(true);
+        telemetry.addData("Signal location", mostRecentDetection);
+        telemetry.addData("Signal finds", signalFinds);
+
+        telemetry.update();
 
     }
 
     @Override
     public void loop() {
-        while (Math.abs(odometry.getXCoordinate() - 23.5) < .2 && Math.abs(odometry.getYCoordinate() - 23.5) < .2) {
+        // telemetry.addData("Robot position", odometry.positionToString());
 
-        }
     }
 
     void tagToTelemetry(AprilTagDetection detection)
     {
         telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
         telemetry.addLine("-------------------------");
-        telemetry.addLine("Found tag " + detection.id + " in " + (coneTimer.getDeltaTime()) + " seconds");
+        telemetry.addLine(String.format("Found tag %d in %.3f seconds", detection.id, coneTimer.getDeltaTime()));
         telemetry.addLine("-------------------------");
+    }
+
+    void getCone() {
+
+    }
+
+    void scoreCone() {
+
     }
 }
 
