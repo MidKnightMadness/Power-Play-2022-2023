@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.drivetrain;
 
 import static org.firstinspires.ftc.teamcode.highlevel.Master.currentPosition;
+import static org.firstinspires.ftc.teamcode.highlevel.Master.invSqrt;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.odometryAlg;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -18,6 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.highlevel.Master.*;
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
 //import org.firstinspires.ftc.teamcode.odometry.Odometry;
+import static org.firstinspires.ftc.teamcode.highlevel.Master.telemetry;
 import static org.firstinspires.ftc.teamcode.highlevel.TeleOp1.*;
 
 public class MecanumDrive {
@@ -224,15 +226,11 @@ public class MecanumDrive {
         return translation.add(displacement);
     }
 
-//    public void driveTo(double currentX, double currentY, double targetX, double targetY){ // Probably run this every few ticks
-//        displacement.set(0, targetX - currentX);
-//        displacement.set(1, targetY - currentY);
-//
-//        drive = RIGHT.multiply(displacement.normalize().getVector()[0])
-//                .add(BACKWARDS.multiply(displacement.normalize().getVector()[1]));
-//
-//        setPowers(MOTORS, drive);
-//    }
+    public void driveTo(double currentX, double currentY, double targetX, double targetY, double targetAngle, double currentAngle){ // Probably run this every few ticks
+        if(invSqrt(((targetAngle) * (currentAngle)) + ((targetX - currentX) * (targetX - currentX)) + ((targetY - currentY) * (targetY - currentY))) < 100) {
+            vectorDrive(targetX - currentX, targetY - currentY, targetAngle - currentAngle, telemetry);
+        }
+    }
 
     @Deprecated
     public static void setVelocities(DcMotorEx [] motors, Vector vector){
@@ -242,15 +240,10 @@ public class MecanumDrive {
     }
 
     public void setPowers(Vector vector, Telemetry telemetry){
-//        for(int i = 0; i < motors.length; i++){
-//            motors[i].setPower(vector.getVector()[i]);
-//            telemetry.addData("powa", vector.getVector()[i]);
-//        }
-
-//        FLMotor.setPower(vector.getVector()[0]);
-//        FRMotor.setPower(vector.getVector()[1]);
-//        BLMotor.setPower(vector.getVector()[2]);
-//        BRMotor.setPower(vector.getVector()[3]);
+        FLMotor.setPower(vector.getVector()[0]);
+        FRMotor.setPower(vector.getVector()[1]);
+        BLMotor.setPower(vector.getVector()[2]);
+        BRMotor.setPower(vector.getVector()[3]);
     }
 
     public void telemetry(Telemetry telemetry) {

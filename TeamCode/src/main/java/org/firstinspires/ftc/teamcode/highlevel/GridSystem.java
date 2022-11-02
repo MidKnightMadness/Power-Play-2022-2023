@@ -107,10 +107,16 @@ public class GridSystem {
         switch(djskjsjksskjkj2){
             case 1:
                 // (23.50, 23.50) relative coords
-                auxillary2d[0] = ((int) (auxillary2d[0] / 23.50)) - 1; // Floors to highest x and y coordinates in box, then converts into list index by subtracting 1
-                auxillary2d[1] = ((int) (auxillary2d[1] / 23.50)) - 1;
+                auxillary2d[0] = (int) (auxillary2d[0] / 23.50); // Floors to highest x and y coordinates in box, then converts into list index by subtracting 1
+                auxillary2d[1] = (int) (auxillary2d[1] / 23.50);
 
-                djskjsjksskjkj = junctionHeights [(((int) (1.0 + (auxillary2d[1] / 23.50))) - 1)][((int) (1.0 + (auxillary2d[0] / 23.50))) - 1] - ROOT_HEIGHT;
+                if(auxillary[0] < 5 && auxillary2d[1] < 5){
+                    djskjsjksskjkj = junctionHeights [(int) auxillary2d[0]][(int) auxillary2d[1]] - ROOT_HEIGHT;
+                }else{
+                    auxillary3d[1] = 0.0;
+                    auxillary3d[2] = 0.0;
+                    break;
+                }
 
                 // Making auxillary2d displacement to junction
                 auxillary2d = currentPosition.getVector();
@@ -118,11 +124,13 @@ public class GridSystem {
                 auxillary2d[1] = 23.50 - (auxillary2d[1] % 23.50);
 
                 auxillary3d[1] = Math.atan(djskjsjksskjkj * invSqrt((auxillary2d[0] * auxillary2d[0]) + (auxillary2d[1] * auxillary2d[1]))); // Angle, note that this doesn't go beyond 90˚, no need to flip
-
                 auxillary3d[2] = Math.sqrt((djskjsjksskjkj * djskjsjksskjkj) + (auxillary2d[0] * auxillary2d[0]) + (auxillary2d[1] * auxillary2d[1]));
+
                 break;
             case 2:
                 // (0.00 , 23.50) relative coords
+                auxillary2d[0] = ((int) (auxillary2d[0] / 23.50)) - 1;
+
                 break;
             case 3:
                 // (0.00, 0.00) relative coords
