@@ -118,7 +118,7 @@ public class GridSystem {
                     break;
                 }
 
-                // Making auxillary2d displacement to junction
+                // Making auxillary2d vertical displacement to junction
                 auxillary2d = currentPosition.getVector();
                 auxillary2d[0] = 23.50 - (auxillary2d[0] % 23.50);
                 auxillary2d[1] = 23.50 - (auxillary2d[1] % 23.50);
@@ -130,6 +130,23 @@ public class GridSystem {
             case 2:
                 // (0.00 , 23.50) relative coords
                 auxillary2d[0] = ((int) (auxillary2d[0] / 23.50)) - 1;
+                auxillary2d[1] = (int) (auxillary2d[1] / 23.50);
+
+                if(auxillary[0] < 5 && auxillary2d[1] < 5){
+                    djskjsjksskjkj = junctionHeights [(int) auxillary2d[0]][(int) auxillary2d[1]] - ROOT_HEIGHT;
+                }else{
+                    auxillary3d[1] = 0.0;
+                    auxillary3d[2] = 0.0;
+                    break;
+                }
+
+                // Making auxillary2d displacement to junction
+                auxillary2d = currentPosition.getVector();
+                auxillary2d[0] = auxillary2d[0] % 23.50;
+                auxillary2d[1] = 23.50 - (auxillary2d[1] % 23.50);
+
+                auxillary3d[1] = Math.atan(djskjsjksskjkj * invSqrt((auxillary2d[0] * auxillary2d[0]) + (auxillary2d[1] * auxillary2d[1])));
+                auxillary3d[2] = Math.sqrt((djskjsjksskjkj * djskjsjksskjkj) + (auxillary2d[0] * auxillary2d[0]) + (auxillary2d[1] * auxillary2d[1]));
 
                 break;
             case 3:

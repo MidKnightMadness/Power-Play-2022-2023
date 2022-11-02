@@ -163,22 +163,6 @@ public class MecanumDrive {
         BRMotor.setPower(auxillary[3]);
     }
 
-//    public void goToPosition(double targetXPosition, double targetYPosition, double power, double targetOrientation) {
-//        double distanceToXTarget = targetXPosition - odometry.getXCoordinate();
-//        double distanceToYTarget = targetYPosition - odometry.getYCoordinate();
-//
-//        double distance = Math.hypot(distanceToXTarget, distanceToYTarget);
-//
-//        while(FRMotor.isBusy() && FLMotor.isBusy() && BRMotor.isBusy() && BLMotor.isBusy()) {
-//            distanceToXTarget = targetXPosition - odometry.getXCoordinate();
-//            distanceToYTarget = targetYPosition - odometry.getYCoordinate();
-//
-//            double robotAngle = Math.toDegrees(Math.atan2(distanceToXTarget, distanceToYTarget));
-//
-//
-//        }
-//    }
-
     public void fieldOrientatedDrive(double x, double y, double rotate, Telemetry telemetry) {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         float pi = 3.1415926f;
@@ -208,14 +192,6 @@ public class MecanumDrive {
         telemetry.addData("First Angle", angles.firstAngle);
     }
 
-//    public void driveTo(Vector target, Vector currentPosition){ // Probably run this every few ticks
-//        displacement = target.add(currentPosition.multiply(-1)); // Normalize this when inputting for ratios
-//
-//        drive = RIGHT.multiply(displacement.normalize().getVector()[0])
-//                .add(BACKWARDS.multiply(displacement.normalize().getVector()[1]));
-//
-//        setPowers(MOTORS, drive);
-//    }
 
     public static double sensitivity = 5.0; // "Steepness" of gradient vectors
     public Vector correct(){
@@ -227,8 +203,8 @@ public class MecanumDrive {
     }
 
     public void driveTo(double currentX, double currentY, double targetX, double targetY, double targetAngle, double currentAngle){ // Probably run this every few ticks
-        if(invSqrt(((targetAngle) * (currentAngle)) + ((targetX - currentX) * (targetX - currentX)) + ((targetY - currentY) * (targetY - currentY))) < 100) {
-            vectorDrive(targetX - currentX, targetY - currentY, targetAngle - currentAngle, telemetry);
+        if(invSqrt(((targetAngle) * (currentAngle)) + ((targetX - currentX) * (targetX - currentX)) + ((targetY - currentY) * (targetY - currentY))) < 10) {
+            fieldOrientatedDrive(targetX - currentX, targetY - currentY, targetAngle - currentAngle, telemetry);
         }
     }
 
