@@ -202,9 +202,10 @@ public class MecanumDrive {
         return translation.add(displacement);
     }
 
-    public void driveTo(double currentX, double currentY, double targetX, double targetY, double targetAngle, double currentAngle){ // Probably run this every few ticks
-        if(invSqrt(((targetAngle) * (currentAngle)) + ((targetX - currentX) * (targetX - currentX)) + ((targetY - currentY) * (targetY - currentY))) < 10) {
-            fieldOrientatedDrive(targetX - currentX, targetY - currentY, targetAngle - currentAngle, telemetry);
+
+    public void driveTo(double targetX, double targetY, double targetAngle){ // Probably run this every few ticks
+        if(invSqrt(((targetAngle) * (odometryAlg.orientationAngle)) + ((targetX - currentPosition.getVector()[0]) * (targetX - currentPosition.getVector()[0])) + ((targetY - currentPosition.getVector()[1]) * (targetY - currentPosition.getVector()[1]))) < 10) {
+            fieldOrientatedDrive(targetX - currentPosition.getVector()[0], targetY - currentPosition.getVector()[1], targetAngle - odometryAlg.orientationAngle, telemetry);
         }
     }
 
