@@ -76,7 +76,6 @@ public class Master {
     static double [] auxillary;
     public static final double MAX_SCORING_RADIUS = 19.0; // Inches
 
-
     private static final double [] DEFAULT_POSITION = {0, 0}; // Get actual robot starting coordinates in inches on Friday, bottom left relative to our starting side is origin
     // Probably write calibration method w/ tape and obj recognition
     public static Vector STARTING_POSITION;
