@@ -25,4 +25,18 @@ public interface fieldData {
         { new Vector2(fposx, 12), new Vector2(fposx, 36), new Vector2(fposx, 60) },
         { new Vector2(fposx, 132), new Vector2(fposx, 108), new Vector2(fposx, 84) },
     };
+
+    public Vector2[] coneStackLocations = {
+            new Vector2(60, 2),
+            new Vector2(60, 142),
+            new Vector2(84, 2),
+            new Vector2(84, 142),
+    };
+
+    public Vector2[] scoringLocations = {
+            new Vector2(60, 24),
+            new Vector2(60, 96),
+            new Vector2(84, 24),
+            new Vector2(84, 96)
+    };
 }
