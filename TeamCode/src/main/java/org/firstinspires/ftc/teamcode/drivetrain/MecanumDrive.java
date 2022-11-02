@@ -30,16 +30,16 @@ public class MecanumDrive {
 
     // Order for power values: FL, FR, RL, RR
     // Make sure to normalize power values 0 to 1
-    public static final double [] NULL = {0.0, 0.0, 0.0, 0.0};
+    public static double [] NULL;
 
-    public static final double [] backwards = {-1.0, 1,0, -1.0, 1.0};
-    public Vector BACKWARDS = new Vector(backwards);
+    public static double [] backwards;
+    public Vector BACKWARDS;
 
-    public static final double [] rightVector = {1.0, 1.0, -1.0, -1.0};
-    public Vector RIGHT = new Vector(rightVector);
+    public static double [] rightVector;
+    public Vector RIGHT;
 
     public static final double [] turnRight = {-1.0, -1.0, -1.0, -1.0};
-    public Vector TURN_RIGHT = new Vector(turnRight);
+    public Vector TURN_RIGHT;
 
 
     // Navigation
@@ -104,6 +104,9 @@ public class MecanumDrive {
         BRMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.00, 0.05, 0.0, 0.0));
         BLMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.00, 0.05, 0.0, 0.0));
 
+        NULL = new double[] {0.0, 0.0, 0.0, 0.0};
+        backwards = new double [] {-1.0, 1,0, -1.0, 1.0};
+        rightVector = new double [] {1.0, 1.0, -1.0, -1.0};
 
         velocity = new Vector(NULL_POSITION);
         drive = new Vector(NULL);
@@ -111,6 +114,10 @@ public class MecanumDrive {
         translation = new Vector(NULL_POSITION);
         rotation = new Vector(NULL_POSITION);
         auxillary = new double [4];
+
+        BACKWARDS = new Vector(backwards);
+        RIGHT = new Vector(rightVector);
+        TURN_RIGHT = new Vector(turnRight);
 
         time = 0; // Ticks ig
 

@@ -73,6 +73,9 @@ public class Master {
     public static double encoder1Reading;
     public static double encoder2Reading;
     public static double encoder3Reading;
+    static double [] auxillary;
+    public static final double MAX_SCORING_RADIUS = 19.0; // Inches
+
 
     private static final double [] DEFAULT_POSITION = {0, 0}; // Get actual robot starting coordinates in inches on Friday, bottom left relative to our starting side is origin
     // Probably write calibration method w/ tape and obj recognition
@@ -91,6 +94,9 @@ public class Master {
     // Constructor to fully instantiate robot
     public Master(){
         STARTING_POSITION = new Vector(DEFAULT_POSITION);
+        auxillary = new double[]{0.0, 0.0};
+
+
         odometryAlg = new TestingOdometryAlgorithm(STARTING_POSITION);
 
         manipulator1 = new LinearSlides();
@@ -239,4 +245,10 @@ public class Master {
         return new Vector(new double[] {x, y});
     }
 
+    public static double [] exponentialControls(double input1, double input2){ //  For controller, goes faster with larger input
+        auxillary[0] = input1*input1*input1;
+        auxillary[1] = input2*input2*input2;
+
+        return auxillary;
+    }
 }

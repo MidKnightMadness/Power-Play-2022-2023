@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.highlevel.Master;
 
 import static org.firstinspires.ftc.teamcode.highlevel.Master.invSqrt;
+import static org.firstinspires.ftc.teamcode.highlevel.Master.odometryAlg;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.turntable;
 import static org.firstinspires.ftc.teamcode.manipulator.Turntable.turntableAngle; // Remove this in final version
 
@@ -101,7 +102,7 @@ public class LinearSlides {
          / |
         /\_| <- Angle
          */
-        this.pivotTo(Math.atan(displacement[3] / invSqrt(displacement[0]*displacement[0] + displacement[1]*displacement[1])));
+        this.pivotTo(Math.atan(displacement[3] / invSqrt(displacement[0]*displacement[0] + displacement[1]*displacement[1])) - odometryAlg.orientationAngle);
 
         // Extend
         this.extendTo(Math.sqrt(displacement[0]*displacement[0] + displacement[1]*displacement[1] + displacement[2]*displacement[2]));

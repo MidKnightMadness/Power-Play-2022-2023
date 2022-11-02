@@ -97,6 +97,15 @@ public class TestingOdometryAlgorithm extends Master {
         orientation.rotate(angleChange / 2);
         normalOrientation.rotate(angleChange / 2);
 
+
+        // Making sure it's positive
+        while(orientationAngle < 0){
+            orientationAngle += Math.PI;
+        }
+
+        // Making sure its between 0 and 2π
+        orientationAngle %= 2 * Math.PI;
+
         Master.currentPosition.add(travel);
     }
 }
