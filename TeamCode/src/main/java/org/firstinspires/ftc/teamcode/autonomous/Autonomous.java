@@ -31,9 +31,10 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData
     Timer coneTimer;
 
     MecanumDrive mecanum;
-    // Odometry odometry;
+    Odometry odometry;
+    MecanumDrive mecanumDrive;
 
-    // Master master;
+    Master master;
 
     @Override
     public void init() {
@@ -91,6 +92,9 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData
         }
     }
 
+    double signalLocationX;
+    double signalLocationY;
+
     @Override
     public void start() {
         telemetry.setAutoClear(true);
@@ -100,15 +104,20 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData
 
         telemetry.update();
 
+        signalLocationX = signalLocations[startingPos][mostRecentDetection - 1].x;
+        signalLocationY = signalLocations[startingPos][mostRecentDetection - 1].y;
     }
 
     @Override
     public void loop() {
         telemetry.addData("Signal #", mostRecentDetection);
-        telemetry.addData("Signal finds", signalFinds[0], signalFinds[1], signalFinds[2]);
+        telemetry.addData("Signal finds", "" + signalFinds[0], signalFinds[1], signalFinds[2]);
         telemetry.addData("Signal location", signalLocations[startingPos][mostRecentDetection - 1]);
         telemetry.update();
-
+        double time = coneTimer.getTime();
+        if (time > 25) {
+            goToSignalLocation((int)odometry.getXCoordinate(), (int) odometry.getYCoordinate(), (int) signalLocationX, (int) signalLocationY);
+        }
     }
 
     void tagToTelemetry(AprilTagDetection detection)
@@ -124,6 +133,24 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData
     }
 
     void scoreCone() {
+
+    }
+
+    void goToSignalLocation(int posX, int posY, int targetX, int targetY) {
+        // go to center of square
+        int directionX = posX < targetX ? 1 : 0;
+        int centerX = (int) (Math.floor(posX / 12d) + directionX) * 12;
+
+        int directionY = posY < targetY ? 1 : 0;
+        int centerY = (int) (Math.floor(posY / 12d) + directionY) * 12;
+
+        goToPosition(centerX, posY);
+        goToPosition(centerX, centerY);
+        goToPosition(centerX, targetY);
+        goToPosition(targetX, targetY);
+    }
+
+    void goToPosition(int target, int gartet) {
 
     }
 }
