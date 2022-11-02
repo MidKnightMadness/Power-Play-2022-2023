@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Odometry;
+package org.firstinspires.ftc.teamcode.odometry;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,32 +9,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.concurrent.TimeUnit;
-import org.firstinspires.ftc.teamcode.Odometry.*;
-
-// final variables
-@Deprecated
-interface OdometryVariables {
-    double wheelRadius = 1.417325;
-    double wheelCircumference = wheelRadius * Math.PI * 2;
-
-    int ticksPerRotation = 8192;
-    double inPerTick = wheelCircumference / ticksPerRotation;
-
-    org.firstinspires.ftc.teamcode.odometry.Vector2 leftWheeelPosition = new org.firstinspires.ftc.teamcode.odometry.Vector2(-3, 0);
-    org.firstinspires.ftc.teamcode.odometry.Vector2 rightWheelPosition = new org.firstinspires.ftc.teamcode.odometry.Vector2(3, 0);
-    org.firstinspires.ftc.teamcode.odometry.Vector2 topWheelPosition = new org.firstinspires.ftc.teamcode.odometry.Vector2(0, 5);
-
-    double lateralWheelDistance = 10;
-    double verticalWheelDistance = 5;
-
-}
+import org.firstinspires.ftc.teamcode.odometry.OdometryVariables;
 
 public class Odometry implements OdometryVariables {
     double deltaTime = 0;
     double lastTime = 0;
 
-    public org.firstinspires.ftc.teamcode.odometry.Vector2 position = new org.firstinspires.ftc.teamcode.odometry.Vector2();
-    public org.firstinspires.ftc.teamcode.odometry.Vector2 velocity = new org.firstinspires.ftc.teamcode.odometry.Vector2();
+    public org.firstinspires.ftc.teamcode.odometry.Vector2 position = new Vector2();
+    public org.firstinspires.ftc.teamcode.odometry.Vector2 velocity = new Vector2();
 
     int lastLeftTicks = 0;
     int deltaLeftTicks = 0;
@@ -128,6 +110,7 @@ public class Odometry implements OdometryVariables {
         return position.y;
     }
 
+    public String positionToString() {return String.format("(%f, %f)", position.x, position.y); }
     public void telemetry(Telemetry telemetry) {
         telemetry.addLine("Position " + position.toString());
         telemetry.addLine("Velocity " + velocity.toString());

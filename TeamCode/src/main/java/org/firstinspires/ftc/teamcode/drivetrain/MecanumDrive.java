@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.highlevel.Master.*;
-import org.firstinspires.ftc.teamcode.Odometry.Odometry;
+import org.firstinspires.ftc.teamcode.odometry.Odometry;
 //import org.firstinspires.ftc.teamcode.odometry.Odometry;
 import static org.firstinspires.ftc.teamcode.highlevel.TeleOp1.*;
 
@@ -206,14 +206,14 @@ public class MecanumDrive {
         telemetry.addData("First Angle", angles.firstAngle);
     }
 
-    public void driveTo(Vector target, Vector currentPosition){ // Probably run this every few ticks
-        displacement = target.add(currentPosition.multiply(-1)); // Normalize this when inputting for ratios
-
-        drive = RIGHT.multiply(displacement.normalize().getVector()[0])
-                .add(BACKWARDS.multiply(displacement.normalize().getVector()[1]));
-
-
-    }
+//    public void driveTo(Vector target, Vector currentPosition){ // Probably run this every few ticks
+//        displacement = target.add(currentPosition.multiply(-1)); // Normalize this when inputting for ratios
+//
+//        drive = RIGHT.multiply(displacement.normalize().getVector()[0])
+//                .add(BACKWARDS.multiply(displacement.normalize().getVector()[1]));
+//
+//        setPowers(MOTORS, drive);
+//    }
 
     public static double sensitivity = 5.0; // "Steepness" of gradient vectors
     public Vector correct(){

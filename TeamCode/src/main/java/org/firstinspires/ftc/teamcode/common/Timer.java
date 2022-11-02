@@ -2,17 +2,19 @@ package org.firstinspires.ftc.teamcode.common;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import java.util.EventListener;
 import java.util.concurrent.TimeUnit;
 
 public class Timer {
     public ElapsedTime elapsedTime;
-
-    private double lastTime = elapsedTime.startTime();
+    private double lastTime;
     private double deltaTime = 0;
     private double currentTime = lastTime;
 
     public Timer() {
         elapsedTime = new ElapsedTime();
+        lastTime = elapsedTime.startTime();
+
     }
 
     public double getTime() {
@@ -28,7 +30,7 @@ public class Timer {
     }
 
     public double getStartTime() {
-        return elapsedTime.startTime();
+        return elapsedTime.startTime() / 10000d;
     }
 
     public double resetTime() {

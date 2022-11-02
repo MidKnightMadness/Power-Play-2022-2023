@@ -120,9 +120,9 @@ public class LinearSlides {
     public void pivotTo(double targetAngle){ // Radians
         seeSawMotor.setTargetPosition((int) (targetAngle / SEESAW_OVERALL_RATIO));
         if(seeSawMotor.getTargetPosition() < seeSawMotor.getCurrentPosition()){ // Remember, motor is geared so direction reversed
-            seeSawMotor.setPower(-1.0); // To go down, set power to negative, might have to reverse this based on motor packaging
+            seeSawMotor.setPower(1.0); // To go down, set power to negative, might have to reverse this based on motor packaging
         }else{
-            seeSawMotor.setPower(1.0);
+            seeSawMotor.setPower(-1.0);
         }
     }
 
