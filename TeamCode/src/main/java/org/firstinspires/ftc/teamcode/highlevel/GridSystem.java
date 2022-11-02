@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.odometry.TestingOdometryAlgorithm;
 import org.firstinspires.ftc.teamcode.drivetrain.*;
 
 
-public class GridSystem {
+public class GridSystem implements fieldData{
     private static double [] auxillary3d; // Use currentPosition if needed, but should pre-calculate during transition
     private static double [] auxillary2d;
     
@@ -57,7 +57,7 @@ public class GridSystem {
         auxillary2d[1] %= 23.50;
 
         //
-
+        return new double[] {4d, 5d};
 
 
         // Floor with type casts for some of these
