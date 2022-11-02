@@ -32,6 +32,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData
 
     MecanumDrive mecanum;
     // Odometry odometry;
+    MecanumDrive mecanumDrive;
 
     // Master master;
 
@@ -124,6 +125,24 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData
     }
 
     void scoreCone() {
+
+    }
+
+    void getToSignalLocation(int posX, int posY, int targetX, int targetY) {
+        // go to center of square
+        int directionX = posX < targetX ? 1 : 0;
+        int centerX = (int) (Math.floor(posX / 12d) + directionX) * 12;
+
+        int directionY = posY < targetY ? 1 : 0;
+        int centerY = (int) (Math.floor(posY / 12d) + directionY) * 12;
+
+        goToPosition(centerX, posY);
+        goToPosition(centerX, centerY);
+        goToPosition(centerX, targetY);
+        goToPosition(targetX, targetY);
+    }
+
+    void goToPosition(int target, int gartet) {
 
     }
 }
