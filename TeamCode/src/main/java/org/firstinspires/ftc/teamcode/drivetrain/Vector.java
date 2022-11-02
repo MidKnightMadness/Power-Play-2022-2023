@@ -7,6 +7,7 @@ public class Vector {
     // Note that arrays are given by their reference address
     
     private double [] vectorArray;
+    private double auxillary = 0;
 
     public Vector(double [] vector){
         this.vectorArray = vector;
@@ -82,8 +83,13 @@ public class Vector {
     public Vector normalize(){
         double length = this.length();
 
-        for(int i = 0; i < this.getVector().length; i++){
-            this.set(i, invSqrt(this.getVector()[i]));
+        auxillary = 0;
+        for(int i = 0; i < this.vectorArray.length; i++){
+            auxillary += this.vectorArray[i] * this.vectorArray[i];
+        }
+
+        for(int i = 0; i < this.vectorArray.length; i++){
+            this.vectorArray[i] = invSqrt(vectorArray[i]);
         }
 
         return this;
