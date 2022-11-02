@@ -39,7 +39,8 @@ public class MainTeleOp extends OpMode {
         if (driveModeToggle) {
             mecanum.fieldOrientatedDrive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, telemetry);
         } else {
-            mecanum.drive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x/2); // normal drive
+            //mecanum.drive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x); // normal drive
+            mecanum.vectorDrive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, telemetry);
         }
         lastPressedDriveMode = gamepad1.right_bumper;
 

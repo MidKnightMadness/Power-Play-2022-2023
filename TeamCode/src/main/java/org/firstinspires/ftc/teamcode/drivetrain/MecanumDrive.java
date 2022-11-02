@@ -15,7 +15,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.highlevel.Master.*;
-//import org.firstinspires.ftc.teamcode.odometry.Odometry;
+import org.firstinspires.ftc.teamcode.odometry.Odometry;
+import org.firstinspires.ftc.teamcode.odometry.TestingOdometryAlgorithm;
+
 import static org.firstinspires.ftc.teamcode.highlevel.TeleOp1.*;
 
 public class MecanumDrive {
@@ -28,11 +30,14 @@ public class MecanumDrive {
     // Make sure to normalize power values 0 to 1
     public static final double [] NULL = {0.0, 0.0, 0.0, 0.0};
 
-    public static final double [] backwards = {-1.0, 1,0, -1.0, 1.0};
-    public Vector BACKWARDS = new Vector(backwards);
+    public static final double [] backwards = {-1.0, 1.0, -1.0, 1.0};
+//    public Vector BACKWARDS = new Vector(backwards);
 
     public static final double [] rightVector = {1.0, 1.0, -1.0, -1.0};
     public Vector RIGHT = new Vector(rightVector);
+
+    public static final double [] backwardsVector = {1.0, 1.0, -1.0, -1.0};
+    public Vector BACKWARDS = new Vector(backwardsVector);
 
     public static final double [] turnRight = {-1.0, -1.0, -1.0, -1.0};
     public Vector TURN_RIGHT = new Vector(turnRight);
@@ -64,7 +69,10 @@ public class MecanumDrive {
 
     private BNO055IMU imu;
 
+    TestingOdometryAlgorithm odometry;
+
     public MecanumDrive(HardwareMap hardwareMap) {
+
 //         Connect Motors
         FRMotor = hardwareMap.get(DcMotorEx.class, "FR");
         FLMotor = hardwareMap.get(DcMotorEx.class, "FL");
@@ -140,6 +148,9 @@ public class MecanumDrive {
 
     public void vectorDrive(double x, double y, double rotate, Telemetry telemetry) {
         telemetry.addData("backwards[0]", backwards[0]);
+        telemetry.addData("backwardsVector[0]", backwardsVector[0]);
+        telemetry.addData("rightVector[0]", rightVector[0]);
+        telemetry.addData("turnRight[0]", turnRight[0]);
         telemetry.addData("BACKWARDS.getVector()[0]", BACKWARDS.getVector()[0]);
 //        telemetry.addData("rightVector[0]", rightVector[0]);
         telemetry.addData("RIGHT.getVector()[0", RIGHT.getVector()[0]);
@@ -161,7 +172,7 @@ public class MecanumDrive {
 //        telemetry.addLine(position.getVector()[0] + ", " + position.getVector()[1]);
     }
 
-//    public void goToPosition(double targetXPosition, double targetYPosition, double power, double targetOrientation) {
+//    public void goToPosiion(double targetXPosition, double targetYPosition, double power, double targetOrientation) {
 //        double distanceToXTarget = targetXPosition - odometry.getXCoordinate();
 //        double distanceToYTarget = targetYPosition - odometry.getYCoordinate();
 //
@@ -178,7 +189,7 @@ public class MecanumDrive {
 //    }
 
     public void fieldOrientatedDrive(double x, double y, double rotate, Telemetry telemetry) {
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         gyro_degrees = angles.firstAngle;
         gyro_radians = gyro_degrees * Math.PI / 180;
 //        y = -y;
@@ -203,7 +214,6 @@ public class MecanumDrive {
 
 //    public void driveTo(Vector target, Vector currentPosition){ // Probably run this every few ticks
 //        displacement = target.add(currentPosition.multiply(-1)); // Normalize this when inputting for ratios
-//
 //        drive = RIGHT.multiply(displacement.normalize().getVector()[0])
 //                .add(BACKWARDS.multiply(displacement.normalize().getVector()[1]));
 //
@@ -250,7 +260,6 @@ public class MecanumDrive {
     }
 
     public void telemetry(Telemetry telemetry) {
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
         telemetry.addData("FR Motor Position", FRMotor.getCurrentPosition());
         telemetry.addData("FL Motor Position", FLMotor.getCurrentPosition());
         telemetry.addData("BR Motor Position", BRMotor.getCurrentPosition());
