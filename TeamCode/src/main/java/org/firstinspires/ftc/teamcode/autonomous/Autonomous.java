@@ -11,14 +11,16 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.firstinspires.ftc.teamcode.highlevel.Master;
-
+import org.firstinspires.ftc.teamcode.highlevel.fieldData;
 import org.firstinspires.ftc.teamcode.common.Timer;
 
 import java.util.ArrayList;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
-public class Autonomous extends OpMode implements cameraInfo
+public class Autonomous extends OpMode implements cameraInfo, fieldData
 {
+    int startingPos = 0;  // 0: A2, 1: A5, 2: F2, 3: F5
+
     int[] signalFinds = new int[] {0, 0, 0};
     int mostRecentDetection = 0;
 
@@ -92,6 +94,7 @@ public class Autonomous extends OpMode implements cameraInfo
     @Override
     public void start() {
         telemetry.setAutoClear(true);
+
         telemetry.addData("Signal location", mostRecentDetection);
         telemetry.addData("Signal finds", signalFinds);
 
@@ -101,7 +104,10 @@ public class Autonomous extends OpMode implements cameraInfo
 
     @Override
     public void loop() {
-        // telemetry.addData("Robot position", odometry.positionToString());
+        telemetry.addData("Signal #", mostRecentDetection);
+        telemetry.addData("Signal finds", signalFinds[0], signalFinds[1], signalFinds[2]);
+        telemetry.addData("Signal location", signalLocations[startingPos][mostRecentDetection - 1]);
+        telemetry.update();
 
     }
 

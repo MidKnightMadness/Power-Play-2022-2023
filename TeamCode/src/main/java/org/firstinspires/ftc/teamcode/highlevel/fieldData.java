@@ -16,8 +16,13 @@ public interface fieldData {
 
     };
 
-//    public static Vector2[][] signalLocations = new Vector2[4][3] {
-//            [new Vector2()]
-//
-//    };
+    final int aposx = 60;
+    final int fposx = 84;
+
+    public static Vector2[][] signalLocations = new Vector2[][] {
+        { new Vector2(aposx, 60), new Vector2(aposx, 36), new Vector2(aposx, 12) },
+        { new Vector2(aposx, 132), new Vector2(aposx, 108), new Vector2(aposx, 84) },
+        { new Vector2(fposx, 12), new Vector2(fposx, 36), new Vector2(fposx, 60) },
+        { new Vector2(fposx, 132), new Vector2(fposx, 108), new Vector2(fposx, 84) },
+    };
 }
