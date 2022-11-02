@@ -16,11 +16,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.highlevel.Master.*;
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
 //import org.firstinspires.ftc.teamcode.odometry.Odometry;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.telemetry;
-import static org.firstinspires.ftc.teamcode.highlevel.TeleOp1.*;
 
 public class MecanumDrive {
     public DcMotorEx FRMotor;
