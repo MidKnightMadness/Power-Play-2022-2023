@@ -105,6 +105,9 @@ public class GridSystem {
         // "Points" at junction corresponding to target position to get required height and extension length
         auxillary2d = currentPosition.getVector();
         switch(djskjsjksskjkj2){
+            // Junction numbering in square
+            // 2 1
+            // 3 4
             case 1:
                 // (23.50, 23.50) relative coords
                 auxillary2d[0] = (int) (auxillary2d[0] / 23.50); // Floors to highest x and y coordinates in box, then converts into list index by subtracting 1
@@ -163,10 +166,35 @@ public class GridSystem {
                 }
 
                 // Making auxillary2d displacement to junction
+                auxillary2d = currentPosition.getVector();
+                auxillary2d[0] = auxillary2d[0] % 23.50;
+                auxillary2d[1] = auxillary2d[1] % 23.50;
+
+                auxillary3d[1] = auxillary3d[1] = Math.atan(djskjsjksskjkj * invSqrt((auxillary2d[0] * auxillary2d[0]) + (auxillary2d[1] * auxillary2d[1])));
+                auxillary3d[2] = Math.sqrt((djskjsjksskjkj * djskjsjksskjkj) + (auxillary2d[0] * auxillary2d[0]) + (auxillary2d[1] * auxillary2d[1]));
 
                 break;
             case 4:
                 // (23.50, 0.00) relative coords
+                auxillary2d[0] = (int) (auxillary2d[0] / 23.50);
+                auxillary2d[1] = ((int) (auxillary2d[1] / 23.50)) - 1;
+
+                if(auxillary[0] < 5 && auxillary2d[1] < 5){
+                    djskjsjksskjkj = junctionHeights [(int) auxillary2d[0]][(int) auxillary2d[1]] - ROOT_HEIGHT;
+                }else{
+                    auxillary3d[1] = 0.0;
+                    auxillary3d[2] = 0.0;
+                    break;
+                }
+
+                // Making auxillary2d displacement to junction
+                auxillary2d = currentPosition.getVector();
+                auxillary2d[0] = 23.50 - (auxillary2d[0] % 23.50);
+                auxillary2d[1] = auxillary2d[1] % 23.50;
+
+                auxillary3d[1] = auxillary3d[1] = Math.atan(djskjsjksskjkj * invSqrt((auxillary2d[0] * auxillary2d[0]) + (auxillary2d[1] * auxillary2d[1])));
+                auxillary3d[2] = Math.sqrt((djskjsjksskjkj * djskjsjksskjkj) + (auxillary2d[0] * auxillary2d[0]) + (auxillary2d[1] * auxillary2d[1]));
+
                 break;
             default:
                 break;
