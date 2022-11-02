@@ -105,7 +105,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData
     @Override
     public void loop() {
         telemetry.addData("Signal #", mostRecentDetection);
-        telemetry.addData("Signal finds", signalFinds[0], signalFinds[1], signalFinds[2]);
+        telemetry.addData("Signal finds", "" + signalFinds[0], signalFinds[1], signalFinds[2]);
         telemetry.addData("Signal location", signalLocations[startingPos][mostRecentDetection - 1]);
         telemetry.update();
 
