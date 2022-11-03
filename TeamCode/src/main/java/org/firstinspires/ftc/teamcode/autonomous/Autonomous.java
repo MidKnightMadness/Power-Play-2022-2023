@@ -19,7 +19,7 @@ import java.util.ArrayList;
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
 public class Autonomous extends OpMode implements cameraInfo, fieldData
 {
-    int startingPos = 0;  // 0: A2, 1: A5, 2: F2, 3: F5
+    public int startingPos = 0;  // 0: A2, 1: A5, 2: F2, 3: F5
 
     int[] signalFinds = new int[] {0, 0, 0};
     int mostRecentDetection = 0;
@@ -36,8 +36,13 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData
 
     Master master;
 
+    public int getStartingPos() {
+        return 0;
+    }
     @Override
     public void init() {
+        startingPos = getStartingPos();
+
         coneTimer = new Timer();
         telemetry.addLine("Start time: " + coneTimer.getStartTime());
 
@@ -89,6 +94,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData
                 telemetry.addLine("Saw tag");
                 tagToTelemetry(tagOfInterest);
             }
+
         }
     }
 
@@ -150,8 +156,11 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData
         goToPosition(targetX, targetY);
     }
 
-    void goToPosition(int target, int gartet) {
-
+    void goToPosition(int targetX, int targetY) {
+        boolean atLocation = false;
+        while (!atLocation) {
+            atLocation = mecanumDrive.driveTo(targetX, targetY, 0);
+        }
     }
 }
 
