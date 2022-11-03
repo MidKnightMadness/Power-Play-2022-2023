@@ -29,9 +29,9 @@ public class TeleOp1 extends OpMode {
 
     @Override
     public void loop() {
-//        drive.vectorDrive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, telemetry);
-//
-//        telemetry.addLine(String.format("deltaX: [%3.1f, %3.1f%nrotation: %3.1f", gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x));
-//        telemetry.update();
+        drive.vectorDrive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, telemetry);
+
+        telemetry.addLine(String.format("deltaX: [%3.1f, %3.1f%nrotation: %3.1f", gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x));
+        telemetry.update();
     }
 }
