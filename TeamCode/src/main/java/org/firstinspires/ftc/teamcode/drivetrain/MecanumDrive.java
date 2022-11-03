@@ -155,6 +155,8 @@ public class MecanumDrive {
         }
 
         auxillary = drive.getVector();
+        telemetry.addLine(String.format("\nMotor Inputs:\nFL: %2.1f  FR: %2.1f\nBL: %2.1f BR: %2.1\n", auxillary[0], auxillary[1], auxillary[2], auxillary[3]));
+
         FLMotor.setPower(auxillary[0]);
         FRMotor.setPower(auxillary[1]);
         BLMotor.setPower(auxillary[2]);
