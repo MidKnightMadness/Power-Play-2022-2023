@@ -201,11 +201,14 @@ public class MecanumDrive {
     }
 
 
-    public void driveTo(double targetX, double targetY, double targetAngle){ // Probably run this every few ticks
+    public boolean driveTo(double targetX, double targetY, double targetAngle){ // Probably run this every few ticks
         if(invSqrt(((targetAngle) * (odometryAlg.orientationAngle)) + ((targetX - currentPosition.getVector()[0]) * (targetX - currentPosition.getVector()[0])) + ((targetY - currentPosition.getVector()[1]) * (targetY - currentPosition.getVector()[1]))) < 10) {
             fieldOrientatedDrive(targetX - currentPosition.getVector()[0], targetY - currentPosition.getVector()[1], targetAngle - odometryAlg.orientationAngle, telemetry);
+            return false;
         }
+        return true;
     }
+
 
     @Deprecated
     public static void setVelocities(DcMotorEx [] motors, Vector vector){
