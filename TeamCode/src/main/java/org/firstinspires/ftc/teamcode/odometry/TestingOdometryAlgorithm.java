@@ -78,7 +78,7 @@ public class TestingOdometryAlgorithm extends Master {
         encoder2Delta = (encoder2.getCurrentPosition() - encoder2Reading) * WHEEL_TRAVEL_CONVERSION_FOR_DEAD_WHEELS;
         encoder3Delta = (encoder3.getCurrentPosition() - encoder3Reading) * WHEEL_TRAVEL_CONVERSION_FOR_DEAD_WHEELS;
 
-        // Tick-updting encoder positions
+        // Tick-updating encoder positions
         encoder1Reading = encoder1.getCurrentPosition();
         encoder2Reading = encoder2.getCurrentPosition();
         encoder3Reading = encoder3.getCurrentPosition();
@@ -91,7 +91,7 @@ public class TestingOdometryAlgorithm extends Master {
         normalOrientation.rotate(angleChange / 2);
 
         travel = orientation.multiply(0.5 * encoder1Delta + 0.5 * encoder2Delta).add
-                (normalOrientation.multiply(encoder3Delta * Math.cos(orientationAngle) - encoder3Delta * (angleChange / 2)));
+                (normalOrientation.multiply(encoder3Delta * Math.cos(orientationAngle) - encoder3Delta * (angleChange / 2))); // Might need to multiply distance to back wheel
 
         orientationAngle += angleChange / 2;
         orientation.rotate(angleChange / 2);
