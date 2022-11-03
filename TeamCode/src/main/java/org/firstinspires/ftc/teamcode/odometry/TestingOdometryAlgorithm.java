@@ -91,7 +91,7 @@ public class TestingOdometryAlgorithm extends Master {
         normalOrientation.rotate(angleChange / 2);
 
         travel = orientation.multiply(0.5 * encoder1Delta + 0.5 * encoder2Delta).add
-                (normalOrientation.multiply(encoder3Delta * Math.cos(orientationAngle) - encoder3Delta * (angleChange / 2))); // Might need to multiply distance to back wheel
+                (normalOrientation.multiply(encoder3Delta * Math.cos(orientationAngle) - DISTANCE_TO_BACK_WHEEL * encoder3Delta * (angleChange / 2))); // Might need to multiply distance to back wheel
 
         orientationAngle += angleChange / 2;
         orientation.rotate(angleChange / 2);
