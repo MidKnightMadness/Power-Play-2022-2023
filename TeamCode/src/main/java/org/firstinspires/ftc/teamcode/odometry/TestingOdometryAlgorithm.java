@@ -19,8 +19,8 @@ public class TestingOdometryAlgorithm extends Master {
     //    ˜˜˜˜˜˜˜˜
 
     // Chassis dimensional constants
-    public static final double TRACK_WIDTH = 10.0; // Distance between dead wheels 1 and 2 in inches
-    public static final double DISTANCE_TO_BACK_WHEEL = 4.0; // Distance between center of robot (currentPosition) and back dead wheel - again, in inches
+    public static final double TRACK_WIDTH = 12.4; // Distance between dead wheels 1 and 2 in inches
+    public static final double DISTANCE_TO_BACK_WHEEL = 7.500 - 2.098; // Distance between center of robot (currentPosition) and back dead wheel - again, in inches
     public static final double DEAD_WHEEL_RADIUS = 1.5;
     public static final double TICKS_PER_ROTATION = 8192;
 
@@ -91,7 +91,7 @@ public class TestingOdometryAlgorithm extends Master {
         normalOrientation.rotate(angleChange / 2);
 
         travel = orientation.multiply(0.5 * encoder1Delta + 0.5 * encoder2Delta).add
-                (normalOrientation.multiply(encoder3Delta * Math.cos(orientationAngle) - encoder3Delta * (angleChange / 2))); // Might need to multiply distance to back wheel
+                (normalOrientation.multiply(encoder3Delta * Math.cos(orientationAngle) - DISTANCE_TO_BACK_WHEEL * encoder3Delta * (angleChange / 2))); // Might need to multiply distance to back wheel
 
         orientationAngle += angleChange / 2;
         orientation.rotate(angleChange / 2);

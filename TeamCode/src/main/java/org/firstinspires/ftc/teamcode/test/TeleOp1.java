@@ -29,9 +29,39 @@ public class TeleOp1 extends OpMode {
 
     @Override
     public void loop() {
-        drive.vectorDrive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, telemetry);
+        // Testing purposes only
+//        translation = BACKWARDS.multiply(gamepad1.left_stick_y).add(RIGHT.multiply(gamepad1.left_stick_x));
+//        rotation = TURN_RIGHT.multiply(gamepad1.right_stick_x);
+//        drive = translation.add(rotation);
+//
+//        double maxValue = 0.0;
+//        for(double thisNum : drive.getVector()){
+//            if(Math.abs(thisNum) > maxValue){
+//                maxValue = thisNum;
+//            }
+//        }
+//
+//        auxillary = drive.getVector();
+//
+//        telemetry.addData("\nFront Left input:", auxillary[0]);
+//        telemetry.addData("Front right input:", auxillary[1]);
+//        telemetry.addData("Rear left input:", auxillary[2]);
+//        telemetry.addData("Rear right input:", auxillary[3]);
+//        telemetry.update();
+//
+//        FLMotor.setPower(auxillary[0]);
+//        FRMotor.setPower(auxillary[1]);
+//        BLMotor.setPower(auxillary[2]);
+//        BRMotor.setPower(auxillary[3]);
 
-        telemetry.addLine(String.format("deltaX: [%3.1f, %3.1f%nrotation: %3.1f", gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x));
+        telemetry.addLine(String.format("deltaX: %3.1f, %3.1f%nrotation: %3.1f", gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x));
+
+        telemetry.addData("\nFront Left output:", drive.FLMotor.getPower());
+        telemetry.addData("Front right output:", drive.FLMotor.getPower());
+        telemetry.addData("Rear left output:", drive.FLMotor.getPower());
+        telemetry.addData("Rear right output:", drive.FLMotor.getPower());
+        telemetry.update();
+
         telemetry.update();
     }
 }
