@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.currentOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
 import org.firstinspires.ftc.teamcode.manipulator.LinearSlides;
@@ -15,6 +16,7 @@ public class MainTeleOp extends OpMode {
     TestingOdometryAlgorithm odometryAlg;
     LinearSlides lift;
     Turntable turntable;
+    HardwareMap hardwareMap;
 
     private boolean lastPressedLiftMotor = false;
     private boolean liftMotorToggle = false;
@@ -23,7 +25,8 @@ public class MainTeleOp extends OpMode {
 
     @Override
     public void init() {
-        mecanum = new MecanumDrive(hardwareMap);
+
+        mecanum = new MecanumDrive(this.hardwareMap);
 //        odometry = new Odometry(hardwareMap);
 //        lift = new LinearSlides(hardwareMap);
 //        turntable = new Turntable(hardwareMap);

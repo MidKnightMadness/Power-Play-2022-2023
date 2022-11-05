@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.drivetrain;
 
 import static org.firstinspires.ftc.teamcode.highlevel.Master.currentPosition;
+import static org.firstinspires.ftc.teamcode.highlevel.Master.invSqrt;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.odometryAlg;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -8,15 +9,16 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.highlevel.Master.*;
+import org.firstinspires.ftc.teamcode.odometry.Odometry;
 //import org.firstinspires.ftc.teamcode.odometry.Odometry;
-import static org.firstinspires.ftc.teamcode.highlevel.TeleOp1.*;
+import static org.firstinspires.ftc.teamcode.highlevel.Master.telemetry;
 
 public class MecanumDrive {
     public DcMotorEx FRMotor;
@@ -24,18 +26,20 @@ public class MecanumDrive {
     public DcMotorEx BRMotor;
     public DcMotorEx BLMotor;
 
+    Odometry odometry;
+
     // Order for power values: FL, FR, RL, RR
     // Make sure to normalize power values 0 to 1
-    public static final double [] NULL = {0.0, 0.0, 0.0, 0.0};
+    public static double [] NULL;
 
-    public static final double [] backwards = {-1.0, 1,0, -1.0, 1.0};
-    public Vector BACKWARDS = new Vector(backwards);
+    public static double [] backwards;
+    public Vector BACKWARDS;
 
-    public static final double [] rightVector = {1.0, 1.0, -1.0, -1.0};
-    public Vector RIGHT = new Vector(rightVector);
+    public static double [] rightVector;
+    public Vector RIGHT;
 
     public static final double [] turnRight = {-1.0, -1.0, -1.0, -1.0};
-    public Vector TURN_RIGHT = new Vector(turnRight);
+    public Vector TURN_RIGHT;
 
 
     // Navigation
@@ -48,16 +52,10 @@ public class MecanumDrive {
     private Vector velocity;
     private Vector drive;
     private Vector displacement;
+    private double [] auxillary;
 
     private Vector translation;
     private Vector rotation;
-
-    private Orientation angles;
-    private double gyro_degrees;
-    private double gyro_radians;
-    private double correctedX;
-    private double correctedY;
-    private double offAngle;
 
     int time;
     double maxValue;
@@ -106,15 +104,22 @@ public class MecanumDrive {
 //        BRMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.00, 0.05, 0.0, 0.0));
 //        BLMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.00, 0.05, 0.0, 0.0));
 
+        NULL = new double[] {0.0, 0.0, 0.0, 0.0};
+        backwards = new double [] {-1.0, 1,0, -1.0, 1.0};
+        rightVector = new double [] {1.0, 1.0, -1.0, -1.0};
 
         velocity = new Vector(NULL_POSITION);
         drive = new Vector(NULL);
         displacement = new Vector(new double [] {0.0, 0.0});
         translation = new Vector(NULL_POSITION);
         rotation = new Vector(NULL_POSITION);
+        auxillary = new double [4];
+
+        BACKWARDS = new Vector(backwards);
+        RIGHT = new Vector(rightVector);
+        TURN_RIGHT = new Vector(turnRight);
 
         time = 0; // Ticks ig
-
 
 
         //IMU
@@ -128,21 +133,16 @@ public class MecanumDrive {
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
     }
 
     public void drive(double x, double y, double rotate) {
-        FRMotor.setPower(-x + y - rotate);
-        FLMotor.setPower( x + y + rotate);
-        BRMotor.setPower( x + y - rotate);
-        BLMotor.setPower(-x + y + rotate);
+//        FRMotor.setPower(-x + y - rotate);
+//        FLMotor.setPower( x + y + rotate);
+//        BRMotor.setPower( x + y - rotate);
+//        BLMotor.setPower(-x + y + rotate);
     }
 
     public void vectorDrive(double x, double y, double rotate, Telemetry telemetry) {
-        telemetry.addData("backwards[0]", backwards[0]);
-        telemetry.addData("BACKWARDS.getVector()[0]", BACKWARDS.getVector()[0]);
-//        telemetry.addData("rightVector[0]", rightVector[0]);
-        telemetry.addData("RIGHT.getVector()[0", RIGHT.getVector()[0]);
         translation = BACKWARDS.multiply(y).add(RIGHT.multiply(x));
         rotation = TURN_RIGHT.multiply(rotate);
         drive = translation.add(rotation);
@@ -154,61 +154,49 @@ public class MecanumDrive {
             }
         }
 
-        setPowers(drive.multiply(1.0 / maxValue), telemetry);
+        auxillary = drive.getVector();
 
-        telemetry.addLine("Right: " + (MAX * x));
-        telemetry.addLine("Forwards: " + (MAX * -1 * -y));
-//        telemetry.addLine(position.getVector()[0] + ", " + position.getVector()[1]);
+        telemetry.addData("\nFront Left input:", auxillary[0]);
+        telemetry.addData("Front right input:", auxillary[1]);
+        telemetry.addData("Rear left input:", auxillary[2]);
+        telemetry.addData("Rear right input:", auxillary[3]);
+        telemetry.update();
+
+        FLMotor.setPower(auxillary[0]);
+        FRMotor.setPower(auxillary[1]);
+        BLMotor.setPower(auxillary[2]);
+        BRMotor.setPower(auxillary[3]);
     }
-
-//    public void goToPosition(double targetXPosition, double targetYPosition, double power, double targetOrientation) {
-//        double distanceToXTarget = targetXPosition - odometry.getXCoordinate();
-//        double distanceToYTarget = targetYPosition - odometry.getYCoordinate();
-//
-//        double distance = Math.hypot(distanceToXTarget, distanceToYTarget);
-//
-//        while(FRMotor.isBusy() && FLMotor.isBusy() && BRMotor.isBusy() && BLMotor.isBusy()) {
-//            distanceToXTarget = targetXPosition - odometry.getXCoordinate();
-//            distanceToYTarget = targetYPosition - odometry.getYCoordinate();
-//
-//            double robotAngle = Math.toDegrees(Math.atan2(distanceToXTarget, distanceToYTarget));
-//
-//
-//        }
-//    }
 
     public void fieldOrientatedDrive(double x, double y, double rotate, Telemetry telemetry) {
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-        gyro_degrees = angles.firstAngle;
-        gyro_radians = gyro_degrees * Math.PI / 180;
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        float pi = 3.1415926f;
+        float gyro_degrees = angles.firstAngle;
+        float gyro_radians = gyro_degrees * pi / 180;
+        double offAngle = 0;
 //        y = -y;
-        if (x == 0 && y == 0) {
-            drive(0, 0, rotate);
-            return;
-        }
         offAngle = Math.atan(y / x);
 
-        if (x < 0) { // Getting displacement angle
-            offAngle = Math.PI - offAngle;
+        if (x < 0){ // Getting displacement angle
+            offAngle = Math.PI - offAngle; // Might wanna use taylor series to approximate atan later since calculation times are gonna be annoying
         }
-        correctedX = Math.cos(-gyro_radians + offAngle);
-        correctedY = Math.sin(-gyro_radians + offAngle);
+        double correctedX = Math.cos(-gyro_radians + offAngle);
+        double correctedY = Math.sin(-gyro_radians + offAngle);
 
-//        correctedX = correctedX;
-//        correctedY = correctedY;
+        correctedX = correctedX;
+        correctedY = correctedY;
 
-        drive(correctedX, correctedY, rotate);
+//        FRMotor.setPower(-correctedX + correctedY - rotate);
+//        FLMotor.setPower( correctedX + correctedY + rotate);
+//        BRMotor.setPower( correctedX + correctedY - rotate);
+//        BLMotor.setPower(-correctedX + correctedY + rotate);
 
+        telemetry.addData("x2", correctedX);
+        telemetry.addData("y2", correctedY);
+        telemetry.addData("rotate", rotate);
+        telemetry.addData("First Angle", angles.firstAngle);
     }
 
-//    public void driveTo(Vector target, Vector currentPosition){ // Probably run this every few ticks
-//        displacement = target.add(currentPosition.multiply(-1)); // Normalize this when inputting for ratios
-//
-//        drive = RIGHT.multiply(displacement.normalize().getVector()[0])
-//                .add(BACKWARDS.multiply(displacement.normalize().getVector()[1]));
-//
-//        setPowers(MOTORS, drive);
-//    }
 
     public static double sensitivity = 5.0; // "Steepness" of gradient vectors
     public Vector correct(){
@@ -219,15 +207,15 @@ public class MecanumDrive {
         return translation.add(displacement);
     }
 
-//    public void driveTo(double currentX, double currentY, double targetX, double targetY){ // Probably run this every few ticks
-//        displacement.set(0, targetX - currentX);
-//        displacement.set(1, targetY - currentY);
-//
-//        drive = RIGHT.multiply(displacement.normalize().getVector()[0])
-//                .add(BACKWARDS.multiply(displacement.normalize().getVector()[1]));
-//
-//        setPowers(MOTORS, drive);
-//    }
+
+    public boolean driveTo(double targetX, double targetY, double targetAngle){ // Probably run this every few ticks
+        if(invSqrt(((targetAngle) * (odometryAlg.orientationAngle)) + ((targetX - currentPosition.getVector()[0]) * (targetX - currentPosition.getVector()[0])) + ((targetY - currentPosition.getVector()[1]) * (targetY - currentPosition.getVector()[1]))) < 10) {
+            fieldOrientatedDrive(targetX - currentPosition.getVector()[0], targetY - currentPosition.getVector()[1], targetAngle - odometryAlg.orientationAngle, telemetry);
+            return false;
+        }
+        return true;
+    }
+
 
     @Deprecated
     public static void setVelocities(DcMotorEx [] motors, Vector vector){
@@ -237,27 +225,16 @@ public class MecanumDrive {
     }
 
     public void setPowers(Vector vector, Telemetry telemetry){
-//        for(int i = 0; i < motors.length; i++){
-//            motors[i].setPower(vector.getVector()[i]);
-//            telemetry.addData("powa", vector.getVector()[i]);
-//        }
-
         FLMotor.setPower(vector.getVector()[0]);
         FRMotor.setPower(vector.getVector()[1]);
         BLMotor.setPower(vector.getVector()[2]);
         BRMotor.setPower(vector.getVector()[3]);
-        telemetry.addData("powa", vector.getVector()[0]);
     }
 
     public void telemetry(Telemetry telemetry) {
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-        telemetry.addData("FR Motor Position", FRMotor.getCurrentPosition());
-        telemetry.addData("FL Motor Position", FLMotor.getCurrentPosition());
-        telemetry.addData("BR Motor Position", BRMotor.getCurrentPosition());
-        telemetry.addData("BL Motor Position", BLMotor.getCurrentPosition());
-        telemetry.addData("Corrected X", correctedX);
-        telemetry.addData("Corrected Y", correctedY);
-        telemetry.addData("First Angle", angles.firstAngle);
-        telemetry.addData("Gyro radians", gyro_radians);
+//        telemetry.addData("FR Motor Position", FRMotor.getCurrentPosition());
+//        telemetry.addData("FL Motor Position", FLMotor.getCurrentPosition());
+//        telemetry.addData("BR Motor Position", BRMotor.getCurrentPosition());
+//        telemetry.addData("BL Motor Position", BLMotor.getCurrentPosition());
     }
 }
