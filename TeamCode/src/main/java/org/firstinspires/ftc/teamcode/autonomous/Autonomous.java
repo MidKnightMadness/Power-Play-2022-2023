@@ -138,6 +138,18 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData
 
     }
 
+    void pickUpCone() {
+
+    }
+
+    void goToScoringLocation() {
+
+    }
+
+    void goToConeStack() {
+
+    }
+
     void scoreCone() {
 
     }

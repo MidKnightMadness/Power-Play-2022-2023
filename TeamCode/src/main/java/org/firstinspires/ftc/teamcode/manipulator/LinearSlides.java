@@ -84,6 +84,15 @@ public class LinearSlides {
         ticksDisplacement = 0.0;
     }
 
+    public double[] getClawCoordinates() {
+        double twoDimensionalRadius = seesawExtensionLength * Math.cos(seesawAngle);
+        double x = twoDimensionalRadius * Math.cos(turntableAngle);
+        double y = twoDimensionalRadius * Math.sin(turntableAngle);
+        double height = seesawExtensionLength * Math.sin(seesawAngle);
+        
+        return new double[] {x, y, height};
+    }
+
     public void goPointAt(double [] xyzDisplacement){ // Make sure to input 3-array for targeted scoring position!!!!!!!! Will have to get angle of robot once it gets to junction, then correct a second time. This is not a one-time algorithm!!!
         // Actually does everything at the same time, will need to edit based on extension speed (want to minimize extended time for reliability purposes)
         displacement = xyzDisplacement; // Screw it I don't wanna run the method over and over haha
@@ -130,4 +139,6 @@ public class LinearSlides {
         seesawExtensionLength = (seeSawMotor.getCurrentPosition() * EXTENDER_OVERALL_RATIO) - STARTING_EXTENDER_LENGTH;
         seesawAngle = (seeSawMotor.getCurrentPosition() * SEESAW_OVERALL_RATIO); // Assuming starting angle is 0
     }
+
+
 }
