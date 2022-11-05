@@ -13,9 +13,7 @@ import static org.firstinspires.ftc.teamcode.highlevel.Master.odometryAlg;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.turntable;
 import static org.firstinspires.ftc.teamcode.manipulator.Turntable.turntableAngle; // Remove this in final version
 
-// This comment was pushed today
 public class LinearSlides {
-    // Add all of these to Master
     public static DcMotorEx seeSawMotor;
     public static DcMotorEx extensionMotor;
     public static Vector manipulatorPosition;
@@ -89,8 +87,8 @@ public class LinearSlides {
         double x = twoDimensionalRadius * Math.cos(turntableAngle);
         double y = twoDimensionalRadius * Math.sin(turntableAngle);
         double height = seesawExtensionLength * Math.sin(seesawAngle);
-        
-        return new double[] {x, y, height};
+
+        return new double[] { x, y, height };
     }
 
     public void goPointAt(double [] xyzDisplacement){ // Make sure to input 3-array for targeted scoring position!!!!!!!! Will have to get angle of robot once it gets to junction, then correct a second time. This is not a one-time algorithm!!!

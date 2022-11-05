@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.AprilTagDetection.AprilTagDetectionPipeline;
+import org.firstinspires.ftc.teamcode.drivetrain.Vector;
+import org.firstinspires.ftc.teamcode.manipulator.LinearSlides;
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
 import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
 import org.openftc.apriltag.AprilTagDetection;
@@ -13,18 +15,26 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.firstinspires.ftc.teamcode.highlevel.Master;
 import org.firstinspires.ftc.teamcode.highlevel.fieldData;
 import org.firstinspires.ftc.teamcode.common.Timer;
+import org.firstinspires.ftc.teamcode.odometry.Vector2;
 
 import java.util.ArrayList;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
-public class Autonomous extends OpMode implements cameraInfo, fieldData
+public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpConeData
 {
     public int startingPos = 0;  // 0: A2, 1: A5, 2: F2, 3: F5
+
+    public static int numberOfConesInStack = 5;
 
     int[] signalFinds = new int[] {0, 0, 0};
     int mostRecentDetection = 0;
 
+    Vector2 coneStackLocation = coneStackLocations[startingPos];
+    Vector2 scoringLocation = scoringLocations[startingPos];
+
     AprilTagDetection tagOfInterest = null;
+
+    LinearSlides linearSlides;
 
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
@@ -139,15 +149,17 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData
     }
 
     void pickUpCone() {
+        double coneHeight = INITIAL_CONE_ABOVE_GROUND + INCHES_ABOVE_CONE + INCHES_ABOVE_PER_CONE * numberOfConesInStack;
 
+        goToConeStack();
     }
 
     void goToScoringLocation() {
-
+        goToPosition((int) scoringLocation.x, (int) scoringLocation.y);
     }
 
     void goToConeStack() {
-
+        goToPosition((int) coneStackLocation.x, (int) scoringLocation.y);
     }
 
     void scoreCone() {
@@ -173,6 +185,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData
         while (!atLocation) {
             atLocation = mecanumDrive.driveTo(targetX, targetY, 0);
         }
+
     }
 }
 
