@@ -168,7 +168,7 @@ public class MecanumDrive {
         BRMotor.setPower(auxillary[3]);
     }
 
-    public void fieldOrientatedDrive(double x, double y, double rotate, Telemetry telemetry) {
+    public void fieldOrientatedDrive(double x, double y, double rotate) {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         float pi = 3.1415926f;
         float gyro_degrees = angles.firstAngle;
@@ -210,7 +210,7 @@ public class MecanumDrive {
 
     public boolean driveTo(double targetX, double targetY, double targetAngle){ // Probably run this every few ticks
         if(invSqrt(((targetAngle) * (odometryAlg.orientationAngle)) + ((targetX - currentPosition.getVector()[0]) * (targetX - currentPosition.getVector()[0])) + ((targetY - currentPosition.getVector()[1]) * (targetY - currentPosition.getVector()[1]))) < 10) {
-            fieldOrientatedDrive(targetX - currentPosition.getVector()[0], targetY - currentPosition.getVector()[1], targetAngle - odometryAlg.orientationAngle, telemetry);
+            fieldOrientatedDrive(targetX - currentPosition.getVector()[0], targetY - currentPosition.getVector()[1], targetAngle - odometryAlg.orientationAngle);
             return false;
         }
         return true;

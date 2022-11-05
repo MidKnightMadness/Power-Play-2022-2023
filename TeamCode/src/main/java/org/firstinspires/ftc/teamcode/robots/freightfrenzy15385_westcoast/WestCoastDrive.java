@@ -45,10 +45,10 @@ public class WestCoastDrive {
     }
 
     public void drive(double x, double y, double rotation) {
-        FRMotor.setPower(-y - rotation);
-        FLMotor.setPower( y - rotation);
-        BRMotor.setPower( y + rotation);
-        BLMotor.setPower(-y + rotation);
+        FRMotor.setPower(y - rotation);
+        FLMotor.setPower(y - rotation);
+        BRMotor.setPower(y + rotation);
+        BLMotor.setPower(y + rotation);
     }
 
     public void telemetry(Telemetry telemetry) {
