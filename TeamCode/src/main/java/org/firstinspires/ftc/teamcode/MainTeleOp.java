@@ -37,10 +37,18 @@ public class MainTeleOp extends OpMode {
             driveModeToggle = !driveModeToggle;
         }
         if (driveModeToggle) {
-            mecanum.fieldOrientatedDrive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, telemetry);
+            mecanum.fieldOrientatedDrive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+            if (gamepad1.dpad_up) { mecanum.fieldOrientatedDrive(0, -1, 0); }
+            if (gamepad1.dpad_down) { mecanum.fieldOrientatedDrive(0, 1, 0); }
+            if (gamepad1.dpad_right) { mecanum.fieldOrientatedDrive(1, 0, 0); }
+            if (gamepad1.dpad_left) { mecanum.fieldOrientatedDrive(-1, 0, 0); }
         } else {
-            //mecanum.drive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x); // normal drive
-            mecanum.vectorDrive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, telemetry);
+            mecanum.drive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x); // normal drive
+//            mecanum.vectorDrive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, telemetry);
+            if (gamepad1.dpad_up) { mecanum.drive(0, -1, 0); }
+            if (gamepad1.dpad_down) { mecanum.drive(0, 1, 0); }
+            if (gamepad1.dpad_right) { mecanum.drive(1, 0, 0); }
+            if (gamepad1.dpad_left) { mecanum.drive(-1, 0, 0); }
         }
         lastPressedDriveMode = gamepad1.right_bumper;
 

@@ -188,7 +188,7 @@ public class MecanumDrive {
 //        }
 //    }
 
-    public void fieldOrientatedDrive(double x, double y, double rotate, Telemetry telemetry) {
+    public void fieldOrientatedDrive(double x, double y, double rotate) {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         gyro_degrees = angles.firstAngle;
         gyro_radians = gyro_degrees * Math.PI / 180;
