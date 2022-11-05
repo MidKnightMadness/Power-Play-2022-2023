@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import org.firstinspires.ftc.teamcode.manipulator.Claw;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.AprilTagDetection.AprilTagDetectionPipeline;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpConeData
 {
     public int startingPos = 0;  // 0: A2, 1: A5, 2: F2, 3: F5
+    Thread thread;
 
     public static int numberOfConesInStack = 5;
 
@@ -35,6 +37,8 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
     AprilTagDetection tagOfInterest = null;
 
     LinearSlides linearSlides;
+
+    Claw claw;
 
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
@@ -144,14 +148,20 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         telemetry.addLine("-------------------------");
     }
 
-    void getCone() {
 
-    }
+    int upDown = startingPos == 0 || startingPos == 2 ? -1 : 1;
 
-    void pickUpCone() {
+    void pickUpCone() throws InterruptedException {
         double coneHeight = INITIAL_CONE_ABOVE_GROUND + INCHES_ABOVE_CONE + INCHES_ABOVE_PER_CONE * numberOfConesInStack;
 
         goToConeStack();
+        linearSlides.goPointAt(new double[] {0, upDown * 6 , coneHeight });
+
+        thread.sleep(1000);
+
+        claw.openClaw();
+        thread.sleep(100);
+        claw.closeClaw();
     }
 
     void goToScoringLocation() {
@@ -162,7 +172,12 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         goToPosition((int) coneStackLocation.x, (int) scoringLocation.y);
     }
 
+
     void scoreCone() {
+        double junctionHeight = junctionHeights[1][2];
+
+        goToScoringLocation();
+
 
     }
 

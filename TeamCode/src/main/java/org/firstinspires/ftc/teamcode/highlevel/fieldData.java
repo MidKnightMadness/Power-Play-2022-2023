@@ -27,10 +27,10 @@ public interface fieldData {
     };
 
     public Vector2[] coneStackLocations = {
-            new Vector2(60, 2),
-            new Vector2(60, 142),
-            new Vector2(84, 2),
-            new Vector2(84, 142),
+            new Vector2(60, 6),
+            new Vector2(60, 138),
+            new Vector2(84, 6),
+            new Vector2(84, 138),
     };
 
     public Vector2[] scoringLocations = {
