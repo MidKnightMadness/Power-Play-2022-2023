@@ -19,8 +19,8 @@ public class TestingOdometryAlgorithm extends Master {
     //    ˜˜˜˜˜˜˜˜
 
     // Chassis dimensional constants
-    public static final double TRACK_WIDTH = 10.0; // Distance between dead wheels 1 and 2 in inches
-    public static final double DISTANCE_TO_BACK_WHEEL = 4.0; // Distance between center of robot (currentPosition) and back dead wheel - again, in inches
+    public static final double TRACK_WIDTH = 12.4; // Distance between dead wheels 1 and 2 in inches
+    public static final double DISTANCE_TO_BACK_WHEEL = 7.500 - 2.098; // Distance between center of robot (currentPosition) and back dead wheel - again, in inches
     public static final double DEAD_WHEEL_RADIUS = 1.5;
     public static final double TICKS_PER_ROTATION = 8192;
 
@@ -78,7 +78,7 @@ public class TestingOdometryAlgorithm extends Master {
         encoder2Delta = (encoder2.getCurrentPosition() - encoder2Reading) * WHEEL_TRAVEL_CONVERSION_FOR_DEAD_WHEELS;
         encoder3Delta = (encoder3.getCurrentPosition() - encoder3Reading) * WHEEL_TRAVEL_CONVERSION_FOR_DEAD_WHEELS;
 
-        // Tick-updting encoder positions
+        // Tick-updating encoder positions
         encoder1Reading = encoder1.getCurrentPosition();
         encoder2Reading = encoder2.getCurrentPosition();
         encoder3Reading = encoder3.getCurrentPosition();
@@ -91,11 +91,20 @@ public class TestingOdometryAlgorithm extends Master {
         normalOrientation.rotate(angleChange / 2);
 
         travel = orientation.multiply(0.5 * encoder1Delta + 0.5 * encoder2Delta).add
-                (normalOrientation.multiply(encoder3Delta * Math.cos(orientationAngle) - encoder3Delta * (angleChange / 2)));
+                (normalOrientation.multiply(encoder3Delta * Math.cos(orientationAngle) - DISTANCE_TO_BACK_WHEEL * encoder3Delta * (angleChange / 2))); // Might need to multiply distance to back wheel
 
         orientationAngle += angleChange / 2;
         orientation.rotate(angleChange / 2);
         normalOrientation.rotate(angleChange / 2);
+
+
+        // Making sure it's positive
+        while(orientationAngle < 0){
+            orientationAngle += Math.PI;
+        }
+
+        // Making sure its between 0 and 2π
+        orientationAngle %= 2 * Math.PI;
 
         Master.currentPosition.add(travel);
     }
