@@ -7,20 +7,22 @@ import org.firstinspires.ftc.teamcode.drivetrain.Vector;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.highlevel.Master;
 import org.firstinspires.ftc.teamcode.manipulator.LinearSlides;
 import org.firstinspires.ftc.teamcode.manipulator.Turntable;
 import org.firstinspires.ftc.teamcode.drivetrain.*;
 
 // Encoders, Motors
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @TeleOp(name = "main")
 public class TeleOp1 extends OpMode {
     MecanumDrive drive;
-
+    HardwareMap hardwareMap;
     @Override
     public void init() {
-        drive = new MecanumDrive(hardwareMap);
+        drive = new MecanumDrive(this.hardwareMap);
         telemetry.addData("\"RIGHT\" reference: ", drive.RIGHT.getVector());
         telemetry.addData("\"BACKWARDS\" reference:\t\t[]", drive.BACKWARDS.getVector());
         telemetry.addData("\"TURN_RIGHT\" reference: \t[]", drive.TURN_RIGHT.getVector());
@@ -29,30 +31,7 @@ public class TeleOp1 extends OpMode {
 
     @Override
     public void loop() {
-        // Testing purposes only
-//        translation = BACKWARDS.multiply(gamepad1.left_stick_y).add(RIGHT.multiply(gamepad1.left_stick_x));
-//        rotation = TURN_RIGHT.multiply(gamepad1.right_stick_x);
-//        drive = translation.add(rotation);
-//
-//        double maxValue = 0.0;
-//        for(double thisNum : drive.getVector()){
-//            if(Math.abs(thisNum) > maxValue){
-//                maxValue = thisNum;
-//            }
-//        }
-//
-//        auxillary = drive.getVector();
-//
-//        telemetry.addData("\nFront Left input:", auxillary[0]);
-//        telemetry.addData("Front right input:", auxillary[1]);
-//        telemetry.addData("Rear left input:", auxillary[2]);
-//        telemetry.addData("Rear right input:", auxillary[3]);
-//        telemetry.update();
-//
-//        FLMotor.setPower(auxillary[0]);
-//        FRMotor.setPower(auxillary[1]);
-//        BLMotor.setPower(auxillary[2]);
-//        BRMotor.setPower(auxillary[3]);
+        drive.vectorDrive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, Master.telemetry);
 
         telemetry.addLine(String.format("deltaX: %3.1f, %3.1f%nrotation: %3.1f", gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x));
 

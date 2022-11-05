@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.drivetrain;
 
 import static org.firstinspires.ftc.teamcode.highlevel.Master.currentPosition;
+import static org.firstinspires.ftc.teamcode.highlevel.Master.hardwaremap;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.invSqrt;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.odometryAlg;
 
@@ -21,10 +22,10 @@ import org.firstinspires.ftc.teamcode.odometry.Odometry;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.telemetry;
 
 public class MecanumDrive {
-    public DcMotorEx FRMotor;
-    public DcMotorEx FLMotor;
-    public DcMotorEx BRMotor;
-    public DcMotorEx BLMotor;
+    public static DcMotorEx FRMotor;
+    public static DcMotorEx FLMotor;
+    public static DcMotorEx BRMotor;
+    public static DcMotorEx BLMotor;
 
     Odometry odometry;
 
@@ -64,10 +65,12 @@ public class MecanumDrive {
 
     public MecanumDrive(HardwareMap hardwareMap) {
 //         Connect Motors
-        FRMotor = hardwareMap.get(DcMotorEx.class, "FR");
-        FLMotor = hardwareMap.get(DcMotorEx.class, "FL");
-        BRMotor = hardwareMap.get(DcMotorEx.class, "BR");
-        BLMotor = hardwareMap.get(DcMotorEx.class, "BL");
+        FRMotor = hardwaremap.get(DcMotorEx.class, "FR");
+        FLMotor = hardwaremap.get(DcMotorEx.class, "FL");
+        BRMotor = hardwaremap.get(DcMotorEx.class, "BR");
+        BLMotor = hardwaremap.get(DcMotorEx.class, "BL");
+
+
 
         // Set Directions
         FRMotor.setDirection(DcMotor.Direction.FORWARD);
