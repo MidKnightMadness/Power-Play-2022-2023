@@ -178,6 +178,12 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 
         goToScoringLocation();
 
+        try {
+            pickUpCone();
+        } catch (InterruptedException e) {
+            telemetry.addLine(e.toString());
+            telemetry.update();
+        }
 
     }
 

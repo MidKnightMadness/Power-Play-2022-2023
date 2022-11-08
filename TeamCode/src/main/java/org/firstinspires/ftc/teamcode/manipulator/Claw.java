@@ -1,20 +1,31 @@
 package org.firstinspires.ftc.teamcode.manipulator;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoController;
 
 public class Claw {
 
     Servo servo;
-    int openPos = 1;
-    int closedPos = 0;
+    ServoController servoController;
+
+    public Claw(HardwareMap hardwareMap) {
+        servo = hardwareMap.get(Servo.class, "claw");
+        servoController = servo.getController();
+    }
 
     public void openClaw() {
-        while (servo.getPosition() < openPos) {
-            servo.setPosition(1);
-        }
+        servo.setPosition(servo.MAX_POSITION);
     }
 
     public void closeClaw() {
-        
+        servo.setPosition(servo.MIN_POSITION);
     }
+
+    public void waitForOpenClaw() {
+        while (servo.getPosition() < servo.MAX_POSITION) {
+            servo.setPosition(servo.MAX_POSITION);
+        }
+    }
+
 }
