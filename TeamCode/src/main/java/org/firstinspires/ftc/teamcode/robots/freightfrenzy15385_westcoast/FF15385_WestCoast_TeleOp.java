@@ -8,6 +8,9 @@ public class FF15385_WestCoast_TeleOp extends OpMode {
 
     WestCoastDrive westcoast;
 
+    private boolean lastPressedDriveMode = false;
+    private boolean driveModeToggle = false;
+
     @Override
     public void init() {
         westcoast = new WestCoastDrive(hardwareMap);
@@ -23,7 +26,19 @@ public class FF15385_WestCoast_TeleOp extends OpMode {
 
     @Override
     public void loop() {
-        westcoast.drive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+        if (gamepad1.right_bumper && !lastPressedDriveMode) {
+            driveModeToggle = !driveModeToggle;
+        }
+        if (driveModeToggle) {
+            westcoast.drive(gamepad1.left_stick_x / 4.0, -gamepad1.left_stick_y / 4.0, gamepad1.right_stick_x / 4.0);
+        } else {
+            westcoast.drive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+        }
+        lastPressedDriveMode = gamepad1.right_bumper;
+
+        if (driveModeToggle) telemetry.addLine("Slow");
+        else telemetry.addLine("Fast");
+
         westcoast.telemetry(telemetry);
     }
 }

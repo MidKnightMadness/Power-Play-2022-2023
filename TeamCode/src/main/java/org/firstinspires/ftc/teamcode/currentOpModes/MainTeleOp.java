@@ -16,7 +16,7 @@ public class MainTeleOp extends OpMode {
     TestingOdometryAlgorithm odometryAlg;
     LinearSlides lift;
     Turntable turntable;
-    HardwareMap hardwareMap;
+//    HardwareMap hardwareMap;
 
     private boolean lastPressedLiftMotor = false;
     private boolean liftMotorToggle = false;
@@ -26,7 +26,7 @@ public class MainTeleOp extends OpMode {
     @Override
     public void init() {
 
-        mecanum = new MecanumDrive(this.hardwareMap);
+        mecanum = new MecanumDrive(hardwareMap);
 //        odometry = new Odometry(hardwareMap);
 //        lift = new LinearSlides(hardwareMap);
 //        turntable = new Turntable(hardwareMap);

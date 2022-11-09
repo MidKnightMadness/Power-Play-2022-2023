@@ -19,10 +19,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 @TeleOp(name = "main")
 public class TeleOp1 extends OpMode {
     MecanumDrive drive;
-    HardwareMap hardwareMap;
     @Override
     public void init() {
-        drive = new MecanumDrive(this.hardwareMap);
+        drive = new MecanumDrive(hardwareMap);
         telemetry.addData("\"RIGHT\" reference: ", drive.RIGHT.getVector());
         telemetry.addData("\"BACKWARDS\" reference:\t\t[]", drive.BACKWARDS.getVector());
         telemetry.addData("\"TURN_RIGHT\" reference: \t[]", drive.TURN_RIGHT.getVector());
@@ -31,7 +30,7 @@ public class TeleOp1 extends OpMode {
 
     @Override
     public void loop() {
-        drive.vectorDrive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, Master.telemetry);
+        drive.vectorDrive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
         telemetry.addLine(String.format("deltaX: %3.1f, %3.1f%nrotation: %3.1f", gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x));
 
