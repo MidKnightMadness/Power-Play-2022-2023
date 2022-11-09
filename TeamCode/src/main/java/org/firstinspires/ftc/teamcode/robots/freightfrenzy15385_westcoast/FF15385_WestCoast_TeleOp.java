@@ -20,10 +20,16 @@ public class FF15385_WestCoast_TeleOp extends OpMode {
     public void start() {
 
     }
+    double multiplier;
 
     @Override
     public void loop() {
-        westcoast.drive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+        if (gamepad1.left_stick_x != 0) {
+            westcoast.drive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+        }
+        else {
+            westcoast.drive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x * multiplier);
+        }
         westcoast.telemetry(telemetry);
     }
 }
