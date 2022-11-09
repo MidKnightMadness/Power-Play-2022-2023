@@ -18,29 +18,29 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @TeleOp(name = "main")
 public class TeleOp1 extends OpMode {
-    MecanumDrive drive;
-    HardwareMap hardwareMap;
+    public static MecanumDrive drive;
+    public static Telemetry telemetry;
     @Override
     public void init() {
         drive = new MecanumDrive(this.hardwareMap);
-        telemetry.addData("\"RIGHT\" reference: ", drive.RIGHT.getVector());
-        telemetry.addData("\"BACKWARDS\" reference:\t\t[]", drive.BACKWARDS.getVector());
-        telemetry.addData("\"TURN_RIGHT\" reference: \t[]", drive.TURN_RIGHT.getVector());
-        telemetry.update();
+        this.telemetry.addData("\"RIGHT\" reference: ", drive.RIGHT.getVector());
+        this.telemetry.addData("\"BACKWARDS\" reference:\t\t[]", drive.BACKWARDS.getVector());
+        this.telemetry.addData("\"TURN_RIGHT\" reference: \t[]", drive.TURN_RIGHT.getVector());
+        this.telemetry.update();
     }
 
     @Override
     public void loop() {
         drive.vectorDrive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, Master.telemetry);
+//        drive.fieldOrientatedDrive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
-        telemetry.addLine(String.format("deltaX: %3.1f, %3.1f%nrotation: %3.1f", gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x));
+        this.telemetry.addLine(String.format("deltaX: %3.1f, %3.1f%nrotation: %3.1f", gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x));
 
-        telemetry.addData("\nFront Left output:", drive.FLMotor.getPower());
-        telemetry.addData("Front right output:", drive.FLMotor.getPower());
-        telemetry.addData("Rear left output:", drive.FLMotor.getPower());
-        telemetry.addData("Rear right output:", drive.FLMotor.getPower());
-        telemetry.update();
+        this.telemetry.addData("\nFront Left output:", drive.FLMotor.getPower());
+        this.telemetry.addData("Front right output:", drive.FLMotor.getPower());
+        this.telemetry.addData("Rear left output:", drive.FLMotor.getPower());
+        this.telemetry.addData("Rear right output:", drive.FLMotor.getPower());
 
-        telemetry.update();
+        this.telemetry.update();
     }
 }

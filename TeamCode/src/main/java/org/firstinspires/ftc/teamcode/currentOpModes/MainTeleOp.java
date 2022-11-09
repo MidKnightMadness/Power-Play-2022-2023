@@ -27,6 +27,7 @@ public class MainTeleOp extends OpMode {
     public void init() {
 
         mecanum = new MecanumDrive(this.hardwareMap);
+
 //        odometry = new Odometry(hardwareMap);
 //        lift = new LinearSlides(hardwareMap);
 //        turntable = new Turntable(hardwareMap);
@@ -41,7 +42,7 @@ public class MainTeleOp extends OpMode {
         }
         if (driveModeToggle) {
             mecanum.fieldOrientatedDrive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
-            if (gamepad1.dpad_up) { mecanum.fieldOrientatedDrive(0, -1, 0); }
+            if (gamepad1.dpad_up) { mecanum.fieldOrientatedDrive(0.0, -1, 0); }
             if (gamepad1.dpad_down) { mecanum.fieldOrientatedDrive(0, 1, 0); }
             if (gamepad1.dpad_right) { mecanum.fieldOrientatedDrive(1, 0, 0); }
             if (gamepad1.dpad_left) { mecanum.fieldOrientatedDrive(-1, 0, 0); }

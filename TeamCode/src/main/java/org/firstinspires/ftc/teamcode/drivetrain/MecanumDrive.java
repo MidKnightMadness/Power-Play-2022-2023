@@ -16,7 +16,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.highlevel.Master;
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
+import org.firstinspires.ftc.teamcode.test.TeleOp1;
 //import org.firstinspires.ftc.teamcode.odometry.Odometry;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.telemetry;
 
@@ -156,11 +158,10 @@ public class MecanumDrive {
 
         auxillary = drive.getVector();
 
-        telemetry.addData("\nFront Left input:", auxillary[0]);
-        telemetry.addData("Front right input:", auxillary[1]);
-        telemetry.addData("Rear left input:", auxillary[2]);
-        telemetry.addData("Rear right input:", auxillary[3]);
-        telemetry.update();
+        TeleOp1.telemetry.addData("\nFront Left input:", auxillary[0]);
+        TeleOp1.telemetry.addData("Front right input:", auxillary[1]);
+        TeleOp1.telemetry.addData("Rear left input:", auxillary[2]);
+        TeleOp1.telemetry.addData("Rear right input:", auxillary[3]);
 
         FLMotor.setPower(auxillary[0]);
         FRMotor.setPower(auxillary[1]);
