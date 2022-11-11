@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.highlevel.Master;
 import org.firstinspires.ftc.teamcode.highlevel.fieldData;
 import org.firstinspires.ftc.teamcode.common.Timer;
 import org.firstinspires.ftc.teamcode.odometry.Vector2;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 import java.util.ArrayList;
 
@@ -27,7 +28,6 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
     Thread thread;
 
     public static int numberOfConesInStack = 5;
-
     int[] signalFinds = new int[] {0, 0, 0};
     int mostRecentDetection = 0;
 
@@ -135,10 +135,15 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         telemetry.addData("Signal location", signalLocations[startingPos][mostRecentDetection - 1]);
         telemetry.update();
         double time = coneTimer.getTime();
-        if (time > 25) {
+
+        if (time < 25) {
             goToSignalLocation((int)odometry.getXCoordinate(), (int) odometry.getYCoordinate(), (int) signalLocationX, (int) signalLocationY);
-            
+            requestOpModeStop();
         }
+        else {
+
+        }
+
     }
 
     void tagToTelemetry(AprilTagDetection detection)
@@ -156,7 +161,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         double coneHeight = INITIAL_CONE_ABOVE_GROUND + INCHES_ABOVE_CONE + INCHES_ABOVE_PER_CONE * numberOfConesInStack;
 
         goToConeStack();
-        linearSlides.goPointAt(new double[] {0, upDown * 6 , coneHeight });
+        linearSlides.goPointAt(new double[] {0, upDown * 12 , coneHeight });
 
         thread.sleep(1000);
 
@@ -184,6 +189,9 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
             telemetry.addLine(e.toString());
             telemetry.update();
         }
+
+        linearSlides.goPointAt(new double[] {upDown * 12, 0, junctionHeight});
+        claw.openClaw();
 
     }
 
