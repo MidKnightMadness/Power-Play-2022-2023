@@ -137,6 +137,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         double time = coneTimer.getTime();
         if (time > 25) {
             goToSignalLocation((int)odometry.getXCoordinate(), (int) odometry.getYCoordinate(), (int) signalLocationX, (int) signalLocationY);
+            
         }
     }
 
