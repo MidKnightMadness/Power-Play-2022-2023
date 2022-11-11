@@ -61,9 +61,9 @@ public class FF15385_TeleOp extends OpMode {
     public void init() {
         drive = new SampleDrive(hardwareMap);
         catapult = new Catapult(hardwareMap);
-        carousel = new Carousel(hardwareMap);
-        intake = new Intake(hardwareMap);
-        lift = new Lift(hardwareMap);
+//        carousel = new Carousel(hardwareMap);
+//        intake = new Intake(hardwareMap);
+//        lift = new Lift(hardwareMap);
 
         sensorDistanceL = hardwareMap.get(DistanceSensor.class, "sensor_distance_left");
         sensorRangeM = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range_middle");
@@ -76,9 +76,9 @@ public class FF15385_TeleOp extends OpMode {
         //sensorTelemetry();
         drive.telemetry(telemetry);
         catapult.telemetry(telemetry);
-        carousel.telemetry(telemetry);
-        intake.telemetry(telemetry);
-        lift.telemetry(telemetry);
+//        carousel.telemetry(telemetry);
+//        intake.telemetry(telemetry);
+//        lift.telemetry(telemetry);
         telemetry.update();
 
         //DRIVER ASSIST

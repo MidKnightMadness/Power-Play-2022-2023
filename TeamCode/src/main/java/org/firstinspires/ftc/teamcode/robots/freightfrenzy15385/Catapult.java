@@ -24,25 +24,25 @@ public class Catapult {
     public void upper() {//12.2 in
         catapultMotor.setTargetPosition(-630 + startPosition);
         catapultMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        catapultMotor.setPower(0.25);
+        catapultMotor.setPower(1);
     }
 
     public void middle() {//13 in
         catapultMotor.setTargetPosition(-830 + startPosition);
         catapultMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        catapultMotor.setPower(0.25);
+        catapultMotor.setPower(1);
     }
 
     public void lower() {//14 in
         catapultMotor.setTargetPosition(-970 + startPosition);
         catapultMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        catapultMotor.setPower(0.25);
+        catapultMotor.setPower(1);
     }
 
     public void returnPosition() {
         catapultMotor.setTargetPosition(startPosition);
         catapultMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        catapultMotor.setPower(0.25);
+        catapultMotor.setPower(1);
     }
 
     public double getVelocity() {
