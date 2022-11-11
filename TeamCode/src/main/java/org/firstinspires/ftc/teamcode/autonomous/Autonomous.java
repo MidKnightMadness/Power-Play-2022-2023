@@ -175,7 +175,6 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 
     void scoreCone() {
         double junctionHeight = junctionHeights[1][2];
-
         goToScoringLocation();
 
         try {
