@@ -139,19 +139,14 @@ public class MecanumDrive {
 
         translation = Vector.add(Vector.multiply(x, RIGHT), Vector.multiply(y, BACKWARDS));
         rotation = Vector.multiply(rotate, TURN_RIGHT);
-        drive = Vector.add(translation, rotation);
+        this.drive = Vector.add(translation, rotation);
 
-        double maxValue = 0.0;
-        for(double thisNum : drive){
-            if(Math.abs(thisNum) > maxValue){
-                maxValue = thisNum;
-            }
-        }
+        Vector.multiply(1/Math.max(this.drive[0], Math.max(this.drive[1], Math.max(this.drive[2], this.drive[3]))), this.drive);
 
-        FLMotor.setPower(drive[0]);
-        FRMotor.setPower(drive[1]);
-        BLMotor.setPower(drive[2]);
-        BRMotor.setPower(drive[3]);
+        FLMotor.setPower(this.drive[0]);
+        FRMotor.setPower(this.drive[1]);
+        BLMotor.setPower(this.drive[2]);
+        BRMotor.setPower(this.drive[3]);
     }
 
     public void fieldOrientatedDrive(double x, double y, double rotate) {
