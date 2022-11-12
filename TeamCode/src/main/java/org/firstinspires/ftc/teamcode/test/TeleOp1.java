@@ -22,9 +22,9 @@ public class TeleOp1 extends OpMode {
     @Override
     public void init() {
         drive = new MecanumDrive(hardwareMap);
-        telemetry.addData("\"RIGHT\" reference: ", drive.RIGHT.getVector());
-        telemetry.addData("\"BACKWARDS\" reference:\t\t[]", drive.BACKWARDS.getVector());
-        telemetry.addData("\"TURN_RIGHT\" reference: \t[]", drive.TURN_RIGHT.getVector());
+        telemetry.addData("\"RIGHT\" reference: ", drive.RIGHT);
+        telemetry.addData("\"BACKWARDS\" reference:\t\t[]", drive.BACKWARDS);
+        telemetry.addData("\"TURN_RIGHT\" reference: \t[]", drive.TURN_RIGHT);
         telemetry.update();
     }
 

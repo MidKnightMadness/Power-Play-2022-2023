@@ -16,7 +16,7 @@ import static org.firstinspires.ftc.teamcode.manipulator.Turntable.turntableAngl
 public class LinearSlides {
     public static DcMotorEx seeSawMotor;
     public static DcMotorEx extensionMotor;
-    public static Vector manipulatorPosition;
+    public static double [] manipulatorPosition = {0.0, 0.0, 0.0};
     private static HardwareMap hardwareMap;
     public static double seesawAngle;
     public static double seesawExtensionLength;
@@ -71,11 +71,10 @@ public class LinearSlides {
 
         // Motor kinematics ;)
         // Note: initialize turntable before manipulator!!!
-        manipulatorPosition = new Vector(new double [] {0.0, 0.0, 0.0}); // Idk if this works lol
 
-        manipulatorPosition.set(0, (STARTING_EXTENDER_LENGTH) * Math.cos(turntableAngle) * Math.cos(STARTING_ANGLE));
-        manipulatorPosition.set(1, (STARTING_EXTENDER_LENGTH) * Math.sin(turntableAngle) * Math.cos(STARTING_ANGLE));
-        manipulatorPosition.set(2, ROOT_HEIGHT + (STARTING_EXTENDER_LENGTH * Math.sin(STARTING_ANGLE)));
+        manipulatorPosition[0] = STARTING_EXTENDER_LENGTH * Math.cos(turntableAngle) * Math.cos(STARTING_ANGLE);
+        manipulatorPosition[1] = STARTING_EXTENDER_LENGTH * Math.sin(turntableAngle) * Math.cos(STARTING_ANGLE);
+        manipulatorPosition[2] =  ROOT_HEIGHT + (STARTING_EXTENDER_LENGTH * Math.sin(STARTING_ANGLE));
 
         displacement = new double[2];
         angleDisplacement = 0.0;

@@ -5,6 +5,9 @@ import static org.firstinspires.ftc.teamcode.highlevel.Master.auxillary;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.currentPosition;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.invSqrt;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.odometryAlg;
+import static org.firstinspires.ftc.teamcode.highlevel.Master.robotSpeed;
+import static org.firstinspires.ftc.teamcode.highlevel.Master.tickRate;
+import static org.firstinspires.ftc.teamcode.highlevel.Master.turntable;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.turntableAngle;
 import static org.firstinspires.ftc.teamcode.manipulator.LinearSlides.ROOT_HEIGHT;
 
@@ -48,7 +51,7 @@ public class GridSystem {
 
     public static double [] closestJunctionDisplacement(){ // Returns 3d displacement vector to be inputed to move methods
         odometryAlg.updateOrientationAndLocation();
-        auxillary2d = currentPosition.getVector();
+        auxillary2d = currentPosition;
 
         auxillary3d[0] = auxillary2d[0] - (23.50 * (Math.round(auxillary2d[0] / 23.50)));
         auxillary3d[1] = auxillary2d[1] - (23.50 * (Math.round(auxillary2d[1] / 23.50)));
@@ -60,7 +63,9 @@ public class GridSystem {
 
     public static double [] pointAtJunction(){ // Returns 3d array with hor. angle target, vert. angle target, and extension length
         odometryAlg.updateOrientationAndLocation();
-        auxillary2d = currentPosition.getVector();
+        auxillary2d = currentPosition;
+        // Holding down a key continuously aims at the same junction, with small adjustments to compensate
+        // This method just locks onto a junction
 
         auxillary2d[0] %= 23.50;
         auxillary2d[1] %= 23.50;
@@ -103,7 +108,7 @@ public class GridSystem {
         auxillary3d[0] = djskjsjksskjkj - turntableAngle; // Turntable target angle
 
         // "Points" at junction corresponding to target position to get required height and extension length
-        auxillary2d = currentPosition.getVector();
+        auxillary2d = currentPosition;
         switch(djskjsjksskjkj2){
             // Junction numbering in square
             // 2 1
@@ -122,9 +127,10 @@ public class GridSystem {
                 }
 
                 // Making auxillary2d displacement to junction
-                auxillary2d = currentPosition.getVector();
+                auxillary2d = currentPosition;
                 auxillary2d[0] = 23.50 - (auxillary2d[0] % 23.50);
                 auxillary2d[1] = 23.50 - (auxillary2d[1] % 23.50);
+                Master.target = auxillary2d;
 
                 auxillary3d[1] = Math.atan(djskjsjksskjkj * invSqrt((auxillary2d[0] * auxillary2d[0]) + (auxillary2d[1] * auxillary2d[1]))); // Angle, note that this doesn't go beyond 90˚, no need to flip
                 auxillary3d[2] = Math.sqrt((djskjsjksskjkj * djskjsjksskjkj) + (auxillary2d[0] * auxillary2d[0]) + (auxillary2d[1] * auxillary2d[1]));
@@ -144,9 +150,10 @@ public class GridSystem {
                 }
 
                 // Making auxillary2d displacement to junction
-                auxillary2d = currentPosition.getVector();
+                auxillary2d = currentPosition;
                 auxillary2d[0] = auxillary2d[0] % 23.50;
                 auxillary2d[1] = 23.50 - (auxillary2d[1] % 23.50);
+                Master.target = auxillary2d;
 
                 auxillary3d[1] = Math.atan(djskjsjksskjkj * invSqrt((auxillary2d[0] * auxillary2d[0]) + (auxillary2d[1] * auxillary2d[1])));
                 auxillary3d[2] = Math.sqrt((djskjsjksskjkj * djskjsjksskjkj) + (auxillary2d[0] * auxillary2d[0]) + (auxillary2d[1] * auxillary2d[1]));
@@ -166,9 +173,10 @@ public class GridSystem {
                 }
 
                 // Making auxillary2d displacement to junction
-                auxillary2d = currentPosition.getVector();
+                auxillary2d = currentPosition;
                 auxillary2d[0] = auxillary2d[0] % 23.50;
                 auxillary2d[1] = auxillary2d[1] % 23.50;
+                Master.target = auxillary2d;
 
                 auxillary3d[1] = auxillary3d[1] = Math.atan(djskjsjksskjkj * invSqrt((auxillary2d[0] * auxillary2d[0]) + (auxillary2d[1] * auxillary2d[1])));
                 auxillary3d[2] = Math.sqrt((djskjsjksskjkj * djskjsjksskjkj) + (auxillary2d[0] * auxillary2d[0]) + (auxillary2d[1] * auxillary2d[1]));
@@ -188,9 +196,10 @@ public class GridSystem {
                 }
 
                 // Making auxillary2d displacement to junction
-                auxillary2d = currentPosition.getVector();
+                auxillary2d = currentPosition;
                 auxillary2d[0] = 23.50 - (auxillary2d[0] % 23.50);
                 auxillary2d[1] = auxillary2d[1] % 23.50;
+                Master.target = auxillary2d;
 
                 auxillary3d[1] = auxillary3d[1] = Math.atan(djskjsjksskjkj * invSqrt((auxillary2d[0] * auxillary2d[0]) + (auxillary2d[1] * auxillary2d[1])));
                 auxillary3d[2] = Math.sqrt((djskjsjksskjkj * djskjsjksskjkj) + (auxillary2d[0] * auxillary2d[0]) + (auxillary2d[1] * auxillary2d[1]));
@@ -201,7 +210,7 @@ public class GridSystem {
         }
 
         return auxillary3d;
-    }
+    } // Still need to input to motors
 }
 
 

@@ -17,6 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
+import org.firstinspires.ftc.teamcode.drivetrain.Vector;
 //import org.firstinspires.ftc.teamcode.odometry.Odometry;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.telemetry;
 
@@ -30,17 +31,12 @@ public class MecanumDrive {
 
     // Order for power values: FL, FR, RL, RR
     // Make sure to normalize power values 0 to 1
-    public static double [] NULL;
 
-    public static double [] backwards;
-    public Vector BACKWARDS;
+    public static double [] BACKWARDS = {-1.0, 1,0, -1.0, 1.0};
 
-    public static double [] rightVector;
-    public Vector RIGHT;
+    public static double [] RIGHT = {1.0, 1.0, -1.0, -1.0};
 
-    public static final double [] turnRight = {-1.0, -1.0, -1.0, -1.0};
-    public Vector TURN_RIGHT;
-
+    public static final double [] TURN_RIGHT = {-1.0, -1.0, -1.0, -1.0};
 
     // Navigation
     public static final double [] NULL_POSITION = {0.0, 0.0};
@@ -48,14 +44,14 @@ public class MecanumDrive {
 
     public static final double MAX = 3.1416; //Max speed
 
-    private Vector position;
-    private Vector velocity;
-    private Vector drive;
-    private Vector displacement;
-    private double [] auxillary;
+    private double [] position = {0.0, 0.0};
+    private double [] velocity = {0.0, 0.0};
+    private double [] drive = {0.0, 0.0, 0.0, 0.0};
+    private double [] displacement = {0.0, 0.0};
+    private double [] auxillary = {0.0, 0.0};
 
-    private Vector translation;
-    private Vector rotation;
+    private double [] translation = {0.0, 0.0, 0.0, 0.0};
+    private double [] rotation = {0.0, 0.0, 0.0, 0.0};
 
     int time;
     double maxValue;
@@ -116,22 +112,6 @@ public class MecanumDrive {
 //        BRMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.00, 0.05, 0.0, 0.0));
 //        BLMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.00, 0.05, 0.0, 0.0));
 
-        NULL = new double[] {0.0, 0.0, 0.0, 0.0};
-        backwards = new double [] {-1.0, 1,0, -1.0, 1.0};
-        rightVector = new double [] {1.0, 1.0, -1.0, -1.0};
-
-        velocity = new Vector(NULL_POSITION);
-        drive = new Vector(NULL);
-        displacement = new Vector(new double [] {0.0, 0.0});
-        translation = new Vector(NULL_POSITION);
-        rotation = new Vector(NULL_POSITION);
-        auxillary = new double [4];
-
-        BACKWARDS = new Vector(backwards);
-        RIGHT = new Vector(rightVector);
-        TURN_RIGHT = new Vector(turnRight);
-
-        time = 0; // Ticks ig
 
 
         //IMU
@@ -156,23 +136,22 @@ public class MecanumDrive {
     }
 
     public void vectorDrive(double x, double y, double rotate) {
-        translation = BACKWARDS.multiply(y).add(RIGHT.multiply(x));
-        rotation = TURN_RIGHT.multiply(rotate);
-        drive = translation.add(rotation);
+
+        translation = Vector.add(Vector.multiply(x, RIGHT), Vector.multiply(y, BACKWARDS));
+        rotation = Vector.multiply(rotate, TURN_RIGHT);
+        drive = Vector.add(translation, rotation);
 
         double maxValue = 0.0;
-        for(double thisNum : drive.getVector()){
+        for(double thisNum : drive){
             if(Math.abs(thisNum) > maxValue){
                 maxValue = thisNum;
             }
         }
 
-        auxillary = drive.getVector();
-
-        FLMotor.setPower(auxillary[0]);
-        FRMotor.setPower(auxillary[1]);
-        BLMotor.setPower(auxillary[2]);
-        BRMotor.setPower(auxillary[3]);
+        FLMotor.setPower(drive[0]);
+        FRMotor.setPower(drive[1]);
+        BLMotor.setPower(drive[2]);
+        BRMotor.setPower(drive[3]);
     }
 
     public void fieldOrientatedDrive(double x, double y, double rotate) {
@@ -194,18 +173,18 @@ public class MecanumDrive {
 
 
     public static double sensitivity = 5.0; // "Steepness" of gradient vectors
-    public Vector correct(){
+    public double [] correct(){
         odometryAlg.updateOrientationAndLocation();
-        displacement.set(0, -sensitivity * ((currentPosition.getVector()[0] % 23.50) - 11.75));
-        displacement.set(1, -sensitivity * ((currentPosition.getVector()[1] % 23.50) - 11.75));
+        displacement[0] = -sensitivity * ((currentPosition[0] % 23.50) - 11.75);
+        displacement[1] = -sensitivity * ((currentPosition[1] % 23.50) - 11.75);
 
-        return translation.add(displacement);
+        return Vector.add(translation, displacement);
     }
 
 
     public boolean driveTo(double targetX, double targetY, double targetAngle){ // Probably run this every few ticks
-        if(invSqrt(((targetAngle) * (odometryAlg.orientationAngle)) + ((targetX - currentPosition.getVector()[0]) * (targetX - currentPosition.getVector()[0])) + ((targetY - currentPosition.getVector()[1]) * (targetY - currentPosition.getVector()[1]))) < 10) {
-            fieldOrientatedDrive(targetX - currentPosition.getVector()[0], targetY - currentPosition.getVector()[1], targetAngle - odometryAlg.orientationAngle);
+        if(invSqrt(((targetAngle) * (odometryAlg.orientationAngle)) + ((targetX - currentPosition[0]) * (targetX - currentPosition[0])) + ((targetY - currentPosition[1]) * (targetY - currentPosition[1]))) < 10) {
+            fieldOrientatedDrive(targetX - currentPosition[0], targetY - currentPosition[1], targetAngle - odometryAlg.orientationAngle);
             return false;
         }
         return true;
@@ -213,17 +192,17 @@ public class MecanumDrive {
 
 
     @Deprecated
-    public static void setVelocities(DcMotorEx [] motors, Vector vector){
-        for(int i = 0; i < vector.getVector().length; i++){
-            motors[i].setVelocity(vector.getVector()[i] * MAX);
+    public static void setVelocities(DcMotorEx [] motors, double [] vector){
+        for(int i = 0; i < vector.length; i++){
+            motors[i].setVelocity(vector[i] * MAX);
         }
     }
 
-    public void setPowers(Vector vector, Telemetry telemetry){
-        FLMotor.setPower(vector.getVector()[0]);
-        FRMotor.setPower(vector.getVector()[1]);
-        BLMotor.setPower(vector.getVector()[2]);
-        BRMotor.setPower(vector.getVector()[3]);
+    public void setPowers(double [] vector, Telemetry telemetry){
+        FLMotor.setPower(vector[0]);
+        FRMotor.setPower(vector[1]);
+        BLMotor.setPower(vector[2]);
+        BRMotor.setPower(vector[3]);
     }
 
     public void telemetry(Telemetry telemetry) {
