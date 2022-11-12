@@ -30,7 +30,7 @@ public class FF15385_WestCoast_TeleOp extends OpMode {
             driveModeToggle = !driveModeToggle;
         }
         if (driveModeToggle) {
-            westcoast.drive(gamepad1.left_stick_x / 4.0, -gamepad1.left_stick_y / 4.0, gamepad1.right_stick_x / 4.0);
+            westcoast.drive(gamepad1.left_stick_x / 8.0, -gamepad1.left_stick_y / 8.0, gamepad1.right_stick_x / 8.0);
         } else {
             westcoast.drive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
         }

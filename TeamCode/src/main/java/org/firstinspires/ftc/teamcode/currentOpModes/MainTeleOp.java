@@ -56,8 +56,8 @@ public class MainTeleOp extends OpMode {
     public void loop() {
         // Update tickRate for robot speed, etc...
         Master.tickRate = 1 / (timer.getTime() - auxillary); // auxillary is previous time
-        auxillaryList1[0] = currentPosition.getVector()[0] - auxillaryList1[0];
-        auxillaryList1[1] = currentPosition.getVector()[1] - auxillaryList1[1];
+        auxillaryList1[0] = currentPosition[0] - auxillaryList1[0];
+        auxillaryList1[1] = currentPosition[1] - auxillaryList1[1];
         Master.robotSpeed = lengthOf(auxillaryList1) / (timer.getTime() - auxillary);
 
 
@@ -126,7 +126,7 @@ public class MainTeleOp extends OpMode {
 
         // Iterative setting of variables for "previous" data
         auxillary = timer.getTime();
-        auxillaryList1 = currentPosition.getVector(); // Temporary, sets current position
+        auxillaryList1 = currentPosition; // Temporary, sets current position
     }
 
 }

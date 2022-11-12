@@ -51,6 +51,13 @@ public class WestCoastDrive {
         BLMotor.setPower(y + rotation);
     }
 
+    public void driveVelocity(double x, double y, double rotation) {
+        FRMotor.setVelocity(y - rotation);
+        FLMotor.setVelocity(y + rotation);
+        BRMotor.setVelocity(y - rotation);
+        BLMotor.setVelocity(y + rotation);
+
+    }
     public void telemetry(Telemetry telemetry) {
         telemetry.addData("FR Motor Position", FRMotor.getCurrentPosition());
         telemetry.addData("FL Motor Position", FLMotor.getCurrentPosition());
