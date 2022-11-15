@@ -23,14 +23,18 @@ public class Vector { // Vector-based methods deprecated, use double []
     }
 
     public static double [] add(double [] list1, double [] list2){ // List 1 altered
-        if(list1.length == list2.length){
-            for(int i = 0; i < list1.length; i++){
-                Master.auxillary[i] = 0.0;
-                Master.auxillary[i] = list1[i] +  list2[i];
-            }
-            return Master.auxillary;
+//        if(list1.length == list2.length){
+//            for(int i = 0; i < list1.length; i++){
+//                Master.auxillary[i] = 0.0;
+//                Master.auxillary[i] = list1[i] +  list2[i];
+//            }
+//            return Master.auxillary;
+//        }
+        for(int i = 0; i < list1.length; i++){
+            Master.auxillary[i] = 0.0;
+            Master.auxillary[i] = list1[i] +  list2[i];
         }
-        return null;
+        return Master.auxillary;
     }
 
     public static double dot(double [] list1, double [] list2){

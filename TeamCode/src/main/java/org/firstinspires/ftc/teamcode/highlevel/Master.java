@@ -75,7 +75,7 @@ public class Master {
     public static double encoder1Reading;
     public static double encoder2Reading;
     public static double encoder3Reading;
-    public static double [] auxillary;
+    public static double [] auxillary = {0.0, 0.0, 0.0, 0.0};
     public static final double MAX_SCORING_RADIUS = 19.0; // Inches
     public static double auxillaryNumber;
     public static double tickRate; // Hertz
@@ -100,7 +100,6 @@ public class Master {
     // Constructor to fully instantiate robot
     public Master(){
         STARTING_POSITION = DEFAULT_POSITION;
-        auxillary = new double[]{0.0, 0.0};
         auxillaryNumber = 0.0;
         tickRate = 0.0;
         robotSpeed = 0.0;

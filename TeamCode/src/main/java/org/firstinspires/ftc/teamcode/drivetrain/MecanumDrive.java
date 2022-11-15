@@ -16,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.highlevel.Master;
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
 import org.firstinspires.ftc.teamcode.drivetrain.Vector;
 //import org.firstinspires.ftc.teamcode.odometry.Odometry;
@@ -141,7 +142,14 @@ public class MecanumDrive {
         rotation = Vector.multiply(rotate, TURN_RIGHT);
         this.drive = Vector.add(translation, rotation);
 
+
         Vector.multiply(1/Math.max(this.drive[0], Math.max(this.drive[1], Math.max(this.drive[2], this.drive[3]))), this.drive);
+
+        Master.telemetry.addData("left front", this.drive[0]);
+        Master.telemetry.addData("right front", this.drive[1]);
+        Master.telemetry.addData("left rear", this.drive[2]);
+        Master.telemetry.addData("right rear", this.drive[3]);
+
 
         FLMotor.setPower(this.drive[0]);
         FRMotor.setPower(this.drive[1]);
