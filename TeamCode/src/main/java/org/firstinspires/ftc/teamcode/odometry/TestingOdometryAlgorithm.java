@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.odometry;
 
 // Auxillary
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+
 import org.firstinspires.ftc.teamcode.drivetrain.*;
 import org.firstinspires.ftc.teamcode.highlevel.*;
 
@@ -40,7 +42,7 @@ public class TestingOdometryAlgorithm extends Master {
 
 
     // Constructor to start everything
-    public TestingOdometryAlgorithm(double [] startingPosition, HardwareMap hardwareMap) {
+    public TestingOdometryAlgorithm() {
         // Encoders
         encoder1 = hardwareMap.get(DcMotorEx.class, "encoder1");
         encoder2 = hardwareMap.get(DcMotorEx.class, "encoder2");
