@@ -140,7 +140,7 @@ public class MecanumDrive {
 
         translation = Vector.add(Vector.multiply(x, RIGHT), Vector.multiply(y, BACKWARDS));
         rotation = Vector.multiply(rotate, TURN_RIGHT);
-        this.drive = Vector.add(translation, rotation);
+        this.drive = Vector.multiply(0.5, Vector.add(translation, rotation));
 
 
         Vector.multiply(1/Math.max(this.drive[0], Math.max(this.drive[1], Math.max(this.drive[2], this.drive[3]))), this.drive);
