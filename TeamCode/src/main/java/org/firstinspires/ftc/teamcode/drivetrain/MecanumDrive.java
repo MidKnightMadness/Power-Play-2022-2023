@@ -47,7 +47,7 @@ public class MecanumDrive {
 
     private double [] position = {0.0, 0.0};
     private double [] velocity = {0.0, 0.0};
-    private double [] drive = {0.0, 0.0, 0.0, 0.0};
+    public double [] drive = {0.0, 0.0, 0.0, 0.0};
     private double [] displacement = {0.0, 0.0};
     private double [] auxillary = {0.0, 0.0};
 
@@ -144,12 +144,6 @@ public class MecanumDrive {
 
 
         Vector.multiply(1/Math.max(this.drive[0], Math.max(this.drive[1], Math.max(this.drive[2], this.drive[3]))), this.drive);
-
-        Master.telemetry.addData("left front", this.drive[0]);
-        Master.telemetry.addData("right front", this.drive[1]);
-        Master.telemetry.addData("left rear", this.drive[2]);
-        Master.telemetry.addData("right rear", this.drive[3]);
-
 
         FLMotor.setPower(this.drive[0]);
         FRMotor.setPower(this.drive[1]);
