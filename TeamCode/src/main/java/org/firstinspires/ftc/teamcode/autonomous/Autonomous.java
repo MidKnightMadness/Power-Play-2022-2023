@@ -53,6 +53,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
     public int getStartingPos() {
         return 0;
     }
+
     @Override
     public void init() {
         startingPos = getStartingPos();
