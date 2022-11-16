@@ -33,7 +33,10 @@ public class TeleOp1 extends OpMode {
     public void loop() {
         drive.vectorDrive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
-        telemetry.addLine(String.format("deltaX: %3.1f, %3.1f%nrotation: %3.1f\n", gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x));
+
+        telemetry.addData("Controller left stick x", gamepad1.left_stick_x);
+        telemetry.addData("Controller left stick y", gamepad1.left_stick_y);
+        telemetry.addData("Controller right stick x", gamepad1.right_stick_x);
 
         telemetry.addData("\nleft front", drive.drive[0]);
         telemetry.addData("right front", drive.drive[1]);
@@ -41,7 +44,7 @@ public class TeleOp1 extends OpMode {
         telemetry.addData("right rear", drive.drive[3]);
 
 
-        telemetry.addData("\n\nFront Left output:", drive.FLMotor.getPower());
+        telemetry.addData("\nFront Left output:", drive.FLMotor.getPower());
         telemetry.addData("Front right output:", drive.FLMotor.getPower());
         telemetry.addData("Rear left output:", drive.FLMotor.getPower());
         telemetry.addData("Rear right output:", drive.FLMotor.getPower());
