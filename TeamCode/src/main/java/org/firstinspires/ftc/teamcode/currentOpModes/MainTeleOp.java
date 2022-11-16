@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.common.Timer;
 import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
 import org.firstinspires.ftc.teamcode.highlevel.Master;
@@ -18,6 +19,10 @@ import org.firstinspires.ftc.teamcode.odometry.TestingOdometryAlgorithm;
 import static org.firstinspires.ftc.teamcode.drivetrain.Vector.neg;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.manipulator1;
 //import static org.firstinspires.ftc.teamcode.highlevel.Master.tracking;
+
+import org.firstinspires.ftc.robotcore.external.android.AndroidAccelerometer;
+import org.firstinspires.ftc.robotcore.external.android.AndroidGyroscope;
+
 
 @TeleOp(name="Main")
 public class MainTeleOp extends OpMode {
@@ -31,6 +36,8 @@ public class MainTeleOp extends OpMode {
     double auxillary1;
     double [] auxillaryList1;
     double [] auxillaryList2;
+
+    AndroidAccelerometer accelerometer;
 
     private boolean lastPressedLiftMotor = false;
     private boolean liftMotorToggle = false;
@@ -49,12 +56,16 @@ public class MainTeleOp extends OpMode {
 //        odometry = new Odometry(hardwareMap);
 //        lift = new LinearSlides(hardwareMap);
 //        turntable = new Turntable(hardwareMap);
-
+        accelerometer = Master.hardwaremap.get(AndroidAccelerometer.class, "accelerometer");
+        accelerometer.setDistanceUnit(DistanceUnit.INCH);
+        accelerometer.startListening();
     }
 
     @Override
     public void loop() {
         // Update tickRate for robot speed, etc...
+        // Temporary thing for position
+
         Master.tickRate = 1 / (timer.getTime() - auxillary); // auxillary is previous time
         auxillaryList1[0] = currentPosition[0] - auxillaryList1[0];
         auxillaryList1[1] = currentPosition[1] - auxillaryList1[1];
@@ -81,6 +92,11 @@ public class MainTeleOp extends OpMode {
         }
         lastPressedDriveMode = gamepad1.right_bumper;
 
+
+        // Autonomous procedure for 1st tournament
+        {
+            // Go
+        }
 
         // Checks if aimbot is activated
         if(gamepad2.left_bumper){

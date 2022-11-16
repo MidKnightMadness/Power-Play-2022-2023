@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.manipulator.Claw;
 import org.firstinspires.ftc.teamcode.manipulator.DoubleReverse4Bar;
 import org.firstinspires.ftc.teamcode.manipulator.LinearSlides;
 import org.firstinspires.ftc.teamcode.manipulator.Turntable;
@@ -95,6 +96,7 @@ public class Master {
     public static TestingOdometryAlgorithm odometryAlg; // Add this
     public static boolean aimbotActivated;
     public static double [] target;
+    public static Claw claw;
 
 
     // Constructor to fully instantiate robot
@@ -109,7 +111,8 @@ public class Master {
         odometryAlg = new TestingOdometryAlgorithm(STARTING_POSITION);
 
         manipulator1 = new LinearSlides();
-        manipulator2 = new DoubleReverse4Bar(hardwaremap);
+        claw = new Claw(hardwaremap);
+        claw.openClaw();
 
         leftSensor = hardwaremap.get(DistanceSensor.class, "left calibration distance sensor");
         rightSensor = hardwaremap.get(DistanceSensor.class, "right calibration distance sensor");

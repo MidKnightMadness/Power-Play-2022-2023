@@ -23,8 +23,9 @@ public class Claw {
     }
 
     public void waitForOpenClaw() {
+        this.openClaw();
         while (servo.getPosition() < servo.MAX_POSITION) {
-            servo.setPosition(servo.MAX_POSITION);
+            continue;
         }
     }
 
