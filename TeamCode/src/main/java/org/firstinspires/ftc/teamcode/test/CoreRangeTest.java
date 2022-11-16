@@ -22,7 +22,7 @@ public class CoreRangeTest extends OpMode {
 
     @Override
     public void loop() {
-        telemetry.addLine("disance" + modernRoboticsI2cRangeSensor.getDistance(DistanceUnit.CM));
+        telemetry.addLine("disance" + modernRoboticsI2cRangeSensor.getDistance(DistanceUnit.INCH));
         telemetry.update();
     }
 

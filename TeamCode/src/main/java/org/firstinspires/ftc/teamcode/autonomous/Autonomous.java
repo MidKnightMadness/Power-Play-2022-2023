@@ -126,6 +126,8 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 
         signalLocationX = signalLocations[startingPos][mostRecentDetection - 1].x;
         signalLocationY = signalLocations[startingPos][mostRecentDetection - 1].y;
+        
+        scoreCone();
     }
 
     @Override
@@ -141,6 +143,13 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
             requestOpModeStop();
         }
         else {
+            try {
+                pickUpCone();
+            } catch (InterruptedException e) {
+                telemetry.addLine(e.toString());
+                telemetry.update();
+            }
+            scoreCone();
 
         }
 
@@ -170,6 +179,10 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         claw.closeClaw();
     }
 
+    void cycle() {
+
+    }
+
     void goToScoringLocation() {
         goToPosition((int) scoringLocation.x, (int) scoringLocation.y);
     }
@@ -183,16 +196,8 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         double junctionHeight = junctionHeights[1][2];
         goToScoringLocation();
 
-        try {
-            pickUpCone();
-        } catch (InterruptedException e) {
-            telemetry.addLine(e.toString());
-            telemetry.update();
-        }
-
         linearSlides.goPointAt(new double[] {upDown * 12, 0, junctionHeight});
         claw.openClaw();
-
     }
 
     void goToSignalLocation(int posX, int posY, int targetX, int targetY) {
