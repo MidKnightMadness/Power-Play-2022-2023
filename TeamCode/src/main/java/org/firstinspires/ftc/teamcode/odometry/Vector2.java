@@ -15,11 +15,14 @@ public class Vector2 {
     public Vector2 minus(Vector2 vec) {
         return new Vector2(this.x - vec.x, this.y - vec.y);
     }
-//
-//    public double dot(Vector2 vec) {
-//        return ;
-//
-//    }
+
+    public double dot(Vector2 vec) {
+        return vec.x * vec.x + vec.y * vec.y;
+    }
+
+    public double dot(Vector2 vec1, Vector2 vec2) {
+        return dot(vec1.minus(vec2));
+    }
 //
 //    public Vector2 cross(Vector2 vec) {
 //        return

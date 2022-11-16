@@ -31,6 +31,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
     int[] signalFinds = new int[] {0, 0, 0};
     int mostRecentDetection = 0;
 
+    Vector2[] scoringLocations =
     Vector2 coneStackLocation = coneStackLocations[startingPos];
     Vector2 scoringLocation = scoringLocations[startingPos];
 
@@ -137,7 +138,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         telemetry.update();
         double time = coneTimer.getTime();
 
-        if (time < 25) {
+        if (time < 26) {
             goToSignalLocation((int)odometry.getXCoordinate(), (int) odometry.getYCoordinate(), (int) signalLocationX, (int) signalLocationY);
             requestOpModeStop();
         }
@@ -172,13 +173,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
     }
 
     void cycle() {
-        try {
-            pickUpCone();
-        } catch (InterruptedException e) {
-            telemetry.addLine(e.toString());
-            telemetry.update();
-        }
-        scoreCone();
+
     }
 
     void goToScoringLocation() {
