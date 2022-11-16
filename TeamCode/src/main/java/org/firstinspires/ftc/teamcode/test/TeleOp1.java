@@ -22,15 +22,15 @@ public class TeleOp1 extends OpMode {
     @Override
     public void init() {
         drive = new MecanumDrive(hardwareMap);
-        telemetry.addData("\"RIGHT\" reference: ", drive.RIGHT.getVector());
-        telemetry.addData("\"BACKWARDS\" reference:\t\t[]", drive.BACKWARDS.getVector());
-        telemetry.addData("\"TURN_RIGHT\" reference: \t[]", drive.TURN_RIGHT.getVector());
+        telemetry.addData("\"RIGHT\" reference\t\t", drive.RIGHT);
+        telemetry.addData("\"BACKWARDS\" reference:\t", drive.BACKWARDS);
+        telemetry.addData("\"TURN_RIGHT\" reference:\t", drive.TURN_RIGHT);
         telemetry.update();
     }
 
     @Override
     public void loop() {
-        drive.vectorDrive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+        drive.vectorDrive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
         telemetry.addLine(String.format("deltaX: %3.1f, %3.1f%nrotation: %3.1f", gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x));
 

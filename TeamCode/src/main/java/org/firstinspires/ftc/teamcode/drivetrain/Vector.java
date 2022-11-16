@@ -9,38 +9,10 @@ import org.firstinspires.ftc.teamcode.highlevel.Master;
 public class Vector { // Vector-based methods deprecated, use double []
     // Current issue: references for all objects within MecanumDrive not working
     // Note that arrays are given by their reference address
-    
-    private double [] vectorArray;
-    private double auxillary = 0;
-
-    public Vector(double [] vector){
-        this.vectorArray = vector;
-    }
-
-    public Vector(Vector vector){
-        this.set(0, vector.getVector()[0]);
-        this.set(1, vector.getVector()[1]);
-    }
-
-    public double [] getVector() {
-        return this.vectorArray;
-    }
-
-    public void set(int i, double num){
-        this.vectorArray[i] = num;
-    }
 
     public static double [] set(double [] list, int i, double num){
         list [i] = num;
         return list;
-    }
-
-    public Vector neg(Vector vector){
-        for(double thisNum : vector.getVector()){
-            thisNum = -thisNum;
-        }
-
-        return this;
     }
 
     public static double [] neg(double [] list){
@@ -50,37 +22,19 @@ public class Vector { // Vector-based methods deprecated, use double []
         return list;
     }
 
-    public Vector add(Vector vector){
-        if(vector.getVector().length == this.getVector().length){
-            for(int i = 0; i < vector.getVector().length; i++) {
-                this.set(i, this.getVector()[i] + vector.getVector()[i]);
-            }
-        }
-
-        return this;
-    }
-
     public static double [] add(double [] list1, double [] list2){ // List 1 altered
-        if(list1.length == list2.length){
-            for(int i = 0; i < list1.length; i++){
-                Master.auxillary[i] = 0.0;
-                Master.auxillary[i] = list1[i] +  list2[i];
-            }
-            return Master.auxillary;
+//        if(list1.length == list2.length){
+//            for(int i = 0; i < list1.length; i++){
+//                Master.auxillary[i] = 0.0;
+//                Master.auxillary[i] = list1[i] +  list2[i];
+//            }
+//            return Master.auxillary;
+//        }
+        for(int i = 0; i < list1.length; i++){
+            Master.auxillary[i] = 0.0;
+            Master.auxillary[i] = list1[i] +  list2[i];
         }
-        return null;
-    }
-
-    public double dot(Vector vector){
-        int total = 0;
-
-        if(vector.getVector().length == this.getVector().length){
-            for(int i = 0; i < vector.getVector().length; i++){
-                total += this.getVector()[i] * vector.getVector()[i];
-            }
-        }
-
-        return total;
+        return Master.auxillary;
     }
 
     public static double dot(double [] list1, double [] list2){
@@ -94,29 +48,11 @@ public class Vector { // Vector-based methods deprecated, use double []
         return -1.0;
     }
 
-    public Vector multiply(double coeff){
-        for(int i = 0; i < this.vectorArray.length; i++){
-            this.set(i, this.vectorArray[i] * coeff);
-        }
-
-        return this;
-    }
-
     public static double [] multiply(double coeff, double [] list){
         for(double i : list){
             i *= coeff;
         }
         return list;
-    }
-
-    public double length(){
-        double length = 0.0;
-
-        for(double thisNum : this.getVector()){
-            length += thisNum * thisNum;
-        }
-
-        return (Math.sqrt(length));
     }
 
     public static double lengthOf(double [] list){ // Alters list
@@ -127,21 +63,6 @@ public class Vector { // Vector-based methods deprecated, use double []
         return auxillaryNumber;
     }
 
-    public Vector normalize(){
-        double length = this.length();
-
-        auxillary = 0;
-        for(int i = 0; i < this.vectorArray.length; i++){
-            auxillary += this.vectorArray[i] * this.vectorArray[i];
-        }
-
-        for(int i = 0; i < this.vectorArray.length; i++){
-            this.vectorArray[i] *= invSqrt(vectorArray[i]);
-        }
-
-        return this;
-    }
-
     public static double [] normalize(double [] list){
         auxillaryNumber = 0;
         auxillaryNumber = lengthOf(list);
@@ -149,13 +70,6 @@ public class Vector { // Vector-based methods deprecated, use double []
             i *= invSqrt(auxillaryNumber);
         }
         return list;
-    }
-
-    public Vector rotate(double angleChange){ // Radians
-        this.set(0, Math.cos(angleChange) * this.getVector()[0] - Math.sin(angleChange) * this.getVector()[1]);
-        this.set(1, Math.sin(angleChange) * this.getVector()[0] + Math.cos(angleChange) * this.getVector()[1]);
-
-        return this;
     }
 
     public static double [] rotateBy(double [] list, double angleChange){ // Radians

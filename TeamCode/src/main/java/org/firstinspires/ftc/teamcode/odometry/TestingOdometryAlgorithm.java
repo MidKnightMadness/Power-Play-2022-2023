@@ -25,8 +25,8 @@ public class TestingOdometryAlgorithm extends Master {
     public static final double TICKS_PER_ROTATION = 8192;
 
     // Input / Output, calculations
-    Vector orientation;
-    Vector normalOrientation;
+    double [] orientation;
+    double [] normalOrientation;
     public static final double [] DEFAULT_STARTING_ORIENTATION = {0.0, 1.0};
     public static final double [] DEFAULT_STARTING_NORMAL_VECTOR = {-1.0, 0.0};
     public double orientationAngle = Math.PI / 2; // Front-facing angle relative to horizontal at start
@@ -40,7 +40,7 @@ public class TestingOdometryAlgorithm extends Master {
 
 
     // Constructor to start everything
-    public TestingOdometryAlgorithm(Vector startingPosition) {
+    public TestingOdometryAlgorithm(double [] startingPosition) {
         // Encoders
         encoder1 = hardwaremap.get(DcMotorEx.class, "encoder1");
         encoder2 = hardwaremap.get(DcMotorEx.class, "encoder2");
@@ -66,19 +66,18 @@ public class TestingOdometryAlgorithm extends Master {
 
         // Vector initialization
         currentPosition = STARTING_POSITION;
-        travel = new Vector(DEFAULT_STARTING_ORIENTATION);
-        orientation = new Vector(DEFAULT_STARTING_ORIENTATION);
-        normalOrientation = new Vector(DEFAULT_STARTING_NORMAL_VECTOR);
+        orientation = DEFAULT_STARTING_ORIENTATION;
+        normalOrientation = DEFAULT_STARTING_NORMAL_VECTOR;
 
     }
 
-    public void updateOrientationAndLocation(){
+    public void updateOrientationAndLocation() {
         // Conversion to inches
         encoder1Delta = (encoder1.getCurrentPosition() - encoder1Reading) * WHEEL_TRAVEL_CONVERSION_FOR_DEAD_WHEELS;
         encoder2Delta = (encoder2.getCurrentPosition() - encoder2Reading) * WHEEL_TRAVEL_CONVERSION_FOR_DEAD_WHEELS;
         encoder3Delta = (encoder3.getCurrentPosition() - encoder3Reading) * WHEEL_TRAVEL_CONVERSION_FOR_DEAD_WHEELS;
 
-        // Tick-updating encoder positions
+        // Tick-updting encoder positions
         encoder1Reading = encoder1.getCurrentPosition();
         encoder2Reading = encoder2.getCurrentPosition();
         encoder3Reading = encoder3.getCurrentPosition();
@@ -87,25 +86,22 @@ public class TestingOdometryAlgorithm extends Master {
         angleChange = (encoder1Delta - encoder2Delta) / TRACK_WIDTH;
 
         orientationAngle += angleChange / 2;
-        orientation.rotate(angleChange / 2);
-        normalOrientation.rotate(angleChange / 2);
+        Vector.rotateBy(orientation, angleChange / 2);
+        Vector.rotateBy(normalOrientation, angleChange / 2);
 
-        travel = orientation.multiply(0.5 * encoder1Delta + 0.5 * encoder2Delta).add
-                (normalOrientation.multiply(encoder3Delta * Math.cos(orientationAngle) - DISTANCE_TO_BACK_WHEEL * encoder3Delta * (angleChange / 2))); // Might need to multiply distance to back wheel
+
+        // Previous iteration - erraneous
+//        travel = orientation.multiply(0.5 * encoder1Delta + 0.5 * encoder2Delta).add
+//                (normalOrientation.multiply(encoder3Delta * Math.cos(orientationAngle) - encoder3Delta * (angleChange / 2)));
+
+        // Current iteration
+        travel = Vector.add(Vector.multiply(0.5 * encoder1Delta + 0.5 * encoder2Delta, orientation),
+                Vector.multiply(encoder3Delta - angleChange * DISTANCE_TO_BACK_WHEEL, normalOrientation));
 
         orientationAngle += angleChange / 2;
-        orientation.rotate(angleChange / 2);
-        normalOrientation.rotate(angleChange / 2);
+        Vector.rotateBy(orientation, angleChange / 2);
+        Vector.rotateBy(normalOrientation, angleChange / 2);
 
-
-        // Making sure it's positive
-        while(orientationAngle < 0){
-            orientationAngle += Math.PI;
-        }
-
-        // Making sure its between 0 and 2π
-        orientationAngle %= 2 * Math.PI;
-
-        Master.currentPosition.add(travel);
+        Vector.add(currentPosition, travel);
     }
 }
