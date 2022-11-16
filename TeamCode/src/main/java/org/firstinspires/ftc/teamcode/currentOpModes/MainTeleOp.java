@@ -65,9 +65,6 @@ public class MainTeleOp extends OpMode {
     public void loop() {
         // Update tickRate for robot speed, etc...
         // Temporary thing for position
-        {
-
-        }
 
         Master.tickRate = 1 / (timer.getTime() - auxillary); // auxillary is previous time
         auxillaryList1[0] = currentPosition[0] - auxillaryList1[0];
@@ -95,6 +92,11 @@ public class MainTeleOp extends OpMode {
         }
         lastPressedDriveMode = gamepad1.right_bumper;
 
+
+        // Autonomous procedure for 1st tournament
+        {
+            // Go
+        }
 
         // Checks if aimbot is activated
         if(gamepad2.left_bumper){

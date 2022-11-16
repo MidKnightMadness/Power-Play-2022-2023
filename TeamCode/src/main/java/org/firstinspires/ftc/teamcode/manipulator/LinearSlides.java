@@ -8,6 +8,7 @@ import java.math.*;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.highlevel.Master;
 
+import static org.firstinspires.ftc.teamcode.highlevel.Master.claw;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.invSqrt;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.odometryAlg;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.turntable;
@@ -40,8 +41,8 @@ public class LinearSlides {
     private static final double EXTENDER_OVERALL_RATIO = 2 * Math.PI / (4096 * EXTENDER_MOTOR_RATIO); // Inches per tick
 
     // Temporary stuff
-    private static final double [] DEFAULT_INTAKE_DISPLACEMENT = {11.75, 0.0, 0.0};
-    private static final double [] DEFAULT_SCORING_DISPLACEMENT = {-11.75, 11.75, 0.0};
+    private static final double [] DEFAULT_INTAKE_DISPLACEMENT = {11.75, -11.75 / 2, -ROOT_HEIGHT};
+    private static final double [] DEFAULT_SCORING_DISPLACEMENT = {-11.75, 11.75 / 2, 34.50-ROOT_HEIGHT};
 
     /* Manipulator diagram:
 
@@ -148,10 +149,14 @@ public class LinearSlides {
 
     // Temporary, first tournament
     public void grabFromDefaultScoringPosition(){
-//        this.goPointAt();
+        claw.openClaw();
+        claw.waitForOpenClaw();
+        this.goPointAt(DEFAULT_INTAKE_DISPLACEMENT);
+        claw.closeClaw();
     }
 
     public void scoreFromDefaultScoringPosition(){
-
+        this.goPointAt(DEFAULT_SCORING_DISPLACEMENT);
+        claw.openClaw();
     }
 }

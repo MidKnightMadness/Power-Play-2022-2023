@@ -31,8 +31,8 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
     int[] signalFinds = new int[] {0, 0, 0};
     int mostRecentDetection = 0;
 
-    Vector2 coneStackLocation = coneStackLocations[startingPos];
-    Vector2 scoringLocation = scoringLocations[startingPos];
+    double [] coneStackLocation = coneStackLocations[startingPos];
+    double [] scoringLocation = scoringLocations[startingPos];
 
     AprilTagDetection tagOfInterest = null;
 
@@ -184,11 +184,11 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
     }
 
     void goToScoringLocation() {
-        goToPosition((int) scoringLocation.x, (int) scoringLocation.y);
+        goToPosition((int) scoringLocation[0], (int) scoringLocation[1]);
     }
 
     void goToConeStack() {
-        goToPosition((int) coneStackLocation.x, (int) scoringLocation.y);
+        goToPosition((int) coneStackLocation[0], (int) scoringLocation[1]);
     }
 
 
