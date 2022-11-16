@@ -37,9 +37,9 @@ public interface fieldData {
     };
 
     public Vector2[] scoringLocations = {
-            new Vector2(60, 24),
-            new Vector2(60, 96),
-            new Vector2(84, 24),
-            new Vector2(84, 96)
+            new Vector2(realSquareWidth * 2.5, realSquareWidth * 1.5),
+            new Vector2(realSquareWidth * 3.5, realSquareWidth * 1.5),
+            new Vector2(realSquareWidth * 2.5, realSquareWidth * 4.5),
+            new Vector2(realSquareWidth * 3.5, realSquareWidth * 4.5)
     };
 }

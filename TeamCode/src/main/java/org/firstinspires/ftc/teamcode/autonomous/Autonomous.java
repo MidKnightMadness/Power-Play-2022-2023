@@ -31,7 +31,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
     int[] signalFinds = new int[] {0, 0, 0};
     int mostRecentDetection = 0;
 
-    Vector2[] scoringLocations =
+
     Vector2 coneStackLocation = coneStackLocations[startingPos];
     Vector2 scoringLocation = scoringLocations[startingPos];
 
@@ -127,7 +127,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         signalLocationY = signalLocations[startingPos][mostRecentDetection - 1].y;
 
         goToScoringLocation();
-        scoreCone();
+        linearSlides.scoreFromDefaultScoringPosition();
     }
 
     @Override
@@ -173,7 +173,8 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
     }
 
     void cycle() {
-
+        linearSlides.grabFromDefaultScoringPosition();
+        linearSlides.scoreFromDefaultScoringPosition();
     }
 
     void goToScoringLocation() {
