@@ -2,6 +2,11 @@ package org.firstinspires.ftc.teamcode.odometry;
 
 // Auxillary
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+import static org.firstinspires.ftc.teamcode.highlevel.Master.STARTING_POSITION;
+import static org.firstinspires.ftc.teamcode.highlevel.Master.currentPosition;
+import static org.firstinspires.ftc.teamcode.highlevel.Master.encoder1;
+import static org.firstinspires.ftc.teamcode.highlevel.Master.encoder2;
+import static org.firstinspires.ftc.teamcode.highlevel.Master.encoder3;
 
 import org.firstinspires.ftc.teamcode.drivetrain.*;
 import org.firstinspires.ftc.teamcode.highlevel.*;
@@ -11,7 +16,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class TestingOdometryAlgorithm extends Master {
+public class TestingOdometryAlgorithm {
+    private double [] travel = {0.0, 0.0};
+
     // Use encoder objects encoder1, encorder2, encoder3 from AuxillaryData
     // Encoder wheels are placed as follows:
     //    ________
@@ -40,9 +47,14 @@ public class TestingOdometryAlgorithm extends Master {
     private double encoder2Delta;
     private double encoder3Delta;
 
+    // Encoder data
+    public int encoder1Reading;
+    public int encoder2Reading;
+    public int encoder3Reading;
+
 
     // Constructor to start everything
-    public TestingOdometryAlgorithm() {
+    public TestingOdometryAlgorithm(HardwareMap hardwareMap) {
         // Encoders
         encoder1 = hardwareMap.get(DcMotorEx.class, "encoder1");
         encoder2 = hardwareMap.get(DcMotorEx.class, "encoder2");
