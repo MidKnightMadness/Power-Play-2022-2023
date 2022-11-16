@@ -109,7 +109,7 @@ public class Master {
 
         odometryAlg = new TestingOdometryAlgorithm(STARTING_POSITION);
 
-        manipulator1 = new LinearSlides();
+        manipulator1 = new LinearSlides(hardwareMap);
         claw = new Claw(hardwareMap);
         claw.openClaw();
 
