@@ -56,9 +56,9 @@ public class MainTeleOp extends OpMode {
 //        odometry = new Odometry(hardwareMap);
 //        lift = new LinearSlides(hardwareMap);
 //        turntable = new Turntable(hardwareMap);
-        accelerometer = Master.hardwaremap.get(AndroidAccelerometer.class, "accelerometer");
-        accelerometer.setDistanceUnit(DistanceUnit.INCH);
-        accelerometer.startListening();
+//        accelerometer = Master.hardwaremap.get(AndroidAccelerometer.class, "accelerometer");
+//        accelerometer.setDistanceUnit(DistanceUnit.INCH);
+//        accelerometer.startListening();
     }
 
     @Override
