@@ -40,11 +40,11 @@ public class TestingOdometryAlgorithm extends Master {
 
 
     // Constructor to start everything
-    public TestingOdometryAlgorithm(double [] startingPosition) {
+    public TestingOdometryAlgorithm(double [] startingPosition, HardwareMap hardwareMap) {
         // Encoders
-        encoder1 = hardwaremap.get(DcMotorEx.class, "encoder1");
-        encoder2 = hardwaremap.get(DcMotorEx.class, "encoder2");
-        encoder3 = hardwaremap.get(DcMotorEx.class, "encoder3");
+        encoder1 = hardwareMap.get(DcMotorEx.class, "encoder1");
+        encoder2 = hardwareMap.get(DcMotorEx.class, "encoder2");
+        encoder3 = hardwareMap.get(DcMotorEx.class, "encoder3");
 
         encoder1.setDirection(DcMotor.Direction.REVERSE);
         encoder2.setDirection(DcMotor.Direction.REVERSE);

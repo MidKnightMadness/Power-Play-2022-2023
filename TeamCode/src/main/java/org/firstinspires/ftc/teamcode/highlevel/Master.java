@@ -107,7 +107,7 @@ public class Master {
         aimbotActivated = false;
         target = new double[] {0.0, 0.0};
 
-        odometryAlg = new TestingOdometryAlgorithm(STARTING_POSITION);
+        odometryAlg = new TestingOdometryAlgorithm(STARTING_POSITION, hardwareMap);
 
         manipulator1 = new LinearSlides(hardwareMap);
         claw = new Claw(hardwareMap);
