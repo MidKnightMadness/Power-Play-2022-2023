@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.highlevel.Master;
 import org.firstinspires.ftc.teamcode.highlevel.fieldData;
 import org.firstinspires.ftc.teamcode.common.Timer;
 import org.firstinspires.ftc.teamcode.odometry.Vector2;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 import java.util.ArrayList;
 
@@ -27,9 +28,9 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
     Thread thread;
 
     public static int numberOfConesInStack = 5;
-
     int[] signalFinds = new int[] {0, 0, 0};
     int mostRecentDetection = 0;
+
 
     Vector2 coneStackLocation = coneStackLocations[startingPos];
     Vector2 scoringLocation = scoringLocations[startingPos];
@@ -47,8 +48,6 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
     MecanumDrive mecanum;
     Odometry odometry;
     MecanumDrive mecanumDrive;
-
-    Master master;
 
     public int getStartingPos() {
         return 0;
@@ -127,6 +126,9 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 
         signalLocationX = signalLocations[startingPos][mostRecentDetection - 1].x;
         signalLocationY = signalLocations[startingPos][mostRecentDetection - 1].y;
+
+        goToScoringLocation();
+        linearSlides.scoreFromDefaultScoringPosition();
     }
 
     @Override
@@ -136,9 +138,22 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         telemetry.addData("Signal location", signalLocations[startingPos][mostRecentDetection - 1]);
         telemetry.update();
         double time = coneTimer.getTime();
-        if (time > 25) {
+
+        if (time < 26) {
             goToSignalLocation((int)odometry.getXCoordinate(), (int) odometry.getYCoordinate(), (int) signalLocationX, (int) signalLocationY);
+            requestOpModeStop();
         }
+        else {
+            try {
+                cycle();
+            }
+            catch (InterruptedException e) {
+                telemetry.addLine(e.toString());
+                telemetry.update();
+            }
+
+        }
+
     }
 
     void tagToTelemetry(AprilTagDetection detection)
@@ -156,13 +171,24 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         double coneHeight = INITIAL_CONE_ABOVE_GROUND + INCHES_ABOVE_CONE + INCHES_ABOVE_PER_CONE * numberOfConesInStack;
 
         goToConeStack();
-        linearSlides.goPointAt(new double[] {0, upDown * 6 , coneHeight });
+        linearSlides.goPointAt(new double[] {0, upDown * 12 , coneHeight });
 
         thread.sleep(1000);
 
         claw.openClaw();
         thread.sleep(100);
         claw.closeClaw();
+    }
+
+    void cycle() throws InterruptedException{
+        linearSlides.grabFromDefaultScoringPosition();
+        thread.sleep(100);
+        linearSlides.scoreFromDefaultScoringPosition();
+        thread.sleep(100);
+//
+//        if(Vector.lengthOf(Vector.add(Vector.neg(linearSlides.getClawCoordinates()), linearSlides.DEFAULT_SCORING_DISPLACEMENT)) > 0.1){
+//
+//        }
     }
 
     void goToScoringLocation() {
@@ -178,13 +204,8 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         double junctionHeight = junctionHeights[1][2];
         goToScoringLocation();
 
-        try {
-            pickUpCone();
-        } catch (InterruptedException e) {
-            telemetry.addLine(e.toString());
-            telemetry.update();
-        }
-
+        linearSlides.goPointAt(new double[] {upDown * 12, 0, junctionHeight});
+        claw.openClaw();
     }
 
     void goToSignalLocation(int posX, int posY, int targetX, int targetY) {
@@ -206,7 +227,6 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         while (!atLocation) {
             atLocation = mecanumDrive.driveTo(targetX, targetY, 0);
         }
-
     }
 }
 

@@ -3,20 +3,23 @@ package org.firstinspires.ftc.teamcode.manipulator;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.autonomous.Autonomous;
 import org.firstinspires.ftc.teamcode.drivetrain.*;
 import java.math.*;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.highlevel.Master;
 
+import static org.firstinspires.ftc.teamcode.highlevel.Master.claw;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.invSqrt;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.odometryAlg;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.turntable;
 import static org.firstinspires.ftc.teamcode.manipulator.Turntable.turntableAngle; // Remove this in final version
+import org.firstinspires.ftc.teamcode.manipulator.Claw;
 
 public class LinearSlides {
     public static DcMotorEx seeSawMotor;
     public static DcMotorEx extensionMotor;
-    public static Vector manipulatorPosition;
+    public static double [] manipulatorPosition = {0.0, 0.0, 0.0};
     private static HardwareMap hardwareMap;
     public static double seesawAngle;
     public static double seesawExtensionLength;
@@ -27,8 +30,8 @@ public class LinearSlides {
     private static double ticksDisplacement;
 
     // Manipulator specifications in inches, radians
-    public static final double ROOT_HEIGHT = 8.0; // From ground to linear slide mount
-    private static final double STARTING_EXTENDER_LENGTH = 9.0; // Starting length from pivot axle
+    public static final double ROOT_HEIGHT = 6.5; // From ground to linear slide mount
+    private static final double STARTING_EXTENDER_LENGTH = 15.0; // Starting length from pivot axle
     // Rotation
     private static final double SEESAW_MOTOR_RATIO = 60; // 60:1 or 40:1 motor?
     private static final double SEESAW_OVERALL_RATIO = 2 * Math.PI * (30 / 64) / (4096 * SEESAW_MOTOR_RATIO); // Angle per tick
@@ -37,6 +40,10 @@ public class LinearSlides {
     private static final double EXTENDER_MOTOR_RATIO = 20; // 20:1 or 40:1 motor?
     private static final double PULLEY_RADIUS = 1.0; // Radius of pulley interacting with string
     private static final double EXTENDER_OVERALL_RATIO = 2 * Math.PI / (4096 * EXTENDER_MOTOR_RATIO); // Inches per tick
+
+    // Temporary stuff
+    public static final double [] DEFAULT_INTAKE_DISPLACEMENT = {11.75, -11.75 / 2, -ROOT_HEIGHT};
+    public static final double [] DEFAULT_SCORING_DISPLACEMENT = {-11.75, 11.75 / 2, 34.50-ROOT_HEIGHT};
 
     /* Manipulator diagram:
 
@@ -54,7 +61,7 @@ public class LinearSlides {
      3. Pull string to extend, roll back to retract
      */
 
-    public LinearSlides(){
+    public LinearSlides(HardwareMap hardwareMap){
         seeSawMotor = hardwareMap.get(DcMotorEx.class, "Seesaw Motor");
         extensionMotor = hardwareMap.get(DcMotorEx.class, "Linear Slide Extension Motor");
 
@@ -71,15 +78,16 @@ public class LinearSlides {
 
         // Motor kinematics ;)
         // Note: initialize turntable before manipulator!!!
-        manipulatorPosition = new Vector(new double [] {0.0, 0.0, 0.0}); // Idk if this works lol
 
-        manipulatorPosition.set(0, (STARTING_EXTENDER_LENGTH) * Math.cos(turntableAngle) * Math.cos(STARTING_ANGLE));
-        manipulatorPosition.set(1, (STARTING_EXTENDER_LENGTH) * Math.sin(turntableAngle) * Math.cos(STARTING_ANGLE));
-        manipulatorPosition.set(2, ROOT_HEIGHT + (STARTING_EXTENDER_LENGTH * Math.sin(STARTING_ANGLE)));
+        manipulatorPosition[0] = STARTING_EXTENDER_LENGTH * Math.cos(turntableAngle) * Math.cos(STARTING_ANGLE);
+        manipulatorPosition[1] = STARTING_EXTENDER_LENGTH * Math.sin(turntableAngle) * Math.cos(STARTING_ANGLE);
+        manipulatorPosition[2] =  ROOT_HEIGHT + (STARTING_EXTENDER_LENGTH * Math.sin(STARTING_ANGLE));
 
         displacement = new double[2];
         angleDisplacement = 0.0;
         ticksDisplacement = 0.0;
+
+        this.pivotTo(1.0);
     }
 
     public double[] getClawCoordinates() {
@@ -140,4 +148,20 @@ public class LinearSlides {
     }
 
 
+    // Temporary, first tournament
+    public void grabFromDefaultScoringPosition(){
+        claw.openClaw();
+        claw.waitForOpenClaw();
+        this.goPointAt(DEFAULT_INTAKE_DISPLACEMENT);
+        claw.closeClaw();
+    }
+
+    public void scoreFromDefaultScoringPosition() {
+        if(Vector.lengthOf(Vector.add(Vector.neg(getClawCoordinates()), DEFAULT_SCORING_DISPLACEMENT)) > 0.1){
+            this.goPointAt(DEFAULT_SCORING_DISPLACEMENT);
+//            Autonomous.isScoring = false;
+        }
+
+        claw.openClaw();
+    }
 }

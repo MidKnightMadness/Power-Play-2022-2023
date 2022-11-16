@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.test;
 
+import static org.firstinspires.ftc.teamcode.odometry.TestingOdometryAlgorithm.DISTANCE_TO_BACK_WHEEL;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -22,8 +24,8 @@ public class TestOdometry extends OpMode {
     private final double TICKS_PER_ROTATION = 8192;
 
     // Input / Output, calculations
-    Vector orientation;
-    Vector normalOrientation;
+    private double [] orientation = {0.0, 1.0};
+    private double [] normalOrientation = {-1.0, 0.0};
     private final double [] DEFAULT_STARTING_ORIENTATION = {0.0, 1.0};
     private final double [] DEFAULT_STARTING_NORMAL_VECTOR = {-1.0, 0.0};
     private double orientationAngle = Math.PI / 2; // Front-facing angle relative to horizontal at start
@@ -43,8 +45,8 @@ public class TestOdometry extends OpMode {
     private double encoder2Reading;
     private double encoder3Reading;
 
-    private Vector currentPosition;
-    private Vector travel;
+    private double [] currentPosition = {0.0, 0.0};
+    private double [] travel = {0.0, 0.0};
 
     @Override
     public void init() {
@@ -71,11 +73,6 @@ public class TestOdometry extends OpMode {
 
         angleChange = 0.0;
 
-        currentPosition = new Vector(new double[]{0, 0});
-        travel = new Vector(DEFAULT_STARTING_ORIENTATION);
-        orientation = new Vector(DEFAULT_STARTING_ORIENTATION);
-        normalOrientation = new Vector(DEFAULT_STARTING_NORMAL_VECTOR);
-
     }
 
     @Override
@@ -94,16 +91,22 @@ public class TestOdometry extends OpMode {
         angleChange = (encoder1Delta - encoder2Delta) / TRACK_WIDTH;
 
         orientationAngle += angleChange / 2;
-        orientation.rotate(angleChange / 2);
-        normalOrientation.rotate(angleChange / 2);
+        Vector.rotateBy(orientation, angleChange / 2);
+        Vector.rotateBy(normalOrientation, angleChange / 2);
 
-        travel = orientation.multiply(0.5 * encoder1Delta + 0.5 * encoder2Delta).add
-                (normalOrientation.multiply(encoder3Delta * Math.cos(orientationAngle) - encoder3Delta * (angleChange / 2)));
+
+        // Previous iteration - erraneous
+//        travel = orientation.multiply(0.5 * encoder1Delta + 0.5 * encoder2Delta).add
+//                (normalOrientation.multiply(encoder3Delta * Math.cos(orientationAngle) - encoder3Delta * (angleChange / 2)));
+
+        // Current iteration
+        travel = Vector.add(Vector.multiply(0.5 * encoder1Delta + 0.5 * encoder2Delta, orientation),
+                            Vector.multiply(encoder3Delta - angleChange * DISTANCE_TO_BACK_WHEEL, normalOrientation));
 
         orientationAngle += angleChange / 2;
-        orientation.rotate(angleChange / 2);
-        normalOrientation.rotate(angleChange / 2);
+        Vector.rotateBy(orientation, angleChange / 2);
+        Vector.rotateBy(normalOrientation, angleChange / 2);
 
-        currentPosition.add(travel);
+        Vector.add(currentPosition, travel);
     }
 }

@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.manipulator.Claw;
 import org.firstinspires.ftc.teamcode.manipulator.DoubleReverse4Bar;
 import org.firstinspires.ftc.teamcode.manipulator.LinearSlides;
 import org.firstinspires.ftc.teamcode.manipulator.Turntable;
@@ -16,6 +17,8 @@ import org.firstinspires.ftc.teamcode.drivetrain.*;
 // Encoders, Motors
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
+import java.util.Timer;
+
 // Servos
 
 
@@ -23,7 +26,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 // Everything public except for in-class default values!!!!!!!!!
 public class Master {
-    public static HardwareMap hardwaremap;
 
     // Robot dimensions
     final static double leftSensorPos = 7.5; // Probably change this to correct notation
@@ -59,10 +61,10 @@ public class Master {
     public static DcMotorEx encoder2; //   ||       |
     public static DcMotorEx encoder3; //   |   ==   | encoder 1 on top, encoder 2 on bottom, encoder3 on left
     //                                      ˜˜˜˜˜˜˜˜
-    public static Vector currentPosition;
-    public static Vector travel;
-    public static Vector orientation;
-    public static Vector normalOrientation;
+    public static double [] currentPosition;
+    public static double [] travel;
+    public static double [] orientation;
+    public static double [] normalOrientation;
 
     // Calibration
     public static DistanceSensor leftSensor;
@@ -73,13 +75,15 @@ public class Master {
     public static double encoder1Reading;
     public static double encoder2Reading;
     public static double encoder3Reading;
-    public static double [] auxillary;
+    public static double [] auxillary = {0.0, 0.0, 0.0, 0.0};
     public static final double MAX_SCORING_RADIUS = 19.0; // Inches
     public static double auxillaryNumber;
+    public static double tickRate; // Hertz
+    public static double robotSpeed; // Inches / sec
 
     private static final double [] DEFAULT_POSITION = {0, 0}; // Get actual robot starting coordinates in inches on Friday, bottom left relative to our starting side is origin
     // Probably write calibration method w/ tape and obj recognition
-    public static Vector STARTING_POSITION;
+    public static double [] STARTING_POSITION;
 
 
     // Manipulator
@@ -89,23 +93,32 @@ public class Master {
     public static DoubleReverse4Bar manipulator2;
     public static double turntableAngle; // Radians, as always
     public static TestingOdometryAlgorithm odometryAlg; // Add this
+    public static boolean aimbotActivated;
+    public static double [] target;
+    public static Claw claw;
 
 
     // Constructor to fully instantiate robot
-    public Master(){
-        STARTING_POSITION = new Vector(DEFAULT_POSITION);
-        auxillary = new double[]{0.0, 0.0};
+    public Master(HardwareMap hardwareMap){
+        STARTING_POSITION = DEFAULT_POSITION;
         auxillaryNumber = 0.0;
+        tickRate = 0.0;
+        robotSpeed = 0.0;
+        aimbotActivated = false;
+        target = new double[] {0.0, 0.0};
 
+        odometryAlg = new TestingOdometryAlgorithm(hardwareMap);
 
-        odometryAlg = new TestingOdometryAlgorithm(STARTING_POSITION);
+        manipulator1 = new LinearSlides(hardwareMap);
+        claw = new Claw(hardwareMap);
+        claw.openClaw();
 
-        manipulator1 = new LinearSlides();
-        manipulator2 = new DoubleReverse4Bar(hardwaremap);
+        leftSensor = hardwareMap.get(DistanceSensor.class, "left calibration distance sensor");
+        rightSensor = hardwareMap.get(DistanceSensor.class, "right calibration distance sensor");
+        backSensor = hardwareMap.get(DistanceSensor.class, "back calibration distance sensor");
+    }
 
-        leftSensor = hardwaremap.get(DistanceSensor.class, "left calibration distance sensor");
-        rightSensor = hardwaremap.get(DistanceSensor.class, "right calibration distance sensor");
-        backSensor = hardwaremap.get(DistanceSensor.class, "back calibration distance sensor");
+    public Master() {
     }
 
     public static double invSqrt(double x) { // Use this for inverse square root ig, gotta tell judges we used some innovative bit shift algorithm originally in C++ or smth
@@ -117,7 +130,7 @@ public class Master {
         return x;
     }
 
-    public static Vector calibratePosition(double currentOrientation, Vector currentPosition) {
+    public static double [] calibratePosition(double currentOrientation, double [] currentPosition) {
         double leftDistance = leftSensor.getDistance(DistanceUnit.INCH);
         double rightDistance = rightSensor.getDistance(DistanceUnit.INCH);
         double backDistance = backSensor.getDistance(DistanceUnit.INCH);
@@ -128,7 +141,7 @@ public class Master {
             // if the back sensor reading is less than 24
             if (backDistance < 24) {
                 // if back sensor is pointing to bottom wall
-                if ((backDistance + 7.5) * Math.sin(currentOrientation - Math.PI/2) < 144 - currentPosition.getVector()[0])
+                if ((backDistance + 7.5) * Math.sin(currentOrientation - Math.PI/2) < 144 - currentPosition[0])
                     y = (backDistance + 7.5) * Math.cos(currentOrientation - Math.PI/2);
                     // if back sensor is pointing to right wall
                 else
@@ -137,7 +150,7 @@ public class Master {
             // if right sensor reading is less than 24
             if (rightDistance < 24) {
                 // if right sensor is pointing to the right wall
-                if (x == -1 && (rightDistance + 7.5) * Math.sin(currentOrientation - Math.PI / 2) < 144 - currentPosition.getVector()[1])
+                if (x == -1 && (rightDistance + 7.5) * Math.sin(currentOrientation - Math.PI / 2) < 144 - currentPosition[1])
                     x = 144 - (rightDistance + 7.5) * Math.cos(currentOrientation - Math.PI / 2);
                 else if (y == -1)
                     y = 144 - (rightDistance + 7.5) * Math.cos(Math.PI - currentOrientation);
@@ -145,7 +158,7 @@ public class Master {
             // if left sensor reading is less than 24
             if (leftDistance < 24) {
                 //if left sensor is pointing to bottom wall
-                if (y == -1 && (leftDistance + 7.5) * Math.sin(Math.PI - currentOrientation) < currentPosition.getVector()[0])
+                if (y == -1 && (leftDistance + 7.5) * Math.sin(Math.PI - currentOrientation) < currentPosition[0])
                     y = (leftDistance + 7.5) * Math.cos(Math.PI - currentOrientation);
                 else if (x == -1)
                     x = (leftDistance + 7.5) * Math.cos(currentOrientation - Math.PI/2);
@@ -155,7 +168,7 @@ public class Master {
             // if back sensor reading is less than 24
             if (backDistance < 24) {
                 // if back sensor is pointing to right wall
-                if ((backDistance + 7.5) * Math.sin(currentOrientation - Math.PI) < 144 - currentPosition.getVector()[1])
+                if ((backDistance + 7.5) * Math.sin(currentOrientation - Math.PI) < 144 - currentPosition[1])
                     x = 144 - (backDistance + 7.5) * Math.cos(currentOrientation - Math.PI);
                     // if back sensor is pointing to top wall
                 else
@@ -164,7 +177,7 @@ public class Master {
             //right sensor reading is less than 24
             if (rightDistance < 24) {
                 // if right sensor pointing to top wall
-                if (y == -1 && (rightDistance + 7.5) * Math.sin(currentOrientation - Math.PI) < currentPosition.getVector()[0])
+                if (y == -1 && (rightDistance + 7.5) * Math.sin(currentOrientation - Math.PI) < currentPosition[0])
                     y = 144 - (rightDistance + 7.5) * Math.cos(currentOrientation - Math.PI);
                     // if right sensor is pointing to left wall
                 else if (x == -1)
@@ -173,7 +186,7 @@ public class Master {
             // if left sensor reading is less than 24
             if (leftDistance < 24) {
                 // if left sensor is pointing to right wall
-                if (x == -1 && (leftDistance + 7.5) * Math.sin(Math.PI * 3.0/2 - currentOrientation) < currentPosition.getVector()[1])
+                if (x == -1 && (leftDistance + 7.5) * Math.sin(Math.PI * 3.0/2 - currentOrientation) < currentPosition[1])
                     x = 144 - (leftDistance + 7.5) * Math.cos(Math.PI * 3.0/2 - currentOrientation);
                     // if left sensor is pointing to bottom wall
                 else if (y == -1)
@@ -184,7 +197,7 @@ public class Master {
             // if back sensor reading is less than 24
             if (backDistance < 24) {
                 // if back sensor is pointing to top wall
-                if ((backDistance + 7.5) * Math.sin(currentOrientation - Math.PI * 3.0 / 2) < currentPosition.getVector()[0])
+                if ((backDistance + 7.5) * Math.sin(currentOrientation - Math.PI * 3.0 / 2) < currentPosition[0])
                     y = 144 - (backDistance + 7.5) * Math.cos(currentOrientation - Math.PI * 3.0 / 2);
                     // if back sensor is pointing to left wall
                 else
@@ -193,7 +206,7 @@ public class Master {
             // right distance reading is less than 24
             if (rightDistance < 24) {
                 // if right sensor is pointing to left wall
-                if (x == -1 && (rightDistance + 7.5) * Math.sin(currentOrientation - Math.PI * 3.0/2) < currentPosition.getVector()[1])
+                if (x == -1 && (rightDistance + 7.5) * Math.sin(currentOrientation - Math.PI * 3.0/2) < currentPosition[1])
                     x = (rightDistance + 7.5) * Math.cos(currentOrientation - Math.PI);
                     // if right sensor is pointing to bottom wall
                 else if (y == -1) {
@@ -203,7 +216,7 @@ public class Master {
             // if left sensor reading is less than 24
             if (leftDistance < 24) {
                 // if left sensor is pointing to top wall
-                if ( y == -1 && (leftDistance + 7.5) * Math.sin(2*Math.PI - currentOrientation) < 144 - currentPosition.getVector()[0])
+                if ( y == -1 && (leftDistance + 7.5) * Math.sin(2*Math.PI - currentOrientation) < 144 - currentPosition[0])
                     y = 144 - (leftDistance + 7.5) * Math.cos(2*Math.PI - currentOrientation);
                     // if left sensor is pointing to right wall
                 else if (x == -1) {
@@ -215,7 +228,7 @@ public class Master {
             // if back distance reading is less than 24
             if (backDistance < 24) {
                 // if back sensor is pointing to left wall
-                if ((backDistance + 7.5) * Math.sin(currentOrientation) < currentPosition.getVector()[1])
+                if ((backDistance + 7.5) * Math.sin(currentOrientation) < currentPosition[1])
                     x = (backDistance + 7.5) * Math.cos(currentOrientation);
                     // if back sensor is pointing to bottom wall
                 else
@@ -224,7 +237,7 @@ public class Master {
             // if right distance reading is less than 24
             if (rightDistance < 24) {
                 // if right sensor is pointing to bottom wall
-                if (y == -1 && (rightDistance + 7.5) * Math.sin(currentOrientation) < 144 - currentPosition.getVector()[0])
+                if (y == -1 && (rightDistance + 7.5) * Math.sin(currentOrientation) < 144 - currentPosition[0])
                     y = (rightDistance + 7.5) * Math.cos(currentOrientation);
                     // if right sensor is pointing to right wall
                 else
@@ -234,7 +247,7 @@ public class Master {
             // if left sensor reading is less than 24
             if (leftDistance < 24) {
                 // if left sensor is pointing to left wall
-                if (x == -1 && (leftDistance + 7.5) * Math.sin(Math.PI/2 - currentOrientation) < 144 - currentPosition.getVector()[1])
+                if (x == -1 && (leftDistance + 7.5) * Math.sin(Math.PI/2 - currentOrientation) < 144 - currentPosition[1])
                     x = (backDistance + 7.5) * Math.cos(Math.PI/2 - currentOrientation);
                 // if left sensor is pointing to top wall
                 if (y == -1) {
@@ -243,7 +256,7 @@ public class Master {
             }
         }
 
-        return new Vector(new double[] {x, y});
+        return new double[] {x, y};
     }
 
     public static double [] exponentialControls(double input1, double input2){ //  For controller, goes faster with larger input

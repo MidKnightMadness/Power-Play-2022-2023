@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.manipulator;
 
-import static org.firstinspires.ftc.teamcode.highlevel.Master.hardwaremap;
+import static org.firstinspires.ftc.teamcode.highlevel.Master.odometryAlg;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.highlevel.Master;
 
 public class Turntable {
     // Make sure that motor starts at 0 ticks
@@ -20,8 +22,8 @@ public class Turntable {
     // Internal use variables
     private int neededTicks; // Displacement or target position
 
-    public Turntable() {
-        tableMotor = hardwaremap.get(DcMotorEx.class, "Turntable Motor"); // connect motor
+    public Turntable(HardwareMap hardwareMap) {
+        tableMotor = hardwareMap.get(DcMotorEx.class, "Turntable Motor"); // connect motor
 
         tableMotor.setDirection(DcMotor.Direction.FORWARD); // set direction
         tableMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // set motor mode
@@ -33,8 +35,8 @@ public class Turntable {
     }
 
     public void turnTo(double angle){ // Turntable angle
-        turntableAngle = tableMotor.getCurrentPosition() * OVERALL_RATIO;
-        neededTicks = (int) (angle / OVERALL_RATIO);
+        turntableAngle = tableMotor.getCurrentPosition() * OVERALL_RATIO + odometryAlg.orientationAngle;
+        neededTicks = (int) ((angle - odometryAlg.orientationAngle) / OVERALL_RATIO);
 
         tableMotor.setTargetPosition(neededTicks);
         if(tableMotor.getTargetPosition() < tableMotor.getCurrentPosition()){ // Note that this is geared, directions will look reversed
@@ -45,7 +47,7 @@ public class Turntable {
     }
 
     public void turnBy(double angleChange){ // Turntable angle
-        turntableAngle = tableMotor.getCurrentPosition() * OVERALL_RATIO;
+        turntableAngle = tableMotor.getCurrentPosition() * OVERALL_RATIO + odometryAlg.orientationAngle;
         neededTicks = (int) (angleChange / OVERALL_RATIO);
 
         tableMotor.setTargetPosition(neededTicks + tableMotor.getCurrentPosition());
