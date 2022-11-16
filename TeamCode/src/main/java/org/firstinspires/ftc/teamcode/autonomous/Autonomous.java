@@ -143,7 +143,14 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
             requestOpModeStop();
         }
         else {
-            cycle();
+            try {
+                cycle();
+            }
+            catch (InterruptedException e) {
+                telemetry.addLine(e.toString());
+                telemetry.update();
+            }
+
         }
 
     }
@@ -172,9 +179,15 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         claw.closeClaw();
     }
 
-    void cycle() {
+    void cycle() throws InterruptedException{
         linearSlides.grabFromDefaultScoringPosition();
+        thread.sleep(100);
         linearSlides.scoreFromDefaultScoringPosition();
+        thread.sleep(100);
+//
+//        if(Vector.lengthOf(Vector.add(Vector.neg(linearSlides.getClawCoordinates()), linearSlides.DEFAULT_SCORING_DISPLACEMENT)) > 0.1){
+//
+//        }
     }
 
     void goToScoringLocation() {

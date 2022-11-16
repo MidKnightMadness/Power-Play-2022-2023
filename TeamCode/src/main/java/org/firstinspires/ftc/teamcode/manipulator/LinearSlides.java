@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.manipulator;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.autonomous.Autonomous;
 import org.firstinspires.ftc.teamcode.drivetrain.*;
 import java.math.*;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -41,8 +42,8 @@ public class LinearSlides {
     private static final double EXTENDER_OVERALL_RATIO = 2 * Math.PI / (4096 * EXTENDER_MOTOR_RATIO); // Inches per tick
 
     // Temporary stuff
-    private static final double [] DEFAULT_INTAKE_DISPLACEMENT = {11.75, -11.75 / 2, -ROOT_HEIGHT};
-    private static final double [] DEFAULT_SCORING_DISPLACEMENT = {-11.75, 11.75 / 2, 34.50-ROOT_HEIGHT};
+    public static final double [] DEFAULT_INTAKE_DISPLACEMENT = {11.75, -11.75 / 2, -ROOT_HEIGHT};
+    public static final double [] DEFAULT_SCORING_DISPLACEMENT = {-11.75, 11.75 / 2, 34.50-ROOT_HEIGHT};
 
     /* Manipulator diagram:
 
@@ -155,8 +156,12 @@ public class LinearSlides {
         claw.closeClaw();
     }
 
-    public void scoreFromDefaultScoringPosition(){
-        this.goPointAt(DEFAULT_SCORING_DISPLACEMENT);
+    public void scoreFromDefaultScoringPosition() {
+        if(Vector.lengthOf(Vector.add(Vector.neg(getClawCoordinates()), DEFAULT_SCORING_DISPLACEMENT)) > 0.1){
+            this.goPointAt(DEFAULT_SCORING_DISPLACEMENT);
+            Autonomous.isScoring = false;
+        }
+
         claw.openClaw();
     }
 }

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.highlevel;
 
 import org.firstinspires.ftc.teamcode.odometry.Vector2;
 
+@Deprecated
 public interface fieldDataOld {
     final static double[][] junctionHeights = { // Matrix format, A[i][j], ith column, jth row; inches
             { 1.0,   14.5,  1.0,   14.5,  1.0 },
