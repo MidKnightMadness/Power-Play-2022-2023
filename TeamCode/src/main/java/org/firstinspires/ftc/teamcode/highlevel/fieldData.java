@@ -19,6 +19,9 @@ public interface fieldData {
     final int aposx = 60;
     final int fposx = 84;
 
+    double realSquareWidth = 23.5;
+    double dimensionMultiplier = 23.5 / 24;
+
     public static Vector2[][] signalLocations = new Vector2[][] {
         { new Vector2(aposx, 60), new Vector2(aposx, 36), new Vector2(aposx, 12) },
         { new Vector2(aposx, 132), new Vector2(aposx, 108), new Vector2(aposx, 84) },
@@ -27,7 +30,7 @@ public interface fieldData {
     };
 
     public Vector2[] coneStackLocations = {
-            new Vector2(60, 6),
+            new Vector2(60 , 6),
             new Vector2(60, 138),
             new Vector2(84, 6),
             new Vector2(84, 138),

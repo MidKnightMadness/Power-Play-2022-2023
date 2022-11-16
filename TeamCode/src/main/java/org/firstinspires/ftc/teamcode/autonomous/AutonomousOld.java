@@ -22,7 +22,8 @@ import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import java.util.ArrayList;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
-public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpConeData
+@Deprecated
+public class AutonomousOld extends OpMode implements cameraInfo, fieldData, pickUpConeData
 {
     public int startingPos = 0;  // 0: A2, 1: A5, 2: F2, 3: F5
     Thread thread;
@@ -125,7 +126,6 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         signalLocationX = signalLocations[startingPos][mostRecentDetection - 1].x;
         signalLocationY = signalLocations[startingPos][mostRecentDetection - 1].y;
 
-        goToScoringLocation();
         scoreCone();
     }
 
@@ -217,6 +217,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         while (!atLocation) {
             atLocation = mecanumDrive.driveTo(targetX, targetY, 0);
         }
+
     }
 }
 
