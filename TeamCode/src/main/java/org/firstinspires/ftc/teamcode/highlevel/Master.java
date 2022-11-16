@@ -26,7 +26,6 @@ import java.util.Timer;
 
 // Everything public except for in-class default values!!!!!!!!!
 public class Master {
-    public static HardwareMap hardwaremap;
 
     // Robot dimensions
     final static double leftSensorPos = 7.5; // Probably change this to correct notation
@@ -100,7 +99,7 @@ public class Master {
 
 
     // Constructor to fully instantiate robot
-    public Master(){
+    public Master(HardwareMap hardwareMap){
         STARTING_POSITION = DEFAULT_POSITION;
         auxillaryNumber = 0.0;
         tickRate = 0.0;
@@ -111,12 +110,12 @@ public class Master {
         odometryAlg = new TestingOdometryAlgorithm(STARTING_POSITION);
 
         manipulator1 = new LinearSlides();
-        claw = new Claw(hardwaremap);
+        claw = new Claw(hardwareMap);
         claw.openClaw();
 
-        leftSensor = hardwaremap.get(DistanceSensor.class, "left calibration distance sensor");
-        rightSensor = hardwaremap.get(DistanceSensor.class, "right calibration distance sensor");
-        backSensor = hardwaremap.get(DistanceSensor.class, "back calibration distance sensor");
+        leftSensor = hardwareMap.get(DistanceSensor.class, "left calibration distance sensor");
+        rightSensor = hardwareMap.get(DistanceSensor.class, "right calibration distance sensor");
+        backSensor = hardwareMap.get(DistanceSensor.class, "back calibration distance sensor");
     }
 
     public static double invSqrt(double x) { // Use this for inverse square root ig, gotta tell judges we used some innovative bit shift algorithm originally in C++ or smth

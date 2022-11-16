@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.drivetrain.*;
 
 // Encoders, Motors
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @TeleOp(name = "main")

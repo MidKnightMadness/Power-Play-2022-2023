@@ -145,10 +145,10 @@ public class MecanumDrive {
 
         Vector.multiply(1/Math.max(this.drive[0], Math.max(this.drive[1], Math.max(this.drive[2], this.drive[3]))), this.drive);
 
-        FLMotor.setPower(this.drive[0]);
-        FRMotor.setPower(this.drive[1]);
-        BLMotor.setPower(this.drive[2]);
-        BRMotor.setPower(this.drive[3]);
+//        FLMotor.setPower(this.drive[0]);
+//        FRMotor.setPower(this.drive[1]);
+//        BLMotor.setPower(this.drive[2]);
+//        BRMotor.setPower(this.drive[3]);
     }
 
     public void fieldOrientatedDrive(double x, double y, double rotate) {

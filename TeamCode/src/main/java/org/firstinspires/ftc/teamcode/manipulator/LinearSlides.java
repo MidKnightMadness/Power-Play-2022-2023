@@ -159,7 +159,7 @@ public class LinearSlides {
     public void scoreFromDefaultScoringPosition() {
         if(Vector.lengthOf(Vector.add(Vector.neg(getClawCoordinates()), DEFAULT_SCORING_DISPLACEMENT)) > 0.1){
             this.goPointAt(DEFAULT_SCORING_DISPLACEMENT);
-            Autonomous.isScoring = false;
+//            Autonomous.isScoring = false;
         }
 
         claw.openClaw();
