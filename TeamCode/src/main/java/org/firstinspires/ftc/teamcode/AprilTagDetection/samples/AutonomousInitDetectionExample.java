@@ -21,6 +21,7 @@
 
 package org.firstinspires.ftc.teamcode.AprilTagDetection.samples;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -48,7 +49,7 @@ public class AutonomousInitDetectionExample extends LinearOpMode
         /**
          * NOTE: Many comments have been omitted from this sample for the
          * sake of conciseness. If you're just starting out with EasyOpenCv,
-         * you should take a look at {@link InternalCamera1Example} or its
+         * you should take a look at {@xlink InternalCamera1Example} or its
          * webcam counterpart, {@link WebcamExample} first.
          */
 
@@ -62,7 +63,7 @@ public class AutonomousInitDetectionExample extends LinearOpMode
             @Override
             public void onOpened()
             {
-                webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
+                webcam.startStreaming(1920,1080, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
@@ -77,9 +78,11 @@ public class AutonomousInitDetectionExample extends LinearOpMode
         {
             telemetry.addData("Realtime analysis", pipeline.getAnalysis());
             telemetry.update();
-
+            webcam.pauseViewport();
+            webcam.resumeViewport();
             // Don't burn CPU cycles busy-looping in this sample
             sleep(50);
+
         }
 
         /*
