@@ -66,10 +66,10 @@ public class MainTeleOp extends OpMode {
         // Update tickRate for robot speed, etc...
         // Temporary thing for position
 
-        Master.tickRate = 1 / (timer.getTime() - auxillary); // auxillary is previous time
-        auxillaryList1[0] = currentPosition[0] - auxillaryList1[0];
-        auxillaryList1[1] = currentPosition[1] - auxillaryList1[1];
-        Master.robotSpeed = lengthOf(auxillaryList1) / (timer.getTime() - auxillary);
+//        Master.tickRate = 1 / (timer.getTime() - auxillary); // auxillary is previous time
+//        auxillaryList1[0] = currentPosition[0] - auxillaryList1[0];
+//        auxillaryList1[1] = currentPosition[1] - auxillaryList1[1];
+//        Master.robotSpeed = lengthOf(auxillaryList1) / (timer.getTime() - auxillary);
 
 
         // DRIVER ASSIST
