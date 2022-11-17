@@ -99,7 +99,7 @@ public class Master {
 
 
     // Constructor to fully instantiate robot
-    public Master(HardwareMap hardwareMap){
+    public Master(HardwareMap hardwareMap) {
         STARTING_POSITION = DEFAULT_POSITION;
         auxillaryNumber = 0.0;
         tickRate = 0.0;

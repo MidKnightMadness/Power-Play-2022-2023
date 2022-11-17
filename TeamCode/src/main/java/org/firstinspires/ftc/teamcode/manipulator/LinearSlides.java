@@ -61,7 +61,7 @@ public class LinearSlides {
      3. Pull string to extend, roll back to retract
      */
 
-    public LinearSlides(){
+    public LinearSlides(HardwareMap hardwareMap){
         seeSawMotor = hardwareMap.get(DcMotorEx.class, "Seesaw Motor");
         extensionMotor = hardwareMap.get(DcMotorEx.class, "Linear Slide Extension Motor");
 
