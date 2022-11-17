@@ -167,6 +167,7 @@ public class MecanumDrive {
         gyro_degrees = angles.firstAngle;
         gyro_radians = gyro_degrees * Math.PI / 180;
         offAngle = Math.atan(y / x);
+        if (x == 0 && y == 0) correctedX = correctedY = 0;
 
         if (x < 0) { offAngle = Math.PI - offAngle; }
 
