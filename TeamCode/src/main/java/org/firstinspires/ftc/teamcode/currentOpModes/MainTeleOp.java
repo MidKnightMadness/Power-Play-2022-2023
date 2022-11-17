@@ -32,7 +32,7 @@ public class MainTeleOp extends OpMode {
     LinearSlides lift;
     Turntable turntable;
 //    HardwareMap hardwareMap;
-    Timer timer;
+//    Timer timer;
     double auxillary;
     double auxillary1;
     double [] auxillaryList1;
@@ -52,7 +52,7 @@ public class MainTeleOp extends OpMode {
 
     @Override
     public void init() {
-        timer = new Timer();
+//        timer = new Timer();
         auxillary = 0.0;
         auxillary1 = 0.0;
         auxillaryList1 = new double [] {0.0, 0.0};
@@ -71,9 +71,9 @@ public class MainTeleOp extends OpMode {
 
     @Override
     public void loop() {
-        timer.updateTime();
-        time = timer.getTime();
-        deltaTime = timer.getDeltaTime();
+//        timer.updateTime();
+//        time = timer.getTime();
+//        deltaTime = timer.getDeltaTime();
 
 //        Master.tickRate = 1 / (time - auxillary); // auxillary is previous time
 //        auxillaryList1[0] = currentPosition[0] - auxillaryList1[0];
@@ -104,6 +104,18 @@ public class MainTeleOp extends OpMode {
         telemetry.addData("Time: ", time);
         telemetry.addData("DeltaTime: ", deltaTime);
         telemetry.addData("DRIVE MODE: ", driveModeToggle ? "FIELD ORIENTED": "NORMAL");
+
+        telemetry.addData("\nFront Left output:", mecanum.FLMotor.getPower());
+        telemetry.addData("Front right output:", mecanum.FLMotor.getPower());
+        telemetry.addData("Rear left output:", mecanum.FLMotor.getPower());
+        telemetry.addData("Rear right output:", mecanum.FLMotor.getPower());
+
+        telemetry.addData("\nLeft stick x:", gamepad1.left_stick_x);
+        telemetry.addData("\nLeft stick y:", gamepad1.left_stick_y);
+        telemetry.addData("\nRight stick x:", gamepad1.right_stick_x);
+
+//        telemetry.addData("\nTime: ", this.timer.elapsedTime);
+
         telemetry.update();
     }
 
