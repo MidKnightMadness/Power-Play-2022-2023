@@ -102,6 +102,14 @@ public class MainTeleOp extends OpMode {
         handleManipulatorControls();
 
         telemetry.addData("DRIVE MODE: ", driveModeToggle ? "FIELD ORIENTED": "NORMAL");
+
+        telemetry.addData("\nFront Left output:", mecanum.FLMotor.getPower());
+        telemetry.addData("Front right output:", mecanum.FLMotor.getPower());
+        telemetry.addData("Rear left output:", mecanum.FLMotor.getPower());
+        telemetry.addData("Rear right output:", mecanum.FLMotor.getPower());
+
+//        telemetry.addData("\nTime: ", this.timer.elapsedTime);
+
         telemetry.update();
     }
 

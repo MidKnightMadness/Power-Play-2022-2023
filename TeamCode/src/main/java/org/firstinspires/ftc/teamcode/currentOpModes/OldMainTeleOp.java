@@ -24,7 +24,7 @@ import org.firstinspires.ftc.robotcore.external.android.AndroidAccelerometer;
 import org.firstinspires.ftc.robotcore.external.android.AndroidGyroscope;
 
 
-@TeleOp(name="Main")
+@TeleOp(name="oldMain")
 @Deprecated
 public class OldMainTeleOp extends OpMode {
     MecanumDrive mecanum;
