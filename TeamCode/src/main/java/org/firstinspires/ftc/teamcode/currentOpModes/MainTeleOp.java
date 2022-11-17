@@ -73,7 +73,7 @@ public class MainTeleOp extends OpMode {
 
 
         // DRIVER ASSIST
-        if (gamepad1.right_bumper && !lastPressedDriveMode) {
+        if (gamepad1.left_bumper && !lastPressedDriveMode) {
             driveModeToggle = !driveModeToggle;
         }
         if (driveModeToggle) {
@@ -90,13 +90,7 @@ public class MainTeleOp extends OpMode {
             if (gamepad1.dpad_right) { mecanum.drive(1, 0, 0); }
             if (gamepad1.dpad_left) { mecanum.drive(-1, 0, 0); }
         }
-        lastPressedDriveMode = gamepad1.right_bumper;
-
-
-        // Autonomous procedure for 1st tournament
-        {
-            // Go
-        }
+        lastPressedDriveMode = gamepad1.left_bumper;
 
         // Checks if aimbot is activated
         if(gamepad2.left_bumper){
