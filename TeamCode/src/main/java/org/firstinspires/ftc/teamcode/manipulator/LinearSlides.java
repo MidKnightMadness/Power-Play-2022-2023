@@ -103,7 +103,7 @@ public class LinearSlides {
     public void goPointAt(double [] xyzDisplacement){ // Make sure to input 3-array for targeted scoring position!!!!!!!! Will have to get angle of robot once it gets to junction, then correct a second time. This is not a one-time algorithm!!!
         // Actually does everything at the same time, will need to edit based on extension speed (want to minimize extended time for reliability purposes)
         displacement = xyzDisplacement; // Screw it I don't wanna run the method over and over haha
-//  Note: displacement from pivot point of linear slide
+        //  Note: displacement from pivot point of linear slide
         // Move turntable, note that this will turn the turntable 180˚ back if target is behind the pivot, will need to account for ability to swing beyond 90˚ vertical (behind) later
         if(displacement[0] <= 0){ // Getting displacement angle
             angleDisplacement = Math.PI - Math.atan(displacement[1] / displacement[0]); // Might wanna use taylor series to approximate atan later since calculation times are gonna be annoying
@@ -125,20 +125,24 @@ public class LinearSlides {
     }
 
     public void extendTo(double target){ // Inches
-        extensionMotor.setTargetPosition((int) ((target - STARTING_EXTENDER_LENGTH) / EXTENDER_OVERALL_RATIO));
-        if(extensionMotor.getTargetPosition() < extensionMotor.getCurrentPosition()){
-            extensionMotor.setPower(-1.0);
-        }else{
-            extensionMotor.setPower(1.0);
-        }
+        this.update();
+            extensionMotor.setTargetPosition((int) ((target - STARTING_EXTENDER_LENGTH) / EXTENDER_OVERALL_RATIO));
+            if (extensionMotor.getTargetPosition() < extensionMotor.getCurrentPosition()) {
+                extensionMotor.setPower(-1.0);
+            } else {
+                extensionMotor.setPower(1.0);
+            }
     }
 
-    public void pivotTo(double targetAngle){ // Radians
-        seeSawMotor.setTargetPosition((int) (targetAngle / SEESAW_OVERALL_RATIO));
-        if(seeSawMotor.getTargetPosition() < seeSawMotor.getCurrentPosition()){ // Remember, motor is geared so direction reversed
-            seeSawMotor.setPower(1.0); // To go down, set power to negative, might have to reverse this based on motor packaging
-        }else{
-            seeSawMotor.setPower(-1.0);
+    public void pivotTo(double targetAngle) { // Radians
+        this.update();
+        if(seesawAngle < Math.PI / 2 && seesawAngle > 0.0) {
+            seeSawMotor.setTargetPosition((int) (targetAngle / SEESAW_OVERALL_RATIO));
+            if (seeSawMotor.getTargetPosition() < seeSawMotor.getCurrentPosition()) { // Remember, motor is geared so direction reversed
+                seeSawMotor.setPower(1.0); // To go down, set power to negative, might have to reverse this based on motor packaging
+            } else {
+                seeSawMotor.setPower(-1.0);
+            }
         }
     }
 
@@ -159,7 +163,6 @@ public class LinearSlides {
     public void scoreFromDefaultScoringPosition() {
         if(Vector.lengthOf(Vector.add(Vector.neg(getClawCoordinates()), DEFAULT_SCORING_DISPLACEMENT)) > 0.1){
             this.goPointAt(DEFAULT_SCORING_DISPLACEMENT);
-            Autonomous.isScoring = false;
         }
 
         claw.openClaw();

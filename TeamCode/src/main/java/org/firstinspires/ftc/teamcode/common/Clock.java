@@ -5,13 +5,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.util.EventListener;
 import java.util.concurrent.TimeUnit;
 
-public class Timer {
+public class Clock {
     public ElapsedTime elapsedTime;
     private double lastTime;
     private double deltaTime = 0;
     private double currentTime = lastTime;
 
-    public Timer() {
+    public Clock() {
         elapsedTime = new ElapsedTime();
         lastTime = elapsedTime.startTime();
 
@@ -23,6 +23,7 @@ public class Timer {
         lastTime = currentTime;
 
         return currentTime;
+
     }
 
     public double getTime() {
@@ -35,5 +36,11 @@ public class Timer {
 
     public double getStartTime() {
         return elapsedTime.startTime() / 10000d;
+    }
+
+    public double resetTime() {
+        currentTime = elapsedTime.time(TimeUnit.MICROSECONDS) * 1000000.0d;
+        elapsedTime.reset();
+        return currentTime;
     }
 }

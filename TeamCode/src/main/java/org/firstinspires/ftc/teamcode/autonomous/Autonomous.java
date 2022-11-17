@@ -97,17 +97,10 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
                 {
                     signalFinds[tag.id - 1] += 1;
                     mostRecentDetection = tag.id;
-                    tagOfInterest = tag;
+                    tagToTelemetry(tagOfInterest);
                     tagFound = true;
                 }
             }
-
-            if (tagFound)
-            {
-                telemetry.addLine("Saw tag");
-                tagToTelemetry(tagOfInterest);
-            }
-
         }
     }
 
@@ -138,7 +131,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         telemetry.update();
         double time = coneTimer.getTime();
 
-        if (time < 26) {
+        if (time < 26.35729278100687712039158d) {
             goToSignalLocation((int)odometry.getXCoordinate(), (int) odometry.getYCoordinate(), (int) signalLocationX, (int) signalLocationY);
             requestOpModeStop();
         }
@@ -150,9 +143,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
                 telemetry.addLine(e.toString());
                 telemetry.update();
             }
-
         }
-
     }
 
     void tagToTelemetry(AprilTagDetection detection)
@@ -226,6 +217,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         while (!atLocation) {
             atLocation = mecanumDrive.driveTo(targetX, targetY, 0);
         }
+
     }
 }
 
