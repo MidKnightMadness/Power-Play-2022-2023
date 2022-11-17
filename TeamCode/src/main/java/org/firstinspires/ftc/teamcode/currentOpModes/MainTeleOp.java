@@ -66,8 +66,8 @@ public class MainTeleOp extends OpMode {
 //        accelerometer.setDistanceUnit(DistanceUnit.INCH);
 //        accelerometer.startListening();
     }
-    double time = timer.getTime();
-    double deltaTime = timer.getDeltaTime();
+    double time;
+    double deltaTime;
 
     @Override
     public void loop() {
@@ -75,13 +75,13 @@ public class MainTeleOp extends OpMode {
         time = timer.getTime();
         deltaTime = timer.getDeltaTime();
 
-        Master.tickRate = 1 / (time - auxillary); // auxillary is previous time
-        auxillaryList1[0] = currentPosition[0] - auxillaryList1[0];
-        auxillaryList1[1] = currentPosition[1] - auxillaryList1[1];
-        Master.robotSpeed = lengthOf(auxillaryList1) / (time - auxillary);
+//        Master.tickRate = 1 / (time - auxillary); // auxillary is previous time
+//        auxillaryList1[0] = currentPosition[0] - auxillaryList1[0];
+//        auxillaryList1[1] = currentPosition[1] - auxillaryList1[1];
+//        Master.robotSpeed = lengthOf(auxillaryList1) / (time - auxillary);
 
         // DRIVER ASSIST
-        if (gamepad1.right_bumper && !lastPressedDriveMode) {
+        if (gamepad1.left_bumper && !lastPressedDriveMode) {
             driveModeToggle = !driveModeToggle;
         }
         if (driveModeToggle) {
@@ -97,18 +97,18 @@ public class MainTeleOp extends OpMode {
             if (gamepad1.dpad_right) { mecanum.drive(1, 0, 0); }
             if (gamepad1.dpad_left) { mecanum.drive(-1, 0, 0); }
         }
-        lastPressedDriveMode = gamepad1.right_bumper;
+        lastPressedDriveMode = gamepad1.left_bumper;
 
-        handleManipulatorControls();
+//        handleManipulatorControls();
 
         telemetry.addData("DRIVE MODE: ", driveModeToggle ? "FIELD ORIENTED": "NORMAL");
         telemetry.update();
     }
 
-    boolean lastClawOpenToggle = false;
-    boolean isClawOpenToggle = false;
+    private boolean lastClawOpenToggle = false;
+    private boolean isClawOpenToggle = false;
 
-    void handleManipulatorControls() {
+    public void handleManipulatorControls() {
          turntable.turnBy(deadZone(this.gamepad2.left_stick_x) * TURNTABLE_DEGREES_PER_SECOND * deltaTime);
          lift.pivotTo( LinearSlides.seesawAngle + deadZone(this.gamepad2.left_stick_y) * SEEESAW_RADIANS_PER_SECOND * deltaTime);
          lift.extendTo(LinearSlides.seesawExtensionLength + deadZone(this.gamepad2.right_stick_x) * LINEAR_SLIDER_INCHES_PER_SECOND * deltaTime );

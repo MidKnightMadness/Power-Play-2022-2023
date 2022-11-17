@@ -17,7 +17,7 @@ public class Claw {
     public void openClaw() {
         servo.setPosition(servo.MAX_POSITION);
     }
-
+    
     public void closeClaw() {
         servo.setPosition(servo.MIN_POSITION);
     }
