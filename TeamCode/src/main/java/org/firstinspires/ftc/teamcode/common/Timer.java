@@ -18,7 +18,7 @@ public class Timer {
     }
 
     public double updateTime() {
-        currentTime = elapsedTime.time(TimeUnit.MICROSECONDS) * 1000000.0d;
+        currentTime = elapsedTime.time(TimeUnit.MICROSECONDS) / 1000000.0d;
         deltaTime = currentTime - lastTime;
         lastTime = currentTime;
 
