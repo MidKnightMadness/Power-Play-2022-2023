@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.manipulator;
 
-import static org.firstinspires.ftc.teamcode.highlevel.Master.hardwaremap;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.odometryAlg;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -23,8 +22,8 @@ public class Turntable {
     // Internal use variables
     private int neededTicks; // Displacement or target position
 
-    public Turntable() {
-        tableMotor = hardwaremap.get(DcMotorEx.class, "Turntable Motor"); // connect motor
+    public Turntable(HardwareMap hardwareMap) {
+        tableMotor = hardwareMap.get(DcMotorEx.class, "Turntable Motor"); // connect motor
 
         tableMotor.setDirection(DcMotor.Direction.FORWARD); // set direction
         tableMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // set motor mode

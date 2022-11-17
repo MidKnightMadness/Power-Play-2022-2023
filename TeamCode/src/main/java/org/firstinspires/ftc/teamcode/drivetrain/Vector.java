@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.drivetrain;
 
 import static org.firstinspires.ftc.teamcode.highlevel.Master.invSqrt;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.auxillaryNumber;
-import static org.firstinspires.ftc.teamcode.highlevel.Master.auxillary;
 
 import org.firstinspires.ftc.teamcode.highlevel.Master;
 
@@ -16,8 +15,8 @@ public class Vector { // Vector-based methods deprecated, use double []
     }
 
     public static double [] neg(double [] list){
-        for(double i : list){
-            i = -i;
+        for(int i = 0; i < list.length; i++){
+            list[i] = -list[i];
         }
         return list;
     }
@@ -31,7 +30,6 @@ public class Vector { // Vector-based methods deprecated, use double []
 //            return Master.auxillary;
 //        }
         for(int i = 0; i < list1.length; i++){
-            Master.auxillary[i] = 0.0;
             Master.auxillary[i] = list1[i] +  list2[i];
         }
         return Master.auxillary;
@@ -49,8 +47,8 @@ public class Vector { // Vector-based methods deprecated, use double []
     }
 
     public static double [] multiply(double coeff, double [] list){
-        for(double i : list){
-            i *= coeff;
+        for(int i = 0; i < list.length; i++){
+            list[i] *= coeff;
         }
         return list;
     }
@@ -60,14 +58,13 @@ public class Vector { // Vector-based methods deprecated, use double []
         for(double i : list){
             auxillaryNumber += i * i;
         }
-        return auxillaryNumber;
+        return Math.sqrt(auxillaryNumber);
     }
 
     public static double [] normalize(double [] list){
-        auxillaryNumber = 0;
         auxillaryNumber = lengthOf(list);
-        for(double i : list){
-            i *= invSqrt(auxillaryNumber);
+        for(int i = 0; i < list.length; i++){
+            list[i] *= invSqrt(auxillaryNumber);
         }
         return list;
     }
