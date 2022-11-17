@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.drivetrain;
 
 import static org.firstinspires.ftc.teamcode.highlevel.Master.invSqrt;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.auxillaryNumber;
-import static org.firstinspires.ftc.teamcode.highlevel.Master.auxillary;
 
 import org.firstinspires.ftc.teamcode.highlevel.Master;
 
@@ -31,7 +30,6 @@ public class Vector { // Vector-based methods deprecated, use double []
 //            return Master.auxillary;
 //        }
         for(int i = 0; i < list1.length; i++){
-            Master.auxillary[i] = 0.0;
             Master.auxillary[i] = list1[i] +  list2[i];
         }
         return Master.auxillary;
@@ -60,7 +58,7 @@ public class Vector { // Vector-based methods deprecated, use double []
         for(double i : list){
             auxillaryNumber += i * i;
         }
-        return auxillaryNumber;
+        return Math.sqrt(auxillaryNumber);
     }
 
     public static double [] normalize(double [] list){
