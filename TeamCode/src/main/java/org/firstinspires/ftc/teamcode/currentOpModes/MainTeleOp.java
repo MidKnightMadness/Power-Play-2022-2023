@@ -32,7 +32,7 @@ public class MainTeleOp extends OpMode {
     LinearSlides lift;
     Turntable turntable;
 //    HardwareMap hardwareMap;
-    Timer timer;
+//    Timer timer;
     double auxillary;
     double auxillary1;
     double [] auxillaryList1;
@@ -52,7 +52,7 @@ public class MainTeleOp extends OpMode {
 
     @Override
     public void init() {
-        timer = new Timer();
+//        timer = new Timer();
         auxillary = 0.0;
         auxillary1 = 0.0;
         auxillaryList1 = new double [] {0.0, 0.0};
@@ -71,9 +71,9 @@ public class MainTeleOp extends OpMode {
 
     @Override
     public void loop() {
-        timer.updateTime();
-        time = timer.getTime();
-        deltaTime = timer.getDeltaTime();
+//        timer.updateTime();
+//        time = timer.getTime();
+//        deltaTime = timer.getDeltaTime();
 
 //        Master.tickRate = 1 / (time - auxillary); // auxillary is previous time
 //        auxillaryList1[0] = currentPosition[0] - auxillaryList1[0];
