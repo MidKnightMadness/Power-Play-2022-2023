@@ -108,6 +108,10 @@ public class MainTeleOp extends OpMode {
         telemetry.addData("Rear left output:", mecanum.FLMotor.getPower());
         telemetry.addData("Rear right output:", mecanum.FLMotor.getPower());
 
+        telemetry.addData("\nLeft stick x:", gamepad1.left_stick_x);
+        telemetry.addData("\nLeft stick y:", gamepad1.left_stick_y);
+        telemetry.addData("\nRight stick x:", gamepad1.right_stick_x);
+
 //        telemetry.addData("\nTime: ", this.timer.elapsedTime);
 
         telemetry.update();
