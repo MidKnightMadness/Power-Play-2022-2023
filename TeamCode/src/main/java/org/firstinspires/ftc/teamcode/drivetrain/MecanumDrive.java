@@ -47,12 +47,12 @@ public class MecanumDrive {
 
     private double [] position = {0.0, 0.0};
     private double [] velocity = {0.0, 0.0};
-    public double [] drive;
+    public static double [] drive = {0.0, 0.0, 0.0, 0.0};
     private double [] displacement = {0.0, 0.0};
     private double [] auxillary = {0.0, 0.0};
 
-    private double [] translation = {0.0, 0.0, 0.0, 0.0};
-    private double [] rotation = {0.0, 0.0, 0.0, 0.0};
+    public static double [] translation = {0.0, 0.0, 0.0, 0.0};
+    public static double [] rotation = {0.0, 0.0, 0.0, 0.0};
 
     int time;
     double maxValue;
@@ -147,20 +147,22 @@ public class MecanumDrive {
         BLMotor.setPower(-x + y + rotate);
     }
 
-//    public void vectorDrive(double x, double y, double rotate) {
-//
-//        translation = Vector.add(Vector.multiply(x, RIGHT), Vector.multiply(y, BACKWARDS));
-//        rotation = Vector.multiply(rotate, TURN_RIGHT);
-//        this.drive = Vector.multiply(0.5, translation); // temporary ig
-//
-//
-//        Vector.multiply(1/Math.max(this.drive[0], Math.max(this.drive[1], Math.max(this.drive[2], this.drive[3]))), this.drive);
-//
-////        FLMotor.setPower(this.drive[0]);
-////        FRMotor.setPower(this.drive[1]);
-////        BLMotor.setPower(this.drive[2]);
-////        BRMotor.setPower(this.drive[3]);
-//    }
+    public static double [] vectorDrive(double x, double y, double rotate) {
+
+        translation = Vector.add(Vector.multiply(x, RIGHT), Vector.multiply(y, BACKWARDS));
+        rotation = Vector.multiply(rotate, TURN_RIGHT);
+        drive = Vector.multiply(0.5, translation); // temporary ig
+
+
+        Vector.multiply(1/Math.max(drive[0], Math.max(drive[1], Math.max(drive[2], drive[3]))), drive);
+
+        return MecanumDrive.drive;
+
+//        FLMotor.setPower(this.drive[0]);
+//        FRMotor.setPower(this.drive[1]);
+//        BLMotor.setPower(this.drive[2]);
+//        BRMotor.setPower(this.drive[3]);
+    }
 
     public void fieldOrientatedDrive(double x, double y, double rotate) {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -168,7 +170,10 @@ public class MecanumDrive {
         gyro_radians = gyro_degrees * Math.PI / 180;
         offAngle = Math.atan(y / x);
         if (x == 0 && y == 0) {
-            correctedX = correctedY = 0;
+            FRMotor.setPower(0 - rotate);
+            FLMotor.setPower(rotate);
+            BRMotor.setPower(0 - rotate);
+            BLMotor.setPower(rotate);
             return;
         }
 
