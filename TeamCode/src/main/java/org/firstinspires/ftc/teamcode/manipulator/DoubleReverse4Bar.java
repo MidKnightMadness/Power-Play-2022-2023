@@ -28,9 +28,9 @@ public class DoubleReverse4Bar {
 
     public void raiseTo(double height) { // Does conversion to ticks in the method
         liftMotor.setTargetPosition((int) ((height - STARTING_HEIGHT) / OVERALL_RATIO)); // Assuming that starting ticks is 0
-        if(liftMotor.getTargetPosition() > liftMotor.getCurrentPosition()){
+        if (liftMotor.getTargetPosition() > liftMotor.getCurrentPosition()) {
             liftMotor.setPower(1.0); // Assuming 1 gearing, pulling the thign down
-        }else{
+        } else {
             liftMotor.setPower(-1.0);
         }
         liftMotor.setPower(1.0);

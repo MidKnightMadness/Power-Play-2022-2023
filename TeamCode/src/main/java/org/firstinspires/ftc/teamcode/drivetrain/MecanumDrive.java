@@ -75,25 +75,29 @@ public class MecanumDrive {
         BLMotor = hardwareMap.get(DcMotorEx.class, "BL");
 
         // Set Directions
-        FRMotor.setDirection(DcMotor.Direction.FORWARD);
-        FLMotor.setDirection(DcMotor.Direction.REVERSE);
-        BRMotor.setDirection(DcMotor.Direction.REVERSE);
-        BLMotor.setDirection(DcMotor.Direction.FORWARD);
 //        FRMotor.setDirection(DcMotor.Direction.FORWARD);
 //        FLMotor.setDirection(DcMotor.Direction.REVERSE);
-//        BRMotor.setDirection(DcMotor.Direction.FORWARD);
-//        BLMotor.setDirection(DcMotor.Direction.REVERSE);
+//        BRMotor.setDirection(DcMotor.Direction.REVERSE);
+//        BLMotor.setDirection(DcMotor.Direction.FORWARD);
+        FRMotor.setDirection(DcMotor.Direction.REVERSE);
+        FLMotor.setDirection(DcMotor.Direction.REVERSE);
+        BRMotor.setDirection(DcMotor.Direction.FORWARD);
+        BLMotor.setDirection(DcMotor.Direction.REVERSE);
 
         // Set Motor Mode
-        FRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        FLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        BRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        BLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        FRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        FLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        BRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        BLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        FRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        FLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        FRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        FLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        FRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        FLMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        BRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        BLMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Set Zero Power Behavior
         FRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
