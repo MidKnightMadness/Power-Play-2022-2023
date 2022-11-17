@@ -57,7 +57,7 @@ public class MecanumDrive {
     int time;
     double maxValue;
 
-    private BNO055IMU imu;
+    public BNO055IMU imu;
 
     private double correctedX;
     private double correctedY;

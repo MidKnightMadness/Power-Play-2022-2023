@@ -4,6 +4,8 @@ import static org.firstinspires.ftc.teamcode.drivetrain.Vector.lengthOf;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.aimbotActivated;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.currentPosition;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -37,6 +39,12 @@ public class MainTeleOp extends OpMode {
     double auxillary1;
     double [] auxillaryList1;
     double [] auxillaryList2;
+
+
+    // Temporary stuff
+    private int [] previousPosition = {0, 0};
+    private int [] currentPosition = {0, 0};
+    // End temporary stuff
 
     final double TURNTABLE_DEGREES_PER_SECOND = 180d;
     final double DEADZONE_TOLERANCE = 0.05;
@@ -109,8 +117,12 @@ public class MainTeleOp extends OpMode {
         telemetry.addData("Rear right output:", mecanum.FLMotor.getPower());
 
         telemetry.addData("\nLeft stick x:", gamepad1.left_stick_x);
-        telemetry.addData("\nLeft stick y:", gamepad1.left_stick_y);
-        telemetry.addData("\nRight stick x:", gamepad1.right_stick_x);
+        telemetry.addData("Left stick y:", gamepad1.left_stick_y);
+        telemetry.addData("Right stick x:", gamepad1.right_stick_x);
+
+        telemetry.addLine(String.format("\nPosition:%f, %f", mecanum.imu.getPosition().x, mecanum.imu.getPosition().y));
+        telemetry.addData("Orientation (deg):", mecanum.imu.getAngularOrientation().firstAngle);
+        telemetry.addLine(String.format("Acceleration:%f, %f", mecanum.imu.getAcceleration().xAccel, mecanum.imu.getAcceleration().yAccel));
 
 //        telemetry.addData("\nTime: ", this.timer.elapsedTime);
 
