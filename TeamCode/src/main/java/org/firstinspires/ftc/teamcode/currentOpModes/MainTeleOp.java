@@ -31,6 +31,7 @@ public class MainTeleOp extends OpMode {
     TestingOdometryAlgorithm odometryAlg;
     LinearSlides lift;
     Turntable turntable;
+    Odo
 //    HardwareMap hardwareMap;
 //    Timer timer;
     double auxillary;
