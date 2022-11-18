@@ -15,8 +15,8 @@ public class Odometry implements OdometryVariables {
     double deltaTime = 0;
     double lastTime = 0;
 
-    public org.firstinspires.ftc.teamcode.odometry.Vector2 position = new Vector2();
-    public org.firstinspires.ftc.teamcode.odometry.Vector2 velocity = new Vector2();
+    Vector2 position = new Vector2();
+    Vector2 velocity = new Vector2();
 
     int lastLeftTicks = 0;
     int deltaLeftTicks = 0;

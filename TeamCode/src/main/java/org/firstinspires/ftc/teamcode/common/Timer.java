@@ -12,9 +12,13 @@ public class Timer {
     private double currentTime = lastTime;
 
     public Timer() {
-        elapsedTime = new ElapsedTime();
+        this.elapsedTime = new ElapsedTime();
         lastTime = elapsedTime.startTime();
 
+    }
+
+    public Timer(ElapsedTime elapsedTime) {
+        this.elapsedTime = elapsedTime;
     }
 
     public double updateTime() {
