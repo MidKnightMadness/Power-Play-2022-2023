@@ -18,6 +18,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class TestingOdometryAlgorithm {
     private double [] travel = {0.0, 0.0};
+    private double [] travel1 = {0.0, 0.0};
 
     // Use encoder objects encoder1, encorder2, encoder3 from AuxillaryData
     // Encoder wheels are placed as follows:
@@ -30,7 +31,7 @@ public class TestingOdometryAlgorithm {
     // Chassis dimensional constants
     public static final double TRACK_WIDTH = 12.4; // Distance between dead wheels 1 and 2 in inches
     public static final double DISTANCE_TO_BACK_WHEEL = 7.500 - 2.098; // Distance between center of robot (currentPosition) and back dead wheel - again, in inches
-    public static final double DEAD_WHEEL_RADIUS = 2.83464566929;
+    public static final double DEAD_WHEEL_RADIUS = 2.83464566929 / 2;
     public static final double TICKS_PER_ROTATION = 8192;
 
     // Input / Output, calculations
@@ -100,22 +101,29 @@ public class TestingOdometryAlgorithm {
         angleChange = (encoder1Delta - encoder2Delta) / TRACK_WIDTH;
 
         orientationAngle += angleChange / 2;
-        Vector.rotateBy(orientation, angleChange / 2);
-        Vector.rotateBy(normalOrientation, angleChange / 2);
+        Vector.equalTo(normalOrientation, Vector.rotateBy(orientation, angleChange / 2));
+        Vector.equalTo(normalOrientation, Vector.rotateBy(normalOrientation, angleChange / 2));
 
 
         // Previous iteration - erraneous
 //        travel = orientation.multiply(0.5 * encoder1Delta + 0.5 * encoder2Delta).add
 //                (normalOrientation.multiply(encoder3Delta * Math.cos(orientationAngle) - encoder3Delta * (angleChange / 2)));
 
+        // 2nd iteration, doesn't work due to reference assignment issues
+//        travel = Vector.add(Vector.multiply(0.5 * encoder1Delta + 0.5 * encoder2Delta, orientation),
+//                Vector.multiply(encoder3Delta - angleChange * DISTANCE_TO_BACK_WHEEL, normalOrientation));
+
         // Current iteration
-        travel = Vector.add(Vector.multiply(0.5 * encoder1Delta + 0.5 * encoder2Delta, orientation),
-                Vector.multiply(encoder3Delta - angleChange * DISTANCE_TO_BACK_WHEEL, normalOrientation));
+        // Component parallel to 2 main wheels, should clear auxillary reference
+        travel = Vector.equalTo(travel1, Vector.multiply(0.5 * encoder1Delta + 0.5 * encoder2Delta, orientation));
+        // Component parallel to back wheel, should also clear auxillary reference
+        travel1 = Vector.equalTo(travel, Vector.multiply(encoder3Delta - angleChange * DISTANCE_TO_BACK_WHEEL, normalOrientation));
+        travel = Vector.equalTo(travel, Vector.add(travel, travel1));
 
         orientationAngle += angleChange / 2;
-        Vector.rotateBy(orientation, angleChange / 2);
-        Vector.rotateBy(normalOrientation, angleChange / 2);
+        Vector.equalTo(normalOrientation, Vector.rotateBy(orientation, angleChange / 2));
+        Vector.equalTo(normalOrientation, Vector.rotateBy(normalOrientation, angleChange / 2));
 
-        Vector.add(currentPosition, travel);
+        Vector.equalTo(currentPosition, Vector.add(currentPosition, travel));
     }
 }

@@ -36,7 +36,8 @@ public class Vector { // Vector-based methods deprecated, use double []
 //            return Master.auxillary;
 //        }
         for(int i = 0; i < list1.length; i++){
-            auxillary[i] = list1[i] +  list2[i];
+            auxillary[i] = list1[i];
+            auxillary[i] += list2[i];
         }
         return auxillary;
     }
@@ -78,8 +79,28 @@ public class Vector { // Vector-based methods deprecated, use double []
     public static double [] rotateBy(double [] list, double angleChange){ // Radians
         auxillary[0] = list[0] * Math.cos(angleChange) - list[1] * Math.sin(angleChange);
         auxillary[1] = list[0] * Math.sin(angleChange) + list[1] * Math.cos(angleChange);
-        return list;
+        return auxillary;
     }
+
+    public static boolean areEqual(double [] list1, double [] list2){ // Checks if they're equal
+        if(list1.length == list2.length){
+            for(int i = 0; i < list1.length; i++){
+                if(list1[i] != list2[i]){
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public static double [] equalTo(double [] list1, double [] list2){ // Copies data of 2nd list to 1st list
+        for(int i = 0; i < Math.min(list1.length, list2.length); i++){
+            list1[i] = list2[i];
+        }
+        return list1;
+    } // If this doesn't work, copy all the data manually
+
 
     /*public Vector multiply(Matrix matrix){
         double [] newVector = new double [this.getVector().length];

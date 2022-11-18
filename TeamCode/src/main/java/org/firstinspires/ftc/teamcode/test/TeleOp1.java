@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.test;
 
 import static org.firstinspires.ftc.teamcode.highlevel.Master.telemetry;
-import static org.firstinspires.ftc.teamcode.test.TeleOp1.drive;
 
 
 //import org.firstinspires.ftc.teamcode.drivetrain.Vector;
@@ -20,10 +19,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @TeleOp(name = "main")
 public class TeleOp1 extends OpMode {
-//    MecanumDrive this;
+    MecanumDrive driver;
 
-    public static double [] drive = {0.0, 0.0, 0.0, 0.0};
+    public static double [] drive = new double [4];
+
     public static double [] translation = {0.0, 0.0, 0.0, 0.0};
+    public static double [] translation1 = {0.0, 0.0, 0.0, 0.0};
     public static double [] rotation = {0.0, 0.0, 0.0, 0.0};
 
     public static double [] BACKWARDS = {-1.0, 1.0, -1.0, 1.0};
@@ -34,11 +35,17 @@ public class TeleOp1 extends OpMode {
 
     @Override
     public void init() {
-//        this = new MecanumDrive(hardwareMap);
+
+        for(int i = 0; i < 4; i++){
+            drive[i] = 0.0;
+        }
+
+        driver = new MecanumDrive(hardwareMap);
+
         telemetry.addData("\"RIGHT\"\t", this.RIGHT);
         telemetry.addData("\"BACKWARDS\"\t", this.BACKWARDS);
         telemetry.addData("\"TURN_RIGHT\"\t", this.TURN_RIGHT);
-        telemetry.addData("drive vector\t", this.drive);
+        telemetry.addData("\ndrive vector\t", drive);
 
         telemetry.addLine(String.format("\nleft front:\t%f", this.RIGHT[0]));
         telemetry.addLine(String.format("\nright front:\t%f", this.RIGHT[1]));
@@ -49,25 +56,39 @@ public class TeleOp1 extends OpMode {
 
     @Override
     public void loop() {
-        this.translation = Vector.add(Vector.multiply(gamepad1.left_stick_x, RIGHT), Vector.multiply(-gamepad1.left_stick_y, BACKWARDS));
-        this.rotation = Vector.multiply(gamepad1.right_stick_x, TURN_RIGHT);
-        this.drive = Vector.multiply(0.5, translation); // temporary ig
 
-        telemetry.addLine(String.format("drive vector:\t{%f, %f, %f, %f}", Vector.multiply(gamepad1.left_stick_y, BACKWARDS)[0], Vector.multiply(gamepad1.left_stick_y, BACKWARDS)[1], Vector.multiply(gamepad1.left_stick_y, BACKWARDS)[2], Vector.multiply(gamepad1.left_stick_y, BACKWARDS)[3]));
+        // Temporarily using translation and rotation as intermediary
+        translation = Vector.multiply(gamepad1.left_stick_y, BACKWARDS);
+        drive = Vector.equalTo(drive, translation); // IDK if this works lmao
 
-//        Vector.multiply(1/Math.max(this.drive[0], Math.max(MecanumDrive.drive[1], Math.max(MecanumDrive.drive[2], MecanumDrive.drive[3]))), MecanumDrive.drive);
+        translation1 = Vector.multiply(gamepad1.left_stick_x, RIGHT);
+        Vector.equalTo(translation, translation1); // Frees up auxillary reference
+        drive = Vector.equalTo(drive, Vector.add(drive, translation)); // Frees up auxillary reference
 
-//        telemetry.addData("drive vector reference:\t", this.drive);
+        rotation = Vector.multiply(gamepad1.right_stick_x, TURN_RIGHT);
+        translation1 = Vector.equalTo(translation1, rotation); // Frees up auxillary reference
+        drive = Vector.equalTo(drive, Vector.add(drive, translation1));
+
+        // Drive should now be untied from auxillary reference
+        drive = Vector.equalTo(drive, Vector.multiply(1/Math.max(drive[0], Math.max(drive[1], Math.max(drive[2], drive[3]))), drive));
+
+
+        telemetry.addLine(String.format("drive vector:\t{%f, %f, %f, %f}", drive[0], drive[1], drive[2], drive[3]));
+
+
+
+
+//        telemetry.addData("drive vector reference:\t", drive);
 //
 //        telemetry.addData("\nController left stick x", gamepad1.left_stick_x);
 //        telemetry.addData("Controller left stick y", gamepad1.left_stick_y);
 //        telemetry.addData("Controller right stick x", gamepad1.right_stick_x);
 //
 //
-//        telemetry.addData("\nleft front:\t", this.drive[0]);
-//        telemetry.addData("\nright front:\t", this.drive[1]);
-//        telemetry.addData("\nleft back:\t", this.drive[2]);
-//        telemetry.addData("\nright back:\t", this.drive[3]);
+//        telemetry.addData("\nleft front:\t", drive[0]);
+//        telemetry.addData("\nright front:\t", drive[1]);
+//        telemetry.addData("\nleft back:\t", drive[2]);
+//        telemetry.addData("\nright back:\t", drive[3]);
 
 
 //        telemetry.addData("\nFront Left output:", this.FLMotor.getPower());
