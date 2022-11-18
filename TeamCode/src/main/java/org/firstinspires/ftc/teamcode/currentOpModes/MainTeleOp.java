@@ -4,8 +4,6 @@ import static org.firstinspires.ftc.teamcode.drivetrain.Vector.lengthOf;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.aimbotActivated;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.currentPosition;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -25,6 +23,7 @@ import static org.firstinspires.ftc.teamcode.highlevel.Master.manipulator1;
 
 import org.firstinspires.ftc.robotcore.external.android.AndroidAccelerometer;
 import org.firstinspires.ftc.robotcore.external.android.AndroidGyroscope;
+import org.firstinspires.ftc.teamcode.odometry.TwoWheelOdometry;
 
 
 @TeleOp(name="Main")
@@ -33,18 +32,13 @@ public class MainTeleOp extends OpMode {
     TestingOdometryAlgorithm odometryAlg;
     LinearSlides lift;
     Turntable turntable;
+    TwoWheelOdometry odometry;
 //    HardwareMap hardwareMap;
-//    Timer timer;
+    Timer timer;
     double auxillary;
     double auxillary1;
     double [] auxillaryList1;
     double [] auxillaryList2;
-
-
-    // Temporary stuff
-    private int [] previousPosition = {0, 0};
-    private int [] currentPosition = {0, 0};
-    // End temporary stuff
 
     final double TURNTABLE_DEGREES_PER_SECOND = 180d;
     final double DEADZONE_TOLERANCE = 0.05;
@@ -60,16 +54,17 @@ public class MainTeleOp extends OpMode {
 
     @Override
     public void init() {
-//        timer = new Timer();
+        timer = new Timer();
         auxillary = 0.0;
         auxillary1 = 0.0;
         auxillaryList1 = new double [] {0.0, 0.0};
         auxillaryList2 = new double [] {0.0, 0.0, 0.0};
 
         mecanum = new MecanumDrive(hardwareMap);
-//        odometry = new Odometry(hardwareMap);
+        odometry = new TwoWheelOdometry(hardwareMap);
 //        lift = new LinearSlides(hardwareMap);
 //        turntable = new Turntable(hardwareMap);
+
 //        accelerometer = Master.hardwaremap.get(AndroidAccelerometer.class, "accelerometer");
 //        accelerometer.setDistanceUnit(DistanceUnit.INCH);
 //        accelerometer.startListening();
@@ -79,9 +74,9 @@ public class MainTeleOp extends OpMode {
 
     @Override
     public void loop() {
-//        timer.updateTime();
-//        time = timer.getTime();
-//        deltaTime = timer.getDeltaTime();
+        timer.updateTime();
+        time = timer.getTime();
+        deltaTime = timer.getDeltaTime();
 
 //        Master.tickRate = 1 / (time - auxillary); // auxillary is previous time
 //        auxillaryList1[0] = currentPosition[0] - auxillaryList1[0];
@@ -108,33 +103,25 @@ public class MainTeleOp extends OpMode {
         lastPressedDriveMode = gamepad1.left_bumper;
 
 //        handleManipulatorControls();
+//        odometry.loop();
 
-        telemetry.addData("Time: ", time);
-        telemetry.addData("DeltaTime: ", deltaTime);
-        telemetry.addData("DRIVE MODE: ", driveModeToggle ? "FIELD ORIENTED": "NORMAL");
 
-        telemetry.addData("\nFront Left output:", mecanum.FLMotor.getPower());
-        telemetry.addData("Front right output:", mecanum.FLMotor.getPower());
-        telemetry.addData("Rear left output:", mecanum.FLMotor.getPower());
-        telemetry.addData("Rear right output:", mecanum.FLMotor.getPower());
 
-        telemetry.addData("\nLeft stick x:", gamepad1.left_stick_x);
-        telemetry.addData("Left stick y:", gamepad1.left_stick_y);
-        telemetry.addData("Right stick x:", gamepad1.right_stick_x);
+        telemetry.addData("DRIVE MODE", driveModeToggle ? "FIELD ORIENTED": "NORMAL");
 
-        telemetry.addLine(String.format("\n\nPosition:%f, %f", mecanum.imu.getPosition().x, mecanum.imu.getPosition().y));
-        telemetry.addData("Orientation (deg)", mecanum.imu.getAngularOrientation().firstAngle);
-        telemetry.addLine(String.format("Acceleration:%f, %f", mecanum.imu.getAcceleration().xAccel, mecanum.imu.getAcceleration().yAccel));
+        odometry.telemetry(telemetry);
+        mecanum.telemetry(telemetry);
 
-//        telemetry.addData("\nTime: ", this.timer.elapsedTime);
-
+        telemetry.addLine("\nTIMER");
+        telemetry.addLine("DeltaTime " + deltaTime);
+        telemetry.addLine("Time" + time);
         telemetry.update();
     }
 
-    private boolean lastClawOpenToggle = false;
-    private boolean isClawOpenToggle = false;
+    boolean lastClawOpenToggle = false;
+    boolean isClawOpenToggle = false;
 
-    public void handleManipulatorControls() {
+    void handleManipulatorControls() {
          turntable.turnBy(deadZone(this.gamepad2.left_stick_x) * TURNTABLE_DEGREES_PER_SECOND * deltaTime);
          lift.pivotTo( LinearSlides.seesawAngle + deadZone(this.gamepad2.left_stick_y) * SEEESAW_RADIANS_PER_SECOND * deltaTime);
          lift.extendTo(LinearSlides.seesawExtensionLength + deadZone(this.gamepad2.right_stick_x) * LINEAR_SLIDER_INCHES_PER_SECOND * deltaTime );

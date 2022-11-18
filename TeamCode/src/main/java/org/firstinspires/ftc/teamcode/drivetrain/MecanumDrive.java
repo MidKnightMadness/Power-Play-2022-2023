@@ -223,14 +223,16 @@ public class MecanumDrive {
     }
 
     public void telemetry(Telemetry telemetry) {
+        telemetry.addLine("\nMECANUM WHEELS");
         telemetry.addData("FR Motor Position", FRMotor.getCurrentPosition());
         telemetry.addData("FL Motor Position", FLMotor.getCurrentPosition());
         telemetry.addData("BR Motor Position", BRMotor.getCurrentPosition());
         telemetry.addData("BL Motor Position", BLMotor.getCurrentPosition());
-        telemetry.addData("\nFront Left input:", auxillary[0]);
-        telemetry.addData("Front right input:", auxillary[1]);
-        telemetry.addData("Rear left input:", auxillary[2]);
-        telemetry.addData("Rear right input:", auxillary[3]);
+        telemetry.addLine();
+//        telemetry.addData("Front Left input:", auxillary[0]);
+//        telemetry.addData("Front right input:", auxillary[1]);
+//        telemetry.addData("Rear left input:", auxillary[2]);
+//        telemetry.addData("Rear right input:", auxillary[3]);
         telemetry.addData("x2", correctedX);
         telemetry.addData("y2", correctedY);
         telemetry.addData("First Angle", angles.firstAngle);
