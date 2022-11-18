@@ -54,9 +54,10 @@ public class Vector { // Vector-based methods deprecated, use double []
 
     public static double [] multiply(double coeff, double [] list){
         for(int i = 0; i < list.length; i++){
-            list[i] *= coeff;
+            auxillary[i] = list[i];
+            auxillary[i] *= coeff;
         }
-        return list;
+        return auxillary;
     }
 
     public static double lengthOf(double [] list){ // Alters list
@@ -90,4 +91,6 @@ public class Vector { // Vector-based methods deprecated, use double []
         return this;
     }*/
 }
+
+
 

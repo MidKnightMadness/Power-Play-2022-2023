@@ -122,8 +122,8 @@ public class MainTeleOp extends OpMode {
         telemetry.addData("Left stick y:", gamepad1.left_stick_y);
         telemetry.addData("Right stick x:", gamepad1.right_stick_x);
 
-        telemetry.addLine(String.format("\nPosition:%f, %f", mecanum.imu.getPosition().x, mecanum.imu.getPosition().y));
-        telemetry.addData("Orientation (deg):", mecanum.imu.getAngularOrientation().firstAngle);
+        telemetry.addLine(String.format("\n\nPosition:%f, %f", mecanum.imu.getPosition().x, mecanum.imu.getPosition().y));
+        telemetry.addData("Orientation (deg)", mecanum.imu.getAngularOrientation().firstAngle);
         telemetry.addLine(String.format("Acceleration:%f, %f", mecanum.imu.getAcceleration().xAccel, mecanum.imu.getAcceleration().yAccel));
 
 //        telemetry.addData("\nTime: ", this.timer.elapsedTime);

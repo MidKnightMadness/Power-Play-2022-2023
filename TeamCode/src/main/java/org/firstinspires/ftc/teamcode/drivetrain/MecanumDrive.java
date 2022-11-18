@@ -150,11 +150,11 @@ public class MecanumDrive {
     public static double [] vectorDrive(double x, double y, double rotate) {
 
         translation = Vector.add(Vector.multiply(x, RIGHT), Vector.multiply(y, BACKWARDS));
-        rotation = Vector.multiply(rotate, TURN_RIGHT);
-        drive = Vector.multiply(0.5, translation); // temporary ig
+//        rotation = Vector.multiply(rotate, TURN_RIGHT);
+        MecanumDrive.drive = Vector.multiply(0.5, translation); // temporary ig
 
 
-        Vector.multiply(1/Math.max(drive[0], Math.max(drive[1], Math.max(drive[2], drive[3]))), drive);
+        Vector.multiply(1/Math.max(MecanumDrive.drive[0], Math.max(MecanumDrive.drive[1], Math.max(MecanumDrive.drive[2], MecanumDrive.drive[3]))), MecanumDrive.drive);
 
         return MecanumDrive.drive;
 

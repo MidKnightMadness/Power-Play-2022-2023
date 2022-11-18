@@ -19,8 +19,8 @@ public class TestOdometry extends OpMode {
     //    ––––––––
 
     // Chassis dimensional constants
-    private final double TRACK_WIDTH = 10.0; // Distance between dead wheels 1 and 2 in inches
-    private final double DEAD_WHEEL_RADIUS = 1.5;
+    private final double TRACK_WIDTH = 12.4; // Distance between dead wheels 1 and 2 in inches
+    private final double DEAD_WHEEL_RADIUS = 7.500 - 2.098;
     private final double TICKS_PER_ROTATION = 8192;
 
     // Input / Output, calculations
