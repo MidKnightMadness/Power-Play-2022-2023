@@ -54,7 +54,7 @@ public class TwoWheelOdometry implements OdometryVariablesab {
     DcMotorEx leftEncoder;
     DcMotorEx rightEncoder;
 
-    public void init(HardwareMap hardwareMap) {
+    public TwoWheelOdometry(HardwareMap hardwareMap) {
         elapsedTime = new ElapsedTime();
         leftEncoder = hardwareMap.get(DcMotorEx.class, "BR");
         leftEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -64,11 +64,9 @@ public class TwoWheelOdometry implements OdometryVariablesab {
         rightEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
-    public void loop(Telemetry telemetry) {
+    public void loop() {
         updateTime();
-        updatePosition(telemetry);
-
-        telemetry.update();
+        updatePosition();
 
         try {
             Thread.sleep(sleepTime);
@@ -84,15 +82,25 @@ public class TwoWheelOdometry implements OdometryVariablesab {
         lastTime = currentTime;
     }
 
-    public void updatePosition(Telemetry telemetry) {
-        int leftTicks = (leftEncoder.getCurrentPosition());
-        int rightTicks = (rightEncoder.getCurrentPosition());
-        int topTicks = 0;
+    int leftTicks;
+    int rightTicks;
+    int topTicks;
 
-        telemetry.addLine(String.valueOf(deltaTime));
+    double deltaRadians;
+    double forwardMovement;
+    double lateralMovementAdjustor;
+    double trueLateralMovement;
 
-        telemetry.addData("Wheel ticks", String.format("%d, %d", leftTicks, rightTicks));
-        telemetry.addData("Delta wheel ticks", String.format("%d, %d", deltaLeftTicks, deltaRightTicks));
+    double sin;
+    double cosine;
+    double netX;
+    double netY;
+
+    public void updatePosition() {
+        leftTicks = leftEncoder.getCurrentPosition();
+        rightTicks = rightEncoder.getCurrentPosition();
+        topTicks = 0;
+
         deltaRightTicks = rightTicks - lastRightTicks;
         deltaLeftTicks = leftTicks - lastLeftTicks;
         deltaTopTicks = topTicks - lastTopTicks;
@@ -107,38 +115,49 @@ public class TwoWheelOdometry implements OdometryVariablesab {
         topDistanceMoved = inPerTick * deltaTopTicks;
 
         // angles
-        double deltaRadians = getDeltaRotation(leftDistanceMoved, rightDistanceMoved);
+        deltaRadians = getDeltaRotation(leftDistanceMoved, rightDistanceMoved);
         rotationRadians += deltaRadians;
 
         // true movement
-        double forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0d;
+        forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0d;
 
-        double lateralMovementAdjustor = deltaRadians * topWheelPosition.y;
-        double trueLateralMovement = 0;
+        lateralMovementAdjustor = deltaRadians * topWheelPosition.y;
+        trueLateralMovement = 0;
 
-        double sin = Math.sin(rotationRadians);
-        double cosine = Math.cos(rotationRadians);
+        sin = Math.sin(rotationRadians);
+        cosine = Math.cos(rotationRadians);
 
-        double netX = forwardMovement * cosine + trueLateralMovement * sin;
-        double netY = forwardMovement * sin + trueLateralMovement * cosine;
+        netX = forwardMovement * cosine + trueLateralMovement * sin;
+        netY = forwardMovement * sin + trueLateralMovement * cosine;
 
-        telemetry.addData("Movement", String.format("%f, %f", forwardMovement, trueLateralMovement));
-        telemetry.addData("Net movement", String.format("%d, %d", deltaLeftTicks, deltaRightTicks));
 
         position.x += netX;
         position.y += netY;
 
         velocity.x = netX / deltaTime;
         velocity.y = netY / deltaTime;
+    }
+
+    double getDeltaRotation(double leftChange, double rightChange) {
+        return (rightChange - leftChange) / lateralWheelDistance;
+    }
+
+    public void telemetry(Telemetry telemetry) {
+        telemetry.addLine("\nTWO WHEEL ODOMETRY");
+
+        telemetry.addLine(String.valueOf(deltaTime));
+
+        telemetry.addData("Wheel ticks", String.format("%d, %d", leftTicks, rightTicks));
+        telemetry.addData("Delta wheel ticks", String.format("%d, %d", deltaLeftTicks, deltaRightTicks));
+
+        telemetry.addData("Movement", String.format("%f, %f", forwardMovement, trueLateralMovement));
+        telemetry.addData("Net movement", String.format("%d, %d", deltaLeftTicks, deltaRightTicks));
 
         telemetry.addLine("Position " + position.toString());
         telemetry.addLine("Velocity " + velocity.toString());
         telemetry.addLine(String.format("Rotation: %f", deltaRadians * 180 / Math.PI));
         telemetry.addLine("Rotation " + (rotationRadians * 180 / Math.PI));
-    }
 
-    double getDeltaRotation(double leftChange, double rightChange) {
-        return (rightChange - leftChange) / lateralWheelDistance;
     }
 }
 
