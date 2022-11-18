@@ -6,11 +6,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.concurrent.TimeUnit;
 
-interface OdometryVariablesa {
+interface OdometryVariablesab {
     double wheelRadius = 2.1232;
     double wheelCircumference = wheelRadius * Math.PI * 2;
 
@@ -25,8 +28,7 @@ interface OdometryVariablesa {
     long sleepTime = 100;
 }
 
-@TeleOp
-public class Odo extends OpMode implements OdometryVariablesa {
+public class TwoWheelOdometry implements OdometryVariablesab {
     double deltaTime = 0;
     double lastTime = 0;
 
@@ -52,8 +54,7 @@ public class Odo extends OpMode implements OdometryVariablesa {
     DcMotorEx leftEncoder;
     DcMotorEx rightEncoder;
 
-    @Override
-    public void init() {
+    public void init(HardwareMap hardwareMap) {
         elapsedTime = new ElapsedTime();
         leftEncoder = hardwareMap.get(DcMotorEx.class, "BR");
         leftEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -63,15 +64,9 @@ public class Odo extends OpMode implements OdometryVariablesa {
         rightEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
-    @Override
-    public void start() {
-
-    }
-
-    @Override
-    public void loop() {
+    public void loop(Telemetry telemetry) {
         updateTime();
-        updatePosition();
+        updatePosition(telemetry);
 
         telemetry.update();
 
@@ -89,7 +84,7 @@ public class Odo extends OpMode implements OdometryVariablesa {
         lastTime = currentTime;
     }
 
-    public void updatePosition() {
+    public void updatePosition(Telemetry telemetry) {
         int leftTicks = (leftEncoder.getCurrentPosition());
         int rightTicks = (rightEncoder.getCurrentPosition());
         int topTicks = 0;

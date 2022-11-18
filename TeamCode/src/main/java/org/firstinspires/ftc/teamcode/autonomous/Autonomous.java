@@ -17,7 +17,6 @@ import org.firstinspires.ftc.teamcode.highlevel.Master;
 import org.firstinspires.ftc.teamcode.highlevel.fieldData;
 import org.firstinspires.ftc.teamcode.common.Timer;
 import org.firstinspires.ftc.teamcode.odometry.Vector2;
-import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 import java.util.ArrayList;
 
