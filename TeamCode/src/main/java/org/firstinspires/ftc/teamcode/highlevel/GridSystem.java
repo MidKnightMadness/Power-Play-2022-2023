@@ -11,7 +11,6 @@ import static org.firstinspires.ftc.teamcode.highlevel.Master.turntable;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.turntableAngle;
 import static org.firstinspires.ftc.teamcode.manipulator.LinearSlides.ROOT_HEIGHT;
 
-import org.firstinspires.ftc.teamcode.drivetrain.Vector;
 import org.firstinspires.ftc.teamcode.highlevel.*;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.manipulator.DoubleReverse4Bar;
