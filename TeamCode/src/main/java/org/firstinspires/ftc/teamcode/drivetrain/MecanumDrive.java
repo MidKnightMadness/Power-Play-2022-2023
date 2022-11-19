@@ -146,6 +146,8 @@ public class MecanumDrive {
 //    }
 
     public boolean driveToOdometryAlg(double targetX, double targetY, double targetAngle, Telemetry telemetry){ // Probably run this every few ticks
+        odometry.updatePosition();
+
         telemetry.addLine(String.format("Current position from odometry: (%3.2f, %3.2f)",
                 AutonomousNew.currentPosition[0], AutonomousNew.currentPosition[1]));
         telemetry.update();
