@@ -35,8 +35,8 @@ public class Turntable {
     }
 
     public void turnTo(double angle){ // Turntable angle
-        turntableAngle = tableMotor.getCurrentPosition() * OVERALL_RATIO + odometryAlg.orientationAngle;
-        neededTicks = (int) ((angle - odometryAlg.orientationAngle) / OVERALL_RATIO);
+        turntableAngle = tableMotor.getCurrentPosition() * OVERALL_RATIO;
+        neededTicks = (int) ((angle) / OVERALL_RATIO);
 
         tableMotor.setTargetPosition(neededTicks);
         if(tableMotor.getTargetPosition() < tableMotor.getCurrentPosition()){ // Note that this is geared, directions will look reversed
