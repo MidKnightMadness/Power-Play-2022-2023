@@ -13,7 +13,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.common.Timer;
 import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
 import org.firstinspires.ftc.teamcode.highlevel.Master;
-import org.firstinspires.ftc.teamcode.manipulator.Claw;
 import org.firstinspires.ftc.teamcode.manipulator.LinearSlides;
 import org.firstinspires.ftc.teamcode.manipulator.Turntable;
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
@@ -39,9 +38,7 @@ public class MainTeleOp extends OpMode {
     MecanumDrive mecanum;
     LinearSlides lift;
     Turntable turntable;
-    LinearSlides linearslides;
-    Claw claw;
-//    Odometry odometry;
+    Odometry odometry;
 
     Timer timer;
     double auxillary;
@@ -70,11 +67,10 @@ public class MainTeleOp extends OpMode {
         auxillaryList2 = new double [] {0.0, 0.0, 0.0};
 
         mecanum = new MecanumDrive(hardwareMap);
+        odometry = new Odometry(hardwareMap);
 //        odometry = new TwoWheelOdometry(hardwareMap);
-        lift = new LinearSlides(hardwareMap);
-        turntable = new Turntable(hardwareMap);
-        linearslides = new LinearSlides(hardwareMap);
-        claw = new Claw(hardwareMap);
+//        lift = new LinearSlides(hardwareMap);
+//        turntable = new Turntable(hardwareMap);
 
 //        accelerometer = Master.hardwaremap.get(AndroidAccelerometer.class, "accelerometer");
 //        accelerometer.setDistanceUnit(DistanceUnit.INCH);
@@ -85,16 +81,16 @@ public class MainTeleOp extends OpMode {
 
     @Override
     public void loop() {
-//        timer.updateTime();
-//        time = timer.getTime();
-//        deltaTime = timer.getDeltaTime();
+        timer.updateTime();
+        time = timer.getTime();
+        deltaTime = timer.getDeltaTime();
 
-//        Master.tickRate = 1 / (time - auxillary); // auxillary is previous time
-//        auxillaryList1[0] = currentPosition[0] - auxillaryList1[0];
-//        auxillaryList1[1] = currentPosition[1] - auxillaryList1[1];
-//        Master.robotSpeed = lengthOf(auxillaryList1) / (time - auxillary);
+        Master.tickRate = 1 / (time - auxillary); // auxillary is previous time
+        auxillaryList1[0] = currentPosition[0] - auxillaryList1[0];
+        auxillaryList1[1] = currentPosition[1] - auxillaryList1[1];
+        Master.robotSpeed = lengthOf(auxillaryList1) / (time - auxillary);
 
-        // DRIVER ASSIST
+//         DRIVER ASSIST
         if (gamepad1.left_bumper && !lastPressedDriveMode) {
             driveModeToggle = !driveModeToggle;
         }
@@ -114,47 +110,34 @@ public class MainTeleOp extends OpMode {
         lastPressedDriveMode = gamepad1.left_bumper;
 
 //        turntable.turnBy(gamepad2.left_stick_x / 5);
-//        turntable.setPower(gamepad2.left_stick_x);
-//        linearslides.setPower(gamepad2.left_stick_y, gamepad2.right_stick_y); //seesaw, extension
 //
-//        claw.pivotBy(gamepad2.right_trigger - gamepad2.left_trigger);
+//        claw.pivotBy(-gamepad2.right_stick_y);
 //
-//        if (gamepad2.right_bumper && !lastClawOpenToggle) {
-//            isClawOpenToggle = !isClawOpenToggle;
-//        }
-//        if (isClawOpenToggle) {
-//            claw.openClaw();
-//        }
-//        else {
-//            claw.closeClaw();
-//        }
-//        lastClawOpenToggle = gamepad2.right_bumper;
-
-        telemetry.addData("turntable motor reference", tableMotor);
-        telemetry.addData("turntable angle", turntableAngle);
-        telemetry.addData("turntable power", tableMotor.getPower());
-
-        telemetry.addData("\n claw pivot servo reference", claw.rotationServo);
-        telemetry.addData("claw pivot position", claw.rotationServo.getPower());
-
-        telemetry.addData("\n claw servo reference", claw.servo);
-        telemetry.addData("claw position", claw.servo.getPosition());
+//        telemetry.addData("turntable motor reference", tableMotor);
+//        telemetry.addData("turntable angle", turntableAngle);
+//        telemetry.addData("turntable power", tableMotor.getPower());
+//
+//        telemetry.addData("\n claw pivot servo reference", claw.rotationServo);
+//        telemetry.addData("claw pivot position", claw.rotationServo.getPosition());
+//
+//        telemetry.addData("\n claw servo reference", claw.servo);
+//        telemetry.addData("claw position", claw.servo.getPosition());
 
 //        lift.pivotBy(gamepad2.left_stick_y / 5);
 //        turntable.turnBy(gamepad2.left_stick_x / 5);
 
-//        handleManipulatorControls();
-//        odometry.loop();
+        handleManipulatorControls();
+        odometry.updatePosition();
 
 
 
-//        telemetry.addData("DRIVE MODE", driveModeToggle ? "FIELD ORIENTED": "NORMAL");
-//        telemetry.addData("Left Stick X", gamepad1.left_stick_x);
-//        telemetry.addData("Left Stick Y", gamepad1.left_stick_y);
-//        telemetry.addData("Right Stick X", gamepad1.right_stick_x);
+        telemetry.addData("DRIVE MODE", driveModeToggle ? "FIELD ORIENTED": "NORMAL");
+        telemetry.addData("Left Stick X", gamepad1.left_stick_x);
+        telemetry.addData("Left Stick Y", gamepad1.left_stick_y);
+        telemetry.addData("Right Stick X", gamepad1.right_stick_x);
 
-//        odometry.telemetry(telemetry);
-//        mecanum.telemetry(telemetry);
+        odometry.telemetry(telemetry);
+        mecanum.telemetry(telemetry);
 
         telemetry.addLine("\nTIMER");
         telemetry.addLine("DeltaTime " + deltaTime);
