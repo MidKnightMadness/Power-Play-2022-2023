@@ -21,11 +21,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class TeleOp1 extends OpMode {
     MecanumDrive driver;
 
-    public static double [] drive = new double [4];
-
-    public static double [] translation = {0.0, 0.0, 0.0, 0.0};
-    public static double [] translation1 = {0.0, 0.0, 0.0, 0.0};
-    public static double [] rotation = {0.0, 0.0, 0.0, 0.0};
+    public static double [] drive = {0.0, 0.0, 0.0, 0.0};
 
     public static double [] BACKWARDS = {-1.0, 1.0, -1.0, 1.0};
 
@@ -56,24 +52,45 @@ public class TeleOp1 extends OpMode {
 
     @Override
     public void loop() {
+        
+        drive[0] = gamepad1.left_stick_y * BACKWARDS[0] + gamepad1.left_stick_x * RIGHT[0];
+        drive[1] = gamepad1.left_stick_y * BACKWARDS[1] + gamepad1.left_stick_x * RIGHT[1];
+        drive[2] = gamepad1.left_stick_y * BACKWARDS[2] + gamepad1.left_stick_x * RIGHT[2];
+        drive[3] = gamepad1.left_stick_y * BACKWARDS[3] + gamepad1.left_stick_x * RIGHT[3];
+        
+        for(int i = 0; i < 4; i++){
+            drive[i] = gamepad1.left_stick_y * BACKWARDS[i];
+        }
 
-        // Temporarily using translation and rotation as intermediary
-        translation = Vector.multiply(gamepad1.left_stick_y, BACKWARDS);
-        drive = Vector.equalTo(drive, translation); // IDK if this works lmao
+        for(int i = 0; i < 4; i++){
+            drive[i] += gamepad1.left_stick_x * RIGHT[i];
+        }
 
-        translation1 = Vector.multiply(gamepad1.left_stick_x, RIGHT);
-        Vector.equalTo(translation, translation1); // Frees up auxillary reference
-        drive = Vector.equalTo(drive, Vector.add(drive, translation)); // Frees up auxillary reference
+        for(int i = 0; i < 4; i++){
+            drive[i] += gamepad1.right_stick_x * TURN_RIGHT[i];
+        }
 
-        rotation = Vector.multiply(gamepad1.right_stick_x, TURN_RIGHT);
-        translation1 = Vector.equalTo(translation1, rotation); // Frees up auxillary reference
-        drive = Vector.equalTo(drive, Vector.add(drive, translation1));
+        for(int i = 0; i < 4; i++){
+            drive[i] /= Math.max(drive[0], Math.max(drive[1], Math.max(drive[2], drive[3])));
+        }
+
+
+//
+//        rotation = Vector.multiply(gamepad1.right_stick_x, TURN_RIGHT);
+//        translation1 = Vector.equalTo(translation1, rotation); // Frees up auxillary reference
+//        drive = Vector.add(rotation, drive);
 
         // Drive should now be untied from auxillary reference
-        drive = Vector.equalTo(drive, Vector.multiply(1/Math.max(drive[0], Math.max(drive[1], Math.max(drive[2], drive[3]))), drive));
 
+//        drive = Vector.multiply(1/Math.max(drive[0], Math.max(drive[1], Math.max(drive[2], drive[3]))), drive);
+//        drive = Vector.equalTo(drive, Vector.multiply(1/Math.max(drive[0], Math.max(drive[1], Math.max(drive[2], drive[3]))), drive));
 
-        telemetry.addLine(String.format("drive vector:\t{%f, %f, %f, %f}", drive[0], drive[1], drive[2], drive[3]));
+        driver.FLMotor.setPower(drive[0]);
+        driver.FRMotor.setPower(drive[1]);
+        driver.BLMotor.setPower(drive[2]);
+        driver.BRMotor.setPower(drive[3]);
+
+        telemetry.addLine(String.format("\ndrive vector:\t{%f, %f, %f, %f}", drive[0], drive[1], drive[2], drive[3]));
 
 
 
@@ -91,10 +108,10 @@ public class TeleOp1 extends OpMode {
 //        telemetry.addData("\nright back:\t", drive[3]);
 
 
-//        telemetry.addData("\nFront Left output:", this.FLMotor.getPower());
-//        telemetry.addData("Front right output:", this.FLMotor.getPower());
-//        telemetry.addData("Rear left output:", this.FLMotor.getPower());
-//        telemetry.addData("Rear right output:", this.FLMotor.getPower());
+        telemetry.addData("\nFront Left output:", driver.FLMotor.getPower());
+        telemetry.addData("Front right output:", driver.FLMotor.getPower());
+        telemetry.addData("Rear left output:", driver.FLMotor.getPower());
+        telemetry.addData("Rear right output:", driver.FLMotor.getPower());
 
         telemetry.update();
     }
