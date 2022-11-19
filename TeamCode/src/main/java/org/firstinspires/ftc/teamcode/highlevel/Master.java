@@ -57,9 +57,9 @@ public class Master {
      */
 
     // Odometry                             ________
-    public static DcMotorEx encoder1; //   |   ==   |
-    public static DcMotorEx encoder2; //   ||       |
-    public static DcMotorEx encoder3; //   |   ==   | encoder 1 on top, encoder 2 on bottom, encoder3 on left
+//    public static DcMotorEx encoder1; //   |   ==   |
+//    public static DcMotorEx encoder2; //   ||       |
+//    public static DcMotorEx encoder3; //   |   ==   | encoder 1 on top, encoder 2 on bottom, encoder3 on left
     //                                      ˜˜˜˜˜˜˜˜
     public static double [] currentPosition;
     public static double [] travel;
