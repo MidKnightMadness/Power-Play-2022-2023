@@ -114,6 +114,7 @@ public class AutonomousNew extends LinearOpMode
                     mecanumDrive.imu.getPosition().y));
             telemetry.addLine(String.format("Starting angle: \t\t%3.2f", mecanumDrive.imu.getAngularOrientation().firstAngle));
 
+            odometry.updatePosition();
             telemetry.addLine(String.format("\nINFORMATION FROM ODOMETRY\n" +
                     "Starting relative position, should be some randum number:\t%3.2f, %3.2f", odometry.getXCoordinate(), odometry.getYCoordinate()));
 

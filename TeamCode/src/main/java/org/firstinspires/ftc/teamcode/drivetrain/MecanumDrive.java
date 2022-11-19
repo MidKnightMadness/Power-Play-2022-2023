@@ -163,7 +163,7 @@ public class MecanumDrive {
                     (targetY - currentY) * (targetY - currentY));
 
 
-            drive(((targetX - currentX)), -((targetY - currentY)), 0); // 0 on rotational component is temporary, needs correction
+            fieldOrientatedDrive(((targetX - currentX) / replacement), -((targetY - currentY) / replacement), 0); // 0 on rotational component is temporary, needs correction
 
 //            FRMotor.setPower(-0 + -((targetY - currentY) / replacement) * 0.1 - 0);
 //            FLMotor.setPower( 0 + -((targetY - currentY) / replacement) * 0.1 + 0);
