@@ -116,7 +116,7 @@ public class AutonomousNew extends LinearOpMode
 
             odometry.updatePosition();
             telemetry.addLine(String.format("\nINFORMATION FROM ODOMETRY\n" +
-                    "Starting relative position, should be some randum number:\t%3.2f, %3.2f", odometry.getXCoordinate(), odometry.getYCoordinate()));
+                    "Starting relative position, should be some randum number:\t%3.2f, %3.2f", odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationDegrees()));
 
             telemetry.addLine("\n\n");
 
