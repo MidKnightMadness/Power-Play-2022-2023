@@ -200,17 +200,21 @@ public class AutonomousNew extends LinearOpMode
             telemetry.addLine("Going to first position (5 in)");
             telemetry.update();
 
-            goToPosition(0, 0, 90);
+            goToPosition(0, 12, 0);
+            goToPosition(-12, 12, 0);
+
         }else if(tagOfInterest.id == MIDDLE){
             telemetry.addLine("Going to first position (10 in)");
             telemetry.update();
+            goToPosition(0, 12, 0);
 
-            goToPosition(0, 0, 180);
         }else{
             telemetry.addLine("Going to first position (15 in)");
             telemetry.update();
 
-            goToPosition(0, 0, 270);
+            goToPosition(0, 12, 0);
+            goToPosition(12, 12, 0);
+
         }
 
 
