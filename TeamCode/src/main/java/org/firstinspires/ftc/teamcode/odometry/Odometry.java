@@ -132,6 +132,10 @@ public class Odometry implements OdometryVariables {
         return rotationRadians;
     }
 
+    public double getRotationDegrees() {
+        return rotationRadians * 180 / Math.PI;
+    }
+
     public String positionToString() {return String.format("(%f, %f)", position.x, position.y); }
 
     public void telemetry(Telemetry telemetry) {

@@ -31,7 +31,7 @@ public class MainTeleOp extends OpMode {
     MecanumDrive mecanum;
     LinearSlides lift;
     Turntable turntable;
-    TwoWheelOdometry odometry;
+    Odometry odometry;
 
     Timer timer;
     double auxillary;
@@ -108,7 +108,7 @@ public class MainTeleOp extends OpMode {
 
         telemetry.addData("DRIVE MODE", driveModeToggle ? "FIELD ORIENTED": "NORMAL");
 
-        odometry.telemetry(telemetry);
+//        odometry.telemetry(telemetry);
         mecanum.telemetry(telemetry);
 
         telemetry.addLine("\nTIMER");
