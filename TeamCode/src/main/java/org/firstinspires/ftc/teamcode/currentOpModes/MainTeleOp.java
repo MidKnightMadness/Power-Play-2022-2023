@@ -114,21 +114,21 @@ public class MainTeleOp extends OpMode {
         lastPressedDriveMode = gamepad1.left_bumper;
 
 //        turntable.turnBy(gamepad2.left_stick_x / 5);
-        turntable.setPower(gamepad2.left_stick_x);
-        linearslides.setPower(gamepad2.left_stick_y, gamepad2.right_stick_y); //seesaw, extension
-
-        claw.pivotBy(gamepad2.right_trigger - gamepad2.left_trigger);
-
-        if (gamepad2.right_bumper && !lastClawOpenToggle) {
-            isClawOpenToggle = !isClawOpenToggle;
-        }
-        if (isClawOpenToggle) {
-            claw.openClaw();
-        }
-        else {
-            claw.closeClaw();
-        }
-        lastClawOpenToggle = gamepad2.right_bumper;
+//        turntable.setPower(gamepad2.left_stick_x);
+//        linearslides.setPower(gamepad2.left_stick_y, gamepad2.right_stick_y); //seesaw, extension
+//
+//        claw.pivotBy(gamepad2.right_trigger - gamepad2.left_trigger);
+//
+//        if (gamepad2.right_bumper && !lastClawOpenToggle) {
+//            isClawOpenToggle = !isClawOpenToggle;
+//        }
+//        if (isClawOpenToggle) {
+//            claw.openClaw();
+//        }
+//        else {
+//            claw.closeClaw();
+//        }
+//        lastClawOpenToggle = gamepad2.right_bumper;
 
         telemetry.addData("turntable motor reference", tableMotor);
         telemetry.addData("turntable angle", turntableAngle);

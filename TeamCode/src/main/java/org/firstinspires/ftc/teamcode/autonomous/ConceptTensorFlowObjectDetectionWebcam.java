@@ -27,17 +27,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import java.util.List;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
+import org.firstinspires.ftc.teamcode.odometry.Odometry;
+
+import java.util.List;
 
 /**
  * This 2022-2023 OpMode illustrates the basics of using the TensorFlow Object Detection API to
@@ -49,9 +53,14 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@TeleOp(name = "Concept: TensorFlow Object Detection", group = "Concept")
+@Autonomous(name = "Autonomous New New New", group = "Concept")
 @Disabled
-public class ConceptTensorFlowObjectDetection extends LinearOpMode {
+public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
+
+
+
+    MecanumDrive mecanumDrive;
+    Odometry odometry;
 
     /*
      * Specify the source for the Tensor Flow Model.
@@ -98,6 +107,12 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+
+
+        mecanumDrive = new MecanumDrive(hardwareMap);
+        odometry = new Odometry(hardwareMap);
+
+
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
         initVuforia();
@@ -124,7 +139,9 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
-        if (opModeIsActive()) {
+        String label = "";
+
+//        if (opModeIsActive()) {
             while (opModeIsActive()) {
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
@@ -141,6 +158,8 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
                             double width  = Math.abs(recognition.getRight() - recognition.getLeft()) ;
                             double height = Math.abs(recognition.getTop()  - recognition.getBottom()) ;
 
+                            label = recognition.getLabel();
+
                             telemetry.addData(""," ");
                             telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100 );
                             telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
@@ -150,7 +169,60 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
                     }
                 }
             }
+//        }
+
+        /* Update the telemetry */
+        if(label != null)
+        {
+            telemetry.addLine("Tag snapshot: " + label + "\n");
+            telemetry.update();
         }
+        else
+        {
+            telemetry.addLine("No tag snapshot available, it was never sighted during the init loop :(");
+            telemetry.update();
+        }
+
+        /* Actually do something useful */
+        if(label == null || label == "1 Bolt"){ // Modify Targets
+            telemetry.addLine("Going to first position (5 in)");
+            telemetry.update();
+
+            goToPosition(0, 12, 0);
+            goToPosition(-12, 12, 0);
+
+        }else if(label == "2 Bulb"){
+            telemetry.addLine("Going to first position (10 in)");
+            telemetry.update();
+            goToPosition(0, 12, 0);
+
+        }else{
+            telemetry.addLine("Going to first position (15 in)");
+            telemetry.update();
+
+            goToPosition(0, 12, 0);
+            goToPosition(12, 12, 0);
+
+        }
+    }
+
+    boolean atLocation = false;
+
+    void goToPosition(double targetX, double targetY, double targetAngle) {
+
+        atLocation = false;
+        while (!atLocation) {
+            odometry.updatePosition();
+            atLocation = mecanumDrive.driveToOdometryAlg(targetX, targetY, targetAngle, odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationDegrees(), telemetry);
+
+            telemetry.addLine(String.format("Current Coordinates: (%3.2f, %3.2f, %3.2f)", odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationDegrees()));
+            telemetry.addLine(String.format("Target Coordinates: (%3.2f, %3.2f, %3.2f)", targetX, targetY, targetAngle));
+            telemetry.addLine(String.format("Target - current: (%3.2f, %3.2f, %3.2f)", targetX - odometry.getXCoordinate(), targetY - odometry.getYCoordinate(), targetAngle - odometry.getRotationDegrees()));
+            telemetry.addData("At Location", atLocation);
+            telemetry.update();
+        }
+
+
     }
 
     /**
