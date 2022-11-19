@@ -35,8 +35,6 @@ public class TestingOdometryAlgorithm {
     public static final double TICKS_PER_ROTATION = 8192;
 
     // Input / Output, calculations
-    double [] orientation;
-    double [] normalOrientation;
     public static final double [] DEFAULT_STARTING_ORIENTATION = {0.0, 1.0};
     public static final double [] DEFAULT_STARTING_NORMAL_VECTOR = {-1.0, 0.0};
     public double orientationAngle = Math.PI / 2; // Front-facing angle relative to horizontal at start
@@ -81,8 +79,6 @@ public class TestingOdometryAlgorithm {
 
         // Vector initialization
         currentPosition = STARTING_POSITION;
-        orientation = DEFAULT_STARTING_ORIENTATION;
-        normalOrientation = DEFAULT_STARTING_NORMAL_VECTOR;
 
     }
 
@@ -97,12 +93,28 @@ public class TestingOdometryAlgorithm {
         encoder2Reading = encoder2.getCurrentPosition();
         encoder3Reading = encoder3.getCurrentPosition();
 
-        // Sandwhich algorithm in 1/2 tick-updating calls for the sake of accuracy
         angleChange = (encoder1Delta - encoder2Delta) / TRACK_WIDTH;
 
+        // Sandwhich algorithm in 1/2 tick-updating calls for the sake of accuracy
         orientationAngle += angleChange / 2;
-        Vector.equalTo(normalOrientation, Vector.rotateBy(orientation, angleChange / 2));
-        Vector.equalTo(normalOrientation, Vector.rotateBy(normalOrientation, angleChange / 2));
+
+        // Rotate travel and travel1 to orientation and normal orientation unit vectors
+        travel[0] = Math.cos(orientationAngle) - Math.sin(orientationAngle);
+        travel[1] = Math.sin(orientationAngle) + Math.cos(orientationAngle);
+        travel1[0] = -travel[1];
+        travel1[1] = travel[0];
+
+        // Multiply 1st principle component vector relative to robot by movement along that direction
+        travel[0] *= (.5 * encoder1Delta + .5 * encoder2Delta);
+        travel[1] *= (.5 * encoder1Delta + .5 * encoder2Delta);
+
+        // Multiply 2nd principle component vector relative to robot by movement along that direction, corrected with angle change
+        travel1[0] *= (encoder3Delta - angleChange * DISTANCE_TO_BACK_WHEEL);
+        travel1[1] *= (encoder3Delta - angleChange * DISTANCE_TO_BACK_WHEEL);
+
+        // Add 2 components together
+        travel[0] += travel1[0];
+        travel[1] += travel1[1];
 
 
         // Previous iteration - erraneous
@@ -115,15 +127,11 @@ public class TestingOdometryAlgorithm {
 
         // Current iteration
         // Component parallel to 2 main wheels, should clear auxillary reference
-        travel = Vector.equalTo(travel1, Vector.multiply(0.5 * encoder1Delta + 0.5 * encoder2Delta, orientation));
-        // Component parallel to back wheel, should also clear auxillary reference
-        travel1 = Vector.equalTo(travel, Vector.multiply(encoder3Delta - angleChange * DISTANCE_TO_BACK_WHEEL, normalOrientation));
-        travel = Vector.equalTo(travel, Vector.add(travel, travel1));
+
 
         orientationAngle += angleChange / 2;
-        Vector.equalTo(normalOrientation, Vector.rotateBy(orientation, angleChange / 2));
-        Vector.equalTo(normalOrientation, Vector.rotateBy(normalOrientation, angleChange / 2));
 
-        Vector.equalTo(currentPosition, Vector.add(currentPosition, travel));
+        currentPosition[0] += travel[0];
+        currentPosition[1] += travel[1];
     }
 }
