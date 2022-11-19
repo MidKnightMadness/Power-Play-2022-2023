@@ -69,6 +69,7 @@ public class AutonomousNew extends LinearOpMode
 
     MecanumDrive mecanumDrive;
     boolean atLocation = false;
+    public static double [] currentPosition = {0.0, 0.0}; // inches
 
 
     @Override
@@ -104,7 +105,10 @@ public class AutonomousNew extends LinearOpMode
          */
         while (!isStarted() && !isStopRequested())
         {
-
+            telemetry.addLine(String.format("Starting relative position, should be (0, 0):\t (%3.2f, %3.2f)",
+                    mecanumDrive.imu.getPosition().x,
+                    mecanumDrive.imu.getPosition().y));
+            telemetry.addLine(String.format("Starting angle: \t\t%3.2f", mecanumDrive.imu.getAngularOrientation().firstAngle));
 
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
@@ -182,12 +186,12 @@ public class AutonomousNew extends LinearOpMode
         }
 
         /* Actually do something useful */
-        if(tagOfInterest == null || tagOfInterest.id == LEFT){
-            goToPosition(0, 1);
+        if(tagOfInterest == null || tagOfInterest.id == LEFT){ // Modify Targets
+            this.goToPosition(0, 10);
         }else if(tagOfInterest.id == MIDDLE){
-            //trajectory
+            this.goToPosition(0, 20);
         }else{
-            //trajectory
+            this.goToPosition(0, 30);
         }
 
 
@@ -196,6 +200,9 @@ public class AutonomousNew extends LinearOpMode
     }
 
     void goToPosition(double targetX, double targetY) {
+        currentPosition[0] = mecanumDrive.imu.getPosition().x * 100 / 2.54;
+        currentPosition[1] = mecanumDrive.imu.getPosition().y * 100 / 2.54;
+        atLocation = false;
         while (!atLocation) {
             atLocation = mecanumDrive.driveToOdometryAlg(targetX, targetY, 0);
         }

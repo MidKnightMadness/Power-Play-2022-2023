@@ -43,7 +43,7 @@ public class MecanumDrive {
 
     public static final double MAX = 3.1416; //Max speed
 
-    private BNO055IMU imu;
+    public BNO055IMU imu;
 
     private double correctedX;
     private double correctedY;
@@ -147,14 +147,15 @@ public class MecanumDrive {
 
     public boolean driveToOdometryAlg(double targetX, double targetY, double targetAngle){ // Probably run this every few ticks
         if(//((targetAngle - odometryAlg.orientationAngle) * (targetAngle - odometryAlg.orientationAngle))
-                + ((targetX - currentPosition[0]) * (targetX - currentPosition[0]))
-                + ((targetY - currentPosition[1]) * (targetY - currentPosition[1])) > .01) {
+                + ((targetX - AutonomousNew.currentPosition[0]) * (targetX - AutonomousNew.currentPosition[0]))
+                + ((targetY - AutonomousNew.currentPosition[1]) * (targetY - AutonomousNew.currentPosition[1])) > .01) {
 
-            replacement = Math.max((targetAngle - odometryAlg.orientationAngle) * (targetAngle - odometryAlg.orientationAngle),
-                    Math.max((targetX - currentPosition[0]) * (targetX - currentPosition[0]),
-                            (targetY - currentPosition[1]) * (targetY - currentPosition[1])));
+            replacement = Math.max(//(targetAngle - odometryAlg.orientationAngle) * (targetAngle - odometryAlg.orientationAngle),
+                    (targetX - AutonomousNew.currentPosition[0]) * (targetX - AutonomousNew.currentPosition[0]),
+                            (targetY - AutonomousNew.currentPosition[1]) * (targetY - AutonomousNew.currentPosition[1]));
 
-            fieldOrientatedDrive((targetX - currentPosition[0]) / replacement, (targetY - currentPosition[1]) / replacement, 0); // 0 on rotational component is temporary, needs correction
+            fieldOrientatedDrive((targetX - AutonomousNew.currentPosition[0]) / replacement,
+                    (targetY - AutonomousNew.currentPosition[1]) / replacement, 0); // 0 on rotational component is temporary, needs correction
             return false;
         }
         return true;
