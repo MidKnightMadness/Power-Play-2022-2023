@@ -5,9 +5,14 @@ import static org.firstinspires.ftc.teamcode.highlevel.Master.auxillaryNumber;
 
 import org.firstinspires.ftc.teamcode.highlevel.Master;
 
+import java.util.*;
+import java.math.*;
+
 public class Vector { // Vector-based methods deprecated, use double []
     // Current issue: references for all objects within MecanumDrive not working
     // Note that arrays are given by their reference address
+    public static double [] auxillary = {0.0, 0.0, 0.0, 0.0};
+    public static double auxillaryNumber = 0.0;
 
     public static double [] set(double [] list, int i, double num){
         list [i] = num;
@@ -16,9 +21,10 @@ public class Vector { // Vector-based methods deprecated, use double []
 
     public static double [] neg(double [] list){
         for(int i = 0; i < list.length; i++){
-            list[i] = -list[i];
+
+            auxillary[i] = -list[i];
         }
-        return list;
+        return auxillary;
     }
 
     public static double [] add(double [] list1, double [] list2){ // List 1 altered
@@ -30,9 +36,10 @@ public class Vector { // Vector-based methods deprecated, use double []
 //            return Master.auxillary;
 //        }
         for(int i = 0; i < list1.length; i++){
-            Master.auxillary[i] = list1[i] +  list2[i];
+            auxillary[i] = list1[i];
+            auxillary[i] += list2[i];
         }
-        return Master.auxillary;
+        return auxillary;
     }
 
     public static double dot(double [] list1, double [] list2){
@@ -48,9 +55,10 @@ public class Vector { // Vector-based methods deprecated, use double []
 
     public static double [] multiply(double coeff, double [] list){
         for(int i = 0; i < list.length; i++){
-            list[i] *= coeff;
+            auxillary[i] = list[i];
+            auxillary[i] *= coeff;
         }
-        return list;
+        return auxillary;
     }
 
     public static double lengthOf(double [] list){ // Alters list
@@ -62,18 +70,37 @@ public class Vector { // Vector-based methods deprecated, use double []
     }
 
     public static double [] normalize(double [] list){
-        auxillaryNumber = lengthOf(list);
         for(int i = 0; i < list.length; i++){
-            list[i] *= invSqrt(auxillaryNumber);
+            list[i] *= Master.invSqrt(lengthOf(list));
         }
         return list;
     }
 
     public static double [] rotateBy(double [] list, double angleChange){ // Radians
-        Master.auxillary[0] = list[0] * Math.cos(angleChange) - list[1] * Math.sin(angleChange);
-        Master.auxillary[1] = list[0] * Math.sin(angleChange) + list[1] * Math.cos(angleChange);
-        return list;
+        auxillary[0] = list[0] * Math.cos(angleChange) - list[1] * Math.sin(angleChange);
+        auxillary[1] = list[0] * Math.sin(angleChange) + list[1] * Math.cos(angleChange);
+        return auxillary;
     }
+
+    public static boolean areEqual(double [] list1, double [] list2){ // Checks if they're equal
+        if(list1.length == list2.length){
+            for(int i = 0; i < list1.length; i++){
+                if(list1[i] != list2[i]){
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public static double [] equalTo(double [] list1, double [] list2){ // Copies data of 2nd list to 1st list
+        for(int i = 0; i < Math.min(list1.length, list2.length); i++){
+            list1[i] = list2[i];
+        }
+        return list1;
+    } // If this doesn't work, copy all the data manually
+
 
     /*public Vector multiply(Matrix matrix){
         double [] newVector = new double [this.getVector().length];
@@ -85,4 +112,6 @@ public class Vector { // Vector-based methods deprecated, use double []
         return this;
     }*/
 }
+
+
 

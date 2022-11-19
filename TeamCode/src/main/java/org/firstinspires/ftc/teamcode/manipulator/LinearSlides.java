@@ -147,8 +147,11 @@ public class LinearSlides {
     }
 
     public void update(){ // Run this as much as applicable
-        seesawExtensionLength = (seeSawMotor.getCurrentPosition() * EXTENDER_OVERALL_RATIO) - STARTING_EXTENDER_LENGTH;
+        seesawExtensionLength = (seeSawMotor.getCurrentPosition() * EXTENDER_OVERALL_RATIO) + STARTING_EXTENDER_LENGTH;
         seesawAngle = (seeSawMotor.getCurrentPosition() * SEESAW_OVERALL_RATIO); // Assuming starting angle is 0
+        manipulatorPosition[0] = seesawExtensionLength * Math.cos(Master.turntableAngle) * Math.cos(seesawAngle);
+        manipulatorPosition[1] = seesawExtensionLength * Math.sin(Master.turntableAngle) * Math.cos(seesawAngle);
+        manipulatorPosition[2] = seesawExtensionLength * Math.sin(seesawAngle);
     }
 
 
