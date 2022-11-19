@@ -204,6 +204,9 @@ public class AutonomousNew extends LinearOpMode
         currentPosition[1] = mecanumDrive.imu.getPosition().y * 100 / 2.54;
         atLocation = false;
         while (!atLocation) {
+            telemetry.addData("Current Position X", currentPosition[0]);
+            telemetry.addData("Current Position Y", currentPosition[1]);
+            telemetry.update();
             atLocation = mecanumDrive.driveToOdometryAlg(targetX, targetY, 0);
         }
 
