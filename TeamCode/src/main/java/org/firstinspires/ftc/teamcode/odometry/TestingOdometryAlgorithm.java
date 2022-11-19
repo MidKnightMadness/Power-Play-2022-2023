@@ -10,6 +10,7 @@ import static org.firstinspires.ftc.teamcode.highlevel.Master.encoder3;
 
 import org.firstinspires.ftc.teamcode.drivetrain.*;
 import org.firstinspires.ftc.teamcode.highlevel.*;
+import org.firstinspires.ftc.teamcode.test.TeleOp1;
 
 // Encoders
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -131,7 +132,7 @@ public class TestingOdometryAlgorithm {
 
         orientationAngle += angleChange / 2;
 
-        currentPosition[0] += travel[0];
-        currentPosition[1] += travel[1];
+        TeleOp1.currentPosition[0] += travel[0];
+        TeleOp1.currentPosition[1] += travel[1];
     }
 }

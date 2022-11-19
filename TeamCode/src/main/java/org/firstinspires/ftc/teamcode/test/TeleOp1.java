@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.highlevel.Master;
 import org.firstinspires.ftc.teamcode.manipulator.LinearSlides;
 import org.firstinspires.ftc.teamcode.manipulator.Turntable;
 import org.firstinspires.ftc.teamcode.drivetrain.*;
+import org.firstinspires.ftc.teamcode.odometry.TestingOdometryAlgorithm;
 
 // Encoders, Motors
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -20,6 +21,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 @TeleOp(name = "main")
 public class TeleOp1 extends OpMode {
     MecanumDrive driver;
+    TestingOdometryAlgorithm odometry;
+
+    public static double [] currentPosition = {0.0, 0.0};
 
     public static double [] drive = {0.0, 0.0, 0.0, 0.0};
 
@@ -37,6 +41,7 @@ public class TeleOp1 extends OpMode {
         }
 
         driver = new MecanumDrive(hardwareMap);
+        odometry = new TestingOdometryAlgorithm(hardwareMap);
 
         telemetry.addData("\"RIGHT\"\t", this.RIGHT);
         telemetry.addData("\"BACKWARDS\"\t", this.BACKWARDS);
@@ -52,7 +57,8 @@ public class TeleOp1 extends OpMode {
 
     @Override
     public void loop() {
-        
+        odometry.updateOrientationAndLocation();
+
         drive[0] = gamepad1.left_stick_y * BACKWARDS[0] + gamepad1.left_stick_x * RIGHT[0];
         drive[1] = gamepad1.left_stick_y * BACKWARDS[1] + gamepad1.left_stick_x * RIGHT[1];
         drive[2] = gamepad1.left_stick_y * BACKWARDS[2] + gamepad1.left_stick_x * RIGHT[2];
@@ -80,23 +86,9 @@ public class TeleOp1 extends OpMode {
         driver.BLMotor.setPower(drive[2]);
         driver.BRMotor.setPower(drive[3]);
 
-        telemetry.addLine(String.format("\ndrive vector:\t{%f, %f, %f, %f}", drive[0], drive[1], drive[2], drive[3]));
+        telemetry.addLine(String.format("\ndrive vector:\t{%3.2f, %3.2f, %3.2f, %3.2f}", drive[0], drive[1], drive[2], drive[3]));
 
-
-
-
-//        telemetry.addData("drive vector reference:\t", drive);
-//
-//        telemetry.addData("\nController left stick x", gamepad1.left_stick_x);
-//        telemetry.addData("Controller left stick y", gamepad1.left_stick_y);
-//        telemetry.addData("Controller right stick x", gamepad1.right_stick_x);
-//
-//
-//        telemetry.addData("\nleft front:\t", drive[0]);
-//        telemetry.addData("\nright front:\t", drive[1]);
-//        telemetry.addData("\nleft back:\t", drive[2]);
-//        telemetry.addData("\nright back:\t", drive[3]);
-
+        telemetry.addLine(String.format("\nposition vector:\t{%4.2f, %4.2f}", currentPosition[0], currentPosition[1]));
 
         telemetry.addData("\nFront Left output:", driver.FLMotor.getPower());
         telemetry.addData("Front right output:", driver.FLMotor.getPower());
