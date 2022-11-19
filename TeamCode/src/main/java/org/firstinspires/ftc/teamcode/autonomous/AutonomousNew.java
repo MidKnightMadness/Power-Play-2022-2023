@@ -71,7 +71,7 @@ public class AutonomousNew extends LinearOpMode
     MecanumDrive mecanumDrive;
     boolean atLocation = false;
     public static double [] currentPosition = {0.0, 0.0}; // inches
-    public static Odometry odometry;
+    Odometry odometry;
 
 
     @Override
@@ -116,7 +116,8 @@ public class AutonomousNew extends LinearOpMode
 
             telemetry.addLine(String.format("\nINFORMATION FROM ODOMETRY\n" +
                     "Starting relative position, should be some randum number:\t%3.2f, %3.2f", odometry.getXCoordinate(), odometry.getYCoordinate()));
-            telemetry.update();
+
+            telemetry.addLine("\n\n");
 
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
@@ -198,17 +199,17 @@ public class AutonomousNew extends LinearOpMode
             telemetry.addLine("Going to first position (5 in)");
             telemetry.update();
 
-            this.goToPosition(0, 5);
+            goToPosition(0, 5);
         }else if(tagOfInterest.id == MIDDLE){
             telemetry.addLine("Going to first position (10 in)");
             telemetry.update();
 
-            this.goToPosition(0, 10);
+            goToPosition(0, 10);
         }else{
             telemetry.addLine("Going to first position (15 in)");
             telemetry.update();
 
-            this.goToPosition(0, 15);
+            goToPosition(0, 15);
         }
 
 
@@ -220,12 +221,19 @@ public class AutonomousNew extends LinearOpMode
 //        currentPosition[0] = mecanumDrive.imu.getPosition().x * 100 / 2.54;
 //        currentPosition[1] = mecanumDrive.imu.getPosition().y * 100 / 2.54;
 
-        currentPosition[0] = odometry.getXCoordinate();
-        currentPosition[1] = odometry.getYCoordinate();
+//        currentPosition[0] = odometry.getXCoordinate();
+//        currentPosition[1] = odometry.getYCoordinate();
 
         atLocation = false;
         while (!atLocation) {
-            atLocation = mecanumDrive.driveToOdometryAlg(targetX, targetY, 0, telemetry);
+            odometry.updatePosition();
+            atLocation = mecanumDrive.driveToOdometryAlg(targetX, targetY, 0, odometry.getXCoordinate(), odometry.getYCoordinate(), 0, telemetry);
+
+            telemetry.addLine(String.format("Current Coordinates: (%3.2f, %3.2f)", odometry.getXCoordinate(), odometry.getYCoordinate()));
+            telemetry.addLine(String.format("Target Coordinates: (%3.2f, %3.2f)", targetX, targetY));
+            telemetry.addLine(String.format("Target - current: (%3.2f, %3.2f)", targetX - odometry.getXCoordinate(), targetY - odometry.getYCoordinate()));
+            telemetry.addData("At Location", atLocation);
+            telemetry.update();
         }
 
 

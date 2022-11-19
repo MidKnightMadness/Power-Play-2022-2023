@@ -145,29 +145,34 @@ public class MecanumDrive {
 //        return Vector.add(translation, displacement);
 //    }
 
-    public boolean driveToOdometryAlg(double targetX, double targetY, double targetAngle, Telemetry telemetry){ // Probably run this every few ticks
-        AutonomousNew.odometry.updatePosition();
+    public boolean driveToOdometryAlg(double targetX, double targetY, double targetAngle, double currentX, double currentY, double currentAngle, Telemetry telemetry){ // Probably run this every few ticks
 
-        telemetry.addLine(String.format("Current position from odometry: (%3.2f, %3.2f)",
-                AutonomousNew.currentPosition[0], AutonomousNew.currentPosition[1]));
-        telemetry.update();
+//        if(currentX < 5){
+//            fieldOrientatedDrive(0, 0.25, 0);
 
-        if(AutonomousNew.currentPosition[1] < 5){
-            fieldOrientatedDrive(0, 1, 0);
+        telemetry.addLine(String.format("replacement stuff: (%3.2f, %3.2f)", (targetX - currentX) * (targetX - currentX), (targetY - currentY) * (targetY - currentY)));
+        telemetry.addLine(String.format("replacement: %3.2f", replacement));
+        telemetry.addLine(String.format("final x y for drive: (%3.2f, %3.2f)", ((targetX - currentX) / replacement) * 0.1, -((targetY - currentY) / replacement) * 0.1));
+
+        if(//((targetAngle - odometryAlg.orientationAngle) * (targetAngle - odometryAlg.orientationAngle))
+                + ((targetX - currentX) * (targetX - currentX))
+                + ((targetY - currentY) * (targetY - currentY)) > 1) {
+
+            replacement = Math.max(//(targetAngle - odometryAlg.orientationAngle) * (targetAngle - odometryAlg.orientationAngle),
+                    (targetX - currentX) * (targetX - currentX),
+                    (targetY - currentY) * (targetY - currentY));
 
 
-//        if(//((targetAngle - odometryAlg.orientationAngle) * (targetAngle - odometryAlg.orientationAngle))
-//                + ((targetX - AutonomousNew.currentPosition[0]) * (targetX - AutonomousNew.currentPosition[0]))
-//                + ((targetY - AutonomousNew.currentPosition[1]) * (targetY - AutonomousNew.currentPosition[1])) > .01) {
+            drive(((targetX - currentX)), -((targetY - currentY)), 0); // 0 on rotational component is temporary, needs correction
 
-//            replacement = Math.max(//(targetAngle - odometryAlg.orientationAngle) * (targetAngle - odometryAlg.orientationAngle),
-//                    (targetX - AutonomousNew.currentPosition[0]) * (targetX - AutonomousNew.currentPosition[0]),
-//                            (targetY - AutonomousNew.currentPosition[1]) * (targetY - AutonomousNew.currentPosition[1]));
-
-//            fieldOrientatedDrive((targetX - AutonomousNew.currentPosition[0]) / replacement,
-//                    (targetY - AutonomousNew.currentPosition[1]) / replacement, 0); // 0 on rotational component is temporary, needs correction
+//            FRMotor.setPower(-0 + -((targetY - currentY) / replacement) * 0.1 - 0);
+//            FLMotor.setPower( 0 + -((targetY - currentY) / replacement) * 0.1 + 0);
+//            BRMotor.setPower( 0 + -((targetY - currentY) / replacement) * 0.1 - 0);
+//            BLMotor.setPower(-0 + -((targetY - currentY) / replacement) * 0.1 + 0);
+            //((targetX - currentX) / replacement) * 0.1
             return false;
         }
+        fieldOrientatedDrive(0, 0, 0);
         return true;
     }
 
