@@ -61,16 +61,16 @@ public class MecanumDrive {
 //        FLMotor.setDirection(DcMotor.Direction.REVERSE);
 //        BRMotor.setDirection(DcMotor.Direction.FORWARD);
 //        BLMotor.setDirection(DcMotor.Direction.FORWARD);
-//        FRMotor.setDirection(DcMotor.Direction.REVERSE);
-//        FLMotor.setDirection(DcMotor.Direction.REVERSE);
-//        BRMotor.setDirection(DcMotor.Direction.FORWARD);
-//        BLMotor.setDirection(DcMotor.Direction.REVERSE);
+        FRMotor.setDirection(DcMotor.Direction.REVERSE);
+        FLMotor.setDirection(DcMotor.Direction.REVERSE);
+        BRMotor.setDirection(DcMotor.Direction.FORWARD);
+        BLMotor.setDirection(DcMotor.Direction.REVERSE);
 
         // For vector drive testing
-        FRMotor.setDirection(DcMotor.Direction.FORWARD);
-        FLMotor.setDirection(DcMotor.Direction.FORWARD);
-        BRMotor.setDirection(DcMotor.Direction.FORWARD);
-        BLMotor.setDirection(DcMotor.Direction.FORWARD);
+//        FRMotor.setDirection(DcMotor.Direction.FORWARD);
+//        FLMotor.setDirection(DcMotor.Direction.FORWARD);
+//        BRMotor.setDirection(DcMotor.Direction.FORWARD);
+//        BLMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Set Motor Mode
         FRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -158,8 +158,8 @@ public class MecanumDrive {
 
     public void setPosition(int x, int y, int rotate) {
         FRMotor.setTargetPosition(-x + y - rotate + FRMotor.getCurrentPosition());
-        FLMotor.setTargetPosition(-x - y - rotate + FLMotor.getCurrentPosition());
-        BRMotor.setTargetPosition(-x - y + rotate + BRMotor.getCurrentPosition());
+        FLMotor.setTargetPosition( x - y - rotate + FLMotor.getCurrentPosition());
+        BRMotor.setTargetPosition( x - y + rotate + BRMotor.getCurrentPosition());
         BLMotor.setTargetPosition(-x + y + rotate + BLMotor.getCurrentPosition());
 
         FRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);

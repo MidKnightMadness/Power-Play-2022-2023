@@ -83,11 +83,15 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         });
     }
 
+    int i = 0;
     @Override
     public void init_loop() {
         coneTimer.getTime();
 
         ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
+
+//        tagToTelemetry(currentDetections);
+
         if (currentDetections.size() != 0)
         {
             boolean tagFound = false;
@@ -98,11 +102,20 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
                 {
                     signalFinds[tag.id - 1] += 1;
                     mostRecentDetection = tag.id;
+                    tagOfInterest = tag;
                     tagToTelemetry(tagOfInterest);
                     tagFound = true;
                 }
+//                telemetry.addData("Signal location", tag.id);
+//                telemetry.addData("Tag Found", tagFound);
             }
         }
+        telemetry.addData("i", i);
+        i++;
+        telemetry.addData("Latest Detections Size", aprilTagDetectionPipeline.getLatestDetections().size());
+        telemetry.addData("Detections ArrayList Size", currentDetections.size());
+//        telemetry.addData("Signal location", currentDetections.get(0).id);
+        telemetry.update();
     }
 
     double signalLocationX;

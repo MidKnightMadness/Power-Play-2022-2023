@@ -25,6 +25,11 @@ import org.firstinspires.ftc.robotcore.external.android.AndroidAccelerometer;
 import org.firstinspires.ftc.robotcore.external.android.AndroidGyroscope;
 import org.firstinspires.ftc.teamcode.odometry.TwoWheelOdometry;
 
+// BR
+// BL
+// FL
+// FR
+
 
 @TeleOp(name="Main")
 public class MainTeleOp extends OpMode {
