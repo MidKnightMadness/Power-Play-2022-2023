@@ -75,16 +75,6 @@ public class TeleOp1 extends OpMode {
         }
 
 
-//
-//        rotation = Vector.multiply(gamepad1.right_stick_x, TURN_RIGHT);
-//        translation1 = Vector.equalTo(translation1, rotation); // Frees up auxillary reference
-//        drive = Vector.add(rotation, drive);
-
-        // Drive should now be untied from auxillary reference
-
-//        drive = Vector.multiply(1/Math.max(drive[0], Math.max(drive[1], Math.max(drive[2], drive[3]))), drive);
-//        drive = Vector.equalTo(drive, Vector.multiply(1/Math.max(drive[0], Math.max(drive[1], Math.max(drive[2], drive[3]))), drive));
-
         driver.FLMotor.setPower(drive[0]);
         driver.FRMotor.setPower(drive[1]);
         driver.BLMotor.setPower(drive[2]);
