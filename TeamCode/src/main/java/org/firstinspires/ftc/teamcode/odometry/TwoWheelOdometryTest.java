@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.util.concurrent.TimeUnit;
 
 interface OdometryVariablesa {
-    double wheelRadius = 2.1232;
+    double wheelRadius = 1.41546666667;
     double wheelCircumference = wheelRadius * Math.PI * 2;
 
     int ticksPerRotation = 8192;
@@ -26,7 +26,7 @@ interface OdometryVariablesa {
 }
 
 @TeleOp
-public class Odo extends OpMode implements OdometryVariablesa {
+public class TwoWheelOdometryTest extends OpMode implements OdometryVariablesa {
     double deltaTime = 0;
     double lastTime = 0;
 
@@ -57,10 +57,10 @@ public class Odo extends OpMode implements OdometryVariablesa {
         elapsedTime = new ElapsedTime();
         leftEncoder = hardwareMap.get(DcMotorEx.class, "BR");
         leftEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
 
         rightEncoder = hardwareMap.get(DcMotorEx.class, "BL");
         rightEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.manipulator.Claw;
 
@@ -119,11 +120,13 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         signalLocationX = signalLocations[startingPos][mostRecentDetection - 1].x;
         signalLocationY = signalLocations[startingPos][mostRecentDetection - 1].y;
 
-        goToScoringLocation();
-        linearSlides.scoreFromDefaultScoringPosition();
+        goToPosition(6, 6);
+
+//        goToScoringLocation();
+//        linearSlides.scoreFromDefaultScoringPosition();
     }
 
-    @Override
+//    @Override
     public void loop() {
         telemetry.addData("Signal #", mostRecentDetection);
         telemetry.addData("Signal finds", "" + signalFinds[0], signalFinds[1], signalFinds[2]);

@@ -1,15 +1,14 @@
 package org.firstinspires.ftc.teamcode.odometry;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.concurrent.TimeUnit;
-import org.firstinspires.ftc.teamcode.odometry.OdometryVariables;
 
 public class Odometry implements OdometryVariables {
     double deltaTime = 0;
@@ -41,13 +40,14 @@ public class Odometry implements OdometryVariables {
     public Odometry(HardwareMap hardwareMap) {
         elapsedTime = new ElapsedTime();
 
-        leftEncoder = hardwareMap.get(DcMotorEx.class, "leftEncoder");
+        leftEncoder = hardwareMap.get(DcMotorEx.class, "BR");
         leftEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        rightEncoder = hardwareMap.get(DcMotorEx.class, "rightEncoder");
+        rightEncoder = hardwareMap.get(DcMotorEx.class, "BL");
         rightEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        horizontalEncoder = hardwareMap.get(DcMotorEx.class, "topEncoder");
+        horizontalEncoder = hardwareMap.get(DcMotorEx.class, "FL");
         horizontalEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
@@ -57,10 +57,28 @@ public class Odometry implements OdometryVariables {
         lastTime = currentTime;
     }
 
+    int leftTicks;
+    int rightTicks;
+    int topTicks;
+
+    double deltaRadians;
+
+    double forwardMovement;
+
+    double lateralMovementAdjustor;
+    double trueLateralMovement;
+
+    double sin;
+    double cosine;
+
+    double netX;
+    double netY;
+
     public void updatePosition() {
-        int leftTicks = leftEncoder.getCurrentPosition();
-        int rightTicks = rightEncoder.getCurrentPosition();
-        int topTicks = horizontalEncoder.getCurrentPosition();
+        leftTicks = leftEncoder.getCurrentPosition();
+        rightTicks = rightEncoder.getCurrentPosition();
+        topTicks = horizontalEncoder.getCurrentPosition();
+
 
         deltaLeftTicks = leftTicks - lastLeftTicks;
         deltaRightTicks = rightTicks - lastRightTicks;
@@ -76,20 +94,20 @@ public class Odometry implements OdometryVariables {
         topDistanceMoved = inPerTick * deltaTopTicks;
 
         // angles
-        double deltaRadians = getDeltaRotation(leftDistanceMoved, rightDistanceMoved);
+        deltaRadians = getDeltaRotation(leftDistanceMoved, rightDistanceMoved);
         rotationRadians += deltaRadians;
 
         // true movement
-        double forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0d;
+        forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0d;
 
-        double lateralMovementAdjustor = deltaRadians * verticalWheelDistance;
-        double trueLateralMovement = topDistanceMoved - (lateralMovementAdjustor);
+        lateralMovementAdjustor = deltaRadians * verticalWheelDistance;
+        trueLateralMovement = topDistanceMoved - (lateralMovementAdjustor);
 
-        double sin = Math.sin(rotationRadians);
-        double cosine = Math.cos(rotationRadians);
+        sin = Math.sin(rotationRadians);
+        cosine = Math.cos(rotationRadians);
 
-        double netX = forwardMovement * cosine + trueLateralMovement * sin;
-        double netY = forwardMovement * sin + trueLateralMovement * cosine;
+        netX = forwardMovement * cosine + trueLateralMovement * sin;
+        netY = forwardMovement * sin + trueLateralMovement * cosine;
 
         position.x += netX;
         position.y += netY;
@@ -98,7 +116,7 @@ public class Odometry implements OdometryVariables {
         velocity.y = netY / deltaTime;
     }
 
-    double getDeltaRotation(double leftChange, double rightChange) {
+    public double getDeltaRotation(double leftChange, double rightChange) {
         return (rightChange - leftChange) / lateralWheelDistance;
     }
 
@@ -110,11 +128,28 @@ public class Odometry implements OdometryVariables {
         return position.y;
     }
 
+    public double getRotationRadians() {
+        return rotationRadians;
+    }
+
     public String positionToString() {return String.format("(%f, %f)", position.x, position.y); }
+
     public void telemetry(Telemetry telemetry) {
-        telemetry.addLine("Position " + position.toString());
+        telemetry.addLine("\nTWO WHEEL ODOMETRY");
+
+        telemetry.addLine(String.valueOf(deltaTime));
+
+        telemetry.addData("Wheel ticks", String.format("%d, %d, %d", leftTicks, rightTicks, topTicks));
+        telemetry.addData("Delta wheel ticks", String.format("%d, %d, %d", deltaLeftTicks, deltaRightTicks, deltaTopTicks));
+
+        telemetry.addData("Movement", String.format("%f, %f", forwardMovement, trueLateralMovement));
+        telemetry.addData("Net movement", String.format("%d, %d", deltaLeftTicks, deltaRightTicks));
+
+        telemetry.addLine("Position " + position);
         telemetry.addLine("Velocity " + velocity.toString());
+        telemetry.addLine(String.format("Rotation: %f", deltaRadians * 180 / Math.PI));
         telemetry.addLine("Rotation " + (rotationRadians * 180 / Math.PI));
+
     }
 
 }
