@@ -1,7 +1,14 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.manipulator.Claw;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -49,12 +56,28 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
     Odometry odometry;
     MecanumDrive mecanumDrive;
 
+    private BNO055IMU imu;
+    Orientation angles;
+
     public int getStartingPos() {
         return 0;
     }
 
     @Override
     public void init() {
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+
         startingPos = getStartingPos();
 
         coneTimer = new Timer();
@@ -81,6 +104,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
                 telemetry.addData("ERROR", "Error code" + errorCode);
             }
         });
+
     }
 
     int i = 0;
@@ -140,6 +164,10 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 
 //    @Override
     public void loop() {
+        if(coneTimer.getTime() >= 25){
+
+        }
+
         telemetry.addData("Signal #", mostRecentDetection);
         telemetry.addData("Signal finds", "" + signalFinds[0], signalFinds[1], signalFinds[2]);
         telemetry.addData("Signal location", signalLocations[startingPos][mostRecentDetection - 1]);

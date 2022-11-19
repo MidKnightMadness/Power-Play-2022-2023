@@ -44,7 +44,7 @@ public class TestingOdometryAlgorithm {
     public static final double [] DEFAULT_STARTING_NORMAL_VECTOR = {-1.0, 0.0};
     public double orientationAngle = Math.PI / 2; // Front-facing angle relative to horizontal at start
     public double angleChange;
-    public static final double WHEEL_TRAVEL_CONVERSION_FOR_DEAD_WHEELS = Math.PI * 2 * DEAD_WHEEL_RADIUS / TICKS_PER_ROTATION;
+    public static final double WHEEL_TRAVEL_CONVERSION_FOR_DEAD_WHEELS = Math.PI * 2 * DEAD_WHEEL_RADIUS / TICKS_PER_ROTATION; // ticks to inches
 
     // Encoder deltas in ticks!
     private double encoder1Delta;
@@ -114,8 +114,8 @@ public class TestingOdometryAlgorithm {
         travel[1] *= (.5 * encoder1Delta + .5 * encoder2Delta);
 
         // Multiply 2nd principle component vector relative to robot by movement along that direction, corrected with angle change
-        travel1[0] *= (encoder3Delta - angleChange * DISTANCE_TO_BACK_WHEEL);
-        travel1[1] *= (encoder3Delta - angleChange * DISTANCE_TO_BACK_WHEEL);
+//        travel1[0] *= (encoder3Delta - angleChange * DISTANCE_TO_BACK_WHEEL);
+//        travel1[1] *= (encoder3Delta - angleChange * DISTANCE_TO_BACK_WHEEL);
 
         // Add 2 components together
         travel[0] += travel1[0];

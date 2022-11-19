@@ -16,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.autonomous.AutonomousNew;
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
 
 public class MecanumDrive {
@@ -25,6 +26,9 @@ public class MecanumDrive {
     public DcMotorEx BLMotor;
 
     Odometry odometry;
+
+    // Temporary:
+    public double replacement;
 
     // Order for power values: FL, FR, RL, RR
     // Make sure to normalize power values 0 to 1
@@ -102,6 +106,9 @@ public class MecanumDrive {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+
+        replacement = 0.0;
     }
 
     public void drive(double x, double y, double rotate) {
@@ -139,8 +146,15 @@ public class MecanumDrive {
 //    }
 
     public boolean driveToOdometryAlg(double targetX, double targetY, double targetAngle){ // Probably run this every few ticks
-        if(invSqrt(((targetAngle) * (odometryAlg.orientationAngle)) + ((targetX - currentPosition[0]) * (targetX - currentPosition[0])) + ((targetY - currentPosition[1]) * (targetY - currentPosition[1]))) > 10) {
-            fieldOrientatedDrive(targetX - currentPosition[0], targetY - currentPosition[1], targetAngle - odometryAlg.orientationAngle);
+        if(//((targetAngle - odometryAlg.orientationAngle) * (targetAngle - odometryAlg.orientationAngle))
+                + ((targetX - currentPosition[0]) * (targetX - currentPosition[0]))
+                + ((targetY - currentPosition[1]) * (targetY - currentPosition[1])) > .01) {
+
+            replacement = Math.max((targetAngle - odometryAlg.orientationAngle) * (targetAngle - odometryAlg.orientationAngle),
+                    Math.max((targetX - currentPosition[0]) * (targetX - currentPosition[0]),
+                            (targetY - currentPosition[1]) * (targetY - currentPosition[1])));
+
+            fieldOrientatedDrive((targetX - currentPosition[0]) / replacement, (targetY - currentPosition[1]) / replacement, 0); // 0 on rotational component is temporary, needs correction
             return false;
         }
         return true;

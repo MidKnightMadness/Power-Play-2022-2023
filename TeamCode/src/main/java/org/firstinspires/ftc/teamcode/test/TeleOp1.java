@@ -89,7 +89,7 @@ public class TeleOp1 extends OpMode {
         telemetry.addLine(String.format("\ndrive vector:\t{%3.2f, %3.2f, %3.2f, %3.2f}", drive[0], drive[1], drive[2], drive[3]));
 
         telemetry.addLine(String.format("\nposition vector:\t{%4.2f, %4.2f}", currentPosition[0], currentPosition[1]));
-        telemetry.addLine(String.format("\nangle vector:\t%4.3", odometry.orientationAngle * 180 / Math.PI));
+        telemetry.addData("\nangle vector", odometry.orientationAngle * 180 / Math.PI);
 
         telemetry.addData("\nFront Left output:", driver.FLMotor.getPower());
         telemetry.addData("Front right output:", driver.FLMotor.getPower());

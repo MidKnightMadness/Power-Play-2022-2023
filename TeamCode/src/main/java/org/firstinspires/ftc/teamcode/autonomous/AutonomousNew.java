@@ -21,11 +21,16 @@
 
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -63,6 +68,8 @@ public class AutonomousNew extends LinearOpMode
     AprilTagDetection tagOfInterest = null;
 
     MecanumDrive mecanumDrive;
+    boolean atLocation = false;
+
 
     @Override
     public void runOpMode()
@@ -97,6 +104,8 @@ public class AutonomousNew extends LinearOpMode
          */
         while (!isStarted() && !isStopRequested())
         {
+
+
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
             if(currentDetections.size() != 0)
@@ -174,7 +183,7 @@ public class AutonomousNew extends LinearOpMode
 
         /* Actually do something useful */
         if(tagOfInterest == null || tagOfInterest.id == LEFT){
-            mecanumDrive.drive(0, 1, 0);
+            goToPosition(0, 1);
         }else if(tagOfInterest.id == MIDDLE){
             //trajectory
         }else{
@@ -186,10 +195,9 @@ public class AutonomousNew extends LinearOpMode
         while (opModeIsActive()) {sleep(20);}
     }
 
-    void goToPosition(int targetX, int targetY) {
-        boolean atLocation = false;
+    void goToPosition(double targetX, double targetY) {
         while (!atLocation) {
-            atLocation = mecanumDrive.driveTo(targetX, targetY, 0);
+            atLocation = mecanumDrive.driveToOdometryAlg(targetX, targetY, 0);
         }
 
     }
@@ -203,5 +211,7 @@ public class AutonomousNew extends LinearOpMode
         telemetry.addLine(String.format("Rotation Yaw: %.2f degrees", Math.toDegrees(detection.pose.yaw)));
         telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
         telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
+
+        mecanumDrive.telemetry(this.telemetry);
     }
 }
