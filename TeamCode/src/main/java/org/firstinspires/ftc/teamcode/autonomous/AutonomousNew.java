@@ -32,6 +32,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
+import org.firstinspires.ftc.teamcode.odometry.Odometry;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -70,12 +71,15 @@ public class AutonomousNew extends LinearOpMode
     MecanumDrive mecanumDrive;
     boolean atLocation = false;
     public static double [] currentPosition = {0.0, 0.0}; // inches
+    Odometry odometry;
 
 
     @Override
     public void runOpMode()
     {
         mecanumDrive = new MecanumDrive(hardwareMap);
+        odometry = new Odometry(hardwareMap);
+
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
@@ -109,6 +113,10 @@ public class AutonomousNew extends LinearOpMode
                     mecanumDrive.imu.getPosition().x,
                     mecanumDrive.imu.getPosition().y));
             telemetry.addLine(String.format("Starting angle: \t\t%3.2f", mecanumDrive.imu.getAngularOrientation().firstAngle));
+
+            telemetry.addLine(String.format("\nINFORMATION FROM ODOMETRY\n" +
+                    "Starting relative position, should be some randum number:\t%3.2f, %3.2f", odometry.getXCoordinate(), odometry.getYCoordinate()));
+            telemetry.update();
 
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
@@ -187,11 +195,20 @@ public class AutonomousNew extends LinearOpMode
 
         /* Actually do something useful */
         if(tagOfInterest == null || tagOfInterest.id == LEFT){ // Modify Targets
-            this.goToPosition(0, 10);
+            telemetry.addLine("Going to first position (5 in)");
+            telemetry.update();
+
+            this.goToPosition(0, 5);
         }else if(tagOfInterest.id == MIDDLE){
-            this.goToPosition(0, 20);
+            telemetry.addLine("Going to first position (10 in)");
+            telemetry.update();
+
+            this.goToPosition(0, 10);
         }else{
-            this.goToPosition(0, 30);
+            telemetry.addLine("Going to first position (15 in)");
+            telemetry.update();
+
+            this.goToPosition(0, 15);
         }
 
 
@@ -200,12 +217,18 @@ public class AutonomousNew extends LinearOpMode
     }
 
     void goToPosition(double targetX, double targetY) {
-        currentPosition[0] = mecanumDrive.imu.getPosition().x * 100 / 2.54;
-        currentPosition[1] = mecanumDrive.imu.getPosition().y * 100 / 2.54;
+//        currentPosition[0] = mecanumDrive.imu.getPosition().x * 100 / 2.54;
+//        currentPosition[1] = mecanumDrive.imu.getPosition().y * 100 / 2.54;
+
+        currentPosition[0] = odometry.getXCoordinate();
+        currentPosition[1] = odometry.getYCoordinate();
+
         atLocation = false;
         while (!atLocation) {
             atLocation = mecanumDrive.driveToOdometryAlg(targetX, targetY, 0);
         }
+        telemetry.addLine(String.format("Current position from odometry: (%3.2f, %3.2f)", this.currentPosition[0], this.currentPosition[1]));
+        telemetry.update();
 
     }
 
