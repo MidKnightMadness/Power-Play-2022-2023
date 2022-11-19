@@ -31,7 +31,7 @@ public class MainTeleOp extends OpMode {
     MecanumDrive mecanum;
     LinearSlides lift;
     Turntable turntable;
-    TwoWheelOdometry odometry;
+    Odometry odometry;
 
     Timer timer;
     double auxillary;
@@ -107,8 +107,10 @@ public class MainTeleOp extends OpMode {
 
 
         telemetry.addData("DRIVE MODE", driveModeToggle ? "FIELD ORIENTED": "NORMAL");
-
-        odometry.telemetry(telemetry);
+        telemetry.addData("Left Stick X", gamepad1.left_stick_x);
+        telemetry.addData("Left Stick Y", gamepad1.left_stick_y);
+        telemetry.addData("Right Stick X", gamepad1.right_stick_x);
+//        odometry.telemetry(telemetry);
         mecanum.telemetry(telemetry);
 
         telemetry.addLine("\nTIMER");

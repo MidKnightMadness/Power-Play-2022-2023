@@ -110,10 +110,7 @@ public class MecanumDrive {
         gyro_radians = gyro_degrees * Math.PI / 180;
         offAngle = Math.atan(y / x);
         if (x == 0 && y == 0) {
-            FRMotor.setPower(-rotate);
-            FLMotor.setPower(rotate);
-            BRMotor.setPower(-rotate);
-            BLMotor.setPower(rotate);
+            drive(0, 0, rotate);
             return;
         }
 
@@ -143,8 +140,10 @@ public class MecanumDrive {
     }
 
     public boolean driveTo(double targetX, double targetY, double targetAngle){
-        if(invSqrt(((targetAngle) * (odometry.getRotationRadians() * 180 / Math.PI)) + ((targetX - odometry.getXCoordinate()) * (targetX - odometry.getXCoordinate())) + ((targetY - odometry.getYCoordinate()) * (targetY - odometry.getYCoordinate()))) > 10) {
-            fieldOrientatedDrive(targetX - odometry.getXCoordinate(), targetY - odometry.getYCoordinate(), targetAngle - odometry.getRotationRadians());
+        if(invSqrt(((targetAngle) * odometry.getRotationDegrees()) +
+                      ((targetX - odometry.getXCoordinate()) * (targetX - odometry.getXCoordinate())) +
+                      ((targetY - odometry.getYCoordinate()) * (targetY - odometry.getYCoordinate()))) > 10) {
+            fieldOrientatedDrive(targetX - odometry.getXCoordinate(), targetY - odometry.getYCoordinate(), targetAngle - odometry.getRotationDegrees());
             return false;
         }
         return true;
@@ -178,10 +177,11 @@ public class MecanumDrive {
 
     public void telemetry(Telemetry telemetry) {
         telemetry.addLine("\nMECANUM WHEELS");
-        telemetry.addData("FR Motor Position", FRMotor.getCurrentPosition());
-        telemetry.addData("FL Motor Position", FLMotor.getCurrentPosition());
-        telemetry.addData("BR Motor Position", BRMotor.getCurrentPosition());
-        telemetry.addData("BL Motor Position", BLMotor.getCurrentPosition());
+        telemetry.addLine(String.format("Front Motor Power: %f %f", FLMotor.getPower(), FRMotor.getPower()));
+        telemetry.addLine(String.format(" Back Motor Power: %f %f", BLMotor.getPower(), BRMotor.getPower()));
+        telemetry.addData("Left Dead Wheel Position", BRMotor.getCurrentPosition());
+        telemetry.addData("Right Dead Wheel Position", BLMotor.getCurrentPosition());
+        telemetry.addData("Top Dead Wheel Position", FLMotor.getCurrentPosition());
         telemetry.addData("Corrected X", correctedX);
         telemetry.addData("Corrected Y", correctedY);
         telemetry.addData("First Angle", angles.firstAngle);
