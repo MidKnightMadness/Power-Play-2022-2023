@@ -106,7 +106,7 @@ public class MainTeleOp extends OpMode {
         }
         lastPressedDriveMode = gamepad1.left_bumper;
 
-//        handleManipulatorControls();
+        handleManipulatorControls();
 //        odometry.loop();
 
 
@@ -128,9 +128,9 @@ public class MainTeleOp extends OpMode {
     boolean isClawOpenToggle = false;
 
     void handleManipulatorControls() {
-         turntable.turnBy(deadZone(this.gamepad2.left_stick_x) * TURNTABLE_DEGREES_PER_SECOND * deltaTime);
-         lift.pivotTo( LinearSlides.seesawAngle + deadZone(this.gamepad2.left_stick_y) * SEEESAW_RADIANS_PER_SECOND * deltaTime);
-         lift.extendTo(LinearSlides.seesawExtensionLength + deadZone(this.gamepad2.right_stick_x) * LINEAR_SLIDER_INCHES_PER_SECOND * deltaTime );
+         turntable.turnBy(deadZone(gamepad2.left_stick_x) * TURNTABLE_DEGREES_PER_SECOND * deltaTime);
+         lift.pivotTo( LinearSlides.seesawAngle + deadZone(gamepad2.left_stick_y) * SEEESAW_RADIANS_PER_SECOND * deltaTime);
+         lift.extendTo(LinearSlides.seesawExtensionLength + deadZone(gamepad2.right_stick_x) * LINEAR_SLIDER_INCHES_PER_SECOND * deltaTime );
 
         if (gamepad2.right_bumper && !lastClawOpenToggle) {
             isClawOpenToggle = !isClawOpenToggle;

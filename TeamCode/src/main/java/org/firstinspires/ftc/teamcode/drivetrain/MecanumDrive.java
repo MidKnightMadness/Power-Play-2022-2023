@@ -155,13 +155,10 @@ public class MecanumDrive {
         telemetry.addLine(String.format("replacement = %3.2f", replacement));
         telemetry.addLine(String.format("fieldOrientatedDrive(%3.2f, %3.2f, %3.2f)", (targetX - currentX) / replacement, (targetY - currentY) / replacement, (targetAngle - currentAngle) / 360));
 
-        if(((targetAngle - currentAngle) * (targetAngle - currentAngle))
-                + ((targetX - currentX) * (targetX - currentX))
-                + ((targetY - currentY) * (targetY - currentY)) > 1) {
+        if(((targetX - currentX) * (targetX - currentX)) + ((targetY - currentY) * (targetY - currentY)) > 1 &&
+            (targetAngle - currentAngle) * (targetAngle - currentAngle) > 10) {
 
-            replacement = Math.max(//Math.abs(targetAngle - currentAngle),
-                          Math.abs(targetX - currentX),
-                                   Math.abs(targetY - currentY));
+            replacement = Math.max(Math.abs(targetX - currentX), Math.abs(targetY - currentY));
 
 
 //            fieldOrientatedDrive(((targetX - currentX) / replacement), ((targetY - currentY) / replacement), ((targetAngle-currentAngle) / 360)); // 0 on rotational component is temporary, needs correction
