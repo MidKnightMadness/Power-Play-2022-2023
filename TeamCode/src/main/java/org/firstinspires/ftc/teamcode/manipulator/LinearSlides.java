@@ -128,9 +128,9 @@ public class LinearSlides {
         this.update();
             extensionMotor.setTargetPosition((int) ((target - STARTING_EXTENDER_LENGTH) / EXTENDER_OVERALL_RATIO));
             if (extensionMotor.getTargetPosition() < extensionMotor.getCurrentPosition()) {
-                extensionMotor.setPower(-1.0);
+                extensionMotor.setPower(-.5);
             } else {
-                extensionMotor.setPower(1.0);
+                extensionMotor.setPower(.5);
             }
     }
 
@@ -139,11 +139,16 @@ public class LinearSlides {
         if(seesawAngle < Math.PI / 2 && seesawAngle > 0.0) {
             seeSawMotor.setTargetPosition((int) (targetAngle / SEESAW_OVERALL_RATIO));
             if (seeSawMotor.getTargetPosition() < seeSawMotor.getCurrentPosition()) { // Remember, motor is geared so direction reversed
-                seeSawMotor.setPower(1.0); // To go down, set power to negative, might have to reverse this based on motor packaging
+                seeSawMotor.setPower(.5); // To go down, set power to negative, might have to reverse this based on motor packaging
             } else {
-                seeSawMotor.setPower(-1.0);
+                seeSawMotor.setPower(-.5);
             }
         }
+    }
+
+    public void pivotBy(double angleChange) { // Radians
+        this.update();
+        this.pivotTo(seesawAngle + angleChange);
     }
 
     public void update(){ // Run this as much as applicable

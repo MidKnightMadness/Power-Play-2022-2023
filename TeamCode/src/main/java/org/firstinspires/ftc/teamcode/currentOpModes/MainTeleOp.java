@@ -66,8 +66,8 @@ public class MainTeleOp extends OpMode {
 
         mecanum = new MecanumDrive(hardwareMap);
 //        odometry = new TwoWheelOdometry(hardwareMap);
-//        lift = new LinearSlides(hardwareMap);
-//        turntable = new Turntable(hardwareMap);
+        lift = new LinearSlides(hardwareMap);
+        turntable = new Turntable(hardwareMap);
 
 //        accelerometer = Master.hardwaremap.get(AndroidAccelerometer.class, "accelerometer");
 //        accelerometer.setDistanceUnit(DistanceUnit.INCH);
@@ -106,7 +106,11 @@ public class MainTeleOp extends OpMode {
         }
         lastPressedDriveMode = gamepad1.left_bumper;
 
-        handleManipulatorControls();
+        turntable.turnBy(gamepad2.left_stick_x / 5);
+//        lift.pivotBy(gamepad2.left_stick_y / 5);
+//        turntable.turnBy(gamepad2.left_stick_x / 5);
+
+//        handleManipulatorControls();
 //        odometry.loop();
 
 
@@ -130,7 +134,7 @@ public class MainTeleOp extends OpMode {
     void handleManipulatorControls() {
          turntable.turnBy(deadZone(gamepad2.left_stick_x) * TURNTABLE_DEGREES_PER_SECOND * deltaTime);
          lift.pivotTo( LinearSlides.seesawAngle + deadZone(gamepad2.left_stick_y) * SEEESAW_RADIANS_PER_SECOND * deltaTime);
-         lift.extendTo(LinearSlides.seesawExtensionLength + deadZone(gamepad2.right_stick_x) * LINEAR_SLIDER_INCHES_PER_SECOND * deltaTime );
+         lift.extendTo(LinearSlides.seesawExtensionLength + deadZone(-gamepad2.right_stick_y) * LINEAR_SLIDER_INCHES_PER_SECOND * deltaTime );
 
         if (gamepad2.right_bumper && !lastClawOpenToggle) {
             isClawOpenToggle = !isClawOpenToggle;
