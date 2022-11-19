@@ -153,18 +153,18 @@ public class MecanumDrive {
 
         telemetry.addLine(String.format("replacement = Math.max(%3.2f, %3.2f)", (targetX - currentX) * (targetX - currentX), (targetY - currentY) * (targetY - currentY)));
         telemetry.addLine(String.format("replacement = %3.2f", replacement));
-        telemetry.addLine(String.format("fieldOrientatedDrive(%3.2f, %3.2f, %3.2f)", (targetX - currentX) / replacement, -(targetY - currentY) / replacement, (targetAngle-currentAngle) / 360));
+        telemetry.addLine(String.format("fieldOrientatedDrive(%3.2f, %3.2f, %3.2f)", (targetX - currentX) / replacement, (targetY - currentY) / replacement, (targetAngle - currentAngle) / 360));
 
         if(((targetAngle - currentAngle) * (targetAngle - currentAngle))
                 + ((targetX - currentX) * (targetX - currentX))
                 + ((targetY - currentY) * (targetY - currentY)) > 1) {
 
-            replacement = Math.max(Math.abs(targetAngle - currentAngle),
-                          Math.max(Math.abs(targetX - currentX),
-                                   Math.abs(targetY - currentY)));
+            replacement = Math.max(//Math.abs(targetAngle - currentAngle),
+                          Math.abs(targetX - currentX),
+                                   Math.abs(targetY - currentY));
 
 
-            fieldOrientatedDrive(((targetX - currentX) / replacement), ((targetY - currentY) / replacement), ((targetAngle-currentAngle) / 360)); // 0 on rotational component is temporary, needs correction
+//            fieldOrientatedDrive(((targetX - currentX) / replacement), ((targetY - currentY) / replacement), ((targetAngle-currentAngle) / 360)); // 0 on rotational component is temporary, needs correction
 
 //            FRMotor.setPower(-0 + -((targetY - currentY) / replacement) * 0.1 - 0);
 //            FLMotor.setPower( 0 + -((targetY - currentY) / replacement) * 0.1 + 0);
