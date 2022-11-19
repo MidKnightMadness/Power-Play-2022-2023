@@ -47,7 +47,7 @@ public class Turntable {
     }
 
     public void turnBy(double angleChange){ // Turntable angle
-        turntableAngle = tableMotor.getCurrentPosition() * OVERALL_RATIO + odometryAlg.orientationAngle;
+        turntableAngle = tableMotor.getCurrentPosition() * OVERALL_RATIO;
         neededTicks = (int) (angleChange / OVERALL_RATIO);
 
         tableMotor.setTargetPosition(neededTicks + tableMotor.getCurrentPosition());
