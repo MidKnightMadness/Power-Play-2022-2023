@@ -113,7 +113,6 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         telemetry.addData("i", i);
         i++;
         telemetry.addData("Latest Detections Size", aprilTagDetectionPipeline.getLatestDetections().size());
-        telemetry.addData("Detections ArrayList Size", currentDetections.size());
 //        telemetry.addData("Signal location", currentDetections.get(0).id);
         telemetry.update();
     }
