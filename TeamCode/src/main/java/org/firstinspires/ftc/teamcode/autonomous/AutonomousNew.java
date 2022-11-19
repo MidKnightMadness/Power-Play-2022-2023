@@ -200,17 +200,18 @@ public class AutonomousNew extends LinearOpMode
             telemetry.addLine("Going to first position (5 in)");
             telemetry.update();
 
-            goToPosition(0, 5);
+            goToPosition(0, 12, 0);
+            goToPosition(0, 12, 90);
         }else if(tagOfInterest.id == MIDDLE){
             telemetry.addLine("Going to first position (10 in)");
             telemetry.update();
 
-            goToPosition(0, 10);
+            goToPosition(0, 10, 0);
         }else{
             telemetry.addLine("Going to first position (15 in)");
             telemetry.update();
 
-            goToPosition(0, 15);
+            goToPosition(0, 15, 0);
         }
 
 
@@ -218,7 +219,7 @@ public class AutonomousNew extends LinearOpMode
         while (opModeIsActive()) {sleep(20);}
     }
 
-    void goToPosition(double targetX, double targetY) {
+    void goToPosition(double targetX, double targetY, double targetAngle) {
 //        currentPosition[0] = mecanumDrive.imu.getPosition().x * 100 / 2.54;
 //        currentPosition[1] = mecanumDrive.imu.getPosition().y * 100 / 2.54;
 
@@ -228,10 +229,10 @@ public class AutonomousNew extends LinearOpMode
         atLocation = false;
         while (!atLocation) {
             odometry.updatePosition();
-            atLocation = mecanumDrive.driveToOdometryAlg(targetX, targetY, 0, odometry.getXCoordinate(), odometry.getYCoordinate(), 0, telemetry);
+            atLocation = mecanumDrive.driveToOdometryAlg(targetX, targetY, targetAngle, odometry.getXCoordinate(), odometry.getYCoordinate(), 0, telemetry);
 
-            telemetry.addLine(String.format("Current Coordinates: (%3.2f, %3.2f)", odometry.getXCoordinate(), odometry.getYCoordinate()));
-            telemetry.addLine(String.format("Target Coordinates: (%3.2f, %3.2f)", targetX, targetY));
+            telemetry.addLine(String.format("Current Coordinates: (%3.2f, %3.2f)", odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationDegrees()));
+            telemetry.addLine(String.format("Target Coordinates: (%3.2f, %3.2f, %3.2f)", targetX, targetY, targetAngle));
             telemetry.addLine(String.format("Target - current: (%3.2f, %3.2f)", targetX - odometry.getXCoordinate(), targetY - odometry.getYCoordinate()));
             telemetry.addData("At Location", atLocation);
             telemetry.update();
