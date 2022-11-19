@@ -110,10 +110,7 @@ public class MecanumDrive {
         gyro_radians = gyro_degrees * Math.PI / 180;
         offAngle = Math.atan(y / x);
         if (x == 0 && y == 0) {
-            FRMotor.setPower(-rotate);
-            FLMotor.setPower(rotate);
-            BRMotor.setPower(-rotate);
-            BLMotor.setPower(rotate);
+            drive(0, 0, rotate);
             return;
         }
 
