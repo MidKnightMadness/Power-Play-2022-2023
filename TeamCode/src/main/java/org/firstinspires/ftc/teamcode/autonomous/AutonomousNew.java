@@ -174,7 +174,7 @@ public class AutonomousNew extends LinearOpMode
 
         /* Actually do something useful */
         if(tagOfInterest == null || tagOfInterest.id == LEFT){
-            goToPosition(6, 6);
+            mecanumDrive.drive(0, 1, 0);
         }else if(tagOfInterest.id == MIDDLE){
             //trajectory
         }else{

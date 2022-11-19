@@ -158,8 +158,8 @@ public class MecanumDrive {
 
     public void setPosition(int x, int y, int rotate) {
         FRMotor.setTargetPosition(-x + y - rotate + FRMotor.getCurrentPosition());
-        FLMotor.setTargetPosition( x - y - rotate + FLMotor.getCurrentPosition());
-        BRMotor.setTargetPosition( x - y + rotate + BRMotor.getCurrentPosition());
+        FLMotor.setTargetPosition( x + y + rotate + FLMotor.getCurrentPosition());
+        BRMotor.setTargetPosition( x + y - rotate + BRMotor.getCurrentPosition());
         BLMotor.setTargetPosition(-x + y + rotate + BLMotor.getCurrentPosition());
 
         FRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
