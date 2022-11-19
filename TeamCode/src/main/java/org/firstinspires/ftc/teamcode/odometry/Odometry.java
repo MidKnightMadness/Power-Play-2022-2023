@@ -34,9 +34,9 @@ public class Odometry implements OdometryVariables {
 
     ElapsedTime elapsedTime;
 
-    DcMotorEx leftEncoder;
-    DcMotorEx horizontalEncoder;
-    DcMotorEx rightEncoder;
+    public DcMotorEx leftEncoder;
+    public DcMotorEx horizontalEncoder;
+    public DcMotorEx rightEncoder;
 
     public Odometry(HardwareMap hardwareMap) {
         elapsedTime = new ElapsedTime();
@@ -99,16 +99,16 @@ public class Odometry implements OdometryVariables {
         rotationRadians += deltaRadians;
 
         // true movement
-        forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0d;
+        forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0;
 
         lateralMovementAdjustor = deltaRadians * verticalWheelDistance;
-        trueLateralMovement = topDistanceMoved - (lateralMovementAdjustor);
+        trueLateralMovement = topDistanceMoved + (lateralMovementAdjustor);
 
         sin = Math.sin(rotationRadians);
         cosine = Math.cos(rotationRadians);
 
-        netX = forwardMovement * cosine + trueLateralMovement * sin;
-        netY = forwardMovement * sin + trueLateralMovement * cosine;
+        netX = forwardMovement * cosine; // + trueLateralMovement * sin;
+        netY = forwardMovement * sin; // + trueLateralMovement * cosine;
 
         position.y += -netX;
         position.x += -netY;
