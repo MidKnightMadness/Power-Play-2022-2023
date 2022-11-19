@@ -13,7 +13,7 @@ public class Claw {
 
     // Alternative
     public Servo servo;
-    public Servo rotationServo;
+    public CRServo rotationServo;
 
 
     private ServoController servoController;
@@ -30,7 +30,7 @@ public class Claw {
 
 //        servo = hardwareMap.get(CRServo.class, "claw");
          servo = hardwareMap.get(Servo.class, "claw");
-         rotationServo = hardwareMap.get(Servo.class, "claw pivot");
+         rotationServo = hardwareMap.get(CRServo.class, "claw pivot");
 
         servoController = servo.getController();
         rotationServoController = rotationServo.getController();
@@ -42,15 +42,15 @@ public class Claw {
         closedPositionTicks = servo.getPosition() + 0.2;
         openPositionTicks = servo.MAX_POSITION - 0.2;
 
-        servo.scaleRange(closedPositionTicks, openPositionTicks);
+//        servo.scaleRange(closedPositionTicks, openPositionTicks);
     }
 
     public void openClaw() {
-        servo.setPosition(openPositionTicks);
+        servo.setPosition(0);
     }
     
     public void closeClaw() {
-        servo.setPosition(closedPositionTicks);
+        servo.setPosition(1);
     }
 
     public void waitForOpenClaw() {
@@ -61,7 +61,8 @@ public class Claw {
     }
 
     public void pivotBy(double ticks){
-        rotationServo.setPosition(rotationServo.getPosition() + ticks / 2);
+//        rotationServo.setPosition(rotationServo.getPosition() + ticks / 2);
+        rotationServo.setPower(ticks);
     }
 
 }

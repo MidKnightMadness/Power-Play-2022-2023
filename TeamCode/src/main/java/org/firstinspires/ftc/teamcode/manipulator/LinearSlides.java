@@ -99,6 +99,11 @@ public class LinearSlides {
         return new double[] { x, y, height };
     }
 
+    public void setPower(double seesawPower, double extensionPower) {
+        seeSawMotor.setPower(-seesawPower * 0.5);
+        extensionMotor.setPower(-extensionPower);
+    }
+
 
     public void goPointAt(double [] xyzDisplacement){ // Make sure to input 3-array for targeted scoring position!!!!!!!! Will have to get angle of robot once it gets to junction, then correct a second time. This is not a one-time algorithm!!!
         // Actually does everything at the same time, will need to edit based on extension speed (want to minimize extended time for reliability purposes)

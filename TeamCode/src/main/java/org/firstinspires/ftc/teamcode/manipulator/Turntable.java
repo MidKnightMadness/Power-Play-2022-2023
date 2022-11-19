@@ -58,6 +58,10 @@ public class Turntable {
         }
     }
 
+    public void setPower(double power) {
+        tableMotor.setPower(-power);
+    }
+
     public void reset(){ // Don't tangle the wires lol, run this intermittently
         tableMotor.setTargetPosition(0);
         if(tableMotor.getCurrentPosition() < 0){

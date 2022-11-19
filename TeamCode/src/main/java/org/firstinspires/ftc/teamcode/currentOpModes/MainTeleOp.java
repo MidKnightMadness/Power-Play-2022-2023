@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.common.Timer;
 import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
 import org.firstinspires.ftc.teamcode.highlevel.Master;
+import org.firstinspires.ftc.teamcode.manipulator.Claw;
 import org.firstinspires.ftc.teamcode.manipulator.LinearSlides;
 import org.firstinspires.ftc.teamcode.manipulator.Turntable;
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
@@ -38,7 +39,9 @@ public class MainTeleOp extends OpMode {
     MecanumDrive mecanum;
     LinearSlides lift;
     Turntable turntable;
-    Odometry odometry;
+    LinearSlides linearslides;
+    Claw claw;
+//    Odometry odometry;
 
     Timer timer;
     double auxillary;
@@ -70,6 +73,8 @@ public class MainTeleOp extends OpMode {
 //        odometry = new TwoWheelOdometry(hardwareMap);
         lift = new LinearSlides(hardwareMap);
         turntable = new Turntable(hardwareMap);
+        linearslides = new LinearSlides(hardwareMap);
+        claw = new Claw(hardwareMap);
 
 //        accelerometer = Master.hardwaremap.get(AndroidAccelerometer.class, "accelerometer");
 //        accelerometer.setDistanceUnit(DistanceUnit.INCH);
@@ -90,34 +95,47 @@ public class MainTeleOp extends OpMode {
 //        Master.robotSpeed = lengthOf(auxillaryList1) / (time - auxillary);
 
         // DRIVER ASSIST
-//        if (gamepad1.left_bumper && !lastPressedDriveMode) {
-//            driveModeToggle = !driveModeToggle;
-//        }
-//        if (driveModeToggle) {
-//            mecanum.fieldOrientatedDrive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
-//            if (gamepad1.dpad_up) { mecanum.fieldOrientatedDrive(0, -1, 0); }
-//            if (gamepad1.dpad_down) { mecanum.fieldOrientatedDrive(0, 1, 0); }
-//            if (gamepad1.dpad_right) { mecanum.fieldOrientatedDrive(1, 0, 0); }
-//            if (gamepad1.dpad_left) { mecanum.fieldOrientatedDrive(-1, 0, 0); }
-//        } else {
-//            mecanum.drive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x); // normal drive
-//            if (gamepad1.dpad_up) { mecanum.drive(0, -1, 0); }
-//            if (gamepad1.dpad_down) { mecanum.drive(0, 1, 0); }
-//            if (gamepad1.dpad_right) { mecanum.drive(1, 0, 0); }
-//            if (gamepad1.dpad_left) { mecanum.drive(-1, 0, 0); }
-//        }
-//        lastPressedDriveMode = gamepad1.left_bumper;
+        if (gamepad1.left_bumper && !lastPressedDriveMode) {
+            driveModeToggle = !driveModeToggle;
+        }
+        if (driveModeToggle) {
+            mecanum.fieldOrientatedDrive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+            if (gamepad1.dpad_up) { mecanum.fieldOrientatedDrive(0, -1, 0); }
+            if (gamepad1.dpad_down) { mecanum.fieldOrientatedDrive(0, 1, 0); }
+            if (gamepad1.dpad_right) { mecanum.fieldOrientatedDrive(1, 0, 0); }
+            if (gamepad1.dpad_left) { mecanum.fieldOrientatedDrive(-1, 0, 0); }
+        } else {
+            mecanum.drive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x); // normal drive
+            if (gamepad1.dpad_up) { mecanum.drive(0, -1, 0); }
+            if (gamepad1.dpad_down) { mecanum.drive(0, 1, 0); }
+            if (gamepad1.dpad_right) { mecanum.drive(1, 0, 0); }
+            if (gamepad1.dpad_left) { mecanum.drive(-1, 0, 0); }
+        }
+        lastPressedDriveMode = gamepad1.left_bumper;
 
-        turntable.turnBy(gamepad2.left_stick_x / 5);
+//        turntable.turnBy(gamepad2.left_stick_x / 5);
+        turntable.setPower(gamepad2.left_stick_x);
+        linearslides.setPower(gamepad2.left_stick_y, gamepad2.right_stick_y); //seesaw, extension
 
-        claw.pivotBy(-gamepad2.right_stick_y);
+        claw.pivotBy(gamepad2.right_trigger - gamepad2.left_trigger);
+
+        if (gamepad2.right_bumper && !lastClawOpenToggle) {
+            isClawOpenToggle = !isClawOpenToggle;
+        }
+        if (isClawOpenToggle) {
+            claw.openClaw();
+        }
+        else {
+            claw.closeClaw();
+        }
+        lastClawOpenToggle = gamepad2.right_bumper;
 
         telemetry.addData("turntable motor reference", tableMotor);
         telemetry.addData("turntable angle", turntableAngle);
         telemetry.addData("turntable power", tableMotor.getPower());
 
         telemetry.addData("\n claw pivot servo reference", claw.rotationServo);
-        telemetry.addData("claw pivot position", claw.rotationServo.getPosition());
+        telemetry.addData("claw pivot position", claw.rotationServo.getPower());
 
         telemetry.addData("\n claw servo reference", claw.servo);
         telemetry.addData("claw position", claw.servo.getPosition());
