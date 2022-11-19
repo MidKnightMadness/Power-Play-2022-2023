@@ -25,7 +25,7 @@ public class MecanumDrive {
     public DcMotorEx BRMotor;
     public DcMotorEx BLMotor;
 
-    Odometry odometry;
+    private Odometry odometry;
 
     // Temporary:
     public double replacement;
@@ -146,21 +146,26 @@ public class MecanumDrive {
 //    }
 
     public boolean driveToOdometryAlg(double targetX, double targetY, double targetAngle, Telemetry telemetry){ // Probably run this every few ticks
-        odometry.updatePosition();
+        AutonomousNew.odometry.updatePosition();
 
         telemetry.addLine(String.format("Current position from odometry: (%3.2f, %3.2f)",
                 AutonomousNew.currentPosition[0], AutonomousNew.currentPosition[1]));
         telemetry.update();
-        if(//((targetAngle - odometryAlg.orientationAngle) * (targetAngle - odometryAlg.orientationAngle))
-                + ((targetX - AutonomousNew.currentPosition[0]) * (targetX - AutonomousNew.currentPosition[0]))
-                + ((targetY - AutonomousNew.currentPosition[1]) * (targetY - AutonomousNew.currentPosition[1])) > .01) {
 
-            replacement = Math.max(//(targetAngle - odometryAlg.orientationAngle) * (targetAngle - odometryAlg.orientationAngle),
-                    (targetX - AutonomousNew.currentPosition[0]) * (targetX - AutonomousNew.currentPosition[0]),
-                            (targetY - AutonomousNew.currentPosition[1]) * (targetY - AutonomousNew.currentPosition[1]));
+        if(AutonomousNew.currentPosition[1] < 5){
+            fieldOrientatedDrive(0, 1, 0);
 
-            fieldOrientatedDrive((targetX - AutonomousNew.currentPosition[0]) / replacement,
-                    (targetY - AutonomousNew.currentPosition[1]) / replacement, 0); // 0 on rotational component is temporary, needs correction
+
+//        if(//((targetAngle - odometryAlg.orientationAngle) * (targetAngle - odometryAlg.orientationAngle))
+//                + ((targetX - AutonomousNew.currentPosition[0]) * (targetX - AutonomousNew.currentPosition[0]))
+//                + ((targetY - AutonomousNew.currentPosition[1]) * (targetY - AutonomousNew.currentPosition[1])) > .01) {
+
+//            replacement = Math.max(//(targetAngle - odometryAlg.orientationAngle) * (targetAngle - odometryAlg.orientationAngle),
+//                    (targetX - AutonomousNew.currentPosition[0]) * (targetX - AutonomousNew.currentPosition[0]),
+//                            (targetY - AutonomousNew.currentPosition[1]) * (targetY - AutonomousNew.currentPosition[1]));
+
+//            fieldOrientatedDrive((targetX - AutonomousNew.currentPosition[0]) / replacement,
+//                    (targetY - AutonomousNew.currentPosition[1]) / replacement, 0); // 0 on rotational component is temporary, needs correction
             return false;
         }
         return true;
