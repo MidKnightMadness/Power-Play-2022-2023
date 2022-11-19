@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.manipulator.Claw;
 
-@TeleOp("Claw Tester");
+@TeleOp(name = "Claw Tester")
 public class TestClawTemporary  extends OpMode {
     Claw claw;
 
