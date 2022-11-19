@@ -145,7 +145,10 @@ public class MecanumDrive {
 //        return Vector.add(translation, displacement);
 //    }
 
-    public boolean driveToOdometryAlg(double targetX, double targetY, double targetAngle){ // Probably run this every few ticks
+    public boolean driveToOdometryAlg(double targetX, double targetY, double targetAngle, Telemetry telemetry){ // Probably run this every few ticks
+        telemetry.addLine(String.format("Current position from odometry: (%3.2f, %3.2f)",
+                AutonomousNew.currentPosition[0], AutonomousNew.currentPosition[1]));
+        telemetry.update();
         if(//((targetAngle - odometryAlg.orientationAngle) * (targetAngle - odometryAlg.orientationAngle))
                 + ((targetX - AutonomousNew.currentPosition[0]) * (targetX - AutonomousNew.currentPosition[0]))
                 + ((targetY - AutonomousNew.currentPosition[1]) * (targetY - AutonomousNew.currentPosition[1])) > .01) {
