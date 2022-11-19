@@ -58,10 +58,10 @@ public class TwoWheelOdometry implements OdometryVariablesab {
         elapsedTime = new ElapsedTime();
         leftEncoder = hardwareMap.get(DcMotorEx.class, "BR");
         leftEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
 
         rightEncoder = hardwareMap.get(DcMotorEx.class, "BL");
         rightEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void loop() {

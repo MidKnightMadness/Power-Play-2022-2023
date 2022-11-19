@@ -29,11 +29,10 @@ import org.firstinspires.ftc.teamcode.odometry.TwoWheelOdometry;
 @TeleOp(name="Main")
 public class MainTeleOp extends OpMode {
     MecanumDrive mecanum;
-    TestingOdometryAlgorithm odometryAlg;
     LinearSlides lift;
     Turntable turntable;
     TwoWheelOdometry odometry;
-//    HardwareMap hardwareMap;
+
     Timer timer;
     double auxillary;
     double auxillary1;
@@ -61,7 +60,7 @@ public class MainTeleOp extends OpMode {
         auxillaryList2 = new double [] {0.0, 0.0, 0.0};
 
         mecanum = new MecanumDrive(hardwareMap);
-        odometry = new TwoWheelOdometry(hardwareMap);
+//        odometry = new TwoWheelOdometry(hardwareMap);
 //        lift = new LinearSlides(hardwareMap);
 //        turntable = new Turntable(hardwareMap);
 
