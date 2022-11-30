@@ -15,7 +15,22 @@ import com.acmerobotics.roadrunner.trajectory.config.*;
 import com.acmerobotics.roadrunner.trajectory.constraints.*;
 import com.acmerobotics.roadrunner.util.*;
 
+// OpMode, other internal application imports
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 // Intra-project imports
 
-public class RoadrunnerTest {
+@TeleOp(name = "main")
+public class RoadrunnerTest extends OpMode {
+
+    @Override
+    public void init() {
+
+    }
+
+    @Override
+    public void loop() {
+
+    }
 }
