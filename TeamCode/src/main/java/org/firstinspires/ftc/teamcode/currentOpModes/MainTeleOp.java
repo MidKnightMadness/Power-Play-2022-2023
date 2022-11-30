@@ -81,14 +81,12 @@ public class MainTeleOp extends OpMode {
 
     @Override
     public void loop() {
-        timer.updateTime();
-        time = timer.getTime();
-        deltaTime = timer.getDeltaTime();
+//        timer.upxx tDeltaTime();
 
-        Master.tickRate = 1 / (time - auxillary); // auxillary is previous time
-        auxillaryList1[0] = currentPosition[0] - auxillaryList1[0];
-        auxillaryList1[1] = currentPosition[1] - auxillaryList1[1];
-        Master.robotSpeed = lengthOf(auxillaryList1) / (time - auxillary);
+//        Master.tickRate = 1 / (time - auxillary); // auxillary is previous time
+//        auxillaryList1[0] = currentPosition[0] - auxillaryList1[0];
+//        auxillaryList1[1] = currentPosition[1] - auxillaryList1[1];
+//        Master.robotSpeed = lengthOf(auxillaryList1) / (time - auxillary);
 
 //         DRIVER ASSIST
         if (gamepad1.left_bumper && !lastPressedDriveMode) {
@@ -126,7 +124,7 @@ public class MainTeleOp extends OpMode {
 //        lift.pivotBy(gamepad2.left_stick_y / 5);
 //        turntable.turnBy(gamepad2.left_stick_x / 5);
 
-        handleManipulatorControls();
+//        handleManipulatorControls();
         odometry.updatePosition();
 
 
