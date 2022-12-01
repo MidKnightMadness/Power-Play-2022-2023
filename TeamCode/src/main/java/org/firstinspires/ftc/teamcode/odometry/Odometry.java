@@ -98,11 +98,15 @@ public class Odometry implements OdometryVariables {
         deltaRadians = getDeltaRotation(leftDistanceMoved, rightDistanceMoved);
         rotationRadians += deltaRadians;
 
+        {
         // left and right distances component
         netX = ((leftDistanceMoved + rightDistanceMoved) / 2) * Math.cos(rotationRadians);
         netY = ((leftDistanceMoved + rightDistanceMoved) / 2) * Math.sin(rotationRadians);
 
-
+        // third wheel component
+        netX += (topDistanceMoved - (verticalWheelDistance * deltaRadians)) * (-Math.sin(rotationRadians));
+        netY += (topDistanceMoved - (verticalWheelDistance * deltaRadians)) * (Math.cos(rotationRadians));
+    }
 
 //        // true movement
 //        forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0;
@@ -115,9 +119,9 @@ public class Odometry implements OdometryVariables {
 //
 //        netX = forwardMovement * cosine; // + trueLateralMovement * sin;
 //        netY = forwardMovement * sin; // + trueLateralMovement * cosine;
-//
-//        position.y += -netX;
-//        position.x += -netY;
+
+        position.y += -netX;
+        position.x += -netY;
 
         // Temporary
         AutonomousNew.currentPosition[0] += netX;
