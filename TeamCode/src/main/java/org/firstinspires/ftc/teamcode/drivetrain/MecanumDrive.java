@@ -66,7 +66,7 @@ public class MecanumDrive {
 //        BRMotor.setDirection(DcMotor.Direction.FORWARD);
 //        BLMotor.setDirection(DcMotor.Direction.FORWARD);
         FRMotor.setDirection(DcMotor.Direction.REVERSE);
-        FLMotor.setDirection(DcMotor.Direction.FORWARD);
+        FLMotor.setDirection(DcMotor.Direction.REVERSE);
         BRMotor.setDirection(DcMotor.Direction.FORWARD);
         BLMotor.setDirection(DcMotor.Direction.REVERSE);
 
