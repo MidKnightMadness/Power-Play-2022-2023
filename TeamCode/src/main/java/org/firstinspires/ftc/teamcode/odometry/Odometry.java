@@ -102,7 +102,7 @@ public class Odometry implements OdometryVariables {
         forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0;
 
         lateralMovementAdjustor = deltaRadians * verticalWheelDistance;
-        trueLateralMovement = topDistanceMoved + (lateralMovementAdjustor);
+        trueLateralMovement = topDistanceMoved + lateralMovementAdjustor;
 
         sin = Math.sin(rotationRadians);
         cosine = Math.cos(rotationRadians);
