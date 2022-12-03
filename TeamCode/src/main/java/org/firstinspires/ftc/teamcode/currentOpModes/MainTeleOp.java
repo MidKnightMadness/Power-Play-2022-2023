@@ -40,6 +40,8 @@ public class MainTeleOp extends OpMode {
     Turntable turntable;
     Odometry odometry;
 
+    public static double [] currentPosition = {0.0, 0.0};
+
     Timer timer;
     double auxillary;
     double auxillary1;
@@ -67,10 +69,8 @@ public class MainTeleOp extends OpMode {
         auxillaryList2 = new double [] {0.0, 0.0, 0.0};
 
         mecanum = new MecanumDrive(hardwareMap);
-
-
-
         odometry = new Odometry(hardwareMap);
+
 //        odometry = new TwoWheelOdometry(hardwareMap);
 //        lift = new LinearSlides(hardwareMap);
 //        turntable = new Turntable(hardwareMap);
@@ -108,6 +108,11 @@ public class MainTeleOp extends OpMode {
             if (gamepad1.dpad_right) { mecanum.drive(1, 0, 0); }
             if (gamepad1.dpad_left) { mecanum.drive(-1, 0, 0); }
         }
+
+        odometry.updatePosition();
+
+        telemetry.addLine(String.format("Position: [%5.2f, %5.2f]", this.currentPosition[0], currentPosition[1]));
+        telemetry.addData("Angle", odometry.getRotationRadians());
 //        lastPressedDriveMode = gamepad1.left_bumper;
 
 //        turntable.turnBy(gamepad2.left_stick_x / 5);
