@@ -92,6 +92,9 @@ public class MainTeleOp extends OpMode {
 //        Master.robotSpeed = lengthOf(auxillaryList1) / (time - auxillary);
 
 //         DRIVER ASSIST
+
+        double powerMultiplier = 0.25;
+
         if (gamepad1.left_bumper && !lastPressedDriveMode) {
             driveModeToggle = !driveModeToggle;
         }
@@ -103,10 +106,10 @@ public class MainTeleOp extends OpMode {
             if (gamepad1.dpad_left) { mecanum.fieldOrientatedDrive(-1, 0, 0); }
         } else {
             mecanum.drive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x); // normal drive
-            if (gamepad1.dpad_up) { mecanum.drive(0, -1, 0); }
-            if (gamepad1.dpad_down) { mecanum.drive(0, 1, 0); }
-            if (gamepad1.dpad_right) { mecanum.drive(1, 0, 0); }
-            if (gamepad1.dpad_left) { mecanum.drive(-1, 0, 0); }
+            if (gamepad1.dpad_up) { mecanum.drive(0, -powerMultiplier , 0); }
+            if (gamepad1.dpad_down) { mecanum.drive(0, powerMultiplier , 0); }
+            if (gamepad1.dpad_right) { mecanum.drive(powerMultiplier , 0, 0); }
+            if (gamepad1.dpad_left) { mecanum.drive(-powerMultiplier , 0, 0); }
         }
 //        lastPressedDriveMode = gamepad1.left_bumper;
 
