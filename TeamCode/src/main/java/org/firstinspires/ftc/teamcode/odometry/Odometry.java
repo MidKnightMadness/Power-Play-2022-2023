@@ -80,7 +80,6 @@ public class Odometry implements OdometryVariables {
         rightTicks = rightEncoder.getCurrentPosition();
         topTicks = horizontalEncoder.getCurrentPosition();
 
-
         deltaLeftTicks = leftTicks - lastLeftTicks;
         deltaRightTicks = rightTicks - lastRightTicks;
         deltaTopTicks = topTicks - lastTopTicks;
@@ -110,8 +109,8 @@ public class Odometry implements OdometryVariables {
         netX = forwardMovement * cosine; // + trueLateralMovement * sin;
         netY = forwardMovement * sin; // + trueLateralMovement * cosine;
 
-        position.y += -netX;
-        position.x += -netY;
+        position.x -= netX;
+        position.y -= netY;
 
         // Temporary
         AutonomousNew.currentPosition[0] += netX;
