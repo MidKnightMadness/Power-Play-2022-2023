@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.autonomous.AutonomousNew;
+import org.firstinspires.ftc.teamcode.currentOpModes.MainTeleOp;
+import static org.firstinspires.ftc.teamcode.currentOpModes.MainTeleOp.currentPosition;
 
 import java.util.concurrent.TimeUnit;
 
@@ -105,7 +107,7 @@ public class Odometry implements OdometryVariables {
         // third wheel component
         netX += (topDistanceMoved - (verticalWheelDistance * deltaRadians)) * (-Math.sin(rotationRadians));
         netY += (topDistanceMoved - (verticalWheelDistance * deltaRadians)) * (Math.cos(rotationRadians));
-    }
+        }
 
 //        // true movement
 //        forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0;
@@ -126,6 +128,8 @@ public class Odometry implements OdometryVariables {
         AutonomousNew.currentPosition[0] += netX;
         AutonomousNew.currentPosition[1] += netY;
 
+        MainTeleOp.currentPosition[0] += netX;
+        MainTeleOp.currentPosition[1] += netY;
 
         velocity.x = netX / deltaTime;
         velocity.y = netY / deltaTime;
