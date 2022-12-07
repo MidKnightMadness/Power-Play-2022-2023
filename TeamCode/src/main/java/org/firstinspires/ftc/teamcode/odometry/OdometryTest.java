@@ -48,9 +48,9 @@ public class OdometryTest extends OpMode implements OdometryVariables{
 
     ElapsedTime elapsedTime;
 
-    DcMotorEx leftEncoder;
-    DcMotorEx horizontalEncoder;
-    DcMotorEx rightEncoder;
+    public DcMotorEx leftEncoder;
+    public DcMotorEx horizontalEncoder;
+    public DcMotorEx rightEncoder;
 
     @Override
     public void init() {

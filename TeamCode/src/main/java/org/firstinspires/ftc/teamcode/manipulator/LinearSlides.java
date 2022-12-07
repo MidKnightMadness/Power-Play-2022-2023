@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.autonomous.Autonomous;
+import org.firstinspires.ftc.teamcode.autonomous.AutonomousNew;
+import org.firstinspires.ftc.teamcode.currentOpModes.MainTeleOp;
 import org.firstinspires.ftc.teamcode.drivetrain.*;
 import java.math.*;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -15,6 +17,7 @@ import static org.firstinspires.ftc.teamcode.highlevel.Master.odometryAlg;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.turntable;
 import static org.firstinspires.ftc.teamcode.manipulator.Turntable.turntableAngle; // Remove this in final version
 import org.firstinspires.ftc.teamcode.manipulator.Claw;
+
 
 public class LinearSlides {
     public static DcMotorEx seeSawMotor;
@@ -115,7 +118,22 @@ public class LinearSlides {
         }else{
             angleDisplacement = Math.atan(displacement[1] / displacement[0]);
         }
-        turntable.turnTo(angleDisplacement);
+
+
+        if(AutonomousNew.mecanumDrive == null){ // For teleOp
+            while(!(Math.abs(angleDisplacement - AutonomousNew.odometry.getRotationRadians()) < 0.1)){
+                if(angleDisplacement >= AutonomousNew.odometry.getRotationRadians()){
+                    AutonomousNew.mecanumDrive.fieldOrientatedDrive(0.0, 0.0, 0.8);
+                }else{
+                    AutonomousNew.mecanumDrive.fieldOrientatedDrive(0.0, 0.0, -0.8);
+                }
+
+                AutonomousNew.odometry.updatePosition();
+            }
+
+        }/*else{ // For teleop
+            MainTeleOp.mecanum.fieldOrientatedDrive(0.0, 0.0, 0.8 * );
+        }*/
 
         // Pivot seesaw up / down to desired position. Due to the behavior described in the previous step, this step (for now) doesn't have to account for swinging beyond 90˚ vertical
         /*

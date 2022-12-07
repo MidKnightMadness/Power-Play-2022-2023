@@ -25,6 +25,18 @@ public class MecanumDrive {
     public DcMotorEx BRMotor;
     public DcMotorEx BLMotor;
 
+    // Control smoothing
+    static final double latencyForSmoothing = 0.5;
+    double [] smoothControlsRecursively(double previousX, double previousY, double xInput, double yInput){
+        double [] newControls = {0.0, 0.0};
+
+        newControls[0] = previousX * latencyForSmoothing + xInput * (1 - latencyForSmoothing);
+        newControls[1] = previousY * latencyForSmoothing + yInput * (1 - latencyForSmoothing);
+
+        return newControls;
+    }
+
+
     private Odometry odometry;
 
     // Temporary:
@@ -120,6 +132,7 @@ public class MecanumDrive {
         BLMotor.setPower(-x + y + rotate);
     }
 
+    private final double SENSITIVITY = 0.5;
     public void fieldOrientatedDrive(double x, double y, double rotate) {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         gyro_degrees = angles.firstAngle;
@@ -136,7 +149,7 @@ public class MecanumDrive {
         correctedX = Math.cos(-gyro_radians + offAngle);
         correctedY = Math.sin(-gyro_radians + offAngle);
 
-        drive(correctedX, correctedY, rotate);
+        drive(correctedX * SENSITIVITY, correctedY * SENSITIVITY, rotate * SENSITIVITY);
     }
 
 //    public static double sensitivity = 5.0; // "Steepness" of gradient vectors
@@ -223,5 +236,6 @@ public class MecanumDrive {
         telemetry.addData("Corrected Y", correctedY);
         telemetry.addData("First Angle", angles.firstAngle);
     }
+
 
 }

@@ -35,10 +35,10 @@ import org.firstinspires.ftc.teamcode.odometry.TwoWheelOdometry;
 
 @TeleOp(name="Main")
 public class MainTeleOp extends OpMode {
-    MecanumDrive mecanum;
+    public static MecanumDrive mecanum;
     LinearSlides lift;
     Turntable turntable;
-    Odometry odometry;
+    public static Odometry odometry;
 
     public static double [] currentPosition = {0.0, 0.0};
 

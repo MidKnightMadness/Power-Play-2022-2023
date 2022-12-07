@@ -4,6 +4,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -52,9 +53,9 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
     Timer coneTimer;
 
-    MecanumDrive mecanum;
+
     Odometry odometry;
-    MecanumDrive mecanumDrive;
+    static MecanumDrive mecanumDrive;
 
     private BNO055IMU imu;
     Orientation angles;
@@ -87,7 +88,9 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
         telemetry.setAutoClear(false);
-        mecanum = new MecanumDrive(hardwareMap);
+
+        mecanumDrive = new MecanumDrive(hardwareMap);
+
         // odometry = new Odometry(hardwareMap);
         camera.setPipeline(aprilTagDetectionPipeline);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
@@ -104,6 +107,11 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
                 telemetry.addData("ERROR", "Error code" + errorCode);
             }
         });
+
+        // Resetting positions for odometry
+        odometry.horizontalEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        odometry.rightEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        odometry.leftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
     }
 
@@ -156,7 +164,9 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         signalLocationX = signalLocations[startingPos][mostRecentDetection - 1].x;
         signalLocationY = signalLocations[startingPos][mostRecentDetection - 1].y;
 
-        goToPosition(6, 6);
+        // Testing autonomous
+        goToPosition(0, 12, 0);
+        goToPosition(0, 0, 0);
 
 //        goToScoringLocation();
 //        linearSlides.scoreFromDefaultScoringPosition();

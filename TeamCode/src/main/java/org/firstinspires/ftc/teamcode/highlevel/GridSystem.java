@@ -11,6 +11,7 @@ import static org.firstinspires.ftc.teamcode.highlevel.Master.turntable;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.turntableAngle;
 import static org.firstinspires.ftc.teamcode.manipulator.LinearSlides.ROOT_HEIGHT;
 
+import org.firstinspires.ftc.teamcode.currentOpModes.MainTeleOp;
 import org.firstinspires.ftc.teamcode.highlevel.*;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.manipulator.DoubleReverse4Bar;
@@ -23,7 +24,7 @@ import org.firstinspires.ftc.teamcode.drivetrain.*;
 
 public class GridSystem {
     private static double [] auxillary3d; // Use currentPosition if needed, but should pre-calculate during transition
-    private static double [] auxillary2d;
+
 
     // 2 "local" variables to deal with internal calculations
     private static double djskjsjksskjkj;
@@ -31,26 +32,28 @@ public class GridSystem {
     
     public GridSystem(){
         auxillary3d = new double [] {0.0, 0.0, 0.0};
-        auxillary2d = new double [] {0.0, 0.0};
         djskjsjksskjkj = 0.0; // For the sake of not repeating names ;)
     }
     
     final static double[][] junctionHeights = { // Matrix format, A[i][j], ith column, jth row; inches
-            { 1.0,   14.5,  1.0,   14.5,  1.0 }, // 0,0 at top left ig for convenience due to symmetry
+            // *12-6-22 Mike added 3.0 in. to all junction heights for position of end of arm
+            // (shorter than claw effective distance)
 
-            { 14.5,  24.5,  34.5,  24.5,  14.5 },
+            { 4.0,   17.5,  4.0,   17.5,  4.0 }, // 0,0 at top left ig for convenience due to symmetry
 
-            { 1.0,   34.5,  1.0,   34.5,  1.0 },
+            { 17.5,  27.5,  37.5,  27.5,  17.5 },
 
-            { 14.5,  24.5,  34.5,  24.5,  14.5 },
+            { 4.0,   37.5,  4.0,   37.5,  4.0 },
 
-            { 1.0,   14.5,  1.0,   14.5,  1.0 },
+            { 17.5,  27.5,  37.5,  27.5,  17.5 },
+
+            { 4.0,   17.5,  4.0,   17.5,  4.0 },
 
     };
 
-    public static double [] closestJunctionDisplacement(){ // Returns 3d displacement vector to be inputed to move methods
+    public static double [] closestJunctionDisplacement(double currentX, double currentY){ // Returns 3d displacement vector to be inputed to move methods
         odometryAlg.updateOrientationAndLocation();
-        auxillary2d = currentPosition;
+        double [] auxillary2d = {currentX, currentY}; // Change
 
         auxillary3d[0] = auxillary2d[0] - (23.50 * (Math.round(auxillary2d[0] / 23.50)));
         auxillary3d[1] = auxillary2d[1] - (23.50 * (Math.round(auxillary2d[1] / 23.50)));
@@ -60,9 +63,11 @@ public class GridSystem {
         return auxillary3d;
     } // Ready for input into "pointAt"
 
-    public static double [] pointAtJunction(){ // Returns 3d array with hor. angle target, vert. angle target, and extension length
-        odometryAlg.updateOrientationAndLocation();
-        auxillary2d = currentPosition;
+    // Revise for backwards scoring!
+    // Let's probably modify this into something to input into the pointAt function, still relative to center of original turntable
+    public static double [] pointAtJunction(double currentX, double currentY){ // Returns 3d array with hor. angle target, vert. angle target, and extension length
+        MainTeleOp.odometry.updatePosition();
+        double [] auxillary2d = {currentX, currentY};
         // Holding down a key continuously aims at the same junction, with small adjustments to compensate
         // This method just locks onto a junction
 
@@ -210,6 +215,11 @@ public class GridSystem {
 
         return auxillary3d;
     } // Still need to input to motors
+
+    // Modified version for backwards scoring, outputs target angles and extensions in array
+    static double [] scoringAdjustments(double currentX, double currentY, double targetX){
+        return null;
+    }
 }
 
 
