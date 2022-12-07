@@ -77,9 +77,7 @@ public class MecanumDrive {
         BRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         BLMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        // Se
-        //
-        // t Zero Power Behavior
+        // Set Zero Power Behavior
         FRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FLMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -111,8 +109,8 @@ public class MecanumDrive {
     public void drive(double x, double y, double rotate) {
         FRMotor.setPower(-x + y - rotate);
         FLMotor.setPower( x + y + rotate);
-        BRMotor.setPower( x - y - rotate);
-        BLMotor.setPower(-x - y + rotate);
+        BRMotor.setPower( x + y - rotate);
+        BLMotor.setPower(-x + y + rotate);
     }
 
     private final double SENSITIVITY = 0.5;
