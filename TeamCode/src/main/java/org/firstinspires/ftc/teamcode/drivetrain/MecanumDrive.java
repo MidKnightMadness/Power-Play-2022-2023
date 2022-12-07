@@ -25,17 +25,6 @@ public class MecanumDrive {
     public DcMotorEx BRMotor;
     public DcMotorEx BLMotor;
 
-    // Control smoothing
-    static final double latencyForSmoothing = 0.5;
-    double [] smoothControlsRecursively(double previousX, double previousY, double xInput, double yInput){
-        double [] newControls = {0.0, 0.0};
-
-        newControls[0] = previousX * latencyForSmoothing + xInput * (1 - latencyForSmoothing);
-        newControls[1] = previousY * latencyForSmoothing + yInput * (1 - latencyForSmoothing);
-
-        return newControls;
-    }
-
 
     private Odometry odometry;
 

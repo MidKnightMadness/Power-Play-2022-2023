@@ -270,9 +270,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
     }
 
     void goToPosition(int targetX, int targetY) {
-        boolean atLocation = false;
-        while (!atLocation) {
-            atLocation = mecanumDrive.driveTo(targetX, targetY, 0);
+        while (mecanumDrive.driveTo(targetX, targetY, 0)) {
         }
 
     }

@@ -4,15 +4,15 @@ import org.firstinspires.ftc.teamcode.odometry.Vector2;
 
 public interface fieldData {
     final static double[][] junctionHeights = { // Matrix format, A[i][j], ith column, jth row; inches
-            { 1.0,   14.5,  1.0,   14.5,  1.0 },
+            { 4.0,   17.5,  4.0,   17.5,  4.0 }, // 0,0 at top left ig for convenience due to symmetry
 
-            { 14.5,  24.5,  34.5,  24.5,  14.5 },
+            { 17.5,  27.5,  37.5,  27.5,  17.5 },
 
-            { 1.0,   34.5,  1.0,   34.5,  1.0 },
+            { 4.0,   37.5,  4.0,   37.5,  4.0 },
 
-            { 14.5,  24.5,  34.5,  24.5,  14.5 },
+            { 17.5,  27.5,  37.5,  27.5,  17.5 },
 
-            { 1.0,   14.5,  1.0,   14.5,  1.0 },
+            { 4.0,   17.5,  4.0,   17.5,  4.0 },
 
     };
 
