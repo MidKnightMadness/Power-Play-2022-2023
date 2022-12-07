@@ -23,6 +23,7 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -43,6 +44,7 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 import java.util.ArrayList;
 
 @Autonomous (name = "New Autonomous")
+@Disabled
 public class AutonomousNew extends LinearOpMode
 {
     OpenCvCamera camera;
@@ -239,7 +241,7 @@ public class AutonomousNew extends LinearOpMode
         atLocation = false;
         while (!atLocation) {
             odometry.updatePosition();
-//            atLocation = mecanumDrive.driveToOdometryAlg(targetX, targetY, targetAngle, odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationDegrees(), telemetry);
+            atLocation = mecanumDrive.driveTo(targetX, targetY, targetAngle, odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationDegrees());
 
             telemetry.addLine(String.format("Current Coordinates: (%3.2f, %3.2f, %3.2f)", odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationDegrees()));
             telemetry.addLine(String.format("Target Coordinates: (%3.2f, %3.2f, %3.2f)", targetX, targetY, targetAngle));

@@ -28,9 +28,6 @@ public class MecanumDrive {
 
     private Odometry odometry;
 
-    // Temporary:
-    public double replacement;
-
     // Order for power values: FL, FR, RL, RR
     // Make sure to normalize power values 0 to 1
 
@@ -133,13 +130,23 @@ public class MecanumDrive {
         drive(correctedX * SENSITIVITY, correctedY * SENSITIVITY, rotate * SENSITIVITY);
     }
 
-    public boolean driveTo(double targetX, double targetY, double targetAngle){
-        if(invSqrt(((targetAngle) * odometry.getRotationDegrees()) +
-                      ((targetX - odometry.getXCoordinate()) * (targetX - odometry.getXCoordinate())) +
-                      ((targetY - odometry.getYCoordinate()) * (targetY - odometry.getYCoordinate()))) > 10) {
-            fieldOrientatedDrive(targetX - odometry.getXCoordinate(), targetY - odometry.getYCoordinate(), targetAngle - odometry.getRotationDegrees());
+    double replacement;
+
+    public boolean driveTo(double targetX, double targetY, double targetAngle, double currentX, double currentY, double currentAngle){
+        if(((targetX - currentX) * (targetX - currentX)) + ((targetY - currentY) * (targetY - currentY)) > 1 ||
+            (targetAngle - currentAngle) * (targetAngle - currentAngle) > 10) {
+
+            replacement = Math.max(Math.abs(targetX - currentX), Math.abs(targetY - currentY));
+
+            fieldOrientatedDrive((targetX - currentX) / replacement, (targetY - currentY) / replacement, (targetAngle-currentAngle) / 360); // 0 on rotational component is temporary, needs correction
+
+//            FRMotor.setPower(-0 + -((targetY - currentY) / replacement) * 0.1 - 0);
+//            FLMotor.setPower( 0 + -((targetY - currentY) / replacement) * 0.1 + 0);
+//            BRMotor.setPower( 0 + -((targetY - currentY) / replacement) * 0.1 - 0);
+//            BLMotor.setPower(-0 + -((targetY - currentY) / replacement) * 0.1 + 0);
             return false;
         }
+        fieldOrientatedDrive(0, 0, 0);
         return true;
     }
 
