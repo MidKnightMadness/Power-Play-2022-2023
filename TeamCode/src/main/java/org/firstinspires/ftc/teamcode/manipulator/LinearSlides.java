@@ -108,19 +108,20 @@ public class LinearSlides {
     }
 
 
+    private static final double MANIPULATOR_BACKSET_DISTANCE = 3.5;
     public void goPointAt(double [] xyzDisplacement){ // Make sure to input 3-array for targeted scoring position!!!!!!!! Will have to get angle of robot once it gets to junction, then correct a second time. This is not a one-time algorithm!!!
         // Actually does everything at the same time, will need to edit based on extension speed (want to minimize extended time for reliability purposes)
         displacement = xyzDisplacement; // Screw it I don't wanna run the method over and over haha
         //  Note: displacement from pivot point of linear slide
         // Move turntable, note that this will turn the turntable 180˚ back if target is behind the pivot, will need to account for ability to swing beyond 90˚ vertical (behind) later
         if(displacement[0] <= 0){ // Getting displacement angle
-            angleDisplacement = Math.PI - Math.atan(displacement[1] / displacement[0]); // Might wanna use taylor series to approximate atan later since calculation times are gonna be annoying
+            angleDisplacement = Math.PI + Math.atan(displacement[1] / displacement[0]); // Might wanna use taylor series to approximate atan later since calculation times are gonna be annoying
         }else{
             angleDisplacement = Math.atan(displacement[1] / displacement[0]);
         }
 
 
-        if(AutonomousNew.mecanumDrive == null){ // For teleOp
+        if(!(AutonomousNew.mecanumDrive == null)){ // For autonomous
             while(!(Math.abs(angleDisplacement - AutonomousNew.odometry.getRotationRadians()) < 0.1)){
                 if(angleDisplacement >= AutonomousNew.odometry.getRotationRadians()){
                     AutonomousNew.mecanumDrive.fieldOrientatedDrive(0.0, 0.0, 0.8);
@@ -142,15 +143,26 @@ public class LinearSlides {
         /\_| <- Angle
          */
 
-//        if(angleDisplacement){ // Case backwards scoring
-//
-//        }else{
-//
-//        }
-        this.pivotTo(Math.atan(displacement[3] / invSqrt(displacement[0]*displacement[0] + displacement[1]*displacement[1])) - odometryAlg.orientationAngle);
+        if(AutonomousNew.mecanumDrive == null){ // Case teleOp
+            if(Math.abs(angleDisplacement - MainTeleOp.odometry.getRotationRadians()) > Math.PI){ // Case backwards scoring
+
+            }else{
+                this.pivotTo(Math.PI + Math.atan(displacement[3] /
+                        Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + displacement[0]*displacement[0] + displacement[1]*displacement[1])));
+            }
+        }else{
+            if(Math.abs(angleDisplacement - AutonomousNew.odometry.getRotationRadians()) > Math.PI){ // Case backwards scoring
+                this.pivotTo(Math.PI + Math.atan(displacement[3] /
+                        Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + displacement[0]*displacement[0] + displacement[1]*displacement[1])));
+            }else{
+                this.pivotTo(Math.atan(displacement[3] /
+                        Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + displacement[0]*displacement[0] + displacement[1]*displacement[1])));
+            }
+        }
 
         // Extend
-        this.extendTo(Math.sqrt(displacement[0]*displacement[0] + displacement[1]*displacement[1] + displacement[2]*displacement[2]));
+        this.extendTo(Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + // Added to accomodate backset manipulator
+                displacement[0]*displacement[0] + displacement[1]*displacement[1] + displacement[2]*displacement[2]));
     }
 
     public void extendTo(double target){ // Inches
