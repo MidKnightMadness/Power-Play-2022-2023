@@ -141,6 +141,12 @@ public class LinearSlides {
          / |
         /\_| <- Angle
          */
+
+//        if(angleDisplacement){ // Case backwards scoring
+//
+//        }else{
+//
+//        }
         this.pivotTo(Math.atan(displacement[3] / invSqrt(displacement[0]*displacement[0] + displacement[1]*displacement[1])) - odometryAlg.orientationAngle);
 
         // Extend
