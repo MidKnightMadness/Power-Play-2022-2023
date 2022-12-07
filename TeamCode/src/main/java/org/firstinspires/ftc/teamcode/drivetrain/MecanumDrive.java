@@ -71,12 +71,6 @@ public class MecanumDrive {
         BRMotor.setDirection(DcMotor.Direction.FORWARD);
         BLMotor.setDirection(DcMotor.Direction.REVERSE);
 
-        // For vector drive testing
-//        FRMotor.setDirection(DcMotor.Direction.FORWARD);
-//        FLMotor.setDirection(DcMotor.Direction.FORWARD);
-//        BRMotor.setDirection(DcMotor.Direction.FORWARD);
-//        BLMotor.setDirection(DcMotor.Direction.FORWARD);
-
         // Set Motor Mode
         FRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         FLMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -141,43 +135,6 @@ public class MecanumDrive {
         drive(correctedX * SENSITIVITY, correctedY * SENSITIVITY, rotate * SENSITIVITY);
     }
 
-//    public static double sensitivity = 5.0; // "Steepness" of gradient vectors
-//    public double [] correct(){
-//        odometryAlg.updateOrientationAndLocation();
-//        displacement[0] = -sensitivity * ((currentPosition[0] % 23.50) - 11.75);
-//        displacement[1] = -sensitivity * ((currentPosition[1] % 23.50) - 11.75);
-//
-//        return Vector.add(translation, displacement);
-//    }
-
-    public boolean driveToOdometryAlg(double targetX, double targetY, double targetAngle, double currentX, double currentY, double currentAngle, Telemetry telemetry){ // Probably run this every few ticks
-
-//        if(currentX < 5){
-//            fieldOrientatedDrive(0, 0.25, 0);
-
-        telemetry.addLine(String.format("replacement = Math.max(%3.2f, %3.2f)", (targetX - currentX) * (targetX - currentX), (targetY - currentY) * (targetY - currentY)));
-        telemetry.addLine(String.format("replacement = %3.2f", replacement));
-        telemetry.addLine(String.format("fieldOrientatedDrive(%3.2f, %3.2f, %3.2f)", (targetX - currentX) / replacement, (targetY - currentY) / replacement, (targetAngle - currentAngle) / 360));
-
-        if(((targetX - currentX) * (targetX - currentX)) + ((targetY - currentY) * (targetY - currentY)) > 1 &&
-            (targetAngle - currentAngle) * (targetAngle - currentAngle) > 10) {
-
-            replacement = Math.max(Math.abs(targetX - currentX), Math.abs(targetY - currentY));
-
-
-            fieldOrientatedDrive(((targetX - currentX) / replacement), ((targetY - currentY) / replacement), ((targetAngle-currentAngle) / 360)); // 0 on rotational component is temporary, needs correction
-
-//            FRMotor.setPower(-0 + -((targetY - currentY) / replacement) * 0.1 - 0);
-//            FLMotor.setPower( 0 + -((targetY - currentY) / replacement) * 0.1 + 0);
-//            BRMotor.setPower( 0 + -((targetY - currentY) / replacement) * 0.1 - 0);
-//            BLMotor.setPower(-0 + -((targetY - currentY) / replacement) * 0.1 + 0);
-            //((targetX - currentX) / replacement) * 0.1
-            return false;
-        }
-        fieldOrientatedDrive(0, 0, 0);
-        return true;
-    }
-
     public boolean driveTo(double targetX, double targetY, double targetAngle){
         if(invSqrt(((targetAngle) * odometry.getRotationDegrees()) +
                       ((targetX - odometry.getXCoordinate()) * (targetX - odometry.getXCoordinate())) +
@@ -186,32 +143,6 @@ public class MecanumDrive {
             return false;
         }
         return true;
-    }
-
-    public void setPosition(int x, int y, int rotate) {
-        FRMotor.setTargetPosition(-x + y - rotate + FRMotor.getCurrentPosition());
-        FLMotor.setTargetPosition( x + y + rotate + FLMotor.getCurrentPosition());
-        BRMotor.setTargetPosition( x + y - rotate + BRMotor.getCurrentPosition());
-        BLMotor.setTargetPosition(-x + y + rotate + BLMotor.getCurrentPosition());
-
-        FRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        FLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        BRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        BLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        FRMotor.setPower(0.5);
-        FLMotor.setPower(0.5);
-        BRMotor.setPower(0.5);
-        BLMotor.setPower(0.5);
-
-        while(FRMotor.isBusy() && FLMotor.isBusy() && BRMotor.isBusy() && BLMotor.isBusy()) {}
-    }
-
-    @Deprecated
-    public static void setVelocities(DcMotorEx [] motors, double [] vector){
-        for(int i = 0; i < vector.length; i++){
-            motors[i].setVelocity(vector[i] * MAX);
-        }
     }
 
     public void telemetry(Telemetry telemetry) {

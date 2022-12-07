@@ -28,7 +28,7 @@ import org.firstinspires.ftc.teamcode.common.Timer;
 import org.firstinspires.ftc.teamcode.odometry.Vector2;
 
 import java.util.ArrayList;
-
+//阿莫古斯
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
 public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpConeData
 {
@@ -124,12 +124,8 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 
         ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
-//        tagToTelemetry(currentDetections);
-
         if (currentDetections.size() != 0)
         {
-            boolean tagFound = false;
-
             for(AprilTagDetection tag : currentDetections)
             {
                 if(tag.id == 1 || tag.id == 2 || tag.id == 3)
@@ -138,18 +134,9 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
                     mostRecentDetection = tag.id;
                     tagOfInterest = tag;
                     tagToTelemetry(tagOfInterest);
-                    tagFound = true;
                 }
-//                telemetry.addData("Signal location", tag.id);
-//                telemetry.addData("Tag Found", tagFound);
             }
         }
-        i++;
-        telemetry.addData("Latest Detections Size", aprilTagDetectionPipeline.getLatestDetections().size());
-//        telemetry.addData("Signal location", currentDetections.get(0).id);
-        telemetry.addData("Signal location", mostRecentDetection);
-        telemetry.addData("Signal finds", signalFinds);
-
         telemetry.update();
     }
 
@@ -169,8 +156,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         signalLocationY = signalLocations[startingPos][mostRecentDetection - 1].y;
 
         // Testing autonomous
-        goToPosition(0, 12);
-        goToPosition(0, 0);
+        goToPosition(0, 12, 0);
 
 //        goToScoringLocation();
 //        linearSlides.scoreFromDefaultScoringPosition();
