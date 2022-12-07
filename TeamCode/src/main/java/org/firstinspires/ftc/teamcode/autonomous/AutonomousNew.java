@@ -239,7 +239,7 @@ public class AutonomousNew extends LinearOpMode
         atLocation = false;
         while (!atLocation) {
             odometry.updatePosition();
-            atLocation = mecanumDrive.driveToOdometryAlg(targetX, targetY, targetAngle, odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationDegrees(), telemetry);
+//            atLocation = mecanumDrive.driveToOdometryAlg(targetX, targetY, targetAngle, odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationDegrees(), telemetry);
 
             telemetry.addLine(String.format("Current Coordinates: (%3.2f, %3.2f, %3.2f)", odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationDegrees()));
             telemetry.addLine(String.format("Target Coordinates: (%3.2f, %3.2f, %3.2f)", targetX, targetY, targetAngle));
