@@ -55,9 +55,7 @@ public class Claw {
 
     public void waitForOpenClaw() {
         this.openClaw();
-        while (servo.getPosition() < servo.MAX_POSITION) {
-            continue;
-        }
+        while (servo.getPosition() < servo.MAX_POSITION) { }
     }
 
     public void pivotBy(double ticks){
