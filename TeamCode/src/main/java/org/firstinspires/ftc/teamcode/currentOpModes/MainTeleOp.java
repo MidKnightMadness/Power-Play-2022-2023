@@ -63,10 +63,10 @@ public class MainTeleOp extends OpMode {
     @Override
     public void init() {
         timer = new Timer();
-        auxillary = 0.0;
-        auxillary1 = 0.0;
-        auxillaryList1 = new double [] {0.0, 0.0};
-        auxillaryList2 = new double [] {0.0, 0.0, 0.0};
+//        auxillary = 0.0;
+//        auxillary1 = 0.0;
+//        auxillaryList1 = new double [] {0.0, 0.0};
+//        auxillaryList2 = new double [] {0.0, 0.0, 0.0};
 
         mecanum = new MecanumDrive(hardwareMap);
         odometry = new Odometry(hardwareMap);

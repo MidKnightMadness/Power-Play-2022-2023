@@ -128,8 +128,8 @@ public class MecanumDrive {
     public void drive(double x, double y, double rotate) {
         FRMotor.setPower(-x + y - rotate);
         FLMotor.setPower( x + y + rotate);
-        BRMotor.setPower( x + y - rotate);
-        BLMotor.setPower(-x + y + rotate);
+        BRMotor.setPower( x - y - rotate);
+        BLMotor.setPower(-x - y + rotate);
     }
 
     private final double SENSITIVITY = 0.5;

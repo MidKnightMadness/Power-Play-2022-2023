@@ -53,8 +53,7 @@ import java.util.List;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@Autonomous(name = "Autonomous New New New", group = "Concept")
-@Disabled
+@Autonomous(name = "Autonomous New New New")
 public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
 
 
@@ -137,12 +136,11 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
         /** Wait for the game to begin */
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
-        waitForStart();
 
         String label = "";
 
 //        if (opModeIsActive()) {
-            while (opModeIsActive()) {
+        while (!isStarted() && !isStopRequested()) {
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
@@ -184,26 +182,27 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
         }
 
         /* Actually do something useful */
-        if(label == null || label == "1 Bolt"){ // Modify Targets
-            telemetry.addLine("Going to first position (5 in)");
-            telemetry.update();
+//        if(label == null || label == "1 Bolt"){ // Modify Targets
+//            telemetry.addLine("Going to first position (5 in)");
+//            telemetry.update();
+//
+//            goToPosition(0, 12, 0);
+//
+//        }else if(label == "2 Bulb"){
+//            telemetry.addLine("Going to first position (10 in)");
+//            telemetry.update();
+//            goToPosition(0, 12, 0);
+//
+//        }else{
+//            telemetry.addLine("Going to first position (15 in)");
+//            telemetry.update();
+//
+//            goToPosition(0, 12, 0);
+//            goToPosition(12, 12, 0);
+//
+//        }
 
-            goToPosition(0, 12, 0);
-            goToPosition(-12, 12, 0);
-
-        }else if(label == "2 Bulb"){
-            telemetry.addLine("Going to first position (10 in)");
-            telemetry.update();
-            goToPosition(0, 12, 0);
-
-        }else{
-            telemetry.addLine("Going to first position (15 in)");
-            telemetry.update();
-
-            goToPosition(0, 12, 0);
-            goToPosition(12, 12, 0);
-
-        }
+        goToPosition(0, 12, 0);
     }
 
     boolean atLocation = false;

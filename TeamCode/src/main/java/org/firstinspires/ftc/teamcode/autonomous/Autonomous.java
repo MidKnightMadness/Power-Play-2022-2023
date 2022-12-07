@@ -235,11 +235,11 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
     }
 
     void goToScoringLocation() {
-        goToPosition((int) scoringLocation.x, (int) scoringLocation.y);
+        goToPosition((int) scoringLocation.x, (int) scoringLocation.y, 0);
     }
 
     void goToConeStack() {
-        goToPosition((int) coneStackLocation.x, (int) scoringLocation.y);
+        goToPosition((int) coneStackLocation.x, (int) scoringLocation.y, 0);
     }
 
 
@@ -259,16 +259,16 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         int directionY = posY < targetY ? 1 : 0;
         int centerY = (int) (Math.floor(posY / 12d) + directionY) * 12;
 
-        goToPosition(centerX, posY);
-        goToPosition(centerX, centerY);
-        goToPosition(centerX, targetY);
-        goToPosition(targetX, targetY);
+        goToPosition(centerX, posY, 0);
+        goToPosition(centerX, centerY, 0);
+        goToPosition(centerX, targetY, 0);
+        goToPosition(targetX, targetY, 0);
     }
 
-    void goToPosition(int targetX, int targetY) {
+    void goToPosition(int targetX, int targetY, int targetAngle) {
         boolean atLocation = false;
         while (!atLocation) {
-            atLocation = mecanumDrive.driveTo(targetX, targetY, 0);
+            atLocation = mecanumDrive.driveTo(targetX, targetY, targetAngle);
         }
 
     }
