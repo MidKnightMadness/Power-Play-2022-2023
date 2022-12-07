@@ -148,6 +148,8 @@ public class MainTeleOp extends OpMode {
         if (driveModeToggle) {
             mecanum.fieldOrientatedDrive(currentInputs[0] * powerMultiplier,
                     -currentInputs[1] * powerMultiplier, gamepad1.right_stick_x * powerMultiplier);
+
+
             if (gamepad1.dpad_up) { mecanum.fieldOrientatedDrive(0, -1, 0); }
             if (gamepad1.dpad_down) { mecanum.fieldOrientatedDrive(0, 1, 0); }
             if (gamepad1.dpad_right) { mecanum.fieldOrientatedDrive(1, 0, 0); }
@@ -155,6 +157,8 @@ public class MainTeleOp extends OpMode {
         } else {
             mecanum.drive(currentInputs[0] * powerMultiplier, -currentInputs[1] * powerMultiplier,
                     gamepad1.right_stick_x * powerMultiplier); // normal drive
+
+
             if (gamepad1.dpad_up) { mecanum.drive(0, -1 , 0); }
             if (gamepad1.dpad_down) { mecanum.drive(0, 1 , 0); }
             if (gamepad1.dpad_right) { mecanum.drive(1, 0, 0); }
