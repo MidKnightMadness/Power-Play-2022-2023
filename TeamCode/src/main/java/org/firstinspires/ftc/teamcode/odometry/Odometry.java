@@ -168,7 +168,7 @@ public class Odometry implements OdometryVariables {
     public String positionToString() {return String.format("(%f, %f)", position.x, position.y); }
 
     public void telemetry(Telemetry telemetry) {
-        telemetry.addLine("\nTWO WHEEL ODOMETRY");
+        telemetry.addLine("\nTHREE WHEEL ODOMETRY");
 
         telemetry.addLine(String.valueOf(deltaTime));
 

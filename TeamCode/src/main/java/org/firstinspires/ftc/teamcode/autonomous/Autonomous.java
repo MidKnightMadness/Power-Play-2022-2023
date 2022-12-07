@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import static org.firstinspires.ftc.teamcode.highlevel.Master.invSqrt;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -92,8 +94,8 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 //        telemetry.setAutoClear(false);
 
         mecanumDrive = new MecanumDrive(hardwareMap);
+        odometry = new Odometry(hardwareMap);
 
-        // odometry = new Odometry(hardwareMap);
         camera.setPipeline(aprilTagDetectionPipeline);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
@@ -117,7 +119,6 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 
     }
 
-    int i = 0;
     @Override
     public void init_loop() {
         coneTimer.getTime();
@@ -126,6 +127,8 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 
         if (currentDetections.size() != 0)
         {
+            boolean tagFound = false;
+
             for(AprilTagDetection tag : currentDetections)
             {
                 if(tag.id == 1 || tag.id == 2 || tag.id == 3)
@@ -134,9 +137,12 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
                     mostRecentDetection = tag.id;
                     tagOfInterest = tag;
                     tagToTelemetry(tagOfInterest);
+                    tagFound = true;
                 }
             }
         }
+        telemetry.addData("Signal location", mostRecentDetection);
+        telemetry.addData("Signal finds", signalFinds);
         telemetry.update();
     }
 
@@ -255,10 +261,29 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         goToPosition(targetX, targetY, 0);
     }
 
-    void goToPosition(int targetX, int targetY, int targetAngle) {
+    void goToPosition(double targetX, double targetY, double targetAngle) {
         boolean atLocation = false;
+
         while (!atLocation) {
-            atLocation = mecanumDrive.driveTo(targetX, targetY, targetAngle);
+//            atLocation = mecanumDrive.driveTo(targetX, targetY, targetAngle);
+
+            odometry.updatePosition();
+
+            if(invSqrt(((targetAngle) * odometry.getRotationDegrees()) +
+                    ((targetX - odometry.getXCoordinate()) * (targetX - odometry.getXCoordinate())) +
+                    ((targetY - odometry.getYCoordinate()) * (targetY - odometry.getYCoordinate()))) > 1) {
+                mecanumDrive.fieldOrientatedDrive(targetX - odometry.getXCoordinate(), targetY - odometry.getYCoordinate(), targetAngle - odometry.getRotationDegrees());
+                atLocation = false;
+            } else {
+                atLocation = true;
+            }
+
+            telemetry.addLine(String.format("Current Coordinates: (%3.2f, %3.2f, %3.2f)", odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationDegrees()));
+            telemetry.addLine(String.format("Target Coordinates: (%3.2f, %3.2f, %3.2f)", targetX, targetY, targetAngle));
+            telemetry.addLine(String.format("Target - current: (%3.2f, %3.2f, %3.2f)", targetX - odometry.getXCoordinate(), targetY - odometry.getYCoordinate(), targetAngle - odometry.getRotationDegrees()));
+            telemetry.addData("At Location", atLocation);
+            odometry.telemetry(telemetry);
+            telemetry.update();
         }
 
     }
