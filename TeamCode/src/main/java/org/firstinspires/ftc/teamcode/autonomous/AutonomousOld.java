@@ -215,7 +215,7 @@ public class AutonomousOld extends OpMode implements cameraInfo, fieldData, pick
     void goToPosition(int targetX, int targetY) {
         boolean atLocation = false;
         while (!atLocation) {
-            atLocation = mecanumDrive.driveTo(targetX, targetY, 0);
+//            atLocation = mecanumDrive.driveTo(targetX, targetY, 0);
         }
 
     }
