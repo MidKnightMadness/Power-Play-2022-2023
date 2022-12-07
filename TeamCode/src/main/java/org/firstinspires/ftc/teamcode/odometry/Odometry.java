@@ -109,6 +109,8 @@ public class Odometry implements OdometryVariables {
         netY += (topDistanceMoved - (verticalWheelDistance * deltaRadians)) * (Math.cos(rotationRadians));
         }
 
+
+
 //        // true movement
 //        forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0;
 //
@@ -155,6 +157,14 @@ public class Odometry implements OdometryVariables {
         return rotationRadians * 180 / Math.PI;
     }
 
+    public Vector2 getVelocity() {
+        return velocity;
+    }
+    public void resetEncoders() {
+        leftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        horizontalEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
     public String positionToString() {return String.format("(%f, %f)", position.x, position.y); }
 
     public void telemetry(Telemetry telemetry) {

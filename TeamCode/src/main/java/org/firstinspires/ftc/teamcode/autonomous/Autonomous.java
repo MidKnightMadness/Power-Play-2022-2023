@@ -66,6 +66,8 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 
     @Override
     public void init() {
+        mecanumDrive = new MecanumDrive(hardwareMap);
+
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -87,7 +89,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
-        telemetry.setAutoClear(false);
+//        telemetry.setAutoClear(false);
 
         mecanumDrive = new MecanumDrive(hardwareMap);
 
@@ -142,10 +144,12 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 //                telemetry.addData("Tag Found", tagFound);
             }
         }
-        telemetry.addData("i", i);
         i++;
         telemetry.addData("Latest Detections Size", aprilTagDetectionPipeline.getLatestDetections().size());
 //        telemetry.addData("Signal location", currentDetections.get(0).id);
+        telemetry.addData("Signal location", mostRecentDetection);
+        telemetry.addData("Signal finds", signalFinds);
+
         telemetry.update();
     }
 
@@ -154,7 +158,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 
     @Override
     public void start() {
-        telemetry.setAutoClear(true);
+        telemetry.setAutoClear(false);
 
         telemetry.addData("Signal location", mostRecentDetection);
         telemetry.addData("Signal finds", signalFinds);
@@ -165,8 +169,8 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         signalLocationY = signalLocations[startingPos][mostRecentDetection - 1].y;
 
         // Testing autonomous
-        goToPosition(0, 12, 0);
-        goToPosition(0, 0, 0);
+        goToPosition(0, 12);
+        goToPosition(0, 0);
 
 //        goToScoringLocation();
 //        linearSlides.scoreFromDefaultScoringPosition();

@@ -26,6 +26,7 @@ import static org.firstinspires.ftc.teamcode.manipulator.Turntable.tableMotor;
 import org.firstinspires.ftc.robotcore.external.android.AndroidAccelerometer;
 import org.firstinspires.ftc.robotcore.external.android.AndroidGyroscope;
 import org.firstinspires.ftc.teamcode.odometry.TwoWheelOdometry;
+import org.firstinspires.ftc.teamcode.odometry.Vector2;
 
 // BR
 // BL
@@ -41,6 +42,10 @@ public class MainTeleOp extends OpMode {
     public static Odometry odometry;
 
     public static double [] currentPosition = {0.0, 0.0};
+
+    // First controller left stick
+    double[] lastInputs = {0, 0};
+    double[] currentInputs = {0, 0};
 
     Timer timer;
     double auxillary;
@@ -63,10 +68,11 @@ public class MainTeleOp extends OpMode {
     @Override
     public void init() {
         timer = new Timer();
-//        auxillary = 0.0;
-//        auxillary1 = 0.0;
-//        auxillaryList1 = new double [] {0.0, 0.0};
-//        auxillaryList2 = new double [] {0.0, 0.0, 0.0};
+
+        auxillary = 0.0;
+        auxillary1 = 0.0;
+        auxillaryList1 = new double [] {0.0, 0.0};
+        auxillaryList2 = new double [] {0.0, 0.0, 0.0};
 
         mecanum = new MecanumDrive(hardwareMap);
         odometry = new Odometry(hardwareMap);
@@ -81,6 +87,7 @@ public class MainTeleOp extends OpMode {
     }
     double time;
     double deltaTime;
+    double previousInputWeight = 0.95;
 
     @Override
     public void loop() {
@@ -93,51 +100,76 @@ public class MainTeleOp extends OpMode {
 
 //         DRIVER ASSIST
 
-        double powerMultiplier = 0.25;
+        double powerMultiplier = 0.5;
 
         if (gamepad1.left_bumper && !lastPressedDriveMode) {
             driveModeToggle = !driveModeToggle;
         }
+
+
+        Vector2 velocity = odometry.getVelocity();
+        if (this.gamepad1.b) {
+            odometry.resetEncoders();
+        }
+
+        if (this.gamepad1.a) {
+            previousInputWeight += 0.01;
+            if (previousInputWeight > 1) {
+                previousInputWeight = 1;
+            }
+            try {
+                Thread.sleep(75);
+            }
+            catch (InterruptedException e) {
+
+            }
+
+        }
+
+        if (this.gamepad1.b) {
+            previousInputWeight -= 0.01;
+            if (previousInputWeight < 0) {
+                previousInputWeight = 0;
+            }
+            try {
+                Thread.sleep(75);
+            }
+            catch (InterruptedException e) {
+
+            }
+        }
+
+        currentInputs[0] = gamepad1.left_stick_x * previousInputWeight + lastInputs[0] * (1 - previousInputWeight);
+        currentInputs[1] = gamepad1.left_stick_y * previousInputWeight + lastInputs[1] * (1 - previousInputWeight);
+
+        lastInputs[0] = currentInputs[0];
+        lastInputs[1] = currentInputs[1];
+
         if (driveModeToggle) {
-            mecanum.fieldOrientatedDrive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+            mecanum.fieldOrientatedDrive(currentInputs[0] * powerMultiplier,
+                    -currentInputs[1] * powerMultiplier, gamepad1.right_stick_x * powerMultiplier);
+
+
             if (gamepad1.dpad_up) { mecanum.fieldOrientatedDrive(0, -1, 0); }
             if (gamepad1.dpad_down) { mecanum.fieldOrientatedDrive(0, 1, 0); }
             if (gamepad1.dpad_right) { mecanum.fieldOrientatedDrive(1, 0, 0); }
             if (gamepad1.dpad_left) { mecanum.fieldOrientatedDrive(-1, 0, 0); }
         } else {
-            mecanum.drive(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x); // normal drive
-            if (gamepad1.dpad_up) { mecanum.drive(0, -powerMultiplier , 0); }
-            if (gamepad1.dpad_down) { mecanum.drive(0, powerMultiplier , 0); }
-            if (gamepad1.dpad_right) { mecanum.drive(powerMultiplier , 0, 0); }
-            if (gamepad1.dpad_left) { mecanum.drive(-powerMultiplier , 0, 0); }
+            mecanum.drive(currentInputs[0] * powerMultiplier, -currentInputs[1] * powerMultiplier,
+                    gamepad1.right_stick_x * powerMultiplier); // normal drive
+
+
+            if (gamepad1.dpad_up) { mecanum.drive(0, -1 , 0); }
+            if (gamepad1.dpad_down) { mecanum.drive(0, 1 , 0); }
+            if (gamepad1.dpad_right) { mecanum.drive(1, 0, 0); }
+            if (gamepad1.dpad_left) { mecanum.drive(-1 , 0, 0); }
         }
 
         odometry.updatePosition();
 
         telemetry.addLine(String.format("Position: [%5.2f, %5.2f]", this.currentPosition[0], currentPosition[1]));
-        telemetry.addData("Angle", odometry.getRotationRadians());
-//        lastPressedDriveMode = gamepad1.left_bumper;
-
-//        turntable.turnBy(gamepad2.left_stick_x / 5);
-//
-//        claw.pivotBy(-gamepad2.right_stick_y);
-//
-//        telemetry.addData("turntable motor reference", tableMotor);
-//        telemetry.addData("turntable angle", turntableAngle);
-//        telemetry.addData("turntable power", tableMotor.getPower());
-//
-//        telemetry.addData("\n claw pivot servo reference", claw.rotationServo);
-//        telemetry.addData("claw pivot position", claw.rotationServo.getPosition());
-//
-//        telemetry.addData("\n claw servo reference", claw.servo);
-//        telemetry.addData("claw position", claw.servo.getPosition());
-
-//        lift.pivotBy(gamepad2.left_stick_y / 5);
-//        turntable.turnBy(gamepad2.left_stick_x / 5);
-
-//        handleManipulatorControls();
-
-
+        telemetry.addLine("EASE COEFFICIENT " + previousInputWeight);
+        telemetry.addData("Angle", odometry.getRotationRadians() * 180 / Math.PI);
 
 
         telemetry.addData("DRIVE MODE", driveModeToggle ? "FIELD ORIENTED": "NORMAL");
@@ -153,12 +185,6 @@ public class MainTeleOp extends OpMode {
         telemetry.addLine("Time" + time);
         telemetry.update();
 
-
-
-        // Odometry Calibration
-//        odometry.updatePosition();
-//        telemetry.addLine(String.format("\nCoordinates: [%5.2f, %5.2f]", currentPosition [0], currentPosition [1]));
-//        telemetry.addData("Angle", odometry.getRotationDegrees());
     }
 
     boolean lastClawOpenToggle = false;
