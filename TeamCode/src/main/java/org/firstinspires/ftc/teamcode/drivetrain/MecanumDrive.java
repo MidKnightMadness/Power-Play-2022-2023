@@ -138,7 +138,7 @@ public class MecanumDrive {
 
             replacement = Math.max(Math.abs(targetX - currentX), Math.abs(targetY - currentY));
 
-            fieldOrientatedDrive((targetX - currentX) / replacement, (targetY - currentY) / replacement, (targetAngle-currentAngle) / 360); // 0 on rotational component is temporary, needs correction
+            fieldOrientatedDrive((targetX - currentX) / (replacement * 10), (targetY - currentY) / (replacement * 10), (targetAngle-currentAngle) / 360); // 0 on rotational component is temporary, needs correction
 
 //            FRMotor.setPower(-0 + -((targetY - currentY) / replacement) * 0.1 - 0);
 //            FLMotor.setPower( 0 + -((targetY - currentY) / replacement) * 0.1 + 0);

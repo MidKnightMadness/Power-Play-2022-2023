@@ -107,7 +107,7 @@ public class Odometry implements OdometryVariables {
         sin = Math.sin(rotationRadians);
         cosine = Math.cos(rotationRadians);
 
-        netX = forwardMovement * cosine + trueLateralMovement * sin;
+        netX = forwardMovement * cosine - trueLateralMovement * sin;
         netY = forwardMovement * sin + trueLateralMovement * cosine;
 
         if (false) {
@@ -120,8 +120,8 @@ public class Odometry implements OdometryVariables {
         }
 
 
-        position.x += netX;
-        position.y += netY;
+        position.x -= netY;
+        position.y += netX;
 
         // Temporary
         AutonomousNew.currentPosition[0] += netX;
