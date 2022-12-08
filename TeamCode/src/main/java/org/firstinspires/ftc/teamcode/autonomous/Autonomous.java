@@ -30,7 +30,8 @@ import org.firstinspires.ftc.teamcode.common.Timer;
 import org.firstinspires.ftc.teamcode.odometry.Vector2;
 
 import java.util.ArrayList;
-//阿莫古斯
+
+
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
 public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpConeData
 {
@@ -113,14 +114,12 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         });
 
         // Resetting positions for odometry
-        odometry.horizontalEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        odometry.rightEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        odometry.leftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
+        odometry.resetEncoders();
     }
 
     @Override
     public void init_loop() {
+
         coneTimer.getTime();
 
         ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
@@ -155,8 +154,6 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 
     @Override
     public void start() {
-
-
         Autonomous.AutonomousPoseArray.add(new double [] {0, 0, 0}); // Default
         Autonomous.AutonomousPoseArray.add(new double [] {0, 12, 0}); // 1 foot up
 
@@ -167,13 +164,23 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 
         telemetry.update();
 
-        signalLocationX = signalLocations[startingPos][mostRecentDetection - 1].x;
-        signalLocationY = signalLocations[startingPos][mostRecentDetection - 1].y;
+        if (mostRecentDetection != 0) {
+            signalLocationX = signalLocations[startingPos][mostRecentDetection - 1].x;
+            signalLocationY = signalLocations[startingPos][mostRecentDetection - 1].y;
+            telemetry.addLine("SIGNAL TAG FOUND, GOING TO POSITION " + mostRecentDetection);
+        }
+        else {
+            signalLocationX = signalLocations[startingPos][1].x;
+            signalLocationY = signalLocations[startingPos][1].y;
+
+            telemetry.addLine("SIGNAL TAG NOT FOUND, GOING TO POSITION 2");
+        }
 
 
+        telemetry.setAutoClear(true);
 
         // Testing autonomous
-        goToPosition(0, 12, 0); /*AutonomousPoseArray.get(1)[0],
+         /*AutonomousPoseArray.get(1)[0],
                 AutonomousPoseArray.get(1)[1],
                 AutonomousPoseArray.get(1)[2]);*/
 
@@ -183,14 +190,18 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 
 
 
-//    @Override
+    @Override
     public void loop() { // Analogous to while(active){
 
-        telemetry.addData("Signal #", mostRecentDetection);
-        telemetry.addData("Signal finds", "" + signalFinds[0], signalFinds[1], signalFinds[2]);
-        telemetry.addData("Signal location", signalLocations[startingPos][mostRecentDetection - 1]);
+        goToPosition(12, 0, 0);
+
+//        telemetry.addData("Signal #", mostRecentDetection);
+//        telemetry.addData("Signal finds", "" + signalFinds[0], signalFinds[1], signalFinds[2]);
+//        telemetry.addData("Signal location", signalLocations[startingPos][mostRecentDetection - 1]);
 
         time = coneTimer.getTime();
+
+
 
 //        if (time > 26.35729278100687712039158d) {
 //            goToSignalLocation((int)odometry.getXCoordinate(), (int) odometry.getYCoordinate(), (int) signalLocationX, (int) signalLocationY);
@@ -280,16 +291,17 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         boolean atLocation = false;
 
         while (!atLocation) {
-            odometry.updatePosition();
-
-            atLocation = mecanumDrive.driveTo(targetX, targetY, targetAngle, odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians());
-
             telemetry.addData("At Location", atLocation);
             telemetry.addLine(String.format("Current Coordinates: (%3.2f, %3.2f, %3.2f)", odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationDegrees()));
             telemetry.addLine(String.format("Target Coordinates: (%3.2f, %3.2f, %3.2f)", targetX, targetY, targetAngle));
             telemetry.addLine(String.format("Target - current: (%3.2f, %3.2f, %3.2f)", targetX - odometry.getXCoordinate(), targetY - odometry.getYCoordinate(), targetAngle - odometry.getRotationDegrees()));
-            odometry.telemetry(telemetry);
+//            odometry.telemetry(telemetry);
             telemetry.update();
+
+            odometry.updatePosition();
+
+            atLocation = mecanumDrive.driveTo(targetX, targetY, targetAngle, odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians());
+
         }
         telemetry.addData("At Location", atLocation);
         telemetry.update();
