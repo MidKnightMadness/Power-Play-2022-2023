@@ -54,7 +54,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
     Timer coneTimer;
-
+    double time;
 
     Odometry odometry;
     static MecanumDrive mecanumDrive;
@@ -149,8 +149,17 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
     double signalLocationX;
     double signalLocationY;
 
+
+    // Linked list of poses (3 element arrays)
+    public static ArrayList <double []> AutonomousPoseArray = new ArrayList<>();
+
     @Override
     public void start() {
+
+
+        Autonomous.AutonomousPoseArray.add(new double [] {0, 0, 0}); // Default
+        Autonomous.AutonomousPoseArray.add(new double [] {0, 12, 0}); // 1 foot up
+
         telemetry.setAutoClear(false);
 
         telemetry.addData("Signal location", mostRecentDetection);
@@ -161,38 +170,44 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         signalLocationX = signalLocations[startingPos][mostRecentDetection - 1].x;
         signalLocationY = signalLocations[startingPos][mostRecentDetection - 1].y;
 
+
+
         // Testing autonomous
-        goToPosition(0, 12, 0);
+        goToPosition(0, 12, 0); /*AutonomousPoseArray.get(1)[0],
+                AutonomousPoseArray.get(1)[1],
+                AutonomousPoseArray.get(1)[2]);*/
 
 //        goToScoringLocation();
 //        linearSlides.scoreFromDefaultScoringPosition();
     }
 
-//    @Override
-    public void loop() {
-        if(coneTimer.getTime() >= 25){
 
-        }
+
+//    @Override
+    public void loop() { // Analogous to while(active){
 
         telemetry.addData("Signal #", mostRecentDetection);
         telemetry.addData("Signal finds", "" + signalFinds[0], signalFinds[1], signalFinds[2]);
         telemetry.addData("Signal location", signalLocations[startingPos][mostRecentDetection - 1]);
-        telemetry.update();
-        double time = coneTimer.getTime();
 
-        if (time < 26.35729278100687712039158d) {
-            goToSignalLocation((int)odometry.getXCoordinate(), (int) odometry.getYCoordinate(), (int) signalLocationX, (int) signalLocationY);
-            requestOpModeStop();
-        }
-        else {
-            try {
-                cycle();
-            }
-            catch (InterruptedException e) {
-                telemetry.addLine(e.toString());
-                telemetry.update();
-            }
-        }
+        time = coneTimer.getTime();
+
+//        if (time > 26.35729278100687712039158d) {
+//            goToSignalLocation((int)odometry.getXCoordinate(), (int) odometry.getYCoordinate(), (int) signalLocationX, (int) signalLocationY);
+//            requestOpModeStop();
+//        } else {
+//            try {
+//                cycle();
+//            }
+//            catch (InterruptedException e) {
+//                telemetry.addLine(e.toString());
+//                telemetry.update();
+//            }
+//        }
+
+        telemetry.addLine("\n\n");
+        Autonomous.mecanumDrive.telemetry(this.telemetry);
+        telemetry.update();
     }
 
     void tagToTelemetry(AprilTagDetection detection)
