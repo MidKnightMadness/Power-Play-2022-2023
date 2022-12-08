@@ -43,7 +43,7 @@ public class Odometry implements OdometryVariables {
     public Odometry(HardwareMap hardwareMap) {
         elapsedTime = new ElapsedTime();
 
-        leftEncoder = hardwareMap.get(DcMotorEx.class, "BL");
+        leftEncoder = hardwareMap.get(DcMotorEx.class, "FL");
 //        leftEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        leftEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -111,17 +111,17 @@ public class Odometry implements OdometryVariables {
         netY = forwardMovement * sin + trueLateralMovement * cosine;
 
         if (false) {
-            netX = ((leftDistanceMoved + rightDistanceMoved) / 2) * Math.cos(rotationRadians);
-            netY = ((leftDistanceMoved + rightDistanceMoved) / 2) * Math.sin(rotationRadians);
+            netX = forwardMovement * Math.cos(rotationRadians);
+            netY = forwardMovement * Math.sin(rotationRadians);
 
             // third wheel component
-            netX += (topDistanceMoved - (verticalWheelDistance * deltaRadians)) * (-Math.sin(rotationRadians));
-            netY += (topDistanceMoved - (verticalWheelDistance * deltaRadians)) * (Math.cos(rotationRadians));
+            netX += (trueLateralMovement) * (-Math.sin(rotationRadians));
+            netY += (trueLateralMovement) * (Math.cos(rotationRadians));
         }
 
 
-        position.x -= netX;
-        position.y -= netY;
+        position.x += netX;
+        position.y += netY;
 
         // Temporary
         AutonomousNew.currentPosition[0] += netX;
