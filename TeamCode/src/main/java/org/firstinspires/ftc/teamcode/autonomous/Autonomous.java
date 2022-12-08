@@ -30,7 +30,8 @@ import org.firstinspires.ftc.teamcode.common.Timer;
 import org.firstinspires.ftc.teamcode.odometry.Vector2;
 
 import java.util.ArrayList;
-//阿莫古斯
+
+
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
 public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpConeData
 {
@@ -113,14 +114,13 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         });
 
         // Resetting positions for odometry
-        odometry.horizontalEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        odometry.rightEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        odometry.leftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
+        odometry.resetEncoders();
     }
 
     @Override
     public void init_loop() {
+        goToPosition(0, 12, 0);
+
         coneTimer.getTime();
 
         ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
@@ -173,7 +173,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 
 
         // Testing autonomous
-        goToPosition(0, 12, 0); /*AutonomousPoseArray.get(1)[0],
+         /*AutonomousPoseArray.get(1)[0],
                 AutonomousPoseArray.get(1)[1],
                 AutonomousPoseArray.get(1)[2]);*/
 
@@ -183,7 +183,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 
 
 
-//    @Override
+    @Override
     public void loop() { // Analogous to while(active){
 
         telemetry.addData("Signal #", mostRecentDetection);
@@ -191,6 +191,8 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         telemetry.addData("Signal location", signalLocations[startingPos][mostRecentDetection - 1]);
 
         time = coneTimer.getTime();
+
+
 
 //        if (time > 26.35729278100687712039158d) {
 //            goToSignalLocation((int)odometry.getXCoordinate(), (int) odometry.getYCoordinate(), (int) signalLocationX, (int) signalLocationY);
