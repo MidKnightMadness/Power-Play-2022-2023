@@ -8,7 +8,6 @@ import static org.firstinspires.ftc.teamcode.highlevel.Master.odometryAlg;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.robotSpeed;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.tickRate;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.turntable;
-import static org.firstinspires.ftc.teamcode.highlevel.Master.turntableAngle;
 import static org.firstinspires.ftc.teamcode.manipulator.LinearSlides.ROOT_HEIGHT;
 
 import org.firstinspires.ftc.teamcode.currentOpModes.MainTeleOp;
@@ -23,16 +22,14 @@ import org.firstinspires.ftc.teamcode.drivetrain.*;
 
 
 public class GridSystem {
-    private static double [] auxillary3d; // Use currentPosition if needed, but should pre-calculate during transition
-
+    private static double [] auxillary3d = {0.0, 0.0, 0.0}; // Use currentPosition if needed, but should pre-calculate during transition
+    private static double [] auxillary = {0.0, 0.0, 0.0};
 
     // 2 "local" variables to deal with internal calculations
-    private static double djskjsjksskjkj;
-    private static int djskjsjksskjkj2;
+    private static double djskjsjksskjkj = 0.0;
+    private static int djskjsjksskjkj2 = 0;
     
     public GridSystem(){
-        auxillary3d = new double [] {0.0, 0.0, 0.0};
-        djskjsjksskjkj = 0.0; // For the sake of not repeating names ;)
     }
     
     final static double[][] junctionHeights = { // Matrix format, A[i][j], ith column, jth row; inches
@@ -109,10 +106,11 @@ public class GridSystem {
             djskjsjksskjkj2 = 4;
         }
 
-        auxillary3d[0] = djskjsjksskjkj - turntableAngle; // Turntable target angle
+        auxillary3d[0] = djskjsjksskjkj - MainTeleOp.odometry.getRotationRadians(); // Turntable target angle
 
         // "Points" at junction corresponding to target position to get required height and extension length
-        auxillary2d = currentPosition;
+        auxillary2d[0] = currentX;
+        auxillary2d[1] = currentY;
         switch(djskjsjksskjkj2){
             // Junction numbering in square
             // 2 1
@@ -131,7 +129,8 @@ public class GridSystem {
                 }
 
                 // Making auxillary2d displacement to junction
-                auxillary2d = currentPosition;
+                auxillary2d[0] = currentX;
+                auxillary2d[1] = currentY;
                 auxillary2d[0] = 23.50 - (auxillary2d[0] % 23.50);
                 auxillary2d[1] = 23.50 - (auxillary2d[1] % 23.50);
                 Master.target = auxillary2d;
@@ -154,7 +153,8 @@ public class GridSystem {
                 }
 
                 // Making auxillary2d displacement to junction
-                auxillary2d = currentPosition;
+                auxillary2d[0] = currentX;
+                auxillary2d[1] = currentY;
                 auxillary2d[0] = auxillary2d[0] % 23.50;
                 auxillary2d[1] = 23.50 - (auxillary2d[1] % 23.50);
                 Master.target = auxillary2d;
@@ -177,7 +177,8 @@ public class GridSystem {
                 }
 
                 // Making auxillary2d displacement to junction
-                auxillary2d = currentPosition;
+                auxillary2d[0] = currentX;
+                auxillary2d[1] = currentY;
                 auxillary2d[0] = auxillary2d[0] % 23.50;
                 auxillary2d[1] = auxillary2d[1] % 23.50;
                 Master.target = auxillary2d;
@@ -200,7 +201,8 @@ public class GridSystem {
                 }
 
                 // Making auxillary2d displacement to junction
-                auxillary2d = currentPosition;
+                auxillary2d[0] = currentX;
+                auxillary2d[1] = currentY;
                 auxillary2d[0] = 23.50 - (auxillary2d[0] % 23.50);
                 auxillary2d[1] = auxillary2d[1] % 23.50;
                 Master.target = auxillary2d;

@@ -20,7 +20,7 @@ interface OdometryVariables {
     double inPerTick = wheelCircumference / ticksPerRotation;
 
     double lateralWheelDistance = 12;
-    double verticalWheelDistance = 7.5 + 2.25;// 12.4 - 7.5;
+    double verticalWheelDistance = 7.5 - 2.5;// 12.4 - 7.5;
     long sleepTime = 100;
 }
 
@@ -133,8 +133,9 @@ public class OdometryTest extends OpMode implements OdometryVariables{
         telemetry.addData("Movement", String.format("%f, %f", forwardMovement, trueLateralMovement));
         telemetry.addData("Net movement", String.format("%d, %d", deltaLeftTicks, deltaRightTicks));
 
-        position.x += netX;
-        position.y += netY;
+        // opposite direction
+        position.x -= netX;
+        position.y -= netY;
 
         velocity.x = netX / deltaTime;
         velocity.y = netY / deltaTime;

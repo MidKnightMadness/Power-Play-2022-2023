@@ -138,7 +138,7 @@ public class MecanumDrive {
 
             replacement = Math.max(Math.abs(targetX - currentX), Math.abs(targetY - currentY));
 
-            fieldOrientatedDrive((targetX - currentX) / replacement, (targetY - currentY) / replacement, (targetAngle-currentAngle) / 360); // 0 on rotational component is temporary, needs correction
+            fieldOrientatedDrive((targetX - currentX) / (replacement * 10), (targetY - currentY) / (replacement * 10), (targetAngle-currentAngle) / 360); // 0 on rotational component is temporary, needs correction
 
 //            FRMotor.setPower(-0 + -((targetY - currentY) / replacement) * 0.1 - 0);
 //            FLMotor.setPower( 0 + -((targetY - currentY) / replacement) * 0.1 + 0);
@@ -154,9 +154,6 @@ public class MecanumDrive {
         telemetry.addLine("\nMECANUM WHEELS");
         telemetry.addLine(String.format("Front Motor Power: %f %f", FLMotor.getPower(), FRMotor.getPower()));
         telemetry.addLine(String.format(" Back Motor Power: %f %f", BLMotor.getPower(), BRMotor.getPower()));
-        telemetry.addData("Left Dead Wheel Position", BRMotor.getCurrentPosition());
-        telemetry.addData("Right Dead Wheel Position", BLMotor.getCurrentPosition());
-        telemetry.addData("Top Dead Wheel Position", FLMotor.getCurrentPosition());
         telemetry.addData("Corrected X", correctedX);
         telemetry.addData("Corrected Y", correctedY);
         telemetry.addData("First Angle", angles.firstAngle);
