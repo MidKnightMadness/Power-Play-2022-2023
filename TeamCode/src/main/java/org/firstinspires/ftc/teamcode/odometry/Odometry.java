@@ -99,7 +99,10 @@ public class Odometry implements OdometryVariables {
         deltaRadians = getDeltaRotation(leftDistanceMoved, rightDistanceMoved);
         rotationRadians += deltaRadians;
 //
-
+        { // Simplified version
+            netX += Math.cos(rotationRadians) * (0.5 * leftDistanceMoved + 0.5 * rightDistanceMoved);
+            netY += Math.cos(rotationRadians) * (0.5 * leftDistanceMoved + 0.5 * rightDistanceMoved);
+        }
         forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0;
 
         lateralMovementAdjustor = deltaRadians * verticalWheelDistance;
