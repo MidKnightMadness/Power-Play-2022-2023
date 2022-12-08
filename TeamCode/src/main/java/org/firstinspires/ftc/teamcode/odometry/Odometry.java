@@ -98,30 +98,18 @@ public class Odometry implements OdometryVariables {
         // angles
         deltaRadians = getDeltaRotation(leftDistanceMoved, rightDistanceMoved);
         rotationRadians += deltaRadians;
-
-        {
-        // left and right distances component
-        netX = ((leftDistanceMoved + rightDistanceMoved) / 2) * Math.cos(rotationRadians);
-        netY = ((leftDistanceMoved + rightDistanceMoved) / 2) * Math.sin(rotationRadians);
-
-        // third wheel component
-        netX += (topDistanceMoved - (verticalWheelDistance * deltaRadians)) * (-Math.sin(rotationRadians));
-        netY += (topDistanceMoved - (verticalWheelDistance * deltaRadians)) * (Math.cos(rotationRadians));
-        }
-
-
-
-//        // true movement
-//        forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0;
 //
-//        lateralMovementAdjustor = deltaRadians * verticalWheelDistance;
-//        trueLateralMovement = topDistanceMoved + lateralMovementAdjustor;
-//
-//        sin = Math.sin(rotationRadians);
-//        cosine = Math.cos(rotationRadians);
-//
-//        netX = forwardMovement * cosine; // + trueLateralMovement * sin;
-//        netY = forwardMovement * sin; // + trueLateralMovement * cosine;
+
+        forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0;
+
+        lateralMovementAdjustor = deltaRadians * verticalWheelDistance;
+        trueLateralMovement = topDistanceMoved + lateralMovementAdjustor;
+
+        sin = Math.sin(rotationRadians);
+        cosine = Math.cos(rotationRadians);
+
+        netX = forwardMovement * cosine + trueLateralMovement * sin;
+        netY = forwardMovement * sin + trueLateralMovement * cosine;
 
         position.x -= netX;
         position.y -= netY;
