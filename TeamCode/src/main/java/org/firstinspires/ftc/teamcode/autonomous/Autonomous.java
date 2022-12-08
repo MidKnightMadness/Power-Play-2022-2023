@@ -154,8 +154,6 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 
     @Override
     public void start() {
-
-
         Autonomous.AutonomousPoseArray.add(new double [] {0, 0, 0}); // Default
         Autonomous.AutonomousPoseArray.add(new double [] {0, 12, 0}); // 1 foot up
 
@@ -166,8 +164,18 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 
         telemetry.update();
 
-        signalLocationX = signalLocations[startingPos][mostRecentDetection - 1].x;
-        signalLocationY = signalLocations[startingPos][mostRecentDetection - 1].y;
+        if (mostRecentDetection != 0) {
+            signalLocationX = signalLocations[startingPos][mostRecentDetection - 1].x;
+            signalLocationY = signalLocations[startingPos][mostRecentDetection - 1].y;
+            telemetry.addLine("SIGNAL TAG FOUND, GOING TO POSITION " + mostRecentDetection);
+        }
+        else {
+            signalLocationX = signalLocations[startingPos][1].x;
+            signalLocationY = signalLocations[startingPos][1].y;
+
+            telemetry.addLine("SIGNAL TAG NOT FOUND, GOING TO POSITION 2");
+        }
+
 
         telemetry.setAutoClear(true);
 
@@ -185,7 +193,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
     @Override
     public void loop() { // Analogous to while(active){
 
-        goToPosition(24, 0, 0);
+        goToPosition(12, 0, 0);
 
 //        telemetry.addData("Signal #", mostRecentDetection);
 //        telemetry.addData("Signal finds", "" + signalFinds[0], signalFinds[1], signalFinds[2]);

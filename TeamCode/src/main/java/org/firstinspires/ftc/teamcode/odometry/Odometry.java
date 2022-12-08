@@ -107,17 +107,17 @@ public class Odometry implements OdometryVariables {
         sin = Math.sin(rotationRadians);
         cosine = Math.cos(rotationRadians);
 
-        netX = forwardMovement * cosine - trueLateralMovement * sin;
-        netY = forwardMovement * sin + trueLateralMovement * cosine;
-
-        if (false) {
-            netX = forwardMovement * Math.cos(rotationRadians);
-            netY = forwardMovement * Math.sin(rotationRadians);
-
-            // third wheel component
-            netX += (trueLateralMovement) * (-Math.sin(rotationRadians));
-            netY += (trueLateralMovement) * (Math.cos(rotationRadians));
-        }
+        netY = forwardMovement * cosine + trueLateralMovement * sin;
+        netX = forwardMovement * sin + trueLateralMovement * cosine;
+//
+//        if (false) {
+//            netX = forwardMovement * Math.cos(rotationRadians);
+//            netY = forwardMovement * Math.sin(rotationRadians);
+//
+//            // third wheel component
+//            netX += (trueLateralMovement) * (-Math.sin(rotationRadians));
+//            netY += (trueLateralMovement) * (Math.cos(rotationRadians));
+//        }
 
 
         position.x -= netY;
