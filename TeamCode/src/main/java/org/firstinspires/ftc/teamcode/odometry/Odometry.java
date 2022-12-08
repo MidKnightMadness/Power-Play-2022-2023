@@ -79,7 +79,7 @@ public class Odometry implements OdometryVariables {
 
     public void updatePosition() {
         leftTicks = leftEncoder.getCurrentPosition();
-        rightTicks = rightEncoder.getCurrentPosition();
+        rightTicks = -rightEncoder.getCurrentPosition();
         topTicks = horizontalEncoder.getCurrentPosition();
 
         deltaLeftTicks = leftTicks - lastLeftTicks;
@@ -182,6 +182,10 @@ public class Odometry implements OdometryVariables {
         telemetry.addLine("Velocity " + velocity.toString());
         telemetry.addLine(String.format("Rotation: %f", deltaRadians * 180 / Math.PI));
         telemetry.addLine("Rotation " + (rotationRadians * 180 / Math.PI));
+
+        telemetry.addData("Left Dead Wheel Position", leftEncoder.getCurrentPosition());
+        telemetry.addData("Right Dead Wheel Position", rightEncoder.getCurrentPosition());
+        telemetry.addData("Top Dead Wheel Position", horizontalEncoder.getCurrentPosition());
 
     }
 

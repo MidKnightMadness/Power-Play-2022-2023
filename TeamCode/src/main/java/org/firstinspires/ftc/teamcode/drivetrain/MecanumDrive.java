@@ -154,9 +154,6 @@ public class MecanumDrive {
         telemetry.addLine("\nMECANUM WHEELS");
         telemetry.addLine(String.format("Front Motor Power: %f %f", FLMotor.getPower(), FRMotor.getPower()));
         telemetry.addLine(String.format(" Back Motor Power: %f %f", BLMotor.getPower(), BRMotor.getPower()));
-        telemetry.addData("Left Dead Wheel Position", BRMotor.getCurrentPosition());
-        telemetry.addData("Right Dead Wheel Position", BLMotor.getCurrentPosition());
-        telemetry.addData("Top Dead Wheel Position", FLMotor.getCurrentPosition());
         telemetry.addData("Corrected X", correctedX);
         telemetry.addData("Corrected Y", correctedY);
         telemetry.addData("First Angle", angles.firstAngle);
