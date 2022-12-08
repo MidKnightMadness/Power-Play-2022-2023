@@ -98,18 +98,27 @@ public class Odometry implements OdometryVariables {
         // angles
         deltaRadians = getDeltaRotation(leftDistanceMoved, rightDistanceMoved);
         rotationRadians += deltaRadians;
-//
 
         forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0;
 
         lateralMovementAdjustor = deltaRadians * verticalWheelDistance;
-        trueLateralMovement = topDistanceMoved + lateralMovementAdjustor;
+        trueLateralMovement = topDistanceMoved - lateralMovementAdjustor;
 
         sin = Math.sin(rotationRadians);
         cosine = Math.cos(rotationRadians);
 
         netX = forwardMovement * cosine + trueLateralMovement * sin;
         netY = forwardMovement * sin + trueLateralMovement * cosine;
+
+        if (false) {
+            netX = ((leftDistanceMoved + rightDistanceMoved) / 2) * Math.cos(rotationRadians);
+            netY = ((leftDistanceMoved + rightDistanceMoved) / 2) * Math.sin(rotationRadians);
+
+            // third wheel component
+            netX += (topDistanceMoved - (verticalWheelDistance * deltaRadians)) * (-Math.sin(rotationRadians));
+            netY += (topDistanceMoved - (verticalWheelDistance * deltaRadians)) * (Math.cos(rotationRadians));
+        }
+
 
         position.x -= netX;
         position.y -= netY;
@@ -152,7 +161,15 @@ public class Odometry implements OdometryVariables {
         leftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         horizontalEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        position = new Vector2();
+        rotationRadians = 0;
+
+        leftEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        horizontalEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
+
     public String positionToString() {return String.format("(%f, %f)", position.x, position.y); }
 
     public void telemetry(Telemetry telemetry) {
@@ -161,15 +178,14 @@ public class Odometry implements OdometryVariables {
         telemetry.addLine(String.valueOf(deltaTime));
 
         telemetry.addData("Wheel ticks", String.format("%d, %d, %d", leftTicks, rightTicks, topTicks));
-        telemetry.addData("Delta wheel ticks", String.format("%d, %d, %d", deltaLeftTicks, deltaRightTicks, deltaTopTicks));
 
-        telemetry.addData("Movement", String.format("%f, %f", forwardMovement, trueLateralMovement));
-        telemetry.addData("Net movement", String.format("%d, %d", deltaLeftTicks, deltaRightTicks));
+        telemetry.addLine("--------");
+        telemetry.addLine("POSITION " + position);
+        telemetry.addLine("ROTATION " + getRotationDegrees());
+        telemetry.addLine("--------");
 
-        telemetry.addLine("Position " + position);
         telemetry.addLine("Velocity " + velocity.toString());
-        telemetry.addLine(String.format("Rotation: %f", deltaRadians * 180 / Math.PI));
-        telemetry.addLine("Rotation " + (rotationRadians * 180 / Math.PI));
+
 
         telemetry.addData("Left Dead Wheel Position", leftEncoder.getCurrentPosition());
         telemetry.addData("Right Dead Wheel Position", rightEncoder.getCurrentPosition());

@@ -108,7 +108,7 @@ public class MainTeleOp extends OpMode {
 
 
         Vector2 velocity = odometry.getVelocity();
-        if (this.gamepad1.b) {
+        if (this.gamepad1.x) {
             odometry.resetEncoders();
         }
 
@@ -121,7 +121,7 @@ public class MainTeleOp extends OpMode {
                 Thread.sleep(75);
             }
             catch (InterruptedException e) {
-
+                telemetry.addLine(e.toString());
             }
 
         }
