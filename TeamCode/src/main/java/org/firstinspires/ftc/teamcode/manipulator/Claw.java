@@ -13,44 +13,59 @@ public class Claw {
 
     // Alternative
     public Servo servo;
-//    public CRServo rotationServo;
+    public Servo rotationServo;
+    public Servo rotationServo2;
 
 
     private ServoController servoController;
 //    private ServoController rotationServoController;
+//        private ServoController rotationServoController2;
 
-    private double closedPositionTicks = 0;
-    private double openPositionTicks = 0;
+    double OPEN = 0.425;
+    double CLOSED = 0.750;
 
     private double downPosition = 0;
     private double upPosition = 0;
 
+    public boolean open = false;
+
     public Claw(HardwareMap hardwareMap) {
         calibrationTimer = new Timer();
 
-//        servo = hardwareMap.get(CRServo.class, "claw");
          servo = hardwareMap.get(Servo.class, "claw");
-//         rotationServo = hardwareMap.get(CRServo.class, "claw pivot");
 
-        servoController = servo.getController();
+         rotationServo = hardwareMap.get(Servo.class, "claw pivot");
+        rotationServo.setDirection(Servo.Direction.FORWARD);
+
+         rotationServo2 = hardwareMap.get(Servo.class, "claw pivot 2");
+         rotationServo2.setDirection(Servo.Direction.REVERSE);
+
+
+
+
+//        servoController = servo.getController();
 //        rotationServoController = rotationServo.getController();
+//                rotationServoController2 = rotationServo2.getController();
+
 
         servo.resetDeviceConfigurationForOpMode();
-//        rotationServo.resetDeviceConfigurationForOpMode();
+        rotationServo.resetDeviceConfigurationForOpMode();
+        rotationServo2.resetDeviceConfigurationForOpMode();
 
-        // Assumes starting closed
-        closedPositionTicks = servo.getPosition() + 0.2;
-        openPositionTicks = servo.MAX_POSITION - 0.2;
 
-//        servo.scaleRange(closedPositionTicks, openPositionTicks);
+
+
+
     }
 
     public void openClaw() {
-        servo.setPosition(0);
+        servo.setPosition(OPEN);
+        boolean open = true;
     }
     
     public void closeClaw() {
-        servo.setPosition(1);
+        servo.setPosition(CLOSED);
+        boolean open = false;
     }
 
     public void waitForOpenClaw() {
@@ -59,8 +74,15 @@ public class Claw {
     }
 
     public void pivotBy(double ticks){
-//        rotationServo.setPosition(rotationServo.getPosition() + ticks / 2);
-//        rotationServo.setPower(ticks);
+        rotationServo.setPosition(rotationServo.getPosition() + ticks / 2);
+
+        rotationServo2.setPosition(rotationServo.getPosition() + ticks / 2);
+
+    }
+
+    public static final double WRIST_RATIO = 0.5 / Math.PI;  // Ticks per radian
+    public void pivotTo(double angle){ // Radians
+
     }
 
 }

@@ -28,10 +28,13 @@ import org.firstinspires.ftc.robotcore.external.android.AndroidGyroscope;
 import org.firstinspires.ftc.teamcode.odometry.TwoWheelOdometry;
 import org.firstinspires.ftc.teamcode.odometry.Vector2;
 
-// BR
-// BL
-// FL
-// FR
+// Control Hub Configurations
+// Motors:
+// 0 FL
+// 1 BR
+// 2 BL
+// 3 FR
+
 
 
 @TeleOp(name="Main")

@@ -22,6 +22,10 @@ import org.firstinspires.ftc.teamcode.manipulator.Claw;
 public class LinearSlides {
     public static DcMotorEx seeSawMotor;
     public static DcMotorEx extensionMotor;
+    public static DcMotorEx extensionMotor2;
+
+    // 2ND EXTENSION MOTOR IN REVERSE PLS
+
     public static double [] manipulatorPosition = {0.0, 0.0, 0.0};
     private static HardwareMap hardwareMap;
     public static double seesawAngle;
@@ -37,12 +41,12 @@ public class LinearSlides {
     private static final double STARTING_EXTENDER_LENGTH = 15.0; // Starting length from pivot axle
     // Rotation
     private static final double SEESAW_MOTOR_RATIO = 60; // 60:1 or 40:1 motor?
-    private static final double SEESAW_OVERALL_RATIO = 2 * Math.PI * (30 / 64) / (4096 * SEESAW_MOTOR_RATIO); // Angle per tick
+    public static final double SEESAW_OVERALL_RATIO = 2 * Math.PI * (30 / 64) / (4096 * SEESAW_MOTOR_RATIO); // Angle per tick
     private static final double STARTING_ANGLE = 0.0;// Of the Manipulator, factor in end-effector's center (cone center), in inches
     // Extension
     private static final double EXTENDER_MOTOR_RATIO = 20; // 20:1 or 40:1 motor?
     private static final double PULLEY_RADIUS = 1.0; // Radius of pulley interacting with string
-    private static final double EXTENDER_OVERALL_RATIO = 2 * Math.PI / (4096 * EXTENDER_MOTOR_RATIO); // Inches per tick
+    public static final double EXTENDER_OVERALL_RATIO = 2 * Math.PI / (4096 * EXTENDER_MOTOR_RATIO); // Inches per tick
 
     // Temporary stuff
     public static final double [] DEFAULT_INTAKE_DISPLACEMENT = {11.75, -11.75 / 2, -ROOT_HEIGHT};
@@ -67,6 +71,7 @@ public class LinearSlides {
     public LinearSlides(HardwareMap hardwareMap){
         seeSawMotor = hardwareMap.get(DcMotorEx.class, "Seesaw Motor");
         extensionMotor = hardwareMap.get(DcMotorEx.class, "Linear Slide Extension Motor");
+        extensionMotor2 = hardwareMap.get(DcMotorEx.class, "Linear Slide Extension Motor 2");
 
         seeSawMotor.setDirection(DcMotor.Direction.FORWARD); // set direction, this was made for 1 gear transfer from drive to axle
         seeSawMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // set motor mode
@@ -79,9 +84,13 @@ public class LinearSlides {
         extensionMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER); // Run to position?
         extensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); // set zero power behavior
 
-        // Motor kinematics ;)
-        // Note: initialize turntable before manipulator!!!
+        extensionMotor2.setDirection(DcMotor.Direction.REVERSE); // set direction, probably need to change
+        extensionMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // set motor mode
+        extensionMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER); // Run to position?
+        extensionMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); // set zero power behavior
 
+        // Motor kinematics ;)
+        // Change this
         manipulatorPosition[0] = STARTING_EXTENDER_LENGTH * Math.cos(turntableAngle) * Math.cos(STARTING_ANGLE);
         manipulatorPosition[1] = STARTING_EXTENDER_LENGTH * Math.sin(turntableAngle) * Math.cos(STARTING_ANGLE);
         manipulatorPosition[2] =  ROOT_HEIGHT + (STARTING_EXTENDER_LENGTH * Math.sin(STARTING_ANGLE));
@@ -89,8 +98,6 @@ public class LinearSlides {
         displacement = new double[2];
         angleDisplacement = 0.0;
         ticksDisplacement = 0.0;
-
-        this.pivotTo(1.0);
     }
 
     public double[] getClawCoordinates() {
@@ -173,6 +180,11 @@ public class LinearSlides {
             } else {
                 extensionMotor.setPower(.5);
             }
+    }
+
+    public void extendBy(double inches){
+        this.update();
+        extensionMotor.setTargetPosition((int) ((inches - (extensionMotor.getCurrentPosition() * EXTENDER_OVERALL_RATIO) - STARTING_EXTENDER_LENGTH) / EXTENDER_OVERALL_RATIO));
     }
 
     public void pivotTo(double targetAngle) { // Radians
