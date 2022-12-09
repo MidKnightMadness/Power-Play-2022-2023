@@ -138,7 +138,7 @@ public class MecanumDrive {
 
 //            replacement = Math.max(Math.abs(targetX - currentX), Math.abs(targetY - currentY));
 //            if(Math.sqrt(((targetX - currentX) * (targetX - currentX)) + ((targetY - currentY) * (targetY - currentY))) < 10.0){ // CHange this later
-                fieldOrientatedDrive((targetX - currentX) / (10), (targetY - currentY) / (replacement * 100), (targetAngle - currentAngle) / 360); // 0 on rotational component is temporary, needs correction
+                fieldOrientatedDrive((targetX - currentX) / (10), (targetY - currentY) / (10), (targetAngle - currentAngle) / 360); // 0 on rotational component is temporary, needs correction
 //            }else {
 //                fieldOrientatedDrive((targetX - currentX) / (replacement * 10), (targetY - currentY) / (replacement * 10), (targetAngle - currentAngle) / 360); // 0 on rotational component is temporary, needs correction
 //            }
