@@ -40,7 +40,7 @@ public class Odometry implements OdometryVariables {
     public DcMotorEx horizontalEncoder;
     public DcMotorEx rightEncoder;
 
-    public Odometry(HardwareMap hardwareMap) {
+    public Odometry(HardwareMap hardwareMap, double startingAngleRadians, Vector2 startingPosition) {
         elapsedTime = new ElapsedTime();
 
         leftEncoder = hardwareMap.get(DcMotorEx.class, "FL");
@@ -52,6 +52,9 @@ public class Odometry implements OdometryVariables {
 
         horizontalEncoder = hardwareMap.get(DcMotorEx.class, "BR");
 //        horizontalEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        this.rotationRadians = startingAngleRadians;
+        this.position = startingPosition;
     }
 
     public void updateTime() {
@@ -68,7 +71,7 @@ public class Odometry implements OdometryVariables {
 
     double forwardMovement;
 
-    double lateralMovementAdjustor;
+    double lateralMovementFromRotation;
     double trueLateralMovement;
 
     double sin;
@@ -100,28 +103,27 @@ public class Odometry implements OdometryVariables {
         rotationRadians += deltaRadians;
 
         forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0;
-
-        lateralMovementAdjustor = deltaRadians * verticalWheelDistance;
-        trueLateralMovement = topDistanceMoved - lateralMovementAdjustor;
+        trueLateralMovement = topDistanceMoved + deltaRadians * verticalWheelDistance;
 
         sin = Math.sin(rotationRadians);
         cosine = Math.cos(rotationRadians);
 
-        netX = forwardMovement * cosine - trueLateralMovement * sin;
+        netX = forwardMovement * cosine + trueLateralMovement * sin;
         netY = forwardMovement * sin + trueLateralMovement * cosine;
 
-        if (false) {
-            netX = forwardMovement * Math.cos(rotationRadians);
-            netY = forwardMovement * Math.sin(rotationRadians);
+//        if (false) {
+//            netX = forwardMovement * Math.cos(rotationRadians);
+//            netY = forwardMovement * Math.sin(rotationRadians);
+////                 (D1 + D2) / 2      Orientation Vector
+//            // third wheel component
+//            netX -= (trueLateralMovement) * (Math.sin(rotationRadians));
+//            netY += (trueLateralMovement) * (Math.cos(rotationRadians));
+//            //       Horizontal movement       Normal Vector
+//        }
 
-            // third wheel component
-            netX += (trueLateralMovement) * (-Math.sin(rotationRadians));
-            netY += (trueLateralMovement) * (Math.cos(rotationRadians));
-        }
 
-
-        position.x -= netY;
         position.y += netX;
+        position.x += netY;
 
         // Temporary
         AutonomousNew.currentPosition[0] += netX;

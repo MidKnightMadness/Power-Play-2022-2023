@@ -28,10 +28,13 @@ import org.firstinspires.ftc.robotcore.external.android.AndroidGyroscope;
 import org.firstinspires.ftc.teamcode.odometry.TwoWheelOdometry;
 import org.firstinspires.ftc.teamcode.odometry.Vector2;
 
-// BR
-// BL
-// FL
-// FR
+// Control Hub Configurations
+// Motors:
+// 0 FL
+// 1 BR
+// 2 BL
+// 3 FR
+
 
 
 @TeleOp(name="Main")
@@ -75,7 +78,7 @@ public class MainTeleOp extends OpMode {
         auxillaryList2 = new double [] {0.0, 0.0, 0.0};
 
         mecanum = new MecanumDrive(hardwareMap);
-        odometry = new Odometry(hardwareMap);
+        odometry = new Odometry(hardwareMap, Math.PI / 2, new Vector2(0, 0));
 
 //        odometry = new TwoWheelOdometry(hardwareMap);
 //        lift = new LinearSlides(hardwareMap);
