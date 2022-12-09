@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.common.Timer;
 import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
 import org.firstinspires.ftc.teamcode.highlevel.Master;
+import org.firstinspires.ftc.teamcode.manipulator.Claw;
 import org.firstinspires.ftc.teamcode.manipulator.LinearSlides;
 import org.firstinspires.ftc.teamcode.manipulator.Turntable;
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
@@ -35,6 +36,9 @@ import org.firstinspires.ftc.teamcode.odometry.Vector2;
 // 2 BL
 // 3 FR
 
+// Expansion Hub Configurations
+//
+
 
 
 @TeleOp(name="Main")
@@ -42,6 +46,8 @@ public class MainTeleOp extends OpMode {
     public static MecanumDrive mecanum;
     LinearSlides lift;
     Turntable turntable;
+    Claw claw;
+    LinearSlides linearslides;
     public static Odometry odometry;
 
     public static double [] currentPosition = {0.0, 0.0};
@@ -194,10 +200,18 @@ public class MainTeleOp extends OpMode {
     boolean isClawOpenToggle = false;
 
     void handleManipulatorControls() {
-         turntable.turnBy(deadZone(gamepad2.left_stick_x) * TURNTABLE_DEGREES_PER_SECOND * deltaTime);
-         lift.pivotTo( LinearSlides.seesawAngle + deadZone(gamepad2.left_stick_y) * SEEESAW_RADIANS_PER_SECOND * deltaTime);
-         lift.extendTo(LinearSlides.seesawExtensionLength + deadZone(-gamepad2.right_stick_y) * LINEAR_SLIDER_INCHES_PER_SECOND * deltaTime );
+//         turntable.turnBy(deadZone(gamepad2.left_stick_x) * TURNTABLE_DEGREES_PER_SECOND * deltaTime);
+//         lift.pivotTo( LinearSlides.seesawAngle + deadZone(gamepad2.left_stick_y) * SEEESAW_RADIANS_PER_SECOND * deltaTime);
+//         lift.extendTo(LinearSlides.seesawExtensionLength + deadZone(-gamepad2.right_stick_y) * LINEAR_SLIDER_INCHES_PER_SECOND * deltaTime );
 
+        // LINEAR SLIDES
+        linearslides.extendBy(gamepad2.right_stick_y);
+
+        // SEESAW
+        linearslides.pivotBy(gamepad2.left_stick_y);
+
+
+        // CLAW
         if (gamepad2.right_bumper && !lastClawOpenToggle) {
             isClawOpenToggle = !isClawOpenToggle;
         }
