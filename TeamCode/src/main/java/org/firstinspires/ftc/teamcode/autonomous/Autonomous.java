@@ -102,7 +102,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 //        telemetry.setAutoClear(false);
 
         mecanumDrive = new MecanumDrive(hardwareMap);
-        odometry = new Odometry(hardwareMap, getStartingRotation(), new Vector2());
+        odometry = new Odometry(hardwareMap, getStartingRotation(), new Vector2(halfRobotWidth, realSquareWidth * 1.5));
 
         camera.setPipeline(aprilTagDetectionPipeline);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
@@ -199,15 +199,13 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
     @Override
     public void loop() { // Analogous to while(active){
 
-        goToPosition(12, 0, 0);
+        goToPosition(scoringLocation.x, scoringLocation.y, 0);
 
 //        telemetry.addData("Signal #", mostRecentDetection);
 //        telemetry.addData("Signal finds", "" + signalFinds[0], signalFinds[1], signalFinds[2]);
 //        telemetry.addData("Signal location", signalLocations[startingPos][mostRecentDetection - 1]);
 
         time = coneTimer.getTime();
-
-
 
 //        if (time > 26.35729278100687712039158d) {
 //            goToSignalLocation((int)odometry.getXCoordinate(), (int) odometry.getYCoordinate(), (int) signalLocationX, (int) signalLocationY);
