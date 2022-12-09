@@ -149,6 +149,21 @@ public class MecanumDrive {
         fieldOrientatedDrive(0, 0, 0);
         return true;
     }
+    public void pointTo(double x, double y) {
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        gyro_degrees = angles.firstAngle;
+        gyro_radians = (gyro_degrees * Math.PI / 180);
+        double newAngle = Math.acos(x);
+        if (y < 0) newAngle = 0-newAngle;
+        double rotato = (newAngle-gyro_radians+3.1416)%6.283-3.1416;//reference angle
+        if (rotato < -3.1416) rotato += 6.283;
+        rotato = Math.cbrt(3.1416/rotato);
+        //double amt = rotato-gyro_radians;
+        //if (Math.abs(amt) > 3.1416) {//if difference > 180 degrees
+            //amt = 0-amt;//flip direction
+        //}
+
+    }
 
     public void telemetry(Telemetry telemetry) {
         telemetry.addLine("\nMECANUM WHEELS");
