@@ -67,6 +67,14 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         return 0;
     }
 
+    public double getStartingRotation() {
+        return Math.PI / 2;
+    }
+
+    public Vector2 getStartingPostition() {
+        return new Vector2(7.5, realSquareWidth * 1.5);
+    }
+
     @Override
     public void init() {
         mecanumDrive = new MecanumDrive(hardwareMap);
@@ -83,7 +91,6 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         imu.initialize(parameters);
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
-
         startingPos = getStartingPos();
 
         coneTimer = new Timer();
@@ -95,7 +102,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 //        telemetry.setAutoClear(false);
 
         mecanumDrive = new MecanumDrive(hardwareMap);
-        odometry = new Odometry(hardwareMap);
+        odometry = new Odometry(hardwareMap, getStartingRotation(), new Vector2());
 
         camera.setPipeline(aprilTagDetectionPipeline);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()

@@ -35,6 +35,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
+import org.firstinspires.ftc.teamcode.odometry.Vector2;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -81,7 +82,7 @@ public class AutonomousNew extends LinearOpMode
     public void runOpMode()
     {
         mecanumDrive = new MecanumDrive(hardwareMap);
-        odometry = new Odometry(hardwareMap);
+        odometry = new Odometry(hardwareMap, Math.PI / 2, new Vector2(0, 0));
 
         // Resetting positions for odometry
         odometry.horizontalEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

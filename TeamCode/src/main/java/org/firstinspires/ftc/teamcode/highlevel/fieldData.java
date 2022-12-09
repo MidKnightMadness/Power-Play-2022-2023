@@ -19,6 +19,8 @@ public interface fieldData {
     final int aposx = 60;
     final int fposx = 84;
 
+    double halfRobotWidth = 7.5;
+
     double realSquareWidth = 23.5;
     double dimensionMultiplier = 23.5 / 24;
 

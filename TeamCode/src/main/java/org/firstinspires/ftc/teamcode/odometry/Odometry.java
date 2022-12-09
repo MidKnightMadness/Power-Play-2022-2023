@@ -40,7 +40,7 @@ public class Odometry implements OdometryVariables {
     public DcMotorEx horizontalEncoder;
     public DcMotorEx rightEncoder;
 
-    public Odometry(HardwareMap hardwareMap) {
+    public Odometry(HardwareMap hardwareMap, double startingAngleRadians, Vector2 position) {
         elapsedTime = new ElapsedTime();
 
         leftEncoder = hardwareMap.get(DcMotorEx.class, "FL");
@@ -52,6 +52,8 @@ public class Odometry implements OdometryVariables {
 
         horizontalEncoder = hardwareMap.get(DcMotorEx.class, "BR");
 //        horizontalEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        this.rotationRadians = startingAngleRadians;
     }
 
     public void updateTime() {
@@ -68,7 +70,7 @@ public class Odometry implements OdometryVariables {
 
     double forwardMovement;
 
-    double lateralMovementAdjustor;
+    double lateralMovementFromRotation;
     double trueLateralMovement;
 
     double sin;
@@ -95,20 +97,18 @@ public class Odometry implements OdometryVariables {
         rightDistanceMoved = inPerTick * deltaRightTicks;
         topDistanceMoved = inPerTick * deltaTopTicks;
 
-
         // angles
         deltaRadians = getDeltaRotation(leftDistanceMoved, rightDistanceMoved);
         rotationRadians += deltaRadians;
 
         forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0;
-
         trueLateralMovement = topDistanceMoved - deltaRadians * verticalWheelDistance;
 
         sin = Math.sin(rotationRadians);
         cosine = Math.cos(rotationRadians);
 
-        netY = forwardMovement * cosine + trueLateralMovement * sin;
-        netX = forwardMovement * sin + trueLateralMovement * cosine;
+        netX = forwardMovement * cosine + trueLateralMovement * sin;
+        netY = forwardMovement * sin + trueLateralMovement * cosine;
 
 //        if (false) {
 //            netX = forwardMovement * Math.cos(rotationRadians);
@@ -121,8 +121,8 @@ public class Odometry implements OdometryVariables {
 //        }
 
 
-        position.x -= netY;
-        position.y += netX;
+        position.x -= netX;
+        position.y += netY;
 
         // Temporary
         AutonomousNew.currentPosition[0] += netX;

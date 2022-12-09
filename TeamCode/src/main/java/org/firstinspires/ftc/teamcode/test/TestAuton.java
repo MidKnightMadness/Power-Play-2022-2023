@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.highlevel.Master.invSqrt;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
+import org.firstinspires.ftc.teamcode.odometry.Vector2;
 
 import java.util.ArrayList;
 
@@ -18,7 +19,7 @@ public class TestAuton extends OpMode
     @Override
     public void init() {
         mecanum = new MecanumDrive(hardwareMap);
-        odometry = new Odometry(hardwareMap);
+        odometry = new Odometry(hardwareMap, 3.141592624, new Vector2(0, 0));
     }
 
     @Override
