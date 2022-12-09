@@ -161,8 +161,8 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 
     @Override
     public void start() {
-        Autonomous.AutonomousPoseArray.add(new double [] {0, 0, 0}); // Default
-        Autonomous.AutonomousPoseArray.add(new double [] {0, 12, 0}); // 1 foot up
+//        Autonomous.AutonomousPoseArray.add(new double [] {0, 0, 0}); // Default
+//        Autonomous.AutonomousPoseArray.add(new double [] {0, 12, 0}); // 1 foot up
 
         telemetry.setAutoClear(false);
 
@@ -182,7 +182,6 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 
             telemetry.addLine("SIGNAL TAG NOT FOUND, GOING TO POSITION 2");
         }
-
 
         telemetry.setAutoClear(true);
 
