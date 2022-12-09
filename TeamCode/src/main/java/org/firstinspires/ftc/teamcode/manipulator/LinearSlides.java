@@ -1,22 +1,16 @@
 package org.firstinspires.ftc.teamcode.manipulator;
 
+import static org.firstinspires.ftc.teamcode.highlevel.Master.claw;
+import static org.firstinspires.ftc.teamcode.manipulator.Turntable.turntableAngle;
+
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.autonomous.Autonomous;
+
 import org.firstinspires.ftc.teamcode.autonomous.AutonomousNew;
 import org.firstinspires.ftc.teamcode.currentOpModes.MainTeleOp;
-import org.firstinspires.ftc.teamcode.drivetrain.*;
-import java.math.*;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import org.firstinspires.ftc.teamcode.drivetrain.Vector;
 import org.firstinspires.ftc.teamcode.highlevel.Master;
-
-import static org.firstinspires.ftc.teamcode.highlevel.Master.claw;
-import static org.firstinspires.ftc.teamcode.highlevel.Master.invSqrt;
-import static org.firstinspires.ftc.teamcode.highlevel.Master.odometryAlg;
-import static org.firstinspires.ftc.teamcode.highlevel.Master.turntable;
-import static org.firstinspires.ftc.teamcode.manipulator.Turntable.turntableAngle; // Remove this in final version
-import org.firstinspires.ftc.teamcode.manipulator.Claw;
 
 
 public class LinearSlides {
@@ -24,28 +18,24 @@ public class LinearSlides {
     public static DcMotorEx extensionMotor;
     public static DcMotorEx extensionMotor2;
 
-    // 2ND EXTENSION MOTOR IN REVERSE PLS
-
     public static double [] manipulatorPosition = {0.0, 0.0, 0.0};
-    private static HardwareMap hardwareMap;
     public static double seesawAngle;
     public static double seesawExtensionLength;
 
     // Internal use variables
     private static double [] displacement;
     private static double angleDisplacement;
-    private static double ticksDisplacement;
+
 
     // Manipulator specifications in inches, radians
     public static final double ROOT_HEIGHT = 6.5; // From ground to linear slide mount
     private static final double STARTING_EXTENDER_LENGTH = 15.0; // Starting length from pivot axle
     // Rotation
     private static final double SEESAW_MOTOR_RATIO = 60; // 60:1 or 40:1 motor?
-    public static final double SEESAW_OVERALL_RATIO = 2 * Math.PI * (30 / 64) / (4096 * SEESAW_MOTOR_RATIO); // Angle per tick
+    public static final double SEESAW_OVERALL_RATIO = 2 * Math.PI * (30.0 / 64.0) / (4096 * SEESAW_MOTOR_RATIO); // Angle per tick
     private static final double STARTING_ANGLE = 0.0;// Of the Manipulator, factor in end-effector's center (cone center), in inches
     // Extension
     private static final double EXTENDER_MOTOR_RATIO = 20; // 20:1 or 40:1 motor?
-    private static final double PULLEY_RADIUS = 1.0; // Radius of pulley interacting with string
     public static final double EXTENDER_OVERALL_RATIO = 2 * Math.PI / (4096 * EXTENDER_MOTOR_RATIO); // Inches per tick
 
     // Temporary stuff
@@ -97,7 +87,6 @@ public class LinearSlides {
 
         displacement = new double[2];
         angleDisplacement = 0.0;
-        ticksDisplacement = 0.0;
     }
 
     public double[] getClawCoordinates() {
@@ -139,9 +128,17 @@ public class LinearSlides {
                 AutonomousNew.odometry.updatePosition();
             }
 
-        }/*else{ // For teleop
-            MainTeleOp.mecanum.fieldOrientatedDrive(0.0, 0.0, 0.8 * );
-        }*/
+        }else{
+            while(!(Math.abs(angleDisplacement - MainTeleOp.odometry.getRotationRadians()) < 0.1)){
+                if(angleDisplacement >= MainTeleOp.odometry.getRotationRadians()){
+                    MainTeleOp.mecanum.fieldOrientatedDrive(0.0, 0.0, 0.8);
+                }else{
+                    MainTeleOp.mecanum.fieldOrientatedDrive(0.0, 0.0, -0.8);
+                }
+
+                MainTeleOp.odometry.updatePosition();
+            }
+        }
 
         // Pivot seesaw up / down to desired position. Due to the behavior described in the previous step, this step (for now) doesn't have to account for swinging beyond 90˚ vertical
         /*
@@ -152,9 +149,10 @@ public class LinearSlides {
 
         if(AutonomousNew.mecanumDrive == null){ // Case teleOp
             if(Math.abs(angleDisplacement - MainTeleOp.odometry.getRotationRadians()) > Math.PI){ // Case backwards scoring
-
-            }else{
                 this.pivotTo(Math.PI + Math.atan(displacement[3] /
+                        Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + displacement[0]*displacement[0] + displacement[1]*displacement[1])));
+            }else{
+                this.pivotTo(Math.atan(displacement[3] /
                         Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + displacement[0]*displacement[0] + displacement[1]*displacement[1])));
             }
         }else{
