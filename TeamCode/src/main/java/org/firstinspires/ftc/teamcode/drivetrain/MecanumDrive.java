@@ -133,12 +133,12 @@ public class MecanumDrive {
     double replacement;
 
     public boolean driveTo(double targetX, double targetY, double targetAngle, double currentX, double currentY, double currentAngle){
-        if(Math.sqrt(((targetX - currentX) * (targetX - currentX)) + ((targetY - currentY) * (targetY - currentY))) > 0.5) { // ||
-            //((targetAngle - currentAngle) * (targetAngle - currentAngle)) > 10) {
+        if(Math.sqrt(((targetX - currentX) * (targetX - currentX)) + ((targetY - currentY) * (targetY - currentY))) > 1 ||
+            (targetAngle - currentAngle > Math.PI / 18)) {
 
 //            replacement = Math.max(Math.abs(targetX - currentX), Math.abs(targetY - currentY));
 //            if(Math.sqrt(((targetX - currentX) * (targetX - currentX)) + ((targetY - currentY) * (targetY - currentY))) < 10.0){ // CHange this later
-                fieldOrientatedDrive((targetX - currentX) / (10), (targetY - currentY) / (10), (targetAngle - currentAngle) / 360); // 0 on rotational component is temporary, needs correction
+                fieldOrientatedDrive((targetX - currentX) / (10), (targetY - currentY) / (10), (targetAngle - currentAngle)); // 0 on rotational component is temporary, needs correction
 //            }else {
 //                fieldOrientatedDrive((targetX - currentX) / (replacement * 10), (targetY - currentY) / (replacement * 10), (targetAngle - currentAngle) / 360); // 0 on rotational component is temporary, needs correction
 //            }
