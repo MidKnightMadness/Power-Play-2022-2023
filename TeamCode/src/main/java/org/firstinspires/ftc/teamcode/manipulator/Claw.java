@@ -32,12 +32,12 @@ public class Claw {
     public Claw(HardwareMap hardwareMap) {
         calibrationTimer = new Timer();
 
-         servo = hardwareMap.get(Servo.class, "claw");
+         servo = hardwareMap.get(Servo.class, "Claw");
 
-         rotationServo = hardwareMap.get(Servo.class, "claw pivot");
+         rotationServo = hardwareMap.get(Servo.class, "CP");
         rotationServo.setDirection(Servo.Direction.FORWARD);
 
-         rotationServo2 = hardwareMap.get(Servo.class, "claw pivot 2");
+         rotationServo2 = hardwareMap.get(Servo.class, "CP2");
          rotationServo2.setDirection(Servo.Direction.REVERSE);
 
 
