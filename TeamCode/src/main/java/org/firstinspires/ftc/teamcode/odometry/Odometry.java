@@ -52,6 +52,8 @@ public class Odometry implements OdometryVariables {
 
         horizontalEncoder = hardwareMap.get(DcMotorEx.class, "BR");
 //        horizontalEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
     }
 
     public void updateTime() {
@@ -110,7 +112,7 @@ public class Odometry implements OdometryVariables {
         netY = forwardMovement * cosine + trueLateralMovement * sin;
         netX = forwardMovement * sin + trueLateralMovement * cosine;
 
-//        if (false) {
+//        if (true) {
 //            netX = forwardMovement * Math.cos(rotationRadians);
 //            netY = forwardMovement * Math.sin(rotationRadians);
 ////                 (D1 + D2) / 2      Orientation Vector
@@ -121,8 +123,8 @@ public class Odometry implements OdometryVariables {
 //        }
 
 
-        position.x -= netY;
-        position.y += netX;
+        position.x -= netX;
+        position.y += netY;
 
         // Temporary
         AutonomousNew.currentPosition[0] += netX;
