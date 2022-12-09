@@ -133,13 +133,15 @@ public class MecanumDrive {
     double replacement;
 
     public boolean driveTo(double targetX, double targetY, double targetAngle, double currentX, double currentY, double currentAngle){
-        if(((targetX - currentX) * (targetX - currentX)) + ((targetY - currentY) * (targetY - currentY)) > 1 ||
-            (targetAngle - currentAngle) * (targetAngle - currentAngle) > 10) {
+        if(Math.sqrt(((targetX - currentX) * (targetX - currentX)) + ((targetY - currentY) * (targetY - currentY))) > 0.5) { // ||
+            //((targetAngle - currentAngle) * (targetAngle - currentAngle)) > 10) {
 
-            replacement = Math.max(Math.abs(targetX - currentX), Math.abs(targetY - currentY));
-
-            fieldOrientatedDrive((targetX - currentX) / (replacement * 10), (targetY - currentY) / (replacement * 10), (targetAngle-currentAngle) / 360); // 0 on rotational component is temporary, needs correction
-
+//            replacement = Math.max(Math.abs(targetX - currentX), Math.abs(targetY - currentY));
+//            if(Math.sqrt(((targetX - currentX) * (targetX - currentX)) + ((targetY - currentY) * (targetY - currentY))) < 10.0){ // CHange this later
+                fieldOrientatedDrive((targetX - currentX) / (10), (targetY - currentY) / (replacement * 100), (targetAngle - currentAngle) / 360); // 0 on rotational component is temporary, needs correction
+//            }else {
+//                fieldOrientatedDrive((targetX - currentX) / (replacement * 10), (targetY - currentY) / (replacement * 10), (targetAngle - currentAngle) / 360); // 0 on rotational component is temporary, needs correction
+//            }
 //            FRMotor.setPower(-0 + -((targetY - currentY) / replacement) * 0.1 - 0);
 //            FLMotor.setPower( 0 + -((targetY - currentY) / replacement) * 0.1 + 0);
 //            BRMotor.setPower( 0 + -((targetY - currentY) / replacement) * 0.1 - 0);
