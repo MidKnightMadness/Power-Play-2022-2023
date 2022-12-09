@@ -95,28 +95,29 @@ public class Odometry implements OdometryVariables {
         rightDistanceMoved = inPerTick * deltaRightTicks;
         topDistanceMoved = inPerTick * deltaTopTicks;
 
+
         // angles
         deltaRadians = getDeltaRotation(leftDistanceMoved, rightDistanceMoved);
         rotationRadians += deltaRadians;
 
         forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0;
 
-        lateralMovementAdjustor = deltaRadians * verticalWheelDistance;
-        trueLateralMovement = topDistanceMoved - lateralMovementAdjustor;
+        trueLateralMovement = topDistanceMoved - deltaRadians * verticalWheelDistance;
 
         sin = Math.sin(rotationRadians);
         cosine = Math.cos(rotationRadians);
 
         netY = forwardMovement * cosine + trueLateralMovement * sin;
         netX = forwardMovement * sin + trueLateralMovement * cosine;
-//
+
 //        if (false) {
 //            netX = forwardMovement * Math.cos(rotationRadians);
 //            netY = forwardMovement * Math.sin(rotationRadians);
-//
+////                 (D1 + D2) / 2      Orientation Vector
 //            // third wheel component
-//            netX += (trueLateralMovement) * (-Math.sin(rotationRadians));
+//            netX -= (trueLateralMovement) * (Math.sin(rotationRadians));
 //            netY += (trueLateralMovement) * (Math.cos(rotationRadians));
+//            //       Horizontal movement       Normal Vector
 //        }
 
 
