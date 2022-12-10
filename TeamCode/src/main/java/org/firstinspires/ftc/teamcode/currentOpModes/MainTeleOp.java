@@ -135,9 +135,12 @@ public class MainTeleOp extends OpMode {
 
         claw.pivotTo(- (LinearSlides.seeSawMotor.getCurrentPosition() * LinearSlides.SEESAW_OVERALL_RATIO) -  (Math.PI / 4));
 
-        LinearSlides.extensionMotor.setPower(-gamepad1.right_stick_y);
-        LinearSlides.extensionMotor2.setPower(-gamepad1.right_stick_y);
-        LinearSlides.seeSawMotor.setPower(-gamepad1.left_stick_y);
+        LinearSlides.extensionMotor.setVelocity(-gamepad1.right_stick_y);
+        LinearSlides.extensionMotor2.setVelocity(-gamepad1.right_stick_y);
+        LinearSlides.seeSawMotor.setVelocity(-gamepad1.left_stick_y);
+
+        //        LinearSlides.extensionMotor.setTargetPosition((int) (- 10 * gamepad1.left_stick_y + LinearSlides.extensionMotor.getCurrentPosition()));
+//        LinearSlides.extensionMotor2.setTargetPosition((int) (- 10 * gamepad1.right_stick_y + LinearSlides.extensionMotor2.getCurrentPosition()));
         // End manipulator implementation
 
 
@@ -217,7 +220,7 @@ public class MainTeleOp extends OpMode {
 
         odometry.updatePosition();
 
-        handleManipulatorControls();
+//        handleManipulatorControls();
 
         telemetry.addLine(String.format("Position: [%5.2f, %5.2f]", this.currentPosition[0], currentPosition[1]));
         telemetry.addLine("EASE COEFFICIENT " + previousInputWeight);
