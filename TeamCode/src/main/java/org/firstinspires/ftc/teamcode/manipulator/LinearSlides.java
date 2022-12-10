@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.autonomous.Autonomous;
 import org.firstinspires.ftc.teamcode.autonomous.AutonomousNew;
 import org.firstinspires.ftc.teamcode.currentOpModes.MainTeleOp;
@@ -99,14 +100,9 @@ public class LinearSlides {
         return new double[] { x, y, height };
     }
 
-    public void setPower(double seesawPower, double extensionPower) {
-        seeSawMotor.setPower(-seesawPower * 0.5);
-        extensionMotor.setPower(-extensionPower);
-    }
-
-
     private static final double MANIPULATOR_BACKSET_DISTANCE = 3.5;
-    public void goPointAt(double [] xyzDisplacement){ // Make sure to input 3-array for targeted scoring position!!!!!!!! Will have to get angle of robot once it gets to junction, then correct a second time. This is not a one-time algorithm!!!
+    public void goPointAt(double [] xyzDisplacement){
+        // Make sure to input 3-array for targeted scoring position!!!!!!!! Will have to get angle of robot once it gets to junction, then correct a second time. This is not a one-time algorithm!!!
         // Actually does everything at the same time, will need to edit based on extension speed (want to minimize extended time for reliability purposes)
         displacement = xyzDisplacement; // Screw it I don't wanna run the method over and over haha
         //  Note: displacement from pivot point of linear slide
@@ -182,9 +178,6 @@ public class LinearSlides {
     }
 
     public void extendBy(double power){
-//        this.update();
-//        extensionMotor.setTargetPosition((int) ((inches - (extensionMotor.getCurrentPosition() * EXTENDER_OVERALL_RATIO) - STARTING_EXTENDER_LENGTH) / EXTENDER_OVERALL_RATIO));
-
         extensionMotor.setPower(power);
         extensionMotor2.setPower(power);
     }
@@ -201,9 +194,7 @@ public class LinearSlides {
         }
     }
 
-    public void pivotBy(double power) { // Radians
-        this.update();
-//        this.pivotTo(seesawAngle + angleChange);
+    public void pivotBy(double power) {
         seeSawMotor.setPower(power);
     }
 
@@ -230,5 +221,13 @@ public class LinearSlides {
         }
 
         claw.openClaw();
+    }
+
+    public void telemetry(Telemetry telemetry) {
+        telemetry.addLine("\nLINEAR SLIDES + SEESAW");
+        telemetry.addLine(String.format("Seesaw Motor Power: %f", seeSawMotor.getPower()));
+        telemetry.addLine(String.format("Extension Motors Powers: %f %f", extensionMotor.getPower(), extensionMotor2.getPower()));
+        telemetry.addLine(String.format("Extensions Current Positions: %f %f", extensionMotor.getCurrentPosition(), extensionMotor2.getCurrentPosition()));
+        telemetry.addLine(String.format("Extensions Target Positions: %f %f", extensionMotor.getTargetPosition(), extensionMotor2.getTargetPosition()));
     }
 }

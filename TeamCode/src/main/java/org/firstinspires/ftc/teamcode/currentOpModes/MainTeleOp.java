@@ -64,28 +64,11 @@ public class MainTeleOp extends OpMode {
     double[] currentInputs = {0, 0};
 
     Timer timer;
-    double auxillary;
-    double auxillary1;
-    double [] auxillaryList1;
-    double [] auxillaryList2;
 
-    final double TURNTABLE_DEGREES_PER_SECOND = 180d;
     final double DEADZONE_TOLERANCE = 0.05;
-    final double SEEESAW_RADIANS_PER_SECOND = 1;
-    final double LINEAR_SLIDER_INCHES_PER_SECOND = 4;
 
-    AndroidAccelerometer accelerometer;
-
-    private boolean lastPressedLiftMotor = false;
-    private boolean liftMotorToggle = false;
     private boolean lastPressedDriveMode = false;
     private boolean driveModeToggle = false;
-
-    // Manipulator implementation
-
-        // Bounds
-        double OPEN = 0.425;
-        double CLOSED = 0.750;
 
 
 
@@ -93,100 +76,40 @@ public class MainTeleOp extends OpMode {
     public void init() {
         timer = new Timer();
 
-        auxillary = 0.0;
-        auxillary1 = 0.0;
-        auxillaryList1 = new double [] {0.0, 0.0};
-        auxillaryList2 = new double [] {0.0, 0.0, 0.0};
-
         mecanum = new MecanumDrive(hardwareMap);
         odometry = new Odometry(hardwareMap, Math.PI / 2, new Vector2(0, 0));
+        claw = new Claw(hardwareMap);
+        slides = new LinearSlides(hardwareMap);
 
-        // Manipulator implementation
-            claw = new Claw(hardwareMap);
-            slides = new LinearSlides(hardwareMap);
-
-            claw.pivotTo(-Math.PI / 4);
-
-
-
-//        odometry = new TwoWheelOdometry(hardwareMap);
-//        lift = new LinearSlides(hardwareMap);
-//        turntable = new Turntable(hardwareMap);
-
-//        accelerometer = Master.hardwaremap.get(AndroidAccelerometer.class, "accelerometer");
-//        accelerometer.setDistanceUnit(DistanceUnit.INCH);
-//        accelerometer.startListening();
+        claw.pivotTo(-Math.PI / 4);
     }
+
     double time;
     double deltaTime;
     double previousInputWeight = 0.95;
+    double powerMultiplier = 0.5;
 
     @Override
     public void loop() {
 
-        // Manipulator implementation
-        if(gamepad1.left_bumper || gamepad1.right_bumper){
-            if(claw.open){
-                claw.closeClaw();
-            }else{
-                claw.openClaw();
-            }
-        }
 
-        claw.pivotTo(- (LinearSlides.seeSawMotor.getCurrentPosition() * LinearSlides.SEESAW_OVERALL_RATIO) -  (Math.PI / 4));
-
-        LinearSlides.extensionMotor.setPower(-gamepad1.right_stick_y);
-        LinearSlides.extensionMotor2.setPower(-gamepad1.right_stick_y);
-        LinearSlides.seeSawMotor.setPower(-gamepad1.left_stick_y);
-        // End manipulator implementation
-
-
-//        timer.upxx tDeltaTime();
-
-//        Master.tickRate = 1 / (time - auxillary); // auxillary is previous time
-//        auxillaryList1[0] = currentPosition[0] - auxillaryList1[0];
-//        auxillaryList1[1] = currentPosition[1] - auxillaryList1[1];
-//        Master.robotSpeed = lengthOf(auxillaryList1) / (time - auxillary);
-
-//         DRIVER ASSIST
-
-        double powerMultiplier = 0.5;
-
-        if (gamepad1.left_bumper && !lastPressedDriveMode) {
-            driveModeToggle = !driveModeToggle;
-        }
-
-
-        Vector2 velocity = odometry.getVelocity();
-        if (this.gamepad1.x) {
+        // DRIVER ASSIST
+        if (gamepad1.x) {
             odometry.resetEncoders();
         }
 
-        if (this.gamepad1.a) {
+        if (gamepad1.a) {
             previousInputWeight += 0.01;
-            if (previousInputWeight > 1) {
-                previousInputWeight = 1;
-            }
-            try {
-                Thread.sleep(75);
-            }
-            catch (InterruptedException e) {
-                telemetry.addLine(e.toString());
-            }
-
+            if (previousInputWeight > 1) { previousInputWeight = 1; }
+            try { Thread.sleep(75); }
+            catch (InterruptedException e) { telemetry.addLine(e.toString()); }
         }
 
-        if (this.gamepad1.b) {
+        if (gamepad1.b) {
             previousInputWeight -= 0.01;
-            if (previousInputWeight < 0) {
-                previousInputWeight = 0;
-            }
-            try {
-                Thread.sleep(75);
-            }
-            catch (InterruptedException e) {
-
-            }
+            if (previousInputWeight < 0) { previousInputWeight = 0; }
+            try { Thread.sleep(75); }
+            catch (InterruptedException e) { }
         }
 
         currentInputs[0] = gamepad1.left_stick_x * previousInputWeight + lastInputs[0] * (1 - previousInputWeight);
@@ -195,29 +118,66 @@ public class MainTeleOp extends OpMode {
         lastInputs[0] = currentInputs[0];
         lastInputs[1] = currentInputs[1];
 
-        if (driveModeToggle) {
-            mecanum.fieldOrientatedDrive(currentInputs[0] * powerMultiplier,
-                    -currentInputs[1] * powerMultiplier, gamepad1.right_stick_x * powerMultiplier);
 
 
-            if (gamepad1.dpad_up) { mecanum.fieldOrientatedDrive(0, -1, 0); }
-            if (gamepad1.dpad_down) { mecanum.fieldOrientatedDrive(0, 1, 0); }
-            if (gamepad1.dpad_right) { mecanum.fieldOrientatedDrive(1, 0, 0); }
-            if (gamepad1.dpad_left) { mecanum.fieldOrientatedDrive(-1, 0, 0); }
-        } else {
-            mecanum.drive(currentInputs[0] * powerMultiplier, -currentInputs[1] * powerMultiplier,
-                    gamepad1.right_stick_x * powerMultiplier); // normal drive
-
-
-            if (gamepad1.dpad_up) { mecanum.drive(0, -1 , 0); }
-            if (gamepad1.dpad_down) { mecanum.drive(0, 1 , 0); }
-            if (gamepad1.dpad_right) { mecanum.drive(1, 0, 0); }
-            if (gamepad1.dpad_left) { mecanum.drive(-1 , 0, 0); }
+        // DRIVE
+        if (gamepad1.left_bumper && !lastPressedDriveMode) {
+            driveModeToggle = !driveModeToggle;
         }
 
-        odometry.updatePosition();
+        if (driveModeToggle) {
+            mecanum.fieldOrientatedDrive(currentInputs[0] * powerMultiplier, -currentInputs[1] * powerMultiplier,
+                    (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier);
 
-        handleManipulatorControls();
+            if (gamepad1.dpad_up) { mecanum.fieldOrientatedDrive(0, -powerMultiplier, 0); }
+            if (gamepad1.dpad_down) { mecanum.fieldOrientatedDrive(0, powerMultiplier, 0); }
+            if (gamepad1.dpad_right) { mecanum.fieldOrientatedDrive(powerMultiplier, 0, 0); }
+            if (gamepad1.dpad_left) { mecanum.fieldOrientatedDrive(-powerMultiplier, 0, 0); }
+        } else {
+            mecanum.drive(currentInputs[0] * powerMultiplier, -currentInputs[1] * powerMultiplier,
+                    (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier); // normal drive
+
+            if (gamepad1.dpad_up) { mecanum.drive(0, -powerMultiplier, 0); }
+            if (gamepad1.dpad_down) { mecanum.drive(0, powerMultiplier, 0); }
+            if (gamepad1.dpad_right) { mecanum.drive(powerMultiplier, 0, 0); }
+            if (gamepad1.dpad_left) { mecanum.drive(-powerMultiplier, 0, 0); }
+        }
+
+        mecanum.drive(0, 0, gamepad2.left_stick_x);
+
+
+
+        // LINEAR SLIDES
+        slides.extendBy(-gamepad2.right_stick_y);
+
+
+
+        // SEESAW
+        slides.pivotBy(gamepad2.left_stick_y);
+
+
+
+        // CLAW
+        if (gamepad2.right_bumper && !lastClawOpenToggle) {
+            isClawOpenToggle = !isClawOpenToggle;
+        }
+
+        lastClawOpenToggle = gamepad2.right_bumper;
+
+        if (isClawOpenToggle) {
+            claw.openClaw();
+        } else {
+            claw.closeClaw();
+        }
+
+        // claw pivot
+        claw.pivotTo(- (LinearSlides.seeSawMotor.getCurrentPosition() * LinearSlides.SEESAW_OVERALL_RATIO) -  (Math.PI / 4));
+
+
+
+
+        // TELEMETRY
+        odometry.updatePosition();
 
         telemetry.addLine(String.format("Position: [%5.2f, %5.2f]", this.currentPosition[0], currentPosition[1]));
         telemetry.addLine("EASE COEFFICIENT " + previousInputWeight);
@@ -229,8 +189,9 @@ public class MainTeleOp extends OpMode {
         telemetry.addData("Left Stick Y", currentInputs[0] * powerMultiplier);
         telemetry.addData("Right Stick X", gamepad1.right_stick_x);
 
-        odometry.telemetry(telemetry);
+//        odometry.telemetry(telemetry);
         mecanum.telemetry(telemetry);
+        slides.telemetry(telemetry);
 
         telemetry.addLine("\nTIMER");
         telemetry.addLine("DeltaTime " + deltaTime);
@@ -243,30 +204,6 @@ public class MainTeleOp extends OpMode {
     boolean isClawOpenToggle = false;
 
     void handleManipulatorControls() {
-//         turntable.turnBy(deadZone(gamepad2.left_stick_x) * TURNTABLE_DEGREES_PER_SECOND * deltaTime);
-//         lift.pivotTo( LinearSlides.seesawAngle + deadZone(gamepad2.left_stick_y) * SEEESAW_RADIANS_PER_SECOND * deltaTime);
-//         lift.extendTo(LinearSlides.seesawExtensionLength + deadZone(-gamepad2.right_stick_y) * LINEAR_SLIDER_INCHES_PER_SECOND * deltaTime );
-
-        // LINEAR SLIDES
-        slides.extendBy(gamepad2.right_stick_y);
-
-        // SEESAW
-        slides.pivotBy(gamepad2.left_stick_y);
-
-
-        // CLAW
-        if (gamepad2.right_bumper && !lastClawOpenToggle) {
-            isClawOpenToggle = !isClawOpenToggle;
-        }
-
-        lastClawOpenToggle = gamepad2.right_bumper;
-
-        if (isClawOpenToggle) {
-            claw.openClaw();
-        }
-        else {
-            claw.closeClaw();
-        }
     }
 
     double deadZone(double input) {
