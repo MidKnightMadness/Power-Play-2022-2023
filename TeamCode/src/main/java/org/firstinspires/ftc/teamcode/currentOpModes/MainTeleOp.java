@@ -37,7 +37,14 @@ import org.firstinspires.ftc.teamcode.odometry.Vector2;
 // 3 FR
 
 // Expansion Hub Configurations
-//
+// Motors:
+// 0 SSM
+// 1 LSEM
+// 2 LSEM2
+// Servos
+// 0 Claw
+// 1 CP
+// 2 CP2
 
 
 
@@ -47,7 +54,7 @@ public class MainTeleOp extends OpMode {
     LinearSlides lift;
     Turntable turntable;
     Claw claw;
-    LinearSlides linearslides;
+    LinearSlides slides;
     public static Odometry odometry;
 
     public static double [] currentPosition = {0.0, 0.0};
@@ -75,9 +82,6 @@ public class MainTeleOp extends OpMode {
     private boolean driveModeToggle = false;
 
     // Manipulator implementation
-        Claw claw;
-
-        LinearSlides slides;
 
         // Bounds
         double OPEN = 0.425;
@@ -213,6 +217,8 @@ public class MainTeleOp extends OpMode {
 
         odometry.updatePosition();
 
+        handleManipulatorControls();
+
         telemetry.addLine(String.format("Position: [%5.2f, %5.2f]", this.currentPosition[0], currentPosition[1]));
         telemetry.addLine("EASE COEFFICIENT " + previousInputWeight);
         telemetry.addData("Angle", odometry.getRotationRadians() * 180 / Math.PI);
@@ -242,10 +248,10 @@ public class MainTeleOp extends OpMode {
 //         lift.extendTo(LinearSlides.seesawExtensionLength + deadZone(-gamepad2.right_stick_y) * LINEAR_SLIDER_INCHES_PER_SECOND * deltaTime );
 
         // LINEAR SLIDES
-        linearslides.extendBy(gamepad2.right_stick_y);
+        slides.extendBy(gamepad2.right_stick_y);
 
         // SEESAW
-        linearslides.pivotBy(gamepad2.left_stick_y);
+        slides.pivotBy(gamepad2.left_stick_y);
 
 
         // CLAW

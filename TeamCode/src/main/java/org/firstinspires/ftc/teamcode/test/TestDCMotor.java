@@ -25,9 +25,9 @@ public class TestDCMotor extends LinearOpMode {
 //            else {
 //                dcMotor.setPower(0);
 //            }
+            telemetry.addData("a", gamepad1.right_stick_x);
+            telemetry.update();
         }
 
-        telemetry.addData("a", gamepad1.right_stick_x);
-        telemetry.update();
     }
 }
