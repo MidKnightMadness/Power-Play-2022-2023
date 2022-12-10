@@ -80,8 +80,6 @@ public class MainTeleOp extends OpMode {
         odometry = new Odometry(hardwareMap, Math.PI / 2, new Vector2(0, 0));
         claw = new Claw(hardwareMap);
         slides = new LinearSlides(hardwareMap);
-
-        claw.pivotTo(-Math.PI / 4);
     }
 
     double time;
@@ -171,8 +169,11 @@ public class MainTeleOp extends OpMode {
         }
 
         // claw pivot
-        claw.pivotTo(- (LinearSlides.seeSawMotor.getCurrentPosition() * LinearSlides.SEESAW_OVERALL_RATIO) -  (Math.PI / 4));
-
+        if (gamepad2.dpad_up) {
+            claw.rotateClaw(1);
+        } else if (gamepad2.dpad_down) {
+            claw.rotateClaw(-1);
+        }
 
 
 
@@ -192,6 +193,7 @@ public class MainTeleOp extends OpMode {
 //        odometry.telemetry(telemetry);
         mecanum.telemetry(telemetry);
         slides.telemetry(telemetry);
+        claw.telemetry(telemetry);
 
         telemetry.addLine("\nTIMER");
         telemetry.addLine("DeltaTime " + deltaTime);

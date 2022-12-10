@@ -27,7 +27,7 @@ public class TestClawTemporary  extends OpMode {
         claw = new Claw(hardwareMap);
         slides = new LinearSlides(hardwareMap);
 
-        claw.pivotTo(-Math.PI / 4);
+//        claw.pivotTo(-Math.PI / 4);
     }
 
     boolean adjustingOpen = false;
@@ -35,14 +35,14 @@ public class TestClawTemporary  extends OpMode {
     @Override
     public void loop() {
         if(gamepad1.left_bumper || gamepad1.right_bumper){
-            if(claw.open){
-                claw.closeClaw();
-            }else{
-                claw.openClaw();
-            }
+//            if(claw.open){
+//                claw.closeClaw();
+//            }else{
+//                claw.openClaw();
+//            }
         }
 
-        claw.pivotTo(- (LinearSlides.seeSawMotor.getCurrentPosition() * LinearSlides.SEESAW_OVERALL_RATIO) -  (Math.PI / 4));
+//        claw.pivotTo(- (LinearSlides.seeSawMotor.getCurrentPosition() * LinearSlides.SEESAW_OVERALL_RATIO) -  (Math.PI / 4));
 
         LinearSlides.extensionMotor.setPower(-gamepad1.right_stick_y);
         LinearSlides.extensionMotor2.setPower(-gamepad1.right_stick_y);
