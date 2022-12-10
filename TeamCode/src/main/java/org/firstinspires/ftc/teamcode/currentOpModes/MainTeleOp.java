@@ -36,6 +36,16 @@ import org.firstinspires.ftc.teamcode.odometry.Vector2;
 // 2 BL
 // 3 FR
 
+// Expansion Hub Configurations
+// Motors:
+// 0 SSM
+// 1 LSEM
+// 2 LSEM2
+// Servos
+// 0 Claw
+// 1 CP
+// 2 CP2
+
 
 
 @TeleOp(name="Main")
@@ -43,6 +53,8 @@ public class MainTeleOp extends OpMode {
     public static MecanumDrive mecanum;
     LinearSlides lift;
     Turntable turntable;
+    Claw claw;
+    LinearSlides slides;
     public static Odometry odometry;
 
     public static double [] currentPosition = {0.0, 0.0};
@@ -70,9 +82,6 @@ public class MainTeleOp extends OpMode {
     private boolean driveModeToggle = false;
 
     // Manipulator implementation
-        Claw claw;
-
-        LinearSlides slides;
 
         // Bounds
         double OPEN = 0.425;
@@ -208,6 +217,8 @@ public class MainTeleOp extends OpMode {
 
         odometry.updatePosition();
 
+        handleManipulatorControls();
+
         telemetry.addLine(String.format("Position: [%5.2f, %5.2f]", this.currentPosition[0], currentPosition[1]));
         telemetry.addLine("EASE COEFFICIENT " + previousInputWeight);
         telemetry.addData("Angle", odometry.getRotationRadians() * 180 / Math.PI);
@@ -232,10 +243,18 @@ public class MainTeleOp extends OpMode {
     boolean isClawOpenToggle = false;
 
     void handleManipulatorControls() {
+//         turntable.turnBy(deadZone(gamepad2.left_stick_x) * TURNTABLE_DEGREES_PER_SECOND * deltaTime);
+//         lift.pivotTo( LinearSlides.seesawAngle + deadZone(gamepad2.left_stick_y) * SEEESAW_RADIANS_PER_SECOND * deltaTime);
+//         lift.extendTo(LinearSlides.seesawExtensionLength + deadZone(-gamepad2.right_stick_y) * LINEAR_SLIDER_INCHES_PER_SECOND * deltaTime );
 
-         lift.pivotTo( LinearSlides.seesawAngle + deadZone(gamepad2.left_stick_y) * SEEESAW_RADIANS_PER_SECOND * deltaTime);
-         lift.extendTo(LinearSlides.seesawExtensionLength + deadZone(-gamepad2.right_stick_y) * LINEAR_SLIDER_INCHES_PER_SECOND * deltaTime );
+        // LINEAR SLIDES
+        slides.extendBy(gamepad2.right_stick_y);
 
+        // SEESAW
+        slides.pivotBy(gamepad2.left_stick_y);
+
+
+        // CLAW
         if (gamepad2.right_bumper && !lastClawOpenToggle) {
             isClawOpenToggle = !isClawOpenToggle;
         }

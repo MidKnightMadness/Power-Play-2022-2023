@@ -181,9 +181,12 @@ public class LinearSlides {
             }
     }
 
-    public void extendBy(double inches){
-        this.update();
-        extensionMotor.setTargetPosition((int) ((inches - (extensionMotor.getCurrentPosition() * EXTENDER_OVERALL_RATIO) - STARTING_EXTENDER_LENGTH) / EXTENDER_OVERALL_RATIO));
+    public void extendBy(double power){
+//        this.update();
+//        extensionMotor.setTargetPosition((int) ((inches - (extensionMotor.getCurrentPosition() * EXTENDER_OVERALL_RATIO) - STARTING_EXTENDER_LENGTH) / EXTENDER_OVERALL_RATIO));
+
+        extensionMotor.setPower(power);
+        extensionMotor2.setPower(power);
     }
 
     public void pivotTo(double targetAngle) { // Radians
@@ -198,9 +201,10 @@ public class LinearSlides {
         }
     }
 
-    public void pivotBy(double angleChange) { // Radians
+    public void pivotBy(double power) { // Radians
         this.update();
-        this.pivotTo(seesawAngle + angleChange);
+//        this.pivotTo(seesawAngle + angleChange);
+        seeSawMotor.setPower(power);
     }
 
     public void update(){ // Run this as much as applicable
