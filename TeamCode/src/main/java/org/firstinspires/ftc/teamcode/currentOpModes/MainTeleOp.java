@@ -12,6 +12,7 @@ import static org.firstinspires.ftc.teamcode.highlevel.Master.claw;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.common.Timer;
 import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
+import org.firstinspires.ftc.teamcode.highlevel.GridSystem;
 import org.firstinspires.ftc.teamcode.highlevel.Master;
 import org.firstinspires.ftc.teamcode.manipulator.Claw;
 import org.firstinspires.ftc.teamcode.manipulator.LinearSlides;
@@ -87,9 +88,18 @@ public class MainTeleOp extends OpMode {
     double previousInputWeight = 0.95;
     double powerMultiplier = 0.5;
 
+    double [] aimBotInputs = {0.0, 0.0, 0.0};
+
     @Override
     public void loop() {
 
+        odometry.updatePosition();
+
+        if(gamepad1.x){
+            aimBotInputs = GridSystem.pointAtJunction(currentPosition[0], currentPosition[1], odometry.getRotationRadians());
+
+            mecanum.driveTo(0, 0, aimBotInputs[0], 0, 0, odometry.getRotationRadians());
+        }
 
         // DRIVER ASSIST
         if (gamepad1.x) {
@@ -145,35 +155,35 @@ public class MainTeleOp extends OpMode {
 
 
 
-        // LINEAR SLIDES
-        slides.extendBy(-gamepad2.right_stick_y);
+//        // LINEAR SLIDES
+//        slides.extendBy(-gamepad2.right_stick_y);
+//
+//
+//
+//        // SEESAW
+//        slides.pivotBy(gamepad2.left_stick_y);
+//
+//
+//
+//        // CLAW
+//        if (gamepad2.right_bumper && !lastClawOpenToggle) {
+//            isClawOpenToggle = !isClawOpenToggle;
+//        }
+//
+//        lastClawOpenToggle = gamepad2.right_bumper;
+//
+//        if (isClawOpenToggle) {
+//            claw.openClaw();
+//        } else {
+//            claw.closeClaw();
+//        }
 
-
-
-        // SEESAW
-        slides.pivotBy(gamepad2.left_stick_y);
-
-
-
-        // CLAW
-        if (gamepad2.right_bumper && !lastClawOpenToggle) {
-            isClawOpenToggle = !isClawOpenToggle;
-        }
-
-        lastClawOpenToggle = gamepad2.right_bumper;
-
-        if (isClawOpenToggle) {
-            claw.openClaw();
-        } else {
-            claw.closeClaw();
-        }
-
-        // claw pivot
-        if (gamepad2.dpad_up) {
-            claw.rotateClaw(1);
-        } else if (gamepad2.dpad_down) {
-            claw.rotateClaw(-1);
-        }
+//        // claw pivot
+//        if (gamepad2.dpad_up) {
+//            claw.rotateClaw(1);
+//        } else if (gamepad2.dpad_down) {
+//            claw.rotateClaw(-1);
+//        }
 
 
 
@@ -202,11 +212,11 @@ public class MainTeleOp extends OpMode {
 
     }
 
-    boolean lastClawOpenToggle = false;
-    boolean isClawOpenToggle = false;
+//    boolean lastClawOpenToggle = false;
+//    boolean isClawOpenToggle = false;
 
-    void handleManipulatorControls() {
-    }
+//    void handleManipulatorControls() {
+//    }
 
     double deadZone(double input) {
         if (Math.abs(input) < DEADZONE_TOLERANCE) {
