@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.autonomous.Autonomous;
 import org.firstinspires.ftc.teamcode.autonomous.AutonomousNew;
 import org.firstinspires.ftc.teamcode.currentOpModes.MainTeleOp;
@@ -184,8 +185,8 @@ public class LinearSlides {
     }
 
     public void extendBy(double power){
-        extensionMotor.setPower(power);
-        extensionMotor2.setPower(power);
+        extensionMotor.setVelocity(power * 250, AngleUnit.RADIANS);
+        extensionMotor2.setVelocity(power * 250, AngleUnit.RADIANS);
     }
 
     public void pivotTo(double targetAngle) { // Radians
@@ -201,7 +202,7 @@ public class LinearSlides {
     }
 
     public void pivotBy(double power) {
-        seeSawMotor.setPower(power);
+        seeSawMotor.setVelocity(power * 250, AngleUnit.RADIANS);
     }
 
     public void update(){ // Run this as much as applicable
@@ -232,8 +233,10 @@ public class LinearSlides {
     public void telemetry(Telemetry telemetry) {
         telemetry.addLine("\nLINEAR SLIDES + SEESAW");
         telemetry.addLine(String.format("Seesaw Motor Power: %f", seeSawMotor.getPower()));
+        telemetry.addLine(String.format("Seesaw Motor Velocity: %f", seeSawMotor.getVelocity()));
         telemetry.addLine(String.format("Extension Motors Powers: %f %f", extensionMotor.getPower(), extensionMotor2.getPower()));
-        telemetry.addLine(String.format("Extensions Current Positions: %f %f", extensionMotor.getCurrentPosition(), extensionMotor2.getCurrentPosition()));
-        telemetry.addLine(String.format("Extensions Target Positions: %f %f", extensionMotor.getTargetPosition(), extensionMotor2.getTargetPosition()));
+        telemetry.addLine(String.format("Extension Motors Velocities: %f %f", extensionMotor.getVelocity(), extensionMotor2.getVelocity()));
+        telemetry.addLine(String.format("Extensions Current Positions: %d %d", extensionMotor.getCurrentPosition(), extensionMotor2.getCurrentPosition()));
+        telemetry.addLine(String.format("Extensions Target Positions: %d %d", extensionMotor.getTargetPosition(), extensionMotor2.getTargetPosition()));
     }
 }
