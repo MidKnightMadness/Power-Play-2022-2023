@@ -27,7 +27,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -72,10 +71,10 @@ public class AutonomousNew extends LinearOpMode
 
     AprilTagDetection tagOfInterest = null;
 
-    public static MecanumDrive mecanumDrive;
+    MecanumDrive mecanumDrive;
     boolean atLocation = false;
     public static double [] currentPosition = {0.0, 0.0}; // inches
-    public static Odometry odometry;
+    Odometry odometry;
 
 
     @Override
@@ -83,11 +82,6 @@ public class AutonomousNew extends LinearOpMode
     {
         mecanumDrive = new MecanumDrive(hardwareMap);
         odometry = new Odometry(hardwareMap, Math.PI / 2, new Vector2(0, 0));
-
-        // Resetting positions for odometry
-        odometry.horizontalEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        odometry.rightEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        odometry.leftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -192,40 +186,39 @@ public class AutonomousNew extends LinearOpMode
          */
 
         /* Update the telemetry */
-//        if(tagOfInterest != null)
-//        {
-//            telemetry.addLine("Tag snapshot:\n");
-//            tagToTelemetry(tagOfInterest);
-//            telemetry.update();
-//        }
-//        else
-//        {
-//            telemetry.addLine("No tag snapshot available, it was never sighted during the init loop :(");
-//            telemetry.update();
-//        }
-//
-//        /* Actually do something useful */
-//        if(tagOfInterest == null || tagOfInterest.id == LEFT){ // Modify Targets
-//            telemetry.addLine("Going to first position (5 in)");
-//            telemetry.update();
-//
-//            goToPosition(0, 12, 0);
-//            goToPosition(-12, 12, 0);
-//
-//        }else if(tagOfInterest.id == MIDDLE){
-//            telemetry.addLine("Going to first position (10 in)");
-//            telemetry.update();
-//            goToPosition(0, 12, 0);
-//
-//        }else{
-//            telemetry.addLine("Going to first position (15 in)");
-//            telemetry.update();
-//
-//            goToPosition(0, 12, 0);
-//            goToPosition(12, 12, 0);
-//
-//        }
+        if(tagOfInterest != null)
+        {
+            telemetry.addLine("Tag snapshot:\n");
+            tagToTelemetry(tagOfInterest);
+            telemetry.update();
+        }
+        else
+        {
+            telemetry.addLine("No tag snapshot available, it was never sighted during the init loop :(");
+            telemetry.update();
+        }
 
+        /* Actually do something useful */
+        if(tagOfInterest == null || tagOfInterest.id == LEFT){ // Modify Targets
+            telemetry.addLine("Going to first position (5 in)");
+            telemetry.update();
+
+            goToPosition(0, 12, 0);
+            goToPosition(-12, 12, 0);
+
+        }else if(tagOfInterest.id == MIDDLE){
+            telemetry.addLine("Going to first position (10 in)");
+            telemetry.update();
+            goToPosition(0, 12, 0);
+
+        }else{
+            telemetry.addLine("Going to first position (15 in)");
+            telemetry.update();
+
+            goToPosition(0, 12, 0);
+            goToPosition(12, 12, 0);
+
+        }
 
 
         /* You wouldn't have this in your autonomous, this is just to prevent the sample from ending */

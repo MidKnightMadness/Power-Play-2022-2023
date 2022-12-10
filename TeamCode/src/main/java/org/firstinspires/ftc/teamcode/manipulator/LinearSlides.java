@@ -31,7 +31,7 @@ public class LinearSlides {
     public static final double ROOT_HEIGHT = 6.5; // From ground to linear slide mount
     private static final double STARTING_EXTENDER_LENGTH = 15.0; // Starting length from pivot axle
     // Rotation
-    private static final double SEESAW_MOTOR_RATIO = 60; // 60:1 or 40:1 motor?
+    private static final double SEESAW_MOTOR_RATIO = 40; // 60:1 or 40:1 motor?
     public static final double SEESAW_OVERALL_RATIO = 2 * Math.PI * (30.0 / 64.0) / (4096 * SEESAW_MOTOR_RATIO); // Angle per tick
     private static final double STARTING_ANGLE = 0.0;// Of the Manipulator, factor in end-effector's center (cone center), in inches
     // Extension
