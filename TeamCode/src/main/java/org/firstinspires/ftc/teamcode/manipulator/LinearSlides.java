@@ -16,7 +16,14 @@ import org.firstinspires.ftc.teamcode.autonomous.AutonomousNew;
 import org.firstinspires.ftc.teamcode.currentOpModes.MainTeleOp;
 import org.firstinspires.ftc.teamcode.drivetrain.Vector;
 import org.firstinspires.ftc.teamcode.highlevel.Master;
-
+import org.firstinspires.ftc.teamcode.odometry.Vector2;
+/*
+ * (Expansion Hub)
+ * Motors:
+ * 0    SSM
+ * 1    LSEM
+ * 2    LSEM2
+ */
 
 public class LinearSlides {
     public static DcMotorEx seeSawMotor;
@@ -174,37 +181,34 @@ public class LinearSlides {
                 displacement[0]*displacement[0] + displacement[1]*displacement[1] + displacement[2]*displacement[2]));
     }
 
-    public void extendTo(double target){ // Inches
-        this.update();
-            extensionMotor.setTargetPosition((int) ((target - STARTING_EXTENDER_LENGTH) / EXTENDER_OVERALL_RATIO));
-            if (extensionMotor.getTargetPosition() < extensionMotor.getCurrentPosition() && extensionMotor.getCurrentPosition() < 0) {
-                extensionMotor.setPower(-.5);
-            } else if (extensionMotor.getCurrentPosition() < 0) {
-                extensionMotor.setPower(.5);
-            }
+    public void extendTo(double inches){ // Inches
+        extensionMotor.setTargetPosition((int) ((inches - STARTING_EXTENDER_LENGTH) / EXTENDER_OVERALL_RATIO));
+        extensionMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        extensionMotor.setPower(.5);
     }
 
     public void extendBy(double power){
-        if(extensionMotor.getCurrentPosition() < 0) {
-            extensionMotor.setVelocity(power * 250, AngleUnit.RADIANS);
-            extensionMotor2.setVelocity(power * 250, AngleUnit.RADIANS);
+        if(extensionMotor.getCurrentPosition() <= 0) {
+            extensionMotor.setVelocity(power * 50, AngleUnit.RADIANS);
+            extensionMotor2.setVelocity(power * 50, AngleUnit.RADIANS);
+//            extensionMotor.setPower(power / 2.0);
+//            extensionMotor2.setPower(power / 2.0);
+        } else {
+            extensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
     }
 
-    public void pivotTo(double targetAngle) { // Radians
-        this.update();
+    public void pivotTo(double angleRadians) { // Radians
+        seesawAngle = seeSawMotor.getCurrentPosition() * SEESAW_OVERALL_RATIO;
         if(seesawAngle < Math.PI / 2 && seesawAngle > 0.0) {
-            seeSawMotor.setTargetPosition((int) (targetAngle / SEESAW_OVERALL_RATIO));
-            if (seeSawMotor.getTargetPosition() < seeSawMotor.getCurrentPosition()) { // Remember, motor is geared so direction reversed
-                seeSawMotor.setPower(.5); // To go down, set power to negative, might have to reverse this based on motor packaging
-            } else {
-                seeSawMotor.setPower(-.5);
-            }
+            seeSawMotor.setTargetPosition((int) (angleRadians / SEESAW_OVERALL_RATIO));
+            seeSawMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            seeSawMotor.setPower(.5);
         }
     }
 
     public void pivotBy(double power) {
-        seeSawMotor.setVelocity(power * 250, AngleUnit.RADIANS);
+        seeSawMotor.setVelocity(power * 10, AngleUnit.RADIANS);
     }
 
     public void update(){ // Run this as much as applicable
@@ -230,6 +234,12 @@ public class LinearSlides {
         }
 
         claw.openClaw();
+    }
+
+    public void resetEncoders() {
+        extensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        extensionMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        seeSawMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     public void telemetry(Telemetry telemetry) {
