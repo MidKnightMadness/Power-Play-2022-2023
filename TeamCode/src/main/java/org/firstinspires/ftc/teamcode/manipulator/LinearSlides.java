@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.autonomous.Autonomous;
 import org.firstinspires.ftc.teamcode.autonomous.AutonomousNew;
 import org.firstinspires.ftc.teamcode.currentOpModes.MainTeleOp;
 import org.firstinspires.ftc.teamcode.drivetrain.Vector;
@@ -117,15 +118,15 @@ public class LinearSlides {
         }
 
 
-        if(!(AutonomousNew.mecanumDrive == null)){ // For autonomous
-            while(!(Math.abs(angleDisplacement - AutonomousNew.odometry.getRotationRadians()) < 0.1)){
-                if(angleDisplacement >= AutonomousNew.odometry.getRotationRadians()){
-                    AutonomousNew.mecanumDrive.fieldOrientatedDrive(0.0, 0.0, 0.8);
+        if(!(Autonomous.mecanumDrive == null)){ // For autonomous
+            while(!(Math.abs(angleDisplacement - Autonomous.odometry.getRotationRadians()) < 0.1)){
+                if(angleDisplacement >= Autonomous.odometry.getRotationRadians()){
+                    Autonomous.mecanumDrive.fieldOrientatedDrive(0.0, 0.0, 0.8);
                 }else{
-                    AutonomousNew.mecanumDrive.fieldOrientatedDrive(0.0, 0.0, -0.8);
+                    Autonomous.mecanumDrive.fieldOrientatedDrive(0.0, 0.0, -0.8);
                 }
 
-                AutonomousNew.odometry.updatePosition();
+                Autonomous.odometry.updatePosition();
             }
 
         }else{
@@ -147,7 +148,7 @@ public class LinearSlides {
         /\_| <- Angle
          */
 
-        if(AutonomousNew.mecanumDrive == null){ // Case teleOp
+        if(Autonomous.mecanumDrive == null){ // Case teleOp
             if(Math.abs(angleDisplacement - MainTeleOp.odometry.getRotationRadians()) > Math.PI){ // Case backwards scoring
                 this.pivotTo(Math.PI + Math.atan(displacement[3] /
                         Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + displacement[0]*displacement[0] + displacement[1]*displacement[1])));
@@ -156,7 +157,7 @@ public class LinearSlides {
                         Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + displacement[0]*displacement[0] + displacement[1]*displacement[1])));
             }
         }else{
-            if(Math.abs(angleDisplacement - AutonomousNew.odometry.getRotationRadians()) > Math.PI){ // Case backwards scoring
+            if(Math.abs(angleDisplacement - Autonomous.odometry.getRotationRadians()) > Math.PI){ // Case backwards scoring
                 this.pivotTo(Math.PI + Math.atan(displacement[3] /
                         Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + displacement[0]*displacement[0] + displacement[1]*displacement[1])));
             }else{
