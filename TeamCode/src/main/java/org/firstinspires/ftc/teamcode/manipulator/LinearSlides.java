@@ -177,16 +177,18 @@ public class LinearSlides {
     public void extendTo(double target){ // Inches
         this.update();
             extensionMotor.setTargetPosition((int) ((target - STARTING_EXTENDER_LENGTH) / EXTENDER_OVERALL_RATIO));
-            if (extensionMotor.getTargetPosition() < extensionMotor.getCurrentPosition()) {
+            if (extensionMotor.getTargetPosition() < extensionMotor.getCurrentPosition() && extensionMotor.getCurrentPosition() < 0) {
                 extensionMotor.setPower(-.5);
-            } else {
+            } else if (extensionMotor.getCurrentPosition() < 0) {
                 extensionMotor.setPower(.5);
             }
     }
 
     public void extendBy(double power){
-        extensionMotor.setVelocity(power * 250, AngleUnit.RADIANS);
-        extensionMotor2.setVelocity(power * 250, AngleUnit.RADIANS);
+        if(extensionMotor.getCurrentPosition() < 0) {
+            extensionMotor.setVelocity(power * 250, AngleUnit.RADIANS);
+            extensionMotor2.setVelocity(power * 250, AngleUnit.RADIANS);
+        }
     }
 
     public void pivotTo(double targetAngle) { // Radians
