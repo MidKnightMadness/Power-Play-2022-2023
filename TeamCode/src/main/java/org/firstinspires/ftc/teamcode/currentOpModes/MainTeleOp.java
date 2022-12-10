@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.common.Timer;
 import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
 import org.firstinspires.ftc.teamcode.highlevel.Master;
+import org.firstinspires.ftc.teamcode.manipulator.Claw;
 import org.firstinspires.ftc.teamcode.manipulator.LinearSlides;
 import org.firstinspires.ftc.teamcode.manipulator.Turntable;
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
@@ -68,6 +69,17 @@ public class MainTeleOp extends OpMode {
     private boolean lastPressedDriveMode = false;
     private boolean driveModeToggle = false;
 
+    // Manipulator implementation
+        Claw claw;
+
+        LinearSlides slides;
+
+        // Bounds
+        double OPEN = 0.425;
+        double CLOSED = 0.750;
+
+
+
     @Override
     public void init() {
         timer = new Timer();
@@ -79,6 +91,14 @@ public class MainTeleOp extends OpMode {
 
         mecanum = new MecanumDrive(hardwareMap);
         odometry = new Odometry(hardwareMap, Math.PI / 2, new Vector2(0, 0));
+
+        // Manipulator implementation
+            claw = new Claw(hardwareMap);
+            slides = new LinearSlides(hardwareMap);
+
+            claw.pivotTo(-Math.PI / 4);
+
+
 
 //        odometry = new TwoWheelOdometry(hardwareMap);
 //        lift = new LinearSlides(hardwareMap);
@@ -94,6 +114,24 @@ public class MainTeleOp extends OpMode {
 
     @Override
     public void loop() {
+
+        // Manipulator implementation
+        if(gamepad1.left_bumper || gamepad1.right_bumper){
+            if(claw.open){
+                claw.closeClaw();
+            }else{
+                claw.openClaw();
+            }
+        }
+
+        claw.pivotTo(- (LinearSlides.seeSawMotor.getCurrentPosition() * LinearSlides.SEESAW_OVERALL_RATIO) -  (Math.PI / 4));
+
+        LinearSlides.extensionMotor.setPower(-gamepad1.right_stick_y);
+        LinearSlides.extensionMotor2.setPower(-gamepad1.right_stick_y);
+        LinearSlides.seeSawMotor.setPower(-gamepad1.left_stick_y);
+        // End manipulator implementation
+
+
 //        timer.upxx tDeltaTime();
 
 //        Master.tickRate = 1 / (time - auxillary); // auxillary is previous time
