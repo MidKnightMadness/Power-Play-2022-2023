@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.odometry.Odometry;
 import org.firstinspires.ftc.teamcode.odometry.TestingOdometryAlgorithm;
 import static org.firstinspires.ftc.teamcode.drivetrain.Vector.neg;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.manipulator1;
+import static org.firstinspires.ftc.teamcode.highlevel.Master.telemetry;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.turntableAngle;
 import static org.firstinspires.ftc.teamcode.manipulator.Turntable.tableMotor;
 //import static org.firstinspires.ftc.teamcode.highlevel.Master.tracking;
@@ -91,6 +92,9 @@ public class MainTeleOp extends OpMode {
 
     @Override
     public void loop() {
+        // Start aimbot
+        // End aimbot
+
 //        timer.upxx tDeltaTime();
 
 //        Master.tickRate = 1 / (time - auxillary); // auxillary is previous time
@@ -183,6 +187,7 @@ public class MainTeleOp extends OpMode {
         telemetry.addLine("\nTIMER");
         telemetry.addLine("DeltaTime " + deltaTime);
         telemetry.addLine("Time" + time);
+
         telemetry.update();
 
     }

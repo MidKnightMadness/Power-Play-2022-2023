@@ -17,7 +17,7 @@ public class Odometry implements OdometryVariables {
     double deltaTime = 0;
     double lastTime = 0;
 
-    Vector2 position = new Vector2();
+    public Vector2 position = new Vector2();
     Vector2 velocity = new Vector2();
 
     int lastLeftTicks = 0;
@@ -32,7 +32,7 @@ public class Odometry implements OdometryVariables {
     int deltaTopTicks = 0;
     double topDistanceMoved;
 
-    double rotationRadians;
+    public double rotationRadians;
 
     ElapsedTime elapsedTime;
 
@@ -122,18 +122,26 @@ public class Odometry implements OdometryVariables {
 //        }
 
 
-        position.y += netX;
-        position.x += netY;
+        this.position.y += netX;
+        this.position.x += netY;
 
-        // Temporary
-        AutonomousNew.currentPosition[0] += netX;
-        AutonomousNew.currentPosition[1] += netY;
-
-        MainTeleOp.currentPosition[0] += netX;
-        MainTeleOp.currentPosition[1] += netY;
+//        // Temporary
+//        AutonomousNew.currentPosition[0] += netX;
+//        AutonomousNew.currentPosition[1] += netY;
+//
+//        MainTeleOp.currentPosition[0] += netX;
+//        MainTeleOp.currentPosition[1] += netY;
 
         velocity.x = netX / deltaTime;
         velocity.y = netY / deltaTime;
+    }
+
+    public void setPostion(Vector2 pos) {
+        this.position = pos;
+    }
+
+    public void setRotation(double rotation) {
+        this.rotationRadians = rotation;
     }
 
     public double getDeltaRotation(double leftChange, double rightChange) {
@@ -187,8 +195,6 @@ public class Odometry implements OdometryVariables {
         telemetry.addLine("--------");
 
         telemetry.addLine("Velocity " + velocity.toString());
-
-
         telemetry.addData("Left Dead Wheel Position", leftEncoder.getCurrentPosition());
         telemetry.addData("Right Dead Wheel Position", rightEncoder.getCurrentPosition());
         telemetry.addData("Top Dead Wheel Position", horizontalEncoder.getCurrentPosition());

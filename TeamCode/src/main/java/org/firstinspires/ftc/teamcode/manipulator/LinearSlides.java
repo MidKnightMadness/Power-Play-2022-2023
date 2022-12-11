@@ -124,9 +124,9 @@ public class LinearSlides {
         if(!(AutonomousNew.mecanumDrive == null)){ // For autonomous
             while(!(Math.abs(angleDisplacement - AutonomousNew.odometry.getRotationRadians()) < 0.1)){
                 if(angleDisplacement >= AutonomousNew.odometry.getRotationRadians()){
-                    AutonomousNew.mecanumDrive.fieldOrientatedDrive(0.0, 0.0, 0.8);
+                    AutonomousNew.mecanumDrive.fieldOrientatedDrive(0.0, 0.0, 0.8, 0);
                 }else{
-                    AutonomousNew.mecanumDrive.fieldOrientatedDrive(0.0, 0.0, -0.8);
+                    AutonomousNew.mecanumDrive.fieldOrientatedDrive(0.0, 0.0, -0.8, 0);
                 }
 
                 AutonomousNew.odometry.updatePosition();
