@@ -159,6 +159,7 @@ public class MecanumDrive {
             double rotato = (targetAngle-currentAngle+3.1416)%6.283-3.1416;
             if (rotato < -3.1416) rotato += 6.283;
             rotato = Math.cbrt(3.1416/rotato);
+            rotato = 0;
                 fieldOrientatedDrive((targetX - currentX) / (20), (targetY - currentY) / (20), (rotato / 8), currentAngle); // 0 on rotational component is temporary, needs correction
 //            }else {
 //                fieldOrientatedDrive((targetX - currentX) / (replacement * 10), (targetY - currentY) / (replacement * 10), (targetAngle - currentAngle) / 360); // 0 on rotational component is temporary, needs correction
