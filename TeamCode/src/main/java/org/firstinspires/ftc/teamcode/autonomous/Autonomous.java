@@ -57,8 +57,8 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
     Timer coneTimer;
     double time;
 
-    Odometry odometry;
-    static MecanumDrive mecanumDrive;
+    public static Odometry odometry;
+    public static MecanumDrive mecanumDrive;
 
     private BNO055IMU imu;
     Orientation angles;

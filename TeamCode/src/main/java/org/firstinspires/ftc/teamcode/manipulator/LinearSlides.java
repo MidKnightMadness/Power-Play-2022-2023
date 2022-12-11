@@ -1,48 +1,54 @@
 package org.firstinspires.ftc.teamcode.manipulator;
 
+import static org.firstinspires.ftc.teamcode.highlevel.Master.claw;
+import static org.firstinspires.ftc.teamcode.manipulator.Turntable.turntableAngle;
+
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.autonomous.Autonomous;
 import org.firstinspires.ftc.teamcode.autonomous.AutonomousNew;
 import org.firstinspires.ftc.teamcode.currentOpModes.MainTeleOp;
-import org.firstinspires.ftc.teamcode.drivetrain.*;
-import java.math.*;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import org.firstinspires.ftc.teamcode.drivetrain.Vector;
 import org.firstinspires.ftc.teamcode.highlevel.Master;
-
-import static org.firstinspires.ftc.teamcode.highlevel.Master.claw;
-import static org.firstinspires.ftc.teamcode.highlevel.Master.invSqrt;
-import static org.firstinspires.ftc.teamcode.highlevel.Master.odometryAlg;
-import static org.firstinspires.ftc.teamcode.highlevel.Master.turntable;
-import static org.firstinspires.ftc.teamcode.manipulator.Turntable.turntableAngle; // Remove this in final version
-import org.firstinspires.ftc.teamcode.manipulator.Claw;
-
+import org.firstinspires.ftc.teamcode.odometry.Vector2;
+/*
+ * (Expansion Hub)
+ * Motors:
+ * 0    SSM
+ * 1    LSEM
+ * 2    LSEM2
+ */
 
 public class LinearSlides {
     public static DcMotorEx seeSawMotor;
     public static DcMotorEx extensionMotor;
+    public static DcMotorEx extensionMotor2;
+
     public static double [] manipulatorPosition = {0.0, 0.0, 0.0};
-    private static HardwareMap hardwareMap;
     public static double seesawAngle;
     public static double seesawExtensionLength;
 
     // Internal use variables
     private static double [] displacement;
     private static double angleDisplacement;
-    private static double ticksDisplacement;
+
 
     // Manipulator specifications in inches, radians
     public static final double ROOT_HEIGHT = 6.5; // From ground to linear slide mount
     private static final double STARTING_EXTENDER_LENGTH = 15.0; // Starting length from pivot axle
     // Rotation
-    private static final double SEESAW_MOTOR_RATIO = 60; // 60:1 or 40:1 motor?
-    private static final double SEESAW_OVERALL_RATIO = 2 * Math.PI * (30 / 64) / (4096 * SEESAW_MOTOR_RATIO); // Angle per tick
+    private static final double SEESAW_MOTOR_RATIO = 40; // 60:1 or 40:1 motor?
+    public static final double SEESAW_OVERALL_RATIO = 2 * Math.PI * (30.0 / 64.0) / (4096 * SEESAW_MOTOR_RATIO); // Angle per tick
     private static final double STARTING_ANGLE = 0.0;// Of the Manipulator, factor in end-effector's center (cone center), in inches
     // Extension
     private static final double EXTENDER_MOTOR_RATIO = 20; // 20:1 or 40:1 motor?
-    private static final double PULLEY_RADIUS = 1.0; // Radius of pulley interacting with string
-    private static final double EXTENDER_OVERALL_RATIO = 2 * Math.PI / (4096 * EXTENDER_MOTOR_RATIO); // Inches per tick
+    public static final double EXTENDER_OVERALL_RATIO = 2 * Math.PI / (4096 * EXTENDER_MOTOR_RATIO); // Inches per tick
 
     // Temporary stuff
     public static final double [] DEFAULT_INTAKE_DISPLACEMENT = {11.75, -11.75 / 2, -ROOT_HEIGHT};
@@ -65,8 +71,9 @@ public class LinearSlides {
      */
 
     public LinearSlides(HardwareMap hardwareMap){
-        seeSawMotor = hardwareMap.get(DcMotorEx.class, "Seesaw Motor");
-        extensionMotor = hardwareMap.get(DcMotorEx.class, "Linear Slide Extension Motor");
+        seeSawMotor = hardwareMap.get(DcMotorEx.class, "SSM");
+        extensionMotor = hardwareMap.get(DcMotorEx.class, "LSEM");
+        extensionMotor2 = hardwareMap.get(DcMotorEx.class, "LSEM2");
 
         seeSawMotor.setDirection(DcMotor.Direction.FORWARD); // set direction, this was made for 1 gear transfer from drive to axle
         seeSawMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // set motor mode
@@ -79,18 +86,23 @@ public class LinearSlides {
         extensionMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER); // Run to position?
         extensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); // set zero power behavior
 
-        // Motor kinematics ;)
-        // Note: initialize turntable before manipulator!!!
+        extensionMotor2.setDirection(DcMotor.Direction.REVERSE); // set direction, probably need to change
+        extensionMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // set motor mode
+        extensionMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER); // Run to position?
+        extensionMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); // set zero power behavior
 
+        seeSawMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.0, 0.1, 10.0, 0));
+        extensionMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.0, 0.1, 10.0, 0));
+        extensionMotor2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.0, 0.1, 10.0, 0));
+
+        // Motor kinematics ;)
+        // Change this
         manipulatorPosition[0] = STARTING_EXTENDER_LENGTH * Math.cos(turntableAngle) * Math.cos(STARTING_ANGLE);
         manipulatorPosition[1] = STARTING_EXTENDER_LENGTH * Math.sin(turntableAngle) * Math.cos(STARTING_ANGLE);
         manipulatorPosition[2] =  ROOT_HEIGHT + (STARTING_EXTENDER_LENGTH * Math.sin(STARTING_ANGLE));
 
         displacement = new double[2];
         angleDisplacement = 0.0;
-        ticksDisplacement = 0.0;
-
-        this.pivotTo(1.0);
     }
 
     public double[] getClawCoordinates() {
@@ -102,14 +114,9 @@ public class LinearSlides {
         return new double[] { x, y, height };
     }
 
-    public void setPower(double seesawPower, double extensionPower) {
-        seeSawMotor.setPower(-seesawPower * 0.5);
-        extensionMotor.setPower(-extensionPower);
-    }
-
-
     private static final double MANIPULATOR_BACKSET_DISTANCE = 3.5;
-    public void goPointAt(double [] xyzDisplacement){ // Make sure to input 3-array for targeted scoring position!!!!!!!! Will have to get angle of robot once it gets to junction, then correct a second time. This is not a one-time algorithm!!!
+    public void goPointAt(double [] xyzDisplacement){
+        // Make sure to input 3-array for targeted scoring position!!!!!!!! Will have to get angle of robot once it gets to junction, then correct a second time. This is not a one-time algorithm!!!
         // Actually does everything at the same time, will need to edit based on extension speed (want to minimize extended time for reliability purposes)
         displacement = xyzDisplacement; // Screw it I don't wanna run the method over and over haha
         //  Note: displacement from pivot point of linear slide
@@ -121,20 +128,28 @@ public class LinearSlides {
         }
 
 
-        if(!(AutonomousNew.mecanumDrive == null)){ // For autonomous
-            while(!(Math.abs(angleDisplacement - AutonomousNew.odometry.getRotationRadians()) < 0.1)){
-                if(angleDisplacement >= AutonomousNew.odometry.getRotationRadians()){
-                    AutonomousNew.mecanumDrive.fieldOrientatedDrive(0.0, 0.0, 0.8, 0);
+        if(!(Autonomous.mecanumDrive == null)){ // For autonomous
+            while(!(Math.abs(angleDisplacement - Autonomous.odometry.getRotationRadians()) < 0.1)){
+                if(angleDisplacement >= Autonomous.odometry.getRotationRadians()){
+                    Autonomous.mecanumDrive.fieldOrientatedDrive(0.0, 0.0, 0.8);
                 }else{
-                    AutonomousNew.mecanumDrive.fieldOrientatedDrive(0.0, 0.0, -0.8, 0);
+                    Autonomous.mecanumDrive.fieldOrientatedDrive(0.0, 0.0, -0.8);
                 }
 
-                AutonomousNew.odometry.updatePosition();
+                Autonomous.odometry.updatePosition();
             }
 
-        }/*else{ // For teleop
-            MainTeleOp.mecanum.fieldOrientatedDrive(0.0, 0.0, 0.8 * );
-        }*/
+        }else{
+            while(!(Math.abs(angleDisplacement - MainTeleOp.odometry.getRotationRadians()) < 0.1)){
+                if(angleDisplacement >= MainTeleOp.odometry.getRotationRadians()){
+                    MainTeleOp.mecanum.fieldOrientatedDrive(0.0, 0.0, 0.8);
+                }else{
+                    MainTeleOp.mecanum.fieldOrientatedDrive(0.0, 0.0, -0.8);
+                }
+
+                MainTeleOp.odometry.updatePosition();
+            }
+        }
 
         // Pivot seesaw up / down to desired position. Due to the behavior described in the previous step, this step (for now) doesn't have to account for swinging beyond 90˚ vertical
         /*
@@ -143,15 +158,16 @@ public class LinearSlides {
         /\_| <- Angle
          */
 
-        if(AutonomousNew.mecanumDrive == null){ // Case teleOp
+        if(Autonomous.mecanumDrive == null){ // Case teleOp
             if(Math.abs(angleDisplacement - MainTeleOp.odometry.getRotationRadians()) > Math.PI){ // Case backwards scoring
-
-            }else{
                 this.pivotTo(Math.PI + Math.atan(displacement[3] /
+                        Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + displacement[0]*displacement[0] + displacement[1]*displacement[1])));
+            }else{
+                this.pivotTo(Math.atan(displacement[3] /
                         Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + displacement[0]*displacement[0] + displacement[1]*displacement[1])));
             }
         }else{
-            if(Math.abs(angleDisplacement - AutonomousNew.odometry.getRotationRadians()) > Math.PI){ // Case backwards scoring
+            if(Math.abs(angleDisplacement - Autonomous.odometry.getRotationRadians()) > Math.PI){ // Case backwards scoring
                 this.pivotTo(Math.PI + Math.atan(displacement[3] /
                         Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + displacement[0]*displacement[0] + displacement[1]*displacement[1])));
             }else{
@@ -165,31 +181,34 @@ public class LinearSlides {
                 displacement[0]*displacement[0] + displacement[1]*displacement[1] + displacement[2]*displacement[2]));
     }
 
-    public void extendTo(double target){ // Inches
-        this.update();
-            extensionMotor.setTargetPosition((int) ((target - STARTING_EXTENDER_LENGTH) / EXTENDER_OVERALL_RATIO));
-            if (extensionMotor.getTargetPosition() < extensionMotor.getCurrentPosition()) {
-                extensionMotor.setPower(-.5);
-            } else {
-                extensionMotor.setPower(.5);
-            }
+    public void extendTo(double inches){ // Inches
+        extensionMotor.setTargetPosition((int) ((inches - STARTING_EXTENDER_LENGTH) / EXTENDER_OVERALL_RATIO));
+        extensionMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        extensionMotor.setPower(.5);
     }
 
-    public void pivotTo(double targetAngle) { // Radians
-        this.update();
-        if(seesawAngle < Math.PI / 2 && seesawAngle > 0.0) {
-            seeSawMotor.setTargetPosition((int) (targetAngle / SEESAW_OVERALL_RATIO));
-            if (seeSawMotor.getTargetPosition() < seeSawMotor.getCurrentPosition()) { // Remember, motor is geared so direction reversed
-                seeSawMotor.setPower(.5); // To go down, set power to negative, might have to reverse this based on motor packaging
-            } else {
-                seeSawMotor.setPower(-.5);
-            }
+    public void extendBy(double power){
+        if(extensionMotor.getCurrentPosition() <= 0) {
+            extensionMotor.setVelocity(power * 50, AngleUnit.RADIANS);
+            extensionMotor2.setVelocity(power * 50, AngleUnit.RADIANS);
+//            extensionMotor.setPower(power / 2.0);
+//            extensionMotor2.setPower(power / 2.0);
+        } else {
+            extensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
     }
 
-    public void pivotBy(double angleChange) { // Radians
-        this.update();
-        this.pivotTo(seesawAngle + angleChange);
+    public void pivotTo(double angleRadians) { // Radians
+        seesawAngle = seeSawMotor.getCurrentPosition() * SEESAW_OVERALL_RATIO;
+        if(seesawAngle < Math.PI / 2 && seesawAngle > 0.0) {
+            seeSawMotor.setTargetPosition((int) (angleRadians / SEESAW_OVERALL_RATIO));
+            seeSawMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            seeSawMotor.setPower(.5);
+        }
+    }
+
+    public void pivotBy(double power) {
+        seeSawMotor.setVelocity(power * 10, AngleUnit.RADIANS);
     }
 
     public void update(){ // Run this as much as applicable
@@ -215,5 +234,21 @@ public class LinearSlides {
         }
 
         claw.openClaw();
+    }
+
+    public void resetEncoders() {
+        extensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        extensionMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        seeSawMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+    public void telemetry(Telemetry telemetry) {
+        telemetry.addLine("\nLINEAR SLIDES + SEESAW");
+        telemetry.addLine(String.format("Seesaw Motor Power: %f", seeSawMotor.getPower()));
+        telemetry.addLine(String.format("Seesaw Motor Velocity: %f", seeSawMotor.getVelocity()));
+        telemetry.addLine(String.format("Extension Motors Powers: %f %f", extensionMotor.getPower(), extensionMotor2.getPower()));
+        telemetry.addLine(String.format("Extension Motors Velocities: %f %f", extensionMotor.getVelocity(), extensionMotor2.getVelocity()));
+        telemetry.addLine(String.format("Extensions Current Positions: %d %d", extensionMotor.getCurrentPosition(), extensionMotor2.getCurrentPosition()));
+        telemetry.addLine(String.format("Extensions Target Positions: %d %d", extensionMotor.getTargetPosition(), extensionMotor2.getTargetPosition()));
     }
 }

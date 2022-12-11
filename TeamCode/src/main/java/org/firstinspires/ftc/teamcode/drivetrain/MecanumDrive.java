@@ -22,6 +22,16 @@ import org.firstinspires.ftc.teamcode.autonomous.AutonomousNew;
 import org.firstinspires.ftc.teamcode.currentOpModes.MainTeleOp;
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
 
+/*
+ * (Control Hub)
+ * Motors:
+ * 0    FL      HD Hex Motor 20:1
+ * 1    BR      HD Hex Motor 20:1
+ * 2    BL      HD Hex Motor 20:1
+ * 3    FR      HD Hex Motor 20:1
+ */
+
+
 public class MecanumDrive {
     public DcMotorEx FRMotor;
     public DcMotorEx FLMotor;
@@ -30,13 +40,6 @@ public class MecanumDrive {
 
 
     private Odometry odometry;
-
-    // Order for power values: FL, FR, RL, RR
-    // Make sure to normalize power values 0 to 1
-
-    public static double [] BACKWARDS = {-1.0, 1,0, -1.0, 1.0};
-    public static double [] RIGHT = {1.0, 1.0, -1.0, -1.0};
-    public static final double [] TURN_RIGHT = {-1.0, -1.0, -1.0, -1.0};
 
     // Navigation
     public static final double [] NULL_POSITION = {0.0, 0.0};
@@ -170,6 +173,21 @@ public class MecanumDrive {
         }
 
         return true;
+    }
+    public void pointTo(double x, double y) {
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        gyro_degrees = angles.firstAngle;
+        gyro_radians = (gyro_degrees * Math.PI / 180);
+        double newAngle = Math.acos(x);
+        if (y < 0) newAngle = 0-newAngle;
+        double rotato = (newAngle-gyro_radians+3.1416)%6.283-3.1416;//reference angle
+        if (rotato < -3.1416) rotato += 6.283;
+        rotato = Math.cbrt(3.1416/rotato);
+        //double amt = rotato-gyro_radians;
+        //if (Math.abs(amt) > 3.1416) {//if difference > 180 degrees
+            //amt = 0-amt;//flip direction
+        //}
+
     }
 
     public void telemetry(Telemetry telemetry) {
