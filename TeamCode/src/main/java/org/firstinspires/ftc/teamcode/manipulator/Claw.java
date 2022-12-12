@@ -1,12 +1,21 @@
 package org.firstinspires.ftc.teamcode.manipulator;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.common.Timer;
+
+/*
+ * (Expansion Hub)
+ * Servos:
+ * 0    Claw    Servo
+ * 1    CP      CRServo
+ * 2    CP2     CRServo
+ */
 
 public class Claw {
     public Timer calibrationTimer;
@@ -21,29 +30,17 @@ public class Claw {
     public Claw(HardwareMap hardwareMap) {
         calibrationTimer = new Timer();
 
-         servo = hardwareMap.get(Servo.class, "Claw");
+        servo = hardwareMap.get(Servo.class, "Claw");
 
-         rotationServo = hardwareMap.get(CRServo.class, "CP");
-         rotationServo.setDirection(CRServo.Direction.FORWARD);
+        rotationServo = hardwareMap.get(CRServo.class, "CP");
+        rotationServo.setDirection(DcMotorSimple.Direction.FORWARD);
 
-         rotationServo2 = hardwareMap.get(CRServo.class, "CP2");
-         rotationServo2.setDirection(CRServo.Direction.REVERSE);
-
-
-
-
-//        servoController = servo.getController();
-//        rotationServoController = rotationServo.getController();
-//                rotationServoController2 = rotationServo2.getController();
-
+        rotationServo2 = hardwareMap.get(CRServo.class, "CP2");
+        rotationServo2.setDirection(DcMotorSimple.Direction.REVERSE);
 
         servo.resetDeviceConfigurationForOpMode();
         rotationServo.resetDeviceConfigurationForOpMode();
         rotationServo2.resetDeviceConfigurationForOpMode();
-
-
-
-
 
     }
 
@@ -57,6 +54,7 @@ public class Claw {
 
     public void rotateClaw(double power) {
         rotationServo.setPower(power);
+//        rotationServo2.setPower(power);
     }
 
     public void waitForOpenClaw() {
@@ -68,6 +66,7 @@ public class Claw {
         telemetry.addLine("\nCLAW");
         telemetry.addLine(String.format("Claw Servo Position: %f", servo.getPosition()));
         telemetry.addLine(String.format("Claw Rotation Servo Power: %f %f", rotationServo.getPower(), rotationServo2.getPower()));
+        telemetry.addLine(String.format("Claw Rotation Servo Direction: %s %s", rotationServo.getDirection(), rotationServo2.getDirection()));
     }
 
 }

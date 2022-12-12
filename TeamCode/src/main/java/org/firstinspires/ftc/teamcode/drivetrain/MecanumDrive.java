@@ -19,6 +19,16 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.autonomous.AutonomousNew;
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
 
+/*
+ * (Control Hub)
+ * Motors:
+ * 0    FL      HD Hex Motor 20:1
+ * 1    BR      HD Hex Motor 20:1
+ * 2    BL      HD Hex Motor 20:1
+ * 3    FR      HD Hex Motor 20:1
+ */
+
+
 public class MecanumDrive {
     public DcMotorEx FRMotor;
     public DcMotorEx FLMotor;
@@ -27,13 +37,6 @@ public class MecanumDrive {
 
 
     private Odometry odometry;
-
-    // Order for power values: FL, FR, RL, RR
-    // Make sure to normalize power values 0 to 1
-
-    public static double [] BACKWARDS = {-1.0, 1,0, -1.0, 1.0};
-    public static double [] RIGHT = {1.0, 1.0, -1.0, -1.0};
-    public static final double [] TURN_RIGHT = {-1.0, -1.0, -1.0, -1.0};
 
     // Navigation
     public static final double [] NULL_POSITION = {0.0, 0.0};
