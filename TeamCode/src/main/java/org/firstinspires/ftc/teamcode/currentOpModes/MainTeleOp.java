@@ -12,16 +12,16 @@ import org.firstinspires.ftc.teamcode.odometry.Vector2;
 /*
  * Control Hub Configurations
  * Motors:
- * 0    FL      HD Hex Motor 20:1
- * 1    BR      HD Hex Motor 20:1
- * 2    BL      HD Hex Motor 20:1
- * 3    FR      HD Hex Motor 20:1
+ * 0    FL      REV Robotics 20:1 HD Hex Motor
+ * 1    BR      REV Robotics 20:1 HD Hex Motor
+ * 2    BL      REV Robotics 20:1 HD Hex Motor
+ * 3    FR      REV Robotics 20:1 HD Hex Motor
  *
  * Expansion Hub Configurations
  * Motors:
- * 0    SSM
- * 1    LSEM
- * 2    LSEM2
+ * 0    SSM     REV Robotics 20:1 HD Hex Motor
+ * 1    LSEM    NeveRest 20 Gearmotor
+ * 2    LSEM2   NeveRest 20 Gearmotor
  * Servos:
  * 0    Claw    Servo
  * 1    CP      CRServo
@@ -40,8 +40,8 @@ import org.firstinspires.ftc.teamcode.odometry.Vector2;
 public class MainTeleOp extends OpMode {
     public static MecanumDrive mecanum;
     public static Odometry odometry;
-//    LinearSlides slides;
-//    Claw claw;
+    LinearSlides slides;
+    Claw claw;
 
     public static double [] currentPosition = {0.0, 0.0};
 
@@ -72,8 +72,8 @@ public class MainTeleOp extends OpMode {
 
         mecanum = new MecanumDrive(hardwareMap);
         odometry = new Odometry(hardwareMap, Math.PI / 2, new Vector2(0, 0));
-//        claw = new Claw(hardwareMap);
-//        slides = new LinearSlides(hardwareMap);
+        claw = new Claw(hardwareMap);
+        slides = new LinearSlides(hardwareMap);
     }
 
     double time;
@@ -149,14 +149,11 @@ public class MainTeleOp extends OpMode {
             if (gamepad1.dpad_left) { mecanum.drive(-powerMultiplier, 0, 0); }
         }
 
-        mecanum.drive(0, 0, gamepad2.left_stick_x);
-
-
 
 
 
         // LINEAR SLIDES
-//        slides.extendBy(-gamepad2.right_stick_y);
+        slides.extendBy(-gamepad2.right_stick_y);
 //
 //        if (gamepad2.y && !lastPressedLinearSlides) {
 //            linearSlidesToggle = !linearSlidesToggle;
@@ -173,7 +170,7 @@ public class MainTeleOp extends OpMode {
 
 
         // SEESAW
-//        slides.pivotBy(gamepad2.left_stick_y);
+        slides.pivotBy(gamepad2.left_stick_y);
 //
 //        if (gamepad2.b && !lastPressedSeesaw) {
 //            seesawToggle = !seesawToggle;
@@ -191,25 +188,27 @@ public class MainTeleOp extends OpMode {
 
 
         // CLAW
-//        if (gamepad2.right_bumper && !lastClawOpenToggle) {
-//            isClawOpenToggle = !isClawOpenToggle;
-//        }
-//        lastClawOpenToggle = gamepad2.right_bumper;
-//
-//        if (isClawOpenToggle) {
-//            claw.openClaw();
-//        } else {
-//            claw.closeClaw();
-//        }
+        if (gamepad2.right_bumper && !lastClawOpenToggle) {
+            isClawOpenToggle = !isClawOpenToggle;
+        }
+        lastClawOpenToggle = gamepad2.right_bumper;
+
+        if (isClawOpenToggle) {
+            claw.openClaw();
+        } else {
+            claw.closeClaw();
+        }
+
+
 
         // claw pivot
-//        if (gamepad2.dpad_up) {
-//            claw.rotateClaw(1);
-//        } else if (gamepad2.dpad_down) {
-//            claw.rotateClaw(-1);
-//        } else {
-//            claw.rotateClaw(0);
-//        }
+        if (gamepad2.dpad_up) {
+            claw.rotateClaw(1);
+        } else if (gamepad2.dpad_down) {
+            claw.rotateClaw(-1);
+        } else {
+            claw.rotateClaw(0);
+        }
 
         // Adjusting angle target
         if(gamepad1.left_trigger >= 0.5){ // Adjsting angle
@@ -250,8 +249,8 @@ public class MainTeleOp extends OpMode {
 
 //        odometry.telemetry(telemetry);
         mecanum.telemetry(telemetry);
-//        slides.telemetry(telemetry);
-//        claw.telemetry(telemetry);
+        slides.telemetry(telemetry);
+        claw.telemetry(telemetry);
 
         telemetry.addLine("\nTIMER");
         telemetry.addLine("DeltaTime " + deltaTime);

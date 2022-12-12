@@ -188,27 +188,31 @@ public class LinearSlides {
     }
 
     public void extendBy(double power){
-        if(extensionMotor.getCurrentPosition() <= 0) {
-            extensionMotor.setVelocity(power * 50, AngleUnit.RADIANS);
-            extensionMotor2.setVelocity(power * 50, AngleUnit.RADIANS);
+//        if(extensionMotor.getCurrentPosition() <= 0) {
+            extensionMotor.setVelocity(power * 100, AngleUnit.RADIANS);
+            extensionMotor2.setVelocity(power * 100, AngleUnit.RADIANS);
 //            extensionMotor.setPower(power / 2.0);
 //            extensionMotor2.setPower(power / 2.0);
-        } else {
-            extensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        }
+//        } else {
+//            extensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        }
     }
 
     public void pivotTo(double angleRadians) { // Radians
         seesawAngle = seeSawMotor.getCurrentPosition() * SEESAW_OVERALL_RATIO;
-        if(seesawAngle < Math.PI / 2 && seesawAngle > 0.0) {
+//        if(seesawAngle < Math.PI / 2 && seesawAngle > 0.0) {
             seeSawMotor.setTargetPosition((int) (angleRadians / SEESAW_OVERALL_RATIO));
             seeSawMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             seeSawMotor.setPower(.5);
-        }
+//        }
     }
 
     public void pivotBy(double power) {
-        seeSawMotor.setVelocity(power * 10, AngleUnit.RADIANS);
+        seeSawMotor.setVelocity(power * 50, AngleUnit.RADIANS);
+//        seeSawMotor.setTargetPosition((int)(power * 100 + seeSawMotor.getCurrentPosition()));
+//        seeSawMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        seeSawMotor.setPower(1);
+
     }
 
     public void update(){ // Run this as much as applicable
@@ -246,6 +250,8 @@ public class LinearSlides {
         telemetry.addLine("\nLINEAR SLIDES + SEESAW");
         telemetry.addLine(String.format("Seesaw Motor Power: %f", seeSawMotor.getPower()));
         telemetry.addLine(String.format("Seesaw Motor Velocity: %f", seeSawMotor.getVelocity()));
+        telemetry.addLine(String.format("Seesaw Current Position: %d", seeSawMotor.getCurrentPosition()));
+        telemetry.addLine(String.format("Seesaw Target Position: %d", seeSawMotor.getTargetPosition()));
         telemetry.addLine(String.format("Extension Motors Powers: %f %f", extensionMotor.getPower(), extensionMotor2.getPower()));
         telemetry.addLine(String.format("Extension Motors Velocities: %f %f", extensionMotor.getVelocity(), extensionMotor2.getVelocity()));
         telemetry.addLine(String.format("Extensions Current Positions: %d %d", extensionMotor.getCurrentPosition(), extensionMotor2.getCurrentPosition()));
