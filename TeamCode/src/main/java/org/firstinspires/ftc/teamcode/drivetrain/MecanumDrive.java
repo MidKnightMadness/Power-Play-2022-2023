@@ -136,7 +136,8 @@ public class MecanumDrive {
     double replacement;
 
     public boolean driveTo(double targetX, double targetY, double targetAngle, double currentX, double currentY, double currentAngle){
-        if(Math.sqrt(((targetX - currentX) * (targetX - currentX)) + ((targetY - currentY) * (targetY - currentY))) > 1) {
+        if(Math.sqrt(((targetX - currentX) * (targetX - currentX)) + ((targetY - currentY) * (targetY - currentY))) > 1 &&
+            targetAngle - currentAngle < 0.1) {
 
 //            replacement = Math.max(Math.abs(targetX - currentX), Math.abs(targetY - currentY));
 //            if(Math.sqrt(((targetX - currentX) * (targetX - currentX)) + ((targetY - currentY) * (targetY - currentY))) < 10.0){ // CHange this later

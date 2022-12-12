@@ -199,7 +199,21 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
     @Override
     public void loop() { // Analogous to while(active){
 
-        goToPosition(scoringLocation.x, scoringLocation.y, 0);
+        goToPosition(this.getStartingPostition().x, this.getStartingPostition().y  + 31, this.getStartingRotation()); // Figure out a way to go forward to next mat, then go left / right, check if this works
+        switch(tagOfInterest.id){
+            case 1:
+                goToPosition(odometry.getXCoordinate() - 23.5, odometry.getYCoordinate(), odometry.getRotationRadians());
+                break;
+            case 2:
+                goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians());
+                break;
+            case 3:
+                goToPosition(odometry.getXCoordinate() + 23.5, odometry.getYCoordinate(), odometry.getRotationRadians());
+                break;
+            default:
+                break;
+        }
+
 
 //        telemetry.addData("Signal #", mostRecentDetection);
 //        telemetry.addData("Signal finds", "" + signalFinds[0], signalFinds[1], signalFinds[2]);
