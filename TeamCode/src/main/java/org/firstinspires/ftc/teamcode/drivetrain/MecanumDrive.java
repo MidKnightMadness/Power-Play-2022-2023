@@ -101,9 +101,6 @@ public class MecanumDrive {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
-
-        replacement = 0.0;
     }
 
     public void drive(double x, double y, double rotate) {
@@ -113,11 +110,21 @@ public class MecanumDrive {
         BLMotor.setPower(-x + y + rotate);
     }
 
-    private final double SENSITIVITY = 0.5;
+
+    private static final double ROTATION_LIMIT = 0.3; // Largest proportion possible for rotation component inputted into drive();
+    private double inputModulation = 0.0;
+    private static double ROTATION_THRESHOLD = 0.02; // Radians, ~20˚
+    private static double DISPLACEMENT_THRESHOLD = 0.5; // Inches
+
     public void fieldOrientatedDrive(double x, double y, double rotate) {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        gyro_degrees = angles.firstAngle;
+
+//        gyro_degrees = angles.firstAngle;
         gyro_radians = gyro_degrees * Math.PI / 180;
+//        gyro_radians = odometry.getRotationRadians() * Math.PI / 180;
+        // Can we move odometry class into mecanumDrive so we don't have 2 odometry classes?
+
+        if(x == 0){ x += 0.001; }
         offAngle = Math.atan(y / x);
 
         if (x == 0 && y == 0) {
@@ -130,20 +137,31 @@ public class MecanumDrive {
         correctedX = Math.cos(-gyro_radians + offAngle);
         correctedY = Math.sin(-gyro_radians + offAngle);
 
-        drive(correctedX * SENSITIVITY, correctedY * SENSITIVITY, rotate * SENSITIVITY);
+
+        // Still need to adjust to prevent overshoots on displacement adjustments
+        if(Math.abs(rotate) < 1.0){ // Precise adjustments, to not overshoot on rotation
+            inputModulation = (1.0 - (ROTATION_LIMIT * rotate * rotate * rotate)) / Math.max(Math.abs(correctedX), Math.abs(correctedY)); // Allocates non-rotational power to translational movement
+            drive(correctedX * inputModulation, correctedY * inputModulation, ROTATION_LIMIT * rotate * rotate * rotate); // To prevent roational overcorrection
+        }else{
+            inputModulation = (1.0 - (ROTATION_LIMIT * rotate / Math.abs(rotate))) / Math.max(Math.abs(correctedX), Math.abs(correctedY)); // Allocates non-rotational power to translational movement
+            drive(correctedX * inputModulation, correctedY * inputModulation, ROTATION_LIMIT * rotate / Math.abs(rotate)); // Would max out at limit
+        }
     }
 
-    double replacement;
-
     public boolean driveTo(double targetX, double targetY, double targetAngle, double currentX, double currentY, double currentAngle){
-        if(Math.sqrt(((targetX - currentX) * (targetX - currentX)) + ((targetY - currentY) * (targetY - currentY))) > 1) {
-//                && targetAngle - currentAngle < 0.1) {
-            fieldOrientatedDrive((targetX - currentX) / (10), (targetY - currentY) / (10), (0)); // 0 on rotational component is temporary, needs correction
-            return false;
-        }
+        if(((targetX - currentX) * (targetX - currentX)) + ((targetY - currentY) * (targetY - currentY)) > 0.01 || // Larger discrepancy than 0.1 in.
+                Math.abs(targetAngle - currentAngle) > 0.00872664625997) { // Larger discrepancy than 0.5˚
+
+                fieldOrientatedDrive((targetX - currentX), (targetY - currentY),
+                        (targetAngle - currentAngle));
+                return false;
+            }
+
         fieldOrientatedDrive(0, 0, 0);
         return true;
     }
+
+
     public void pointTo(double x, double y) {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         gyro_degrees = angles.firstAngle;
