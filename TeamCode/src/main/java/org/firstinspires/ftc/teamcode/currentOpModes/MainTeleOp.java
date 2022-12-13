@@ -221,13 +221,13 @@ public class MainTeleOp extends OpMode {
 
         // Autonomous testing
         if(gamepad1.dpad_right){
-            goToPosition(12, 0, targetAngle);
+            goToPosition(odometry.getXCoordinate() + 12, odometry.getYCoordinate() , targetAngle);
         }else if(gamepad1.dpad_left){
-            goToPosition(-12, 0, targetAngle);
+            goToPosition(odometry.getXCoordinate() - 12, odometry.getYCoordinate(), targetAngle);
         }else if(gamepad1.dpad_up){
-            goToPosition(0, 12, targetAngle);
+            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate() + 12, targetAngle);
         }else if(gamepad1.dpad_down){
-            goToPosition(0, -12, targetAngle);
+            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate() - 12, targetAngle);
         }
 
         telemetry.addData("\nController target angle", targetAngle);
