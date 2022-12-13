@@ -71,8 +71,9 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         return Math.PI / 2;
     }
 
-    public Vector2 getStartingPostition() {
-        return new Vector2(7.5, realSquareWidth * 1.5);
+    public Vector2 getStartingPosition() {
+//        return new Vector2(7.5, realSquareWidth * .5);
+        return new Vector2(104.5, halfRobotWidth);
     }
 
     @Override
@@ -102,7 +103,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 //        telemetry.setAutoClear(false);
 
         mecanumDrive = new MecanumDrive(hardwareMap);
-        odometry = new Odometry(hardwareMap, getStartingRotation(), new Vector2(halfRobotWidth, realSquareWidth * 1.5));
+        odometry = new Odometry(hardwareMap, getStartingPosition(), getStartingRotation());
 
         camera.setPipeline(aprilTagDetectionPipeline);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
@@ -121,7 +122,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         });
 
         // Resetting positions for odometry
-        odometry.resetEncoders();
+//        odometry.resetEncoders();
     }
 
     @Override
@@ -192,27 +193,27 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 
 //        goToScoringLocation();
 //        linearSlides.scoreFromDefaultScoringPosition();
+
     }
 
 
 
     @Override
     public void loop() { // Analogous to while(active){
-
-        goToPosition(this.getStartingPostition().x, this.getStartingPostition().y  + 31, this.getStartingRotation()); // Figure out a way to go forward to next mat, then go left / right, check if this works
-        switch(tagOfInterest.id){
-            case 1:
-                goToPosition(odometry.getXCoordinate() - 23.5, odometry.getYCoordinate(), odometry.getRotationRadians());
-                break;
-            case 2:
-                goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians());
-                break;
-            case 3:
-                goToPosition(odometry.getXCoordinate() + 23.5, odometry.getYCoordinate(), odometry.getRotationRadians());
-                break;
-            default:
-                break;
-        }
+        goToPosition(getStartingPosition().x, getStartingPosition().y  + 31, getStartingRotation()); // Figure out a way to go forward to next mat, then go left / right, check if this works
+//        switch(tagOfInterest.id){
+//            case 1:
+//                goToPosition(odometry.getXCoordinate() - 23.5, odometry.getYCoordinate(), odometry.getRotationRadians());
+//                break;
+//            case 2:
+//                goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians());
+//                break;
+//            case 3:
+//                goToPosition(odometry.getXCoordinate() + 23.5, odometry.getYCoordinate(), odometry.getRotationRadians());
+//                break;
+//            default:
+//                break;
+//        }
 
 
 //        telemetry.addData("Signal #", mostRecentDetection);
@@ -310,9 +311,9 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 
         while (!atLocation) {
             telemetry.addData("At Location", atLocation);
-            telemetry.addLine(String.format("Current Coordinates: (%3.2f, %3.2f, %3.2f)", odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationDegrees()));
+            telemetry.addLine(String.format("Current Coordinates: (%3.2f, %3.2f, %3.2f)", odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians()));
             telemetry.addLine(String.format("Target Coordinates: (%3.2f, %3.2f, %3.2f)", targetX, targetY, targetAngle));
-            telemetry.addLine(String.format("Target - current: (%3.2f, %3.2f, %3.2f)", targetX - odometry.getXCoordinate(), targetY - odometry.getYCoordinate(), targetAngle - odometry.getRotationDegrees()));
+            telemetry.addLine(String.format("Target - current: (%3.2f, %3.2f, %3.2f)", targetX - odometry.getXCoordinate(), targetY - odometry.getYCoordinate(), targetAngle - odometry.getRotationRadians()));
 //            odometry.telemetry(telemetry);
             telemetry.update();
 
@@ -321,9 +322,6 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
             atLocation = mecanumDrive.driveTo(targetX, targetY, targetAngle, odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians());
 
         }
-        telemetry.addData("At Location", atLocation);
-        telemetry.update();
-
     }
 
 }

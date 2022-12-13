@@ -81,7 +81,7 @@ public class AutonomousNew extends LinearOpMode
     public void runOpMode()
     {
         mecanumDrive = new MecanumDrive(hardwareMap);
-        odometry = new Odometry(hardwareMap, Math.PI / 2, new Vector2(0, 0));
+        odometry = new Odometry(hardwareMap, new Vector2(0, 0), Math.PI / 2);
 
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());

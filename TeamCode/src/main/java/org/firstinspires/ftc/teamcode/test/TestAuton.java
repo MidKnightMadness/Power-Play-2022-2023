@@ -19,7 +19,7 @@ public class TestAuton extends OpMode
     @Override
     public void init() {
         mecanum = new MecanumDrive(hardwareMap);
-        odometry = new Odometry(hardwareMap, 3.141592624, new Vector2(0, 0));
+        odometry = new Odometry(hardwareMap, new Vector2(0, 0), 3.141592624);
     }
 
     @Override

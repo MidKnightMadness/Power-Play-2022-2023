@@ -40,7 +40,7 @@ public class Odometry implements OdometryVariables {
     public DcMotorEx horizontalEncoder;
     public DcMotorEx rightEncoder;
 
-    public Odometry(HardwareMap hardwareMap, double startingAngleRadians, Vector2 startingPosition) {
+    public Odometry(HardwareMap hardwareMap, Vector2 startingPosition, double startingAngleRadians) {
         elapsedTime = new ElapsedTime();
 
         leftEncoder = hardwareMap.get(DcMotorEx.class, "FL");

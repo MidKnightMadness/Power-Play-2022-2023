@@ -71,7 +71,7 @@ public class MainTeleOp extends OpMode {
         timer = new Timer();
 
         mecanum = new MecanumDrive(hardwareMap);
-        odometry = new Odometry(hardwareMap, Math.PI / 2, new Vector2(0, 0));
+        odometry = new Odometry(hardwareMap, new Vector2(0, 0), Math.PI / 2);
         claw = new Claw(hardwareMap);
         slides = new LinearSlides(hardwareMap);
     }
