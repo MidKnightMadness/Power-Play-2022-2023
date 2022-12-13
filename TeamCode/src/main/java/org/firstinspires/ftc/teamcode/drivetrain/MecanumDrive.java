@@ -141,9 +141,15 @@ public class MecanumDrive {
         // Still need to adjust to prevent overshoots on displacement adjustments
         if(Math.abs(rotate) < 1.0){ // Precise adjustments, to not overshoot on rotation
             inputModulation = (1.0 - (ROTATION_LIMIT * rotate * rotate * rotate)) / Math.max(Math.abs(correctedX), Math.abs(correctedY)); // Allocates non-rotational power to translational movement
+            if(x < 1.0 || y < 1.0){ // Precise adjustments
+                drive(correctedX, correctedY, ROTATION_LIMIT * rotate * rotate * rotate); // To prevent roational overcorrection
+            }
             drive(correctedX * inputModulation, correctedY * inputModulation, ROTATION_LIMIT * rotate * rotate * rotate); // To prevent roational overcorrection
         }else{
             inputModulation = (1.0 - (ROTATION_LIMIT * rotate / Math.abs(rotate))) / Math.max(Math.abs(correctedX), Math.abs(correctedY)); // Allocates non-rotational power to translational movement
+            if(x < 1.0 || y < 1.0){ // Precise adjustments
+                drive(correctedX, correctedY, ROTATION_LIMIT * rotate * rotate * rotate); // To prevent roational overcorrection
+            }
             drive(correctedX * inputModulation, correctedY * inputModulation, ROTATION_LIMIT * rotate / Math.abs(rotate)); // Would max out at limit
         }
     }
