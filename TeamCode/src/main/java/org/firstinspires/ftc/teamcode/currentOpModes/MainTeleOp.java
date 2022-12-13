@@ -130,6 +130,7 @@ public class MainTeleOp extends OpMode {
         if (gamepad1.left_bumper && !lastPressedDriveMode) {
             driveModeToggle = !driveModeToggle;
         }
+        lastPressedDriveMode = gamepad1.left_bumper;
 
         if (driveModeToggle) {
             mecanum.fieldOrientatedDrive(currentInputs[0] * powerMultiplier, -currentInputs[1] * powerMultiplier,

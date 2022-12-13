@@ -15,7 +15,7 @@ public class AutonomousTwo extends Autonomous {
     }
 
     public Vector2 getStartingPostition() {
-        return new Vector2(halfRobotWidth, realSquareWidth * 1.5);
+        return new Vector2(104.5, halfRobotWidth);
     }
 
 }

@@ -124,7 +124,7 @@ public class MecanumDrive {
 //        gyro_radians = odometry.getRotationRadians() * Math.PI / 180;
         // Can we move odometry class into mecanumDrive so we don't have 2 odometry classes?
 
-        if(x == 0){ x += 0.001; }
+        if(x == 0) { x += 0.001; }
         offAngle = Math.atan(y / x);
 
         if (x == 0 && y == 0) {
@@ -139,21 +139,20 @@ public class MecanumDrive {
 
 
         // Still need to adjust to prevent overshoots on displacement adjustments
-        if(Math.abs(rotate) < 1.0){ // Precise adjustments, to not overshoot on rotation
+        if(Math.abs(rotate) < 1.0) { // Precise adjustments, to not overshoot on rotation
             inputModulation = (1.0 - (ROTATION_LIMIT * rotate * rotate * rotate)) / Math.max(Math.abs(correctedX), Math.abs(correctedY)); // Allocates non-rotational power to translational movement
             drive(correctedX * inputModulation, correctedY * inputModulation, ROTATION_LIMIT * rotate * rotate * rotate); // To prevent roational overcorrection
-        }else{
+        } else {
             inputModulation = (1.0 - (ROTATION_LIMIT * rotate / Math.abs(rotate))) / Math.max(Math.abs(correctedX), Math.abs(correctedY)); // Allocates non-rotational power to translational movement
             drive(correctedX * inputModulation, correctedY * inputModulation, ROTATION_LIMIT * rotate / Math.abs(rotate)); // Would max out at limit
         }
     }
 
-    public boolean driveTo(double targetX, double targetY, double targetAngle, double currentX, double currentY, double currentAngle){
+    public boolean driveTo(double targetX, double targetY, double targetAngle, double currentX, double currentY, double currentAngle) {
         if(((targetX - currentX) * (targetX - currentX)) + ((targetY - currentY) * (targetY - currentY)) > 0.01 || // Larger discrepancy than 0.1 in.
                 Math.abs(targetAngle - currentAngle) > 0.00872664625997) { // Larger discrepancy than 0.5˚
 
-                fieldOrientatedDrive((targetX - currentX), (targetY - currentY),
-                        (targetAngle - currentAngle));
+                fieldOrientatedDrive((targetX - currentX), (targetY - currentY), (targetAngle - currentAngle));
                 return false;
             }
 
