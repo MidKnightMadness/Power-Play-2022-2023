@@ -123,8 +123,8 @@ public class MecanumDrive {
             drivenY = Math.sin(-angle) * x + Math.cos(-angle) * y;
 
             // Cap values for translation
-            drivenX *= TRANSLATION_LIMIT / Math.max(Math.abs(drivenX), Math.abs(drivenY));
-            drivenY *= TRANSLATION_LIMIT / Math.max(Math.abs(drivenX), Math.abs(drivenY));
+            drivenX *= TRANSLATION_LIMIT / (Math.abs(drivenX) + Math.abs(drivenY));
+            drivenY *= TRANSLATION_LIMIT / (Math.abs(drivenX) + Math.abs(drivenY));
 
             // Precise adjustments
             if(x < TRANSLATION_LIMIT / 2){
@@ -147,7 +147,7 @@ public class MecanumDrive {
         double newx = Math.cos(rotato-currentAngle+Math.PI/2); //drives without turning to the point
         double newy = Math.sin(rotato-currentAngle+Math.PI/2);
         double spd = Math.min(Math.hypot(dy, dx), 4.0)/4;
-        spd=spd*spd;
+        spd *= spd * spd; // Cube, still needed more precise adjustment
         drive(newx*spd, newy*spd, -pointTo(targetAngle,currentAngle));
 
         return true;
