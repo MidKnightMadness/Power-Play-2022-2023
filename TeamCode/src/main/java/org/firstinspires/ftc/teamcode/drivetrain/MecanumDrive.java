@@ -112,60 +112,30 @@ public class MecanumDrive {
 
 
     private static final double ROTATION_LIMIT = 0.3; // Largest proportion possible for rotation component inputted into drive();
-    private double inputModulation = 0.0;
-    private static double ROTATION_THRESHOLD = 0.02; // Radians, ~20˚
-    private static double DISPLACEMENT_THRESHOLD = 0.5; // Inches
-    public static boolean preciseRotation = false;
-    public static boolean preciseDisplacement = false;
-    public static boolean newFieldOrientedDrive= false;
+    private static final double TRANSLATION_LIMIT = 1.0 - ROTATION_LIMIT;
+    private double drivenX = 0.0;
+    private double drivenY = 0.0;
 
-    public void fieldOrientatedDrive(double x, double y, double rotate, double angle) {
+    public void fieldOrientatedDrive(double x, double y, double rotate, double angle) { // Angle is angle of robot relative to horizontal right, 0 ≤ rotate, x, y ≤ 1
 
+            // Rotation of perpendicular unit drive vectors back to basis vectors
+            drivenX = Math.cos(-angle) * x - Math.sin(-angle) * y;
+            drivenY = Math.sin(-angle) * x + Math.cos(-angle) * y;
 
-//        if(!newFieldOrientedDrive) {
-//            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-//            gyro_degrees = angles.firstAngle;
-//            gyro_radians = gyro_degrees * Math.PI / 180;
-//        }else{
-//            gyro_radians = angle;
-//        }
-//
-//        if(x == 0) { x += 0.001; }
-//        offAngle = Math.atan(y / x);
-//
-//        if (x == 0 && y == 0) {
-//            drive(0, 0, rotate);
-//            return;
-//        }
-//
-//        if (x < 0) { offAngle = Math.PI + offAngle; }
-//
-//        correctedX = Math.cos(-gyro_radians + offAngle);
-//        correctedY = Math.sin(-gyro_radians + offAngle);
-//
-//
-//        // Still need to adjust to prevent overshoots on displacement adjustments
-//        if(Math.abs(rotate) < 1.0) { // Precise adjustments, to not overshoot on rotation
-//            preciseRotation = true;
-//            inputModulation = (1.0 - (ROTATION_LIMIT * rotate * rotate * rotate)) / Math.max(Math.abs(correctedX), Math.abs(correctedY)); // Allocates non-rotational power to translational movement
-//            if(x < 1.0 || y < 1.0){ // Precise adjustments
-//                preciseDisplacement = true;
-//                drive(correctedX / 5, correctedY / 5, ROTATION_LIMIT * rotate * rotate * rotate); // To prevent roational overcorrection
-//            }else {
-//                preciseDisplacement = true;
-//                drive(correctedX * inputModulation, correctedY * inputModulation, ROTATION_LIMIT * rotate * rotate * rotate); // To prevent roational overcorrection
-//            }
-//        } else {
-//            preciseRotation = false;
-//            inputModulation = (1.0 - (ROTATION_LIMIT * rotate / Math.abs(rotate))) / Math.max(Math.abs(correctedX), Math.abs(correctedY)); // Allocates non-rotational power to translational movement
-//            if(x < 1.0 || y < 1.0){ // Precise adjustments
-//                preciseDisplacement = true;
-//                drive(correctedX / 5, correctedY / 5, ROTATION_LIMIT * rotate / Math.abs(rotate)); // To prevent roational overcorrection
-//            }else {
-//                preciseDisplacement = false;
-//                drive(correctedX * inputModulation, correctedY * inputModulation, ROTATION_LIMIT * rotate / Math.abs(rotate)); // Would max out at limit
-//            }
-//        }
+            // Cap values for translation
+            drivenX *= TRANSLATION_LIMIT / Math.max(Math.abs(drivenX), Math.abs(drivenY));
+            drivenY *= TRANSLATION_LIMIT / Math.max(Math.abs(drivenX), Math.abs(drivenY));
+
+            // Precise adjustments
+            if(x < TRANSLATION_LIMIT / 2){
+                drivenX /= 2;
+            }
+            if(y < TRANSLATION_LIMIT / 2){
+                drivenY /= 2;
+            }
+
+            drive(drivenX, drivenY, ROTATION_LIMIT * rotate / Math.abs(rotate));
+
     }
 
     public boolean driveTo(double targetX, double targetY, double targetAngle, double currentX, double currentY, double currentAngle) {

@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.currentOpModes;
 
-import static org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive.preciseDisplacement;
-import static org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive.preciseRotation;
 import static org.firstinspires.ftc.teamcode.highlevel.GridSystem.pointAtJunction;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -285,8 +283,8 @@ public class MainTeleOp extends OpMode {
                 atLocation = true;
                break;
             }
-            telemetry.addData("Precise position adjustment", preciseDisplacement);
-            telemetry.addData("Precise rotation adjustment", preciseRotation);
+//            telemetry.addData("Precise position adjustment", preciseDisplacement);
+//            telemetry.addData("Precise rotation adjustment", preciseRotation);
             telemetry.addData("At Location", atLocation);
             telemetry.addLine(String.format("Current Coordinates: (%3.2f, %3.2f, %3.2f)", odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationDegrees()));
             telemetry.addLine(String.format("Target Coordinates: (%3.2f, %3.2f, %3.2f)", targetX, targetY, targetAngle));
