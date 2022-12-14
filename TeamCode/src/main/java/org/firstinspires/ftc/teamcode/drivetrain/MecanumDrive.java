@@ -147,7 +147,7 @@ public class MecanumDrive {
         double newx = Math.cos(rotato-currentAngle+Math.PI/2); //drives without turning to the point
         double newy = Math.sin(rotato-currentAngle+Math.PI/2);
         double spd = Math.min(Math.hypot(dy, dx), 4.0)/4;
-        spd *= spd*spd; // Cube, still needed more precise adjustment
+        spd *= spd * spd; // Cube, still needed more precise adjustment
         drive(newx*spd, newy*spd, -pointTo(targetAngle,currentAngle));
 
         return true;
