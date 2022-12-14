@@ -115,73 +115,82 @@ public class MecanumDrive {
     private double inputModulation = 0.0;
     private static double ROTATION_THRESHOLD = 0.02; // Radians, ~20˚
     private static double DISPLACEMENT_THRESHOLD = 0.5; // Inches
+    public static boolean preciseRotation = false;
+    public static boolean preciseDisplacement = false;
+    public static boolean newFieldOrientedDrive= false;
 
-    public void fieldOrientatedDrive(double x, double y, double rotate) {
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
-//        gyro_degrees = angles.firstAngle;
-        gyro_radians = gyro_degrees * Math.PI / 180;
-//        gyro_radians = odometry.getRotationRadians() * Math.PI / 180;
-        // Can we move odometry class into mecanumDrive so we don't have 2 odometry classes?
-
-        if(x == 0) { x += 0.001; }
-        offAngle = Math.atan(y / x);
-
-        if (x == 0 && y == 0) {
-            drive(0, 0, rotate);
-            return;
-        }
-
-        if (x < 0) { offAngle = Math.PI + offAngle; }
-
-        correctedX = Math.cos(-gyro_radians + offAngle);
-        correctedY = Math.sin(-gyro_radians + offAngle);
+    public void fieldOrientatedDrive(double x, double y, double rotate, double angle) {
 
 
-        // Still need to adjust to prevent overshoots on displacement adjustments
-        if(Math.abs(rotate) < 1.0) { // Precise adjustments, to not overshoot on rotation
-            inputModulation = (1.0 - (ROTATION_LIMIT * rotate * rotate * rotate)) / Math.max(Math.abs(correctedX), Math.abs(correctedY)); // Allocates non-rotational power to translational movement
-            if(x < 1.0 || y < 1.0){ // Precise adjustments
-                drive(correctedX, correctedY, ROTATION_LIMIT * rotate * rotate * rotate); // To prevent roational overcorrection
-            }
-            drive(correctedX * inputModulation, correctedY * inputModulation, ROTATION_LIMIT * rotate * rotate * rotate); // To prevent roational overcorrection
-        } else {
-            inputModulation = (1.0 - (ROTATION_LIMIT * rotate / Math.abs(rotate))) / Math.max(Math.abs(correctedX), Math.abs(correctedY)); // Allocates non-rotational power to translational movement
-            if(x < 1.0 || y < 1.0){ // Precise adjustments
-                drive(correctedX, correctedY, ROTATION_LIMIT * rotate * rotate * rotate); // To prevent roational overcorrection
-            }
-            drive(correctedX * inputModulation, correctedY * inputModulation, ROTATION_LIMIT * rotate / Math.abs(rotate)); // Would max out at limit
-        }
+//        if(!newFieldOrientedDrive) {
+//            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+//            gyro_degrees = angles.firstAngle;
+//            gyro_radians = gyro_degrees * Math.PI / 180;
+//        }else{
+//            gyro_radians = angle;
+//        }
+//
+//        if(x == 0) { x += 0.001; }
+//        offAngle = Math.atan(y / x);
+//
+//        if (x == 0 && y == 0) {
+//            drive(0, 0, rotate);
+//            return;
+//        }
+//
+//        if (x < 0) { offAngle = Math.PI + offAngle; }
+//
+//        correctedX = Math.cos(-gyro_radians + offAngle);
+//        correctedY = Math.sin(-gyro_radians + offAngle);
+//
+//
+//        // Still need to adjust to prevent overshoots on displacement adjustments
+//        if(Math.abs(rotate) < 1.0) { // Precise adjustments, to not overshoot on rotation
+//            preciseRotation = true;
+//            inputModulation = (1.0 - (ROTATION_LIMIT * rotate * rotate * rotate)) / Math.max(Math.abs(correctedX), Math.abs(correctedY)); // Allocates non-rotational power to translational movement
+//            if(x < 1.0 || y < 1.0){ // Precise adjustments
+//                preciseDisplacement = true;
+//                drive(correctedX / 5, correctedY / 5, ROTATION_LIMIT * rotate * rotate * rotate); // To prevent roational overcorrection
+//            }else {
+//                preciseDisplacement = true;
+//                drive(correctedX * inputModulation, correctedY * inputModulation, ROTATION_LIMIT * rotate * rotate * rotate); // To prevent roational overcorrection
+//            }
+//        } else {
+//            preciseRotation = false;
+//            inputModulation = (1.0 - (ROTATION_LIMIT * rotate / Math.abs(rotate))) / Math.max(Math.abs(correctedX), Math.abs(correctedY)); // Allocates non-rotational power to translational movement
+//            if(x < 1.0 || y < 1.0){ // Precise adjustments
+//                preciseDisplacement = true;
+//                drive(correctedX / 5, correctedY / 5, ROTATION_LIMIT * rotate / Math.abs(rotate)); // To prevent roational overcorrection
+//            }else {
+//                preciseDisplacement = false;
+//                drive(correctedX * inputModulation, correctedY * inputModulation, ROTATION_LIMIT * rotate / Math.abs(rotate)); // Would max out at limit
+//            }
+//        }
     }
 
     public boolean driveTo(double targetX, double targetY, double targetAngle, double currentX, double currentY, double currentAngle) {
-        if(((targetX - currentX) * (targetX - currentX)) + ((targetY - currentY) * (targetY - currentY)) > 0.01 || // Larger discrepancy than 0.1 in.
-                Math.abs(targetAngle - currentAngle) > 0.00872664625997) { // Larger discrepancy than 0.5˚
+        double dy = (targetY-currentY);
+        double dx = (targetX-currentX);
+        double rotato = Math.acos(dx/Math.hypot(dy, dx));
+        if (dy<0) rotato = 0 - rotato; //finds angle of approach
 
-                fieldOrientatedDrive((targetX - currentX), (targetY - currentY), (targetAngle - currentAngle));
-                return false;
-            }
+        double newx = Math.cos(rotato-currentAngle+Math.PI/2); //drives without turning to the point
+        double newy = Math.sin(rotato-currentAngle+Math.PI/2);
+        double spd = Math.min(Math.hypot(dy, dx), 4.0)/4;
+        spd=spd*spd;
+        drive(newx*spd, newy*spd, -pointTo(targetAngle,currentAngle));
 
-        fieldOrientatedDrive(0, 0, 0);
         return true;
     }
 
 
-    public void pointTo(double x, double y) {
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        gyro_degrees = angles.firstAngle;
-        gyro_radians = (gyro_degrees * Math.PI / 180);
-        double newAngle = Math.acos(x);
-        if (y < 0) newAngle = 0-newAngle;
-        double rotato = (newAngle-gyro_radians+3.1416)%6.283-3.1416;//reference angle
+    public double pointTo(double targetAngle, double currentAngle) { //forward is 0
+        double rotato = (targetAngle-currentAngle+3.1416)%6.283-3.1416;//reference angle
         if (rotato < -3.1416) rotato += 6.283;
-        rotato = Math.cbrt(3.1416/rotato);
-        //double amt = rotato-gyro_radians;
-        //if (Math.abs(amt) > 3.1416) {//if difference > 180 degrees
-            //amt = 0-amt;//flip direction
-        //}
-
+        if (Math.abs(rotato) < .087) return rotato/.087/5;
+        return rotato/Math.abs(rotato)/5;
     }
+
 
     public void telemetry(Telemetry telemetry) {
         telemetry.addLine("\nMECANUM WHEELS");

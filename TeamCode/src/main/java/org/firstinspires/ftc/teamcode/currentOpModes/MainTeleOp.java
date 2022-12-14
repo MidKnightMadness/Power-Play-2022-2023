@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.currentOpModes;
 
 import static org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive.preciseDisplacement;
 import static org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive.preciseRotation;
+import static org.firstinspires.ftc.teamcode.highlevel.GridSystem.pointAtJunction;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -224,7 +225,7 @@ public class MainTeleOp extends OpMode {
         }
 
         if (gamepad1.triangle) {
-            newFieldOriented = !newFieldOriented;
+            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[0]);
         }
 
         // Autonomous testing

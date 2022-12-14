@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.manipulator;
 
+import static org.firstinspires.ftc.teamcode.autonomous.Autonomous.mecanumDrive;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.claw;
 import static org.firstinspires.ftc.teamcode.manipulator.Turntable.turntableAngle;
 
@@ -128,12 +129,12 @@ public class LinearSlides {
         }
 
 
-        if(!(Autonomous.mecanumDrive == null)){ // For autonomous
+        if(!(mecanumDrive == null)){ // For autonomous
             while(!(Math.abs(angleDisplacement - Autonomous.odometry.getRotationRadians()) < 0.1)){
                 if(angleDisplacement >= Autonomous.odometry.getRotationRadians()){
-                    Autonomous.mecanumDrive.fieldOrientatedDrive(0.0, 0.0, 0.8);
+//                    mecanumDrive.fieldOrientatedDrive(0.0, 0.0, 0.8, mecanumDrive.odometry.getRotationRadians());
                 }else{
-                    Autonomous.mecanumDrive.fieldOrientatedDrive(0.0, 0.0, -0.8);
+//                    mecanumDrive.fieldOrientatedDrive(0.0, 0.0, -0.8);
                 }
 
                 Autonomous.odometry.updatePosition();
@@ -142,9 +143,9 @@ public class LinearSlides {
         }else{
             while(!(Math.abs(angleDisplacement - MainTeleOp.odometry.getRotationRadians()) < 0.1)){
                 if(angleDisplacement >= MainTeleOp.odometry.getRotationRadians()){
-                    MainTeleOp.mecanum.fieldOrientatedDrive(0.0, 0.0, 0.8);
+//                    MainTeleOp.mecanum.fieldOrientatedDrive(0.0, 0.0, 0.8);
                 }else{
-                    MainTeleOp.mecanum.fieldOrientatedDrive(0.0, 0.0, -0.8);
+//                    MainTeleOp.mecanum.fieldOrientatedDrive(0.0, 0.0, -0.8);
                 }
 
                 MainTeleOp.odometry.updatePosition();
@@ -158,7 +159,7 @@ public class LinearSlides {
         /\_| <- Angle
          */
 
-        if(Autonomous.mecanumDrive == null){ // Case teleOp
+        if(mecanumDrive == null){ // Case teleOp
             if(Math.abs(angleDisplacement - MainTeleOp.odometry.getRotationRadians()) > Math.PI){ // Case backwards scoring
                 this.pivotTo(Math.PI + Math.atan(displacement[3] /
                         Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + displacement[0]*displacement[0] + displacement[1]*displacement[1])));

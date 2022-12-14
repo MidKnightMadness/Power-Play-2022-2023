@@ -95,7 +95,7 @@ public class OdometryTest extends OpMode implements OdometryVariables{
 
     public void updatePosition() {
         int leftTicks = leftEncoder.getCurrentPosition();
-        int rightTicks = rightEncoder.getCurrentPosition();
+        int rightTicks = -rightEncoder.getCurrentPosition();
         int topTicks = horizontalEncoder.getCurrentPosition();
 
         telemetry.addData("Wheel ticks", String.format("%d, %d, %d", leftTicks, rightTicks, topTicks));
@@ -121,8 +121,7 @@ public class OdometryTest extends OpMode implements OdometryVariables{
         // true movement
         double forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0d;
 
-        double lateralMovementAdjustor = deltaRadians * verticalWheelDistance;
-        double trueLateralMovement = topDistanceMoved - (lateralMovementAdjustor);
+        double trueLateralMovement = topDistanceMoved + deltaRadians * verticalWheelDistance;
 
         double sin = Math.sin(rotationRadians);
         double cosine = Math.cos(rotationRadians);
@@ -134,8 +133,8 @@ public class OdometryTest extends OpMode implements OdometryVariables{
         telemetry.addData("Net movement", String.format("%d, %d", deltaLeftTicks, deltaRightTicks));
 
         // opposite direction
-        position.x -= netX;
-        position.y -= netY;
+        position.x += netX;
+        position.y += netY;
 
         velocity.x = netX / deltaTime;
         velocity.y = netY / deltaTime;

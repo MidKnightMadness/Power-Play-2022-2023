@@ -58,7 +58,7 @@ public class TestAuton extends OpMode
         if(invSqrt(((targetAngle) * (0)) //odometry.deltaRadians * 180 / Math.PI))
                     + ((targetX - odometry.getXCoordinate()) * (targetX - odometry.getXCoordinate()))
                     + ((targetY - odometry.getYCoordinate()) * (targetY - odometry.getYCoordinate()))) > 1) {
-            mecanum.fieldOrientatedDrive(targetX - odometry.getXCoordinate(), targetY - odometry.getYCoordinate(), targetAngle - 0); //odometry.getDeltaRotation());
+//            mecanum.fieldOrientatedDrive(targetX - odometry.getXCoordinate(), targetY - odometry.getYCoordinate(), targetAngle - 0); //odometry.getDeltaRotation());
             return false;
 
         }

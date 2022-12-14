@@ -68,7 +68,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
     }
 
     public double getStartingRotation() {
-        return Math.PI / 2;
+        return Math.PI/2;
     }
 
     public Vector2 getStartingPosition() {
@@ -199,7 +199,19 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 
     @Override
     public void loop() { // Analogous to while(active){
-        goToPosition(getStartingPosition().x, getStartingPosition().y + 31, getStartingRotation()); // Figure out a way to go forward to next mat, then go left / right, check if this works
+        goToPosition(getStartingPosition().x, getStartingPosition().y + 31, getStartingRotation());
+        switch(tagOfInterest.id){
+            case 1:
+                goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 31, getStartingRotation());
+                break;
+            case 2:
+                break;
+            case 3:
+                goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 31, getStartingRotation());
+                break;
+            default:
+                break;
+        }
 //        switch(tagOfInterest.id){
 //            case 1:
 //                goToPosition(odometry.getXCoordinate() - 23.5, odometry.getYCoordinate(), odometry.getRotationRadians());
@@ -234,9 +246,9 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 //            }
 //        }
 
-        telemetry.addLine("\n\n");
-        Autonomous.mecanumDrive.telemetry(this.telemetry);
-        telemetry.update();
+        //telemetry.addLine("\n\n");
+        //Autonomous.mecanumDrive.telemetry(this.telemetry);
+        //telemetry.update();
     }
 
     void tagToTelemetry(AprilTagDetection detection)
@@ -312,6 +324,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
             telemetry.addLine(String.format("Current Coordinates: (%3.2f, %3.2f, %3.2f)", odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians()));
             telemetry.addLine(String.format("Target Coordinates: (%3.2f, %3.2f, %3.2f)", targetX, targetY, targetAngle));
             telemetry.addLine(String.format("Target - current: (%3.2f, %3.2f, %3.2f)", targetX - odometry.getXCoordinate(), targetY - odometry.getYCoordinate(), targetAngle - odometry.getRotationRadians()));
+            telemetry.addLine(String.format("Angle: (%3.2f, %3.2f, )", odometry.getRotationDegrees(), targetAngle*180/Math.PI));
 //            odometry.telemetry(telemetry);
             telemetry.update();
 
