@@ -44,14 +44,13 @@ public class Odometry implements OdometryVariables {
         elapsedTime = new ElapsedTime();
 
         leftEncoder = hardwareMap.get(DcMotorEx.class, "FL");
-//        leftEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        leftEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
-
         rightEncoder = hardwareMap.get(DcMotorEx.class, "FR");
-//        rightEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         horizontalEncoder = hardwareMap.get(DcMotorEx.class, "BR");
-//        horizontalEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        resetEncoders();
+
+        position = startingPosition;// startingPosition;
+        rotationRadians = startingAngleRadians;
     }
 
     public void updateTime() {

@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.highlevel.Master.invSqrt;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -33,7 +34,7 @@ import java.util.ArrayList;
 
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
-public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpConeData
+public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, pickUpConeData
 {
     public int startingPos = 0;  // 0: A2, 1: A5, 2: F2, 3: F5
     Thread thread;
@@ -63,6 +64,9 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
     private BNO055IMU imu;
     Orientation angles;
 
+    double signalLocationX;
+    double signalLocationY;
+
     public int getStartingPos() {
         return 0;
     }
@@ -76,15 +80,19 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
     }
 
     @Override
-    public void init() {
+    public void runOpMode() {
+
+
+//----------------INIT----------------------------------------------------------------------------------------------------
+
         mecanumDrive = new MecanumDrive(hardwareMap);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json";
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
+        parameters.loggingEnabled = true;
+        parameters.loggingTag = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");
@@ -105,64 +113,48 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         odometry = new Odometry(hardwareMap, getStartingPosition(), getStartingRotation());
 
         camera.setPipeline(aprilTagDetectionPipeline);
-        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
+        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
-            public void onOpened()
-            {
-                camera.startStreaming(800,448, OpenCvCameraRotation.UPRIGHT);
+            public void onOpened() {
+                camera.startStreaming(800, 448, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
-            public void onError(int errorCode)
-            {
+            public void onError(int errorCode) {
                 telemetry.addData("ERROR", "Error code" + errorCode);
             }
         });
 
-        // Resetting positions for odometry
-//        odometry.resetEncoders();
-    }
 
-    @Override
-    public void init_loop() {
 
-        coneTimer.getTime();
+//----------------INIT-LOOP----------------------------------------------------------------------------------------------------
 
-        ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
+        while (!isStarted() && !isStopRequested()) {
+            coneTimer.getTime();
 
-        if (currentDetections.size() != 0)
-        {
-            boolean tagFound = false;
+            ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
-            for(AprilTagDetection tag : currentDetections)
-            {
-                if(tag.id == 1 || tag.id == 2 || tag.id == 3)
-                {
-                    signalFinds[tag.id - 1] += 1;
-                    mostRecentDetection = tag.id;
-                    tagOfInterest = tag;
-                    tagToTelemetry(tagOfInterest);
-                    tagFound = true;
+            if (currentDetections.size() != 0) {
+                boolean tagFound = false;
+
+                for (AprilTagDetection tag : currentDetections) {
+                    if (tag.id == 1 || tag.id == 2 || tag.id == 3) {
+                        signalFinds[tag.id - 1] += 1;
+                        mostRecentDetection = tag.id;
+                        tagOfInterest = tag;
+                        tagToTelemetry(tagOfInterest);
+                        tagFound = true;
+                    }
                 }
             }
+            telemetry.addData("Signal location", mostRecentDetection);
+            telemetry.addData("Signal finds", signalFinds);
+            telemetry.update();
+            sleep(20);
         }
-        telemetry.addData("Signal location", mostRecentDetection);
-        telemetry.addData("Signal finds", signalFinds);
-        telemetry.update();
-    }
-
-    double signalLocationX;
-    double signalLocationY;
 
 
-    // Linked list of poses (3 element arrays)
-    public static ArrayList <double []> AutonomousPoseArray = new ArrayList<>();
-
-    @Override
-    public void start() {
-//        Autonomous.AutonomousPoseArray.add(new double [] {0, 0, 0}); // Default
-//        Autonomous.AutonomousPoseArray.add(new double [] {0, 12, 0}); // 1 foot up
+//----------------START----------------------------------------------------------------------------------------------------
 
         telemetry.setAutoClear(false);
 
@@ -175,8 +167,7 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
             signalLocationX = signalLocations[startingPos][mostRecentDetection - 1].x;
             signalLocationY = signalLocations[startingPos][mostRecentDetection - 1].y;
             telemetry.addLine("SIGNAL TAG FOUND, GOING TO POSITION " + mostRecentDetection);
-        }
-        else {
+        } else {
             signalLocationX = signalLocations[startingPos][1].x;
             signalLocationY = signalLocations[startingPos][1].y;
 
@@ -185,70 +176,53 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
 
         telemetry.setAutoClear(true);
 
-        // Testing autonomous
-         /*AutonomousPoseArray.get(1)[0],
-                AutonomousPoseArray.get(1)[1],
-                AutonomousPoseArray.get(1)[2]);*/
-
 //        goToScoringLocation();
 //        linearSlides.scoreFromDefaultScoringPosition();
 
-    }
 
+//----------------LOOP----------------------------------------------------------------------------------------------------
 
-
-    @Override
-    public void loop() { // Analogous to while(active){
-        goToPosition(getStartingPosition().x, getStartingPosition().y + 31, getStartingRotation());
-//        switch(tagOfInterest.id){
-//            case 1:
-//                goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 31, getStartingRotation());
-//                break;
-//            case 2:
-//                break;
-//            case 3:
-//                goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 31, getStartingRotation());
-//                break;
-//            default:
-//                break;
-//        }
-//        switch(tagOfInterest.id){
-//            case 1:
-//                goToPosition(odometry.getXCoordinate() - 23.5, odometry.getYCoordinate(), odometry.getRotationRadians());
-//                break;
-//            case 2:
-//                goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians());
-//                break;
-//            case 3:
-//                goToPosition(odometry.getXCoordinate() + 23.5, odometry.getYCoordinate(), odometry.getRotationRadians());
-//                break;
-//            default:
-//                break;
-//        }
-
-
-//        telemetry.addData("Signal #", mostRecentDetection);
-//        telemetry.addData("Signal finds", "" + signalFinds[0], signalFinds[1], signalFinds[2]);
-//        telemetry.addData("Signal location", signalLocations[startingPos][mostRecentDetection - 1]);
-
-        time = coneTimer.getTime();
-
-//        if (time > 26.35729278100687712039158d) {
-//            goToSignalLocation((int)odometry.getXCoordinate(), (int) odometry.getYCoordinate(), (int) signalLocationX, (int) signalLocationY);
-//            requestOpModeStop();
-//        } else {
-//            try {
-//                cycle();
+        while (opModeIsActive()) {
+//            switch(tagOfInterest.id){
+//                case 1:
+//                    goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 31, getStartingRotation());
+//                    break;
+//                case 2:
+//                    break;
+//                case 3:
+//                    goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 31, getStartingRotation());
+//                    break;
+//                default:
+//                    break;
 //            }
-//            catch (InterruptedException e) {
-//                telemetry.addLine(e.toString());
-//                telemetry.update();
-//            }
-//        }
 
-        //telemetry.addLine("\n\n");
-        //Autonomous.mecanumDrive.telemetry(this.telemetry);
-        //telemetry.update();
+
+//            telemetry.addData("Signal #", mostRecentDetection);
+//            telemetry.addData("Signal finds", "" + signalFinds[0], signalFinds[1], signalFinds[2]);
+//            telemetry.addData("Signal location", signalLocations[startingPos][mostRecentDetection - 1]);
+
+            time = coneTimer.getTime();
+
+//            if (time > 26.35729278100687712039158d) {
+                  goToPosition(getStartingPosition().x, getStartingPosition().y + 28, getStartingRotation());
+                  goToPosition(getStartingPosition().x + 24, getStartingPosition().y + 28, getStartingRotation());
+//                goToSignalLocation((int)odometry.getXCoordinate(), (int) odometry.getYCoordinate(), (int) signalLocationX, (int) signalLocationY);
+                requestOpModeStop();
+//            } else {
+//                try {
+//                    cycle();
+//                }
+//                catch (InterruptedException e) {
+//                    telemetry.addLine(e.toString());
+//                    telemetry.update();
+//                }
+//            }
+
+            //telemetry.addLine("\n\n");
+            //Autonomous.mecanumDrive.telemetry(this.telemetry);
+            //telemetry.update();
+            sleep(20);
+        }
     }
 
     void tagToTelemetry(AprilTagDetection detection)
@@ -268,18 +242,18 @@ public class Autonomous extends OpMode implements cameraInfo, fieldData, pickUpC
         goToConeStack();
         linearSlides.goPointAt(new double[] {0, upDown * 12 , coneHeight });
 
-        thread.sleep(1000);
+        sleep(1000);
 
         claw.openClaw();
-        thread.sleep(100);
+        sleep(100);
         claw.closeClaw();
     }
 
     void cycle() throws InterruptedException{
         linearSlides.grabFromDefaultScoringPosition();
-        thread.sleep(100);
+        sleep(100);
         linearSlides.scoreFromDefaultScoringPosition();
-        thread.sleep(100);
+        sleep(100);
 //
 //        if(Vector.lengthOf(Vector.add(Vector.neg(linearSlides.getClawCoordinates()), linearSlides.DEFAULT_SCORING_DISPLACEMENT)) > 0.1){
 //
