@@ -88,7 +88,7 @@ public class MainTeleOp extends OpMode {
 
 
         // DRIVER ASSIST
-        if (gamepad1.x) {
+        if (gamepad1.x || gamepad1.square) {
             odometry.resetEncoders();
         }
 
@@ -96,7 +96,7 @@ public class MainTeleOp extends OpMode {
 //            slides.resetEncoders();
 //        }
 
-        if (gamepad1.a) {
+        if (gamepad1.a || gamepad1.cross) {
             previousInputWeight += 0.01;
             if (previousInputWeight > 1) {
                 previousInputWeight = 1;
@@ -108,7 +108,7 @@ public class MainTeleOp extends OpMode {
             }
         }
 
-        if (gamepad1.b) {
+        if (gamepad1.b || gamepad1.circle) {
             previousInputWeight -= 0.01;
             if (previousInputWeight < 0) {
                 previousInputWeight = 0;
