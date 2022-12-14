@@ -52,9 +52,6 @@ public class Odometry implements OdometryVariables {
 
         horizontalEncoder = hardwareMap.get(DcMotorEx.class, "BR");
 //        horizontalEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        this.rotationRadians = Math.PI/2;
-        this.position = new Vector2(7.5, 7.5);// startingPosition;
     }
 
     public void updateTime() {
