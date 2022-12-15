@@ -350,6 +350,10 @@ public class MainTeleOp extends OpMode {
         telemetry.addData("At Location", atLocation);
         telemetry.update();
 
+        }
     }
+    public void rotateArm(double power) {
+        slides.pivotBy(power);
 
-}}
+    }
+}
