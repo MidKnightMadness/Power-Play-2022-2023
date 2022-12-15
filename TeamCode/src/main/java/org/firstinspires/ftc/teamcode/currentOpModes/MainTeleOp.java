@@ -89,32 +89,36 @@ public class MainTeleOp extends OpMode {
 
 
         // DRIVER ASSIST
-        if (gamepad1.x || gamepad1.square) {
-            odometry.resetEncoders();
-        }
+//        if (gamepad1.x) {
+//            odometry.resetEncoders();
+//        }
 
-        if (gamepad1.a || gamepad1.cross) {
-            previousInputWeight += 0.01;
-            if (previousInputWeight > 1) {
-                previousInputWeight = 1;
-            }
-            try {
-                Thread.sleep(75);
-            } catch (InterruptedException e) {
-                telemetry.addLine(e.toString());
-            }
-        }
+//        if (gamepad2.x) {
+//            slides.resetEncoders();
+//        }
 
-        if (gamepad1.b || gamepad1.circle) {
-            previousInputWeight -= 0.01;
-            if (previousInputWeight < 0) {
-                previousInputWeight = 0;
-            }
-            try {
-                Thread.sleep(75);
-            } catch (InterruptedException e) {
-            }
-        }
+//        if (gamepad1.a) {
+//            previousInputWeight += 0.01;
+//            if (previousInputWeight > 1) {
+//                previousInputWeight = 1;
+//            }
+//            try {
+//                Thread.sleep(75);
+//            } catch (InterruptedException e) {
+//                telemetry.addLine(e.toString());
+//            }
+//        }
+//
+//        if (gamepad1.b) {
+//            previousInputWeight -= 0.01;
+//            if (previousInputWeight < 0) {
+//                previousInputWeight = 0;
+//            }
+//            try {
+//                Thread.sleep(75);
+//            } catch (InterruptedException e) {
+//            }
+//        }
 
         currentInputs[0] = gamepad1.left_stick_x * previousInputWeight + lastInputs[0] * (1 - previousInputWeight);
         currentInputs[1] = gamepad1.left_stick_y * previousInputWeight + lastInputs[1] * (1 - previousInputWeight);
@@ -122,58 +126,56 @@ public class MainTeleOp extends OpMode {
         lastInputs[0] = currentInputs[0];
         lastInputs[1] = currentInputs[1];
 
-        // slow mode (change driving power multiplier)
-        powerMultiplier = staticPowerMultiplier * (1 - gamepad1.right_trigger * 0.95); // slows the driving as trigger is pressed
 
 
 
         // DRIVE
-        if (gamepad1.left_bumper && !lastPressedDriveMode) {
-            driveModeToggle = !driveModeToggle;
-        }
-        lastPressedDriveMode = gamepad1.left_bumper;
-
-        if (driveModeToggle) {
-            mecanum.fieldOrientatedDrive(currentInputs[0] * powerMultiplier, -currentInputs[1] * powerMultiplier,
-                    (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier, odometry.getRotationRadians());
+//        if (gamepad1.left_bumper && !lastPressedDriveMode) {
+//            driveModeToggle = !driveModeToggle;
+//        }
+//        lastPressedDriveMode = gamepad1.left_bumper;
+//
+//        if (driveModeToggle) {
+//            mecanum.fieldOrientatedDrive(currentInputs[0] * powerMultiplier, -currentInputs[1] * powerMultiplier,
+//                    (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier, odometry.getRotationRadians());
 
 //            if (gamepad1.dpad_up) { mecanum.fieldOrientatedDrive(0, -powerMultiplier, 0); }
 //            if (gamepad1.dpad_down) { mecanum.fieldOrientatedDrive(0, powerMultiplier, 0); }
 //            if (gamepad1.dpad_right) { mecanum.fieldOrientatedDrive(powerMultiplier, 0, 0); }
 //            if (gamepad1.dpad_left) { mecanum.fieldOrientatedDrive(-powerMultiplier, 0, 0); }
-        } else {
-            mecanum.drive(currentInputs[0] * powerMultiplier, -currentInputs[1] * powerMultiplier,
-                    (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier); // normal drive
+//        } else {
+//            mecanum.drive(currentInputs[0] * powerMultiplier, -currentInputs[1] * powerMultiplier,
+//                    (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier); // normal drive
 
 //            if (gamepad1.dpad_up) { mecanum.drive(0, -powerMultiplier, 0); }
 //            if (gamepad1.dpad_down) { mecanum.drive(0, powerMultiplier, 0); }
 //            if (gamepad1.dpad_right) { mecanum.drive(powerMultiplier, 0, 0); }
 //            if (gamepad1.dpad_left) { mecanum.drive(-powerMultiplier, 0, 0); }
-        }
+//        }
 
 
 
 
         // LINEAR SLIDES
-        slides.extendBy(-gamepad2.right_stick_y);
-//
-//        if (gamepad2.y && !lastPressedLinearSlides) {
-//            linearSlidesToggle = !linearSlidesToggle;
-//        }
-//        lastPressedLinearSlides = gamepad2.y;
-//
-//        if (linearSlidesToggle) {
-//            slides.extendTo(6);
-//        } else {
-//            slides.extendTo(0);
-//        }
+        slides.extendBy(gamepad2.right_stick_y);
+
+        //if (gamepad2.y && !lastPressedLinearSlides) {
+        //linearSlidesToggle = !linearSlidesToggle;
+        //}
+        //lastPressedLinearSlides = gamepad2.y;
+
+        //if (linearSlidesToggle) {
+        //slides.extendTo(6);
+        //} else {
+        //slides.extendTo(0);
+        //}
 
 
 
 
         // SEESAW
-        slides.pivotBy(gamepad2.left_stick_y);
-//
+        slides.pivotBy(-gamepad2.left_stick_y);
+
 //        if (gamepad2.b && !lastPressedSeesaw) {
 //            seesawToggle = !seesawToggle;
 //        }
@@ -189,28 +191,28 @@ public class MainTeleOp extends OpMode {
 
 
 
-        // CLAW
-        if (gamepad2.right_bumper && !lastClawOpenToggle) {
-            isClawOpenToggle = !isClawOpenToggle;
-        }
-        lastClawOpenToggle = gamepad2.right_bumper;
-
-        if (isClawOpenToggle) {
-            claw.openClaw();
-        } else {
-            claw.closeClaw();
-        }
-
-
-
-        // claw pivot
-        if (gamepad2.dpad_up) {
-            claw.rotateClaw(1);
-        } else if (gamepad2.dpad_down) {
-            claw.rotateClaw(-1);
-        } else {
-            claw.rotateClaw(0);
-        }
+//        // CLAW
+//        if (gamepad2.right_bumper && !lastClawOpenToggle) {
+//            isClawOpenToggle = !isClawOpenToggle;
+//        }
+//        lastClawOpenToggle = gamepad2.right_bumper;
+//
+//        if (isClawOpenToggle) {
+//            claw.openClaw();
+//        } else {
+//            claw.closeClaw();
+//        }
+//
+//
+//
+//        // claw pivot
+//        if (gamepad2.dpad_up) {
+//            claw.rotateClaw(1);
+//        } else if (gamepad2.dpad_down) {
+//            claw.rotateClaw(-1);
+//        } else {
+//            claw.rotateClaw(0);
+//        }
 
         // Adjusting angle target
 //        if(gamepad1.left_trigger >= 0.5){ // Adjsting angle
@@ -220,39 +222,79 @@ public class MainTeleOp extends OpMode {
 //                targetAngle += 0.001;
 //            }
 //        }
-
-//        if (gamepad1.triangle) {
-//            while(Math.abs(pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[0]) - Math.abs(odometry.getRotationRadians()) > 0.08){ // Not at aimbot angle
-//                if(pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[0] > odometry.getRotationRadians()){
-//                    mecanum.drive(0.0, 0.0, 0.3);
-//                }else{
-//                    mecanum.drive(0.0, 0.0, 0.3);
-//                }
 //
-//                if(gamepad1.left_trigger > 1.0){
-//                    break;
-//                }
-//            }
+//        if (gamepad1.triangle) {
+//            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[0]);
+//        }
+//
+//        // Autonomous testing
+//        if(gamepad1.dpad_right){
+//            goToPosition(odometry.getXCoordinate() + 12, odometry.getYCoordinate() , targetAngle);
+//        }else if(gamepad1.dpad_left){
+//            goToPosition(odometry.getXCoordinate() - 12, odometry.getYCoordinate(), targetAngle);
+//        }else if(gamepad1.dpad_up){
+//            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate() + 12, targetAngle);
+//        }else if(gamepad1.dpad_down){
+//            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate() - 12, targetAngle);
 //        }
 
-        // Autonomous testing
-        if(gamepad1.dpad_right){
-            goToPosition(odometry.getXCoordinate() + 12, odometry.getYCoordinate() , targetAngle);
-        }else if(gamepad1.dpad_left){
-            goToPosition(odometry.getXCoordinate() - 12, odometry.getYCoordinate(), targetAngle);
-        }else if(gamepad1.dpad_up){
-            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate() + 12, targetAngle);
-        }else if(gamepad1.dpad_down){
-            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate() - 12, targetAngle);
+        // Adjusting extension length and angle
+        if(gamepad2.left_trigger > 0.5){
+            adjustingExtensionLength = !adjustingExtensionLength;
+        }
+        if(gamepad2.dpad_up && adjustingExtensionLength){
+            targetExtension += 0.001;
+        }else if(gamepad2.dpad_down && adjustingExtensionLength){
+            targetExtension -= 0.001;
+        }else if(gamepad2.dpad_up && !adjustingExtensionLength){
+            targetAngle += 0.001;
+        }else if(gamepad2.dpad_down && !adjustingExtensionLength){
+            targetAngle -= 0.001;
         }
 
-        telemetry.addData("\nController target angle", targetAngle);
+        if(gamepad2.right_trigger > 0.5){
+            while(true){
+                slides.pivotTo(targetAngle);
+                slides.extendTo(targetAngle);
 
-        odometry.updatePosition();
-        telemetry();
+                telemetry.addData("\nController target angle (degrees)", targetAngle * 180 / Math.PI);
+                telemetry.addData("Controller target extension length", targetExtension);
+                telemetry.addData("Adjusting extension length", adjustingExtensionLength);
+
+                slides.update();
+                telemetry.addData("\nPivot angle (degrees)", slides.seesawAngle * 180 / Math.PI);
+                telemetry.addData("Extended length", slides.seesawExtensionLength);
+                telemetry.update();
+
+                if(gamepad1.left_trigger > 0.5){
+                    break;
+                }
+            }
+        }
+
+        telemetry.addData("Pivot Motor reading", slides.seeSawMotor.getCurrentPosition());
+        telemetry.addData("Extension Motor 1 reading", slides.extensionMotor.getCurrentPosition());
+        telemetry.addData("Extension Motor 2 reading", slides.extensionMotor2.getCurrentPosition());
+        telemetry.addData("power", -gamepad2.right_stick_y);
+        telemetry.addData("Left stick y", -gamepad2.left_stick_y);
+
+        telemetry.addData("\nController target angle (degrees)", targetAngle * 180 / Math.PI);
+        telemetry.addData("Controller target extension length", targetExtension);
+        telemetry.addData("Adjusting extension length", adjustingExtensionLength);
+
+
+        slides.update();
+        telemetry.addData("\nPivot angle (degrees)", slides.seesawAngle * 180 / Math.PI);
+        telemetry.addData("Extended length", slides.seesawExtensionLength);
+
+//        odometry.updatePosition();
+        telemetry.update();
     }
 
-    double targetAngle = 0.0;
+    static double targetAngle = 0.0;
+    public static boolean adjustingExtensionLength = false;
+    public static double targetExtension = 19.0;
+    public static boolean newFieldOriented = false;
 
     // TELEMETRY
     public void telemetry() {
