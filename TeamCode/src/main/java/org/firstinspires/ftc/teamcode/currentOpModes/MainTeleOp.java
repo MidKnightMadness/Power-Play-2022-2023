@@ -265,7 +265,7 @@ public class MainTeleOp extends OpMode {
 
 //        odometry.telemetry(telemetry);
         mecanum.telemetry(telemetry);
-//        slides.telemetry(telemetry);
+        slides.telemetry(telemetry);
 //        claw.telemetry(telemetry);
 
         telemetry.addLine("\nTIMER");
