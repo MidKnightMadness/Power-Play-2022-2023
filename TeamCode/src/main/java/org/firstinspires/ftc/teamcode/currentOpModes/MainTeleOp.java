@@ -43,7 +43,7 @@ public class MainTeleOp extends OpMode {
     public static MecanumDrive mecanum;
     public static Odometry odometry;
     LinearSlides slides;
-    Claw claw;
+//    Claw claw;
 
     public static double [] currentPosition = {0.0, 0.0};
 
@@ -74,7 +74,7 @@ public class MainTeleOp extends OpMode {
 
         mecanum = new MecanumDrive(hardwareMap);
         odometry = new Odometry(hardwareMap, new Vector2(0, 0), Math.PI / 2);
-        claw = new Claw(hardwareMap);
+//        claw = new Claw(hardwareMap);
         slides = new LinearSlides(hardwareMap);
     }
 
@@ -196,20 +196,20 @@ public class MainTeleOp extends OpMode {
         lastClawOpenToggle = gamepad2.right_bumper;
 
         if (isClawOpenToggle) {
-            claw.openClaw();
+//            claw.openClaw();
         } else {
-            claw.closeClaw();
+//            claw.closeClaw();
         }
 
 
 
         // claw pivot
         if (gamepad2.dpad_up) {
-            claw.rotateClaw(1);
+//            claw.rotateClaw(1);
         } else if (gamepad2.dpad_down) {
-            claw.rotateClaw(-1);
+//            claw.rotateClaw(-1);
         } else {
-            claw.rotateClaw(0);
+//            claw.rotateClaw(0);
         }
 
         // Adjusting angle target
