@@ -1,14 +1,9 @@
 package org.firstinspires.ftc.teamcode.drivetrain;
 
-import static org.firstinspires.ftc.teamcode.highlevel.Master.currentPosition;
-import static org.firstinspires.ftc.teamcode.highlevel.Master.invSqrt;
-import static org.firstinspires.ftc.teamcode.highlevel.Master.odometryAlg;
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -16,7 +11,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.autonomous.AutonomousNew;
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
 
 /*
@@ -112,83 +106,56 @@ public class MecanumDrive {
 
 
     private static final double ROTATION_LIMIT = 0.3; // Largest proportion possible for rotation component inputted into drive();
-    private double inputModulation = 0.0;
-    private static double ROTATION_THRESHOLD = 0.02; // Radians, ~20˚
-    private static double DISPLACEMENT_THRESHOLD = 0.5; // Inches
-    public static boolean preciseRotation = false;
-    public static boolean preciseDisplacement = false;
-    public static boolean newFieldOrientedDrive= false;
+    private static final double TRANSLATION_LIMIT = 1.0 - ROTATION_LIMIT;
+    private double drivenX = 0.0;
+    private double drivenY = 0.0;
 
-    public void fieldOrientatedDrive(double x, double y, double rotate, double angle) {
+    public void fieldOrientatedDrive(double x, double y, double rotate, double angle) { // Angle is angle of robot relative to horizontal right, 0 ≤ rotate, x, y ≤ 1
 
+            // Rotation of perpendicular unit drive vectors back to basis vectors
+            drivenX = Math.cos(-angle) * x - Math.sin(-angle) * y;
+            drivenY = Math.sin(-angle) * x + Math.cos(-angle) * y;
 
-//        if(!newFieldOrientedDrive) {
-//            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-//            gyro_degrees = angles.firstAngle;
-//            gyro_radians = gyro_degrees * Math.PI / 180;
-//        }else{
-//            gyro_radians = angle;
-//        }
-//
-//        if(x == 0) { x += 0.001; }
-//        offAngle = Math.atan(y / x);
-//
-//        if (x == 0 && y == 0) {
-//            drive(0, 0, rotate);
-//            return;
-//        }
-//
-//        if (x < 0) { offAngle = Math.PI + offAngle; }
-//
-//        correctedX = Math.cos(-gyro_radians + offAngle);
-//        correctedY = Math.sin(-gyro_radians + offAngle);
-//
-//
-//        // Still need to adjust to prevent overshoots on displacement adjustments
-//        if(Math.abs(rotate) < 1.0) { // Precise adjustments, to not overshoot on rotation
-//            preciseRotation = true;
-//            inputModulation = (1.0 - (ROTATION_LIMIT * rotate * rotate * rotate)) / Math.max(Math.abs(correctedX), Math.abs(correctedY)); // Allocates non-rotational power to translational movement
-//            if(x < 1.0 || y < 1.0){ // Precise adjustments
-//                preciseDisplacement = true;
-//                drive(correctedX / 5, correctedY / 5, ROTATION_LIMIT * rotate * rotate * rotate); // To prevent roational overcorrection
-//            }else {
-//                preciseDisplacement = true;
-//                drive(correctedX * inputModulation, correctedY * inputModulation, ROTATION_LIMIT * rotate * rotate * rotate); // To prevent roational overcorrection
-//            }
-//        } else {
-//            preciseRotation = false;
-//            inputModulation = (1.0 - (ROTATION_LIMIT * rotate / Math.abs(rotate))) / Math.max(Math.abs(correctedX), Math.abs(correctedY)); // Allocates non-rotational power to translational movement
-//            if(x < 1.0 || y < 1.0){ // Precise adjustments
-//                preciseDisplacement = true;
-//                drive(correctedX / 5, correctedY / 5, ROTATION_LIMIT * rotate / Math.abs(rotate)); // To prevent roational overcorrection
-//            }else {
-//                preciseDisplacement = false;
-//                drive(correctedX * inputModulation, correctedY * inputModulation, ROTATION_LIMIT * rotate / Math.abs(rotate)); // Would max out at limit
-//            }
-//        }
+            // Cap values for translation
+            drivenX *= TRANSLATION_LIMIT / (Math.abs(drivenX) + Math.abs(drivenY));
+            drivenY *= TRANSLATION_LIMIT / (Math.abs(drivenX) + Math.abs(drivenY));
+
+            // Precise adjustments
+            if(x < TRANSLATION_LIMIT / 2){
+                drivenX /= 2;
+            }
+            if(y < TRANSLATION_LIMIT / 2){
+                drivenY /= 2;
+            }
+
+            drive(drivenX, drivenY, ROTATION_LIMIT * rotate / Math.abs(rotate));
+
     }
 
     public boolean driveTo(double targetX, double targetY, double targetAngle, double currentX, double currentY, double currentAngle) {
-        double dy = (targetY-currentY);
-        double dx = (targetX-currentX);
-        double rotato = Math.acos(dx/Math.hypot(dy, dx));
-        if (dy<0) rotato = 0 - rotato; //finds angle of approach
+        double dy = (targetY - currentY);
+        double dx = (targetX - currentX);
+        double rotato = Math.acos(dx / Math.hypot(dy, dx));
+        if (dy < 0) rotato = 0 - rotato; //finds angle of approach
 
-        double newx = Math.cos(rotato-currentAngle+Math.PI/2); //drives without turning to the point
-        double newy = Math.sin(rotato-currentAngle+Math.PI/2);
-        double spd = Math.min(Math.hypot(dy, dx), 4.0)/4;
-        spd=spd*spd;
-        drive(newx*spd, newy*spd, -pointTo(targetAngle,currentAngle));
+        double newx = Math.cos(rotato - currentAngle+Math.PI / 2); //drives without turning to the point
+        double newy = Math.sin(rotato - currentAngle+Math.PI / 2);
+        double spd = Math.min(Math.hypot(dy, dx), 4.0) / 5;
+        spd *= spd * spd; // Cube, still needed more precise adjustment
 
+        if((dx * dx) + (dy * dy) > 0.5 || (targetAngle - currentAngle) * (targetAngle - currentAngle) > 5) {
+            drive(newx * spd, newy * spd, -pointTo(targetAngle, currentAngle));
+            return false;
+        }
         return true;
     }
 
 
     public double pointTo(double targetAngle, double currentAngle) { //forward is 0
-        double rotato = (targetAngle-currentAngle+3.1416)%6.283-3.1416;//reference angle
+        double rotato = (targetAngle - currentAngle + 3.1416) % 6.283 - 3.1416; //reference angle
         if (rotato < -3.1416) rotato += 6.283;
-        if (Math.abs(rotato) < .087) return rotato/.087/5;
-        return rotato/Math.abs(rotato)/5;
+        if (Math.abs(rotato) < .087) return rotato / .087 / 4;
+        return rotato / Math.abs(rotato) / 4;
     }
 
 

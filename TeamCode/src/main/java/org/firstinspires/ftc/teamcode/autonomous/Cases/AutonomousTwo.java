@@ -14,7 +14,7 @@ public class AutonomousTwo extends Autonomous {
         return Math.PI / 2;
     }
 
-    public Vector2 getStartingPostition() {
+    public Vector2 getStartingPosition() {
         return new Vector2(104.5, halfRobotWidth);
     }
 
