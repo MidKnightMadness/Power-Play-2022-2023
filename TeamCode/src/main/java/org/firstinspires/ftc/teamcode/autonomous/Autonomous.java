@@ -152,14 +152,6 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             telemetry.addLine(String.format("Degrees: %3.2f", odometry.getRotationDegrees()));
             telemetry.addData("Signal location", mostRecentDetection);
             telemetry.addData("Signal finds", "" + signalFinds[0], signalFinds[1], signalFinds[2]);
-
-            telemetry.addData("\nPivot Motor reading", linearSlides.seeSawMotor.getCurrentPosition());
-            telemetry.addData("Extension Motor 1 reading", linearSlides.extensionMotor.getCurrentPosition());
-            telemetry.addData("Extension Motor 2 reading", linearSlides.extensionMotor2.getCurrentPosition());
-
-            telemetry.addData("\nManipulator pivot Angle", linearSlides.seesawAngle * 180 / Math.PI);
-            telemetry.addData("\nManipulator extension length", linearSlides.seesawExtensionLength);
-
             telemetry.update();
             sleep(20);
         }
@@ -178,12 +170,13 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         }
 
 //        goToScoringLocation();
-        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
-        sleep(3000);
-        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation() - Math.PI / 4);
-        sleep(3000);
-        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
-        sleep(3000);
+        goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation() - Math.PI / 4);
+//        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
+//        sleep(3000);
+//        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation() - Math.PI / 4);
+//        sleep(3000);
+//        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
+//        sleep(3000);
 //        linearSlides.scoreFromDefaultScoringPosition();
 
 
@@ -197,10 +190,11 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 //                sleep(3000);
 //                if(mostRecentDetection == 1) {
 //                    goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 26, getStartingRotation());
+//                    goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 32, getStartingRotation());
 //                } else if (mostRecentDetection == 3) {
 //                    goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 26, getStartingRotation());
+//                    goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 32, getStartingRotation());
 //                }
-//            }
 
                 // Making sure cone is grabbed, needs to lift manipulator off support first
                 claw.openClaw();
@@ -220,8 +214,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
                 linearSlides.extendTo(34.01424334);
                 sleep(5000);
                 claw.openClaw();
-
-
+//            }
 
 //                goToSignalLocation((int)odometry.getXCoordinate(), (int) odometry.getYCoordinate(), (int) signalLocationX, (int) signalLocationY);
                 requestOpModeStop();
