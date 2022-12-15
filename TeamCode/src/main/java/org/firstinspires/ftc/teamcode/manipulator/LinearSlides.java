@@ -69,9 +69,9 @@ public class LinearSlides {
         extensionMotor = hardwareMap.get(DcMotorEx.class, "LSEM");
         extensionMotor2 = hardwareMap.get(DcMotorEx.class, "LSEM2");
 
-        seeSawMotor.setDirection(DcMotor.Direction.FORWARD); // set direction, this was made for 1 gear transfer from drive to axle
+        seeSawMotor.setDirection(DcMotor.Direction.REVERSE); // set direction, this was made for 1 gear transfer from drive to axle
         seeSawMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // set motor mode
-        seeSawMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER); // Run to position?
+        seeSawMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER); // Run to posi  tion?
         seeSawMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); // set zero power behavior
 
         // Extension Motor specifics need to be edited ig
@@ -222,9 +222,9 @@ public class LinearSlides {
 //        if(extensionMotor.getCurrentPosition() <= 0) {
 //            extensionMotor.setVelocity(power * 100, AngleUnit.RADIANS);
 //            extensionMotor2.setVelocity(- power * 100, AngleUnit.RADIANS);
-            extensionMotor.setPower(power);
-            extensionMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             extensionMotor2.setTargetPosition(extensionMotor.getCurrentPosition());
+            extensionMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            extensionMotor.setPower(power);
             extensionMotor2.setPower(power);
 //        } else {
 //            extensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -241,22 +241,8 @@ public class LinearSlides {
     }
 
     public void pivotBy(double power) {
-//        seeSawMotor.setVelocity(power * 20, AngleUnit.RADIANS);
-        //seeSawMotor.setTargetPosition(seeSawMotor.getCurrentPosition() + 20);
-//        seeSawMotor.setPower(Math.cos(seeSawMotor.getCurrentPosition()*SEESAW_OVERALL_RATIO)*.2 +power);
 
-//        seeSawMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        seeSawMotor.setPower(power); // Used for control hub interface
-
-        // Used for expansion hub interface, had issue of delay between 2 hubs
-//            if(power > 0.0){
-//                seeSawMotor.setPower(Math.max(power - 5.0 , 0.0)); // Had issue of delayed power output compared to configured
-//                // Motor stopped braking before actual power kicked in
-//                // Motor would go up before going down when controller deflected down WHEN LOW BATTERY
-//            }else if(power < 0.0){
-//                seeSawMotor.setPower(power);
-//            }
+        seeSawMotor.setPower(power);
 
 
 //        seeSawMotor.setTargetPosition((int)(power * 100 + seeSawMotor.getCurrentPosition()));
@@ -307,5 +293,7 @@ public class LinearSlides {
         telemetry.addLine(String.format("Extension Motors Velocities: %f %f", extensionMotor.getVelocity(), extensionMotor2.getVelocity()));
         telemetry.addLine(String.format("Extensions Current Positions: %d %d", extensionMotor.getCurrentPosition(), extensionMotor2.getCurrentPosition()));
         telemetry.addLine(String.format("Extensions Target Positions: %d %d", extensionMotor.getTargetPosition(), extensionMotor2.getTargetPosition()));
+
+//        telemetry.addData("\nController target angle",);
     }
 }
