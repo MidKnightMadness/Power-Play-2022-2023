@@ -172,7 +172,7 @@ public class MainTeleOp extends OpMode {
 
 
         // SEESAW
-        slides.pivotBy(gamepad2.left_stick_y);
+        slides.pivotBy(-gamepad2.left_stick_y);
 //
 //        if (gamepad2.b && !lastPressedSeesaw) {
 //            seesawToggle = !seesawToggle;
