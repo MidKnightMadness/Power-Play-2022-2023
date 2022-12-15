@@ -308,5 +308,10 @@ public class MainTeleOp extends OpMode {
         telemetry.update();
 
     }
+    public void rotateArm(double power) {
+        slides.pivotBy(power);
+        claw.rotateClaw(-power*LinearSlides.SEESAW_OVERALL_RATIO/Math.PI);
+
+    }
 
 }
