@@ -354,6 +354,7 @@ public class MainTeleOp extends OpMode {
     }
     public void rotateArm(double power) {
         slides.pivotBy(power);
+        claw.rotateClaw(-power*LinearSlides.SEESAW_OVERALL_RATIO/Math.PI);
 
     }
 }
