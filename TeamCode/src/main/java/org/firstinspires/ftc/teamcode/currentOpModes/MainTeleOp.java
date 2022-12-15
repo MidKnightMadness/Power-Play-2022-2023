@@ -42,10 +42,10 @@ import org.firstinspires.ftc.teamcode.odometry.Vector2;
 
 @TeleOp(name="Main")
 public class MainTeleOp extends OpMode {
-    public static MecanumDrive mecanum;
-    public static Odometry odometry;
-//    LinearSlides slides;
-//    Claw claw;
+//    public static MecanumDrive mecanum;
+//    public static Odometry odometry;
+    LinearSlides slides;
+    Claw claw;
 
     public static double [] currentPosition = {0.0, 0.0};
 
@@ -74,10 +74,10 @@ public class MainTeleOp extends OpMode {
     public void init() {
         timer = new Timer();
 
-        mecanum = new MecanumDrive(hardwareMap);
-        odometry = new Odometry(hardwareMap, new Vector2(0, 0), Math.PI / 2);
-//        claw = new Claw(hardwareMap);
-//        slides = new LinearSlides(hardwareMap);
+//        mecanum = new MecanumDrive(hardwareMap);
+//        odometry = new Odometry(hardwareMap, new Vector2(0, 0), Math.PI / 2);
+        claw = new Claw(hardwareMap);
+        slides = new LinearSlides(hardwareMap);
     }
 
     double time;
@@ -90,36 +90,36 @@ public class MainTeleOp extends OpMode {
 
 
         // DRIVER ASSIST
-        if (gamepad1.x) {
-            odometry.resetEncoders();
-        }
+//        if (gamepad1.x) {
+//            odometry.resetEncoders();
+//        }
 
 //        if (gamepad2.x) {
 //            slides.resetEncoders();
 //        }
 
-        if (gamepad1.a) {
-            previousInputWeight += 0.01;
-            if (previousInputWeight > 1) {
-                previousInputWeight = 1;
-            }
-            try {
-                Thread.sleep(75);
-            } catch (InterruptedException e) {
-                telemetry.addLine(e.toString());
-            }
-        }
-
-        if (gamepad1.b) {
-            previousInputWeight -= 0.01;
-            if (previousInputWeight < 0) {
-                previousInputWeight = 0;
-            }
-            try {
-                Thread.sleep(75);
-            } catch (InterruptedException e) {
-            }
-        }
+//        if (gamepad1.a) {
+//            previousInputWeight += 0.01;
+//            if (previousInputWeight > 1) {
+//                previousInputWeight = 1;
+//            }
+//            try {
+//                Thread.sleep(75);
+//            } catch (InterruptedException e) {
+//                telemetry.addLine(e.toString());
+//            }
+//        }
+//
+//        if (gamepad1.b) {
+//            previousInputWeight -= 0.01;
+//            if (previousInputWeight < 0) {
+//                previousInputWeight = 0;
+//            }
+//            try {
+//                Thread.sleep(75);
+//            } catch (InterruptedException e) {
+//            }
+//        }
 
         currentInputs[0] = gamepad1.left_stick_x * previousInputWeight + lastInputs[0] * (1 - previousInputWeight);
         currentInputs[1] = gamepad1.left_stick_y * previousInputWeight + lastInputs[1] * (1 - previousInputWeight);
@@ -131,52 +131,52 @@ public class MainTeleOp extends OpMode {
 
 
         // DRIVE
-        if (gamepad1.left_bumper && !lastPressedDriveMode) {
-            driveModeToggle = !driveModeToggle;
-        }
-        lastPressedDriveMode = gamepad1.left_bumper;
-
-        if (driveModeToggle) {
-            mecanum.fieldOrientatedDrive(currentInputs[0] * powerMultiplier, -currentInputs[1] * powerMultiplier,
-                    (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier, odometry.getRotationRadians());
+//        if (gamepad1.left_bumper && !lastPressedDriveMode) {
+//            driveModeToggle = !driveModeToggle;
+//        }
+//        lastPressedDriveMode = gamepad1.left_bumper;
+//
+//        if (driveModeToggle) {
+//            mecanum.fieldOrientatedDrive(currentInputs[0] * powerMultiplier, -currentInputs[1] * powerMultiplier,
+//                    (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier, odometry.getRotationRadians());
 
 //            if (gamepad1.dpad_up) { mecanum.fieldOrientatedDrive(0, -powerMultiplier, 0); }
 //            if (gamepad1.dpad_down) { mecanum.fieldOrientatedDrive(0, powerMultiplier, 0); }
 //            if (gamepad1.dpad_right) { mecanum.fieldOrientatedDrive(powerMultiplier, 0, 0); }
 //            if (gamepad1.dpad_left) { mecanum.fieldOrientatedDrive(-powerMultiplier, 0, 0); }
-        } else {
-            mecanum.drive(currentInputs[0] * powerMultiplier, -currentInputs[1] * powerMultiplier,
-                    (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier); // normal drive
+//        } else {
+//            mecanum.drive(currentInputs[0] * powerMultiplier, -currentInputs[1] * powerMultiplier,
+//                    (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier); // normal drive
 
 //            if (gamepad1.dpad_up) { mecanum.drive(0, -powerMultiplier, 0); }
 //            if (gamepad1.dpad_down) { mecanum.drive(0, powerMultiplier, 0); }
 //            if (gamepad1.dpad_right) { mecanum.drive(powerMultiplier, 0, 0); }
 //            if (gamepad1.dpad_left) { mecanum.drive(-powerMultiplier, 0, 0); }
-        }
+//        }
 
 
 
 
         // LINEAR SLIDES
-//        slides.extendBy(-gamepad2.right_stick_y);
-//
-//        if (gamepad2.y && !lastPressedLinearSlides) {
-//            linearSlidesToggle = !linearSlidesToggle;
-//        }
-//        lastPressedLinearSlides = gamepad2.y;
-//
-//        if (linearSlidesToggle) {
-//            slides.extendTo(6);
-//        } else {
-//            slides.extendTo(0);
-//        }
+        slides.extendBy(gamepad2.right_stick_y);
+
+        //if (gamepad2.y && !lastPressedLinearSlides) {
+            //linearSlidesToggle = !linearSlidesToggle;
+        //}
+        //lastPressedLinearSlides = gamepad2.y;
+
+        //if (linearSlidesToggle) {
+            //slides.extendTo(6);
+        //} else {
+            //slides.extendTo(0);
+        //}
 
 
 
 
         // SEESAW
-//        slides.pivotBy(gamepad2.left_stick_y);
-//
+        slides.pivotBy(-gamepad2.left_stick_y);
+
 //        if (gamepad2.b && !lastPressedSeesaw) {
 //            seesawToggle = !seesawToggle;
 //        }
@@ -216,32 +216,40 @@ public class MainTeleOp extends OpMode {
 //        }
 
         // Adjusting angle target
-        if(gamepad1.left_trigger >= 0.5){ // Adjsting angle
-            if(gamepad1.square){
-                targetAngle -= 0.001;
-            }else if(gamepad1.circle){
-                targetAngle += 0.001;
-            }
-        }
-
-        if (gamepad1.triangle) {
-            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[0]);
-        }
-
-        // Autonomous testing
-        if(gamepad1.dpad_right){
-            goToPosition(odometry.getXCoordinate() + 12, odometry.getYCoordinate() , targetAngle);
-        }else if(gamepad1.dpad_left){
-            goToPosition(odometry.getXCoordinate() - 12, odometry.getYCoordinate(), targetAngle);
-        }else if(gamepad1.dpad_up){
-            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate() + 12, targetAngle);
-        }else if(gamepad1.dpad_down){
-            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate() - 12, targetAngle);
-        }
-
+//        if(gamepad1.left_trigger >= 0.5){ // Adjsting angle
+//            if(gamepad1.square){
+//                targetAngle -= 0.001;
+//            }else if(gamepad1.circle){
+//                targetAngle += 0.001;
+//            }
+//        }
+//
+//        if (gamepad1.triangle) {
+//            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[0]);
+//        }
+//
+//        // Autonomous testing
+//        if(gamepad1.dpad_right){
+//            goToPosition(odometry.getXCoordinate() + 12, odometry.getYCoordinate() , targetAngle);
+//        }else if(gamepad1.dpad_left){
+//            goToPosition(odometry.getXCoordinate() - 12, odometry.getYCoordinate(), targetAngle);
+//        }else if(gamepad1.dpad_up){
+//            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate() + 12, targetAngle);
+//        }else if(gamepad1.dpad_down){
+//            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate() - 12, targetAngle);
+//        }
+        telemetry.addData("Pivot Motor reading", slides.seeSawMotor.getCurrentPosition());
+        telemetry.addData("Extension Motor 1 reading", slides.extensionMotor.getCurrentPosition());
+        telemetry.addData("Extension Motor 2 reading", slides.extensionMotor2.getCurrentPosition());
+        telemetry.addData("power", -gamepad2.right_stick_y);
+        telemetry.addData("Left stick y", -gamepad2.left_stick_y);
         telemetry.addData("\nController target angle", targetAngle);
 
-        odometry.updatePosition();
+        slides.update();
+        telemetry.addData("\nPivot angle", slides.seesawAngle * 180 / Math.PI);
+        telemetry.addData("Extended length", slides.seesawExtensionLength);
+
+//        odometry.updatePosition();
         telemetry();
     }
 
@@ -254,12 +262,12 @@ public class MainTeleOp extends OpMode {
         telemetry.addData("DRIVE MODE", driveModeToggle ? "FIELD ORIENTED": "NORMAL");
         telemetry.addData("New field oriented version", newFieldOriented);
 
-        telemetry.addLine(String.format("Position: [%5.2f, %5.2f]", odometry.getXCoordinate(), odometry.getYCoordinate())); // Check if x and y are still reversed
-        telemetry.addData("Angle", odometry.getRotationRadians() * 180 / Math.PI);
-        telemetry.addLine("EASE COEFFICIENT " + previousInputWeight);
+//        telemetry.addLine(String.format("Position: [%5.2f, %5.2f]", odometry.getXCoordinate(), odometry.getYCoordinate())); // Check if x and y are still reversed
+//        telemetry.addData("Angle", odometry.getRotationRadians() * 180 / Math.PI);
+//        telemetry.addLine("EASE COEFFICIENT " + previousInputWeight);
 
 //        odometry.telemetry(telemetry);
-        mecanum.telemetry(telemetry);
+//        mecanum.telemetry(telemetry);
 //        slides.telemetry(telemetry);
 //        claw.telemetry(telemetry);
 
@@ -288,15 +296,15 @@ public class MainTeleOp extends OpMode {
             telemetry.addData("Precise position adjustment", preciseDisplacement);
             telemetry.addData("Precise rotation adjustment", preciseRotation);
             telemetry.addData("At Location", atLocation);
-            telemetry.addLine(String.format("Current Coordinates: (%3.2f, %3.2f, %3.2f)", odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationDegrees()));
-            telemetry.addLine(String.format("Target Coordinates: (%3.2f, %3.2f, %3.2f)", targetX, targetY, targetAngle));
-            telemetry.addLine(String.format("Target - current: (%3.2f, %3.2f, %3.2f)", targetX - odometry.getXCoordinate(), targetY - odometry.getYCoordinate(), targetAngle - odometry.getRotationDegrees()));
+//            telemetry.addLine(String.format("Current Coordinates: (%3.2f, %3.2f, %3.2f)", odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationDegrees()));
+//            telemetry.addLine(String.format("Target Coordinates: (%3.2f, %3.2f, %3.2f)", targetX, targetY, targetAngle));
+//            telemetry.addLine(String.format("Target - current: (%3.2f, %3.2f, %3.2f)", targetX - odometry.getXCoordinate(), targetY - odometry.getYCoordinate(), targetAngle - odometry.getRotationDegrees()));
 //            odometry.telemetry(telemetry);
             telemetry.update();
 
-            odometry.updatePosition();
+//            odometry.updatePosition();
 
-            atLocation = mecanum.driveTo(targetX, targetY, targetAngle, odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians());
+//            atLocation = mecanum.driveTo(targetX, targetY, targetAngle, odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians());
 
         }
         telemetry.addData("At Location", atLocation);
