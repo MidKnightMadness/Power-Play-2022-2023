@@ -2,14 +2,10 @@ package org.firstinspires.ftc.teamcode.odometry;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.autonomous.AutonomousNew;
-import org.firstinspires.ftc.teamcode.currentOpModes.MainTeleOp;
-import static org.firstinspires.ftc.teamcode.currentOpModes.MainTeleOp.currentPosition;
 
 import java.util.concurrent.TimeUnit;
 
@@ -120,13 +116,6 @@ public class Odometry implements OdometryVariables {
 
         position.x += netX;
         position.y += netY;
-
-        // Temporary
-        AutonomousNew.currentPosition[0] += netX;
-        AutonomousNew.currentPosition[1] += netY;
-
-        MainTeleOp.currentPosition[0] += netX;
-        MainTeleOp.currentPosition[1] += netY;
 
         velocity.x = netX / deltaTime;
         velocity.y = netY / deltaTime;

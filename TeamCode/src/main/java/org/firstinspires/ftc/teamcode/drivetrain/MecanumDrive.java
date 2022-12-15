@@ -1,14 +1,9 @@
 package org.firstinspires.ftc.teamcode.drivetrain;
 
-import static org.firstinspires.ftc.teamcode.highlevel.Master.currentPosition;
-import static org.firstinspires.ftc.teamcode.highlevel.Master.invSqrt;
-import static org.firstinspires.ftc.teamcode.highlevel.Master.odometryAlg;
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -16,7 +11,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.autonomous.AutonomousNew;
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
 
 /*
@@ -139,26 +133,29 @@ public class MecanumDrive {
     }
 
     public boolean driveTo(double targetX, double targetY, double targetAngle, double currentX, double currentY, double currentAngle) {
-        double dy = (targetY-currentY);
-        double dx = (targetX-currentX);
-        double rotato = Math.acos(dx/Math.hypot(dy, dx));
-        if (dy<0) rotato = 0 - rotato; //finds angle of approach
+        double dy = (targetY - currentY);
+        double dx = (targetX - currentX);
+        double rotato = Math.acos(dx / Math.hypot(dy, dx));
+        if (dy < 0) rotato = 0 - rotato; //finds angle of approach
 
-        double newx = Math.cos(rotato-currentAngle+Math.PI/2); //drives without turning to the point
-        double newy = Math.sin(rotato-currentAngle+Math.PI/2);
-        double spd = Math.min(Math.hypot(dy, dx), 4.0)/4;
+        double newx = Math.cos(rotato - currentAngle+Math.PI / 2); //drives without turning to the point
+        double newy = Math.sin(rotato - currentAngle+Math.PI / 2);
+        double spd = Math.min(Math.hypot(dy, dx), 4.0) / 5;
         spd *= spd * spd; // Cube, still needed more precise adjustment
-        drive(newx*spd, newy*spd, -pointTo(targetAngle,currentAngle));
 
+        if((dx * dx) + (dy * dy) > 0.5 || (targetAngle - currentAngle) * (targetAngle - currentAngle) > 5) {
+            drive(newx * spd, newy * spd, -pointTo(targetAngle, currentAngle));
+            return false;
+        }
         return true;
     }
 
 
     public double pointTo(double targetAngle, double currentAngle) { //forward is 0
-        double rotato = (targetAngle-currentAngle+3.1416)%6.283-3.1416;//reference angle
+        double rotato = (targetAngle - currentAngle + 3.1416) % 6.283 - 3.1416; //reference angle
         if (rotato < -3.1416) rotato += 6.283;
-        if (Math.abs(rotato) < .087) return rotato/.087/5;
-        return rotato/Math.abs(rotato)/5;
+        if (Math.abs(rotato) < .087) return rotato / .087 / 4;
+        return rotato / Math.abs(rotato) / 4;
     }
 
 

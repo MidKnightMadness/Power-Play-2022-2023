@@ -1,23 +1,15 @@
 package org.firstinspires.ftc.teamcode.manipulator;
 
-import static org.firstinspires.ftc.teamcode.autonomous.Autonomous.mecanumDrive;
-import static org.firstinspires.ftc.teamcode.highlevel.Master.claw;
 import static org.firstinspires.ftc.teamcode.manipulator.Turntable.turntableAngle;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.autonomous.Autonomous;
-import org.firstinspires.ftc.teamcode.autonomous.AutonomousNew;
-import org.firstinspires.ftc.teamcode.currentOpModes.MainTeleOp;
-import org.firstinspires.ftc.teamcode.drivetrain.Vector;
 import org.firstinspires.ftc.teamcode.highlevel.Master;
-import org.firstinspires.ftc.teamcode.odometry.Vector2;
 /*
  * (Expansion Hub)
  * Motors:
@@ -117,69 +109,69 @@ public class LinearSlides {
 
     private static final double MANIPULATOR_BACKSET_DISTANCE = 3.5;
     public void goPointAt(double [] xyzDisplacement){
-        // Make sure to input 3-array for targeted scoring position!!!!!!!! Will have to get angle of robot once it gets to junction, then correct a second time. This is not a one-time algorithm!!!
-        // Actually does everything at the same time, will need to edit based on extension speed (want to minimize extended time for reliability purposes)
-        displacement = xyzDisplacement; // Screw it I don't wanna run the method over and over haha
-        //  Note: displacement from pivot point of linear slide
-        // Move turntable, note that this will turn the turntable 180˚ back if target is behind the pivot, will need to account for ability to swing beyond 90˚ vertical (behind) later
-        if(displacement[0] <= 0){ // Getting displacement angle
-            angleDisplacement = Math.PI + Math.atan(displacement[1] / displacement[0]); // Might wanna use taylor series to approximate atan later since calculation times are gonna be annoying
-        }else{
-            angleDisplacement = Math.atan(displacement[1] / displacement[0]);
-        }
+//        // Make sure to input 3-array for targeted scoring position!!!!!!!! Will have to get angle of robot once it gets to junction, then correct a second time. This is not a one-time algorithm!!!
+//        // Actually does everything at the same time, will need to edit based on extension speed (want to minimize extended time for reliability purposes)
+//        displacement = xyzDisplacement; // Screw it I don't wanna run the method over and over haha
+//        //  Note: displacement from pivot point of linear slide
+//        // Move turntable, note that this will turn the turntable 180˚ back if target is behind the pivot, will need to account for ability to swing beyond 90˚ vertical (behind) later
+//        if(displacement[0] <= 0){ // Getting displacement angle
+//            angleDisplacement = Math.PI + Math.atan(displacement[1] / displacement[0]); // Might wanna use taylor series to approximate atan later since calculation times are gonna be annoying
+//        }else{
+//            angleDisplacement = Math.atan(displacement[1] / displacement[0]);
+//        }
+//
 
-
-        if(!(mecanumDrive == null)){ // For autonomous
-            while(!(Math.abs(angleDisplacement - Autonomous.odometry.getRotationRadians()) < 0.1)){
-                if(angleDisplacement >= Autonomous.odometry.getRotationRadians()){
+//        if(!(mecanumDrive == null)){ // For autonomous
+//            while(!(Math.abs(angleDisplacement - Autonomous.odometry.getRotationRadians()) < 0.1)){
+//                if(angleDisplacement >= Autonomous.odometry.getRotationRadians()){
 //                    mecanumDrive.fieldOrientatedDrive(0.0, 0.0, 0.8, mecanumDrive.odometry.getRotationRadians());
-                }else{
+//                }else{
 //                    mecanumDrive.fieldOrientatedDrive(0.0, 0.0, -0.8);
-                }
-
-                Autonomous.odometry.updatePosition();
-            }
-
-        }else{
-            while(!(Math.abs(angleDisplacement - MainTeleOp.odometry.getRotationRadians()) < 0.1)){
-                if(angleDisplacement >= MainTeleOp.odometry.getRotationRadians()){
+//                }
+//
+//                Autonomous.odometry.updatePosition();
+//            }
+//
+//        }else{
+//            while(!(Math.abs(angleDisplacement - MainTeleOp.odometry.getRotationRadians()) < 0.1)){
+//                if(angleDisplacement >= MainTeleOp.odometry.getRotationRadians()){
 //                    MainTeleOp.mecanum.fieldOrientatedDrive(0.0, 0.0, 0.8);
-                }else{
+//                }else{
 //                    MainTeleOp.mecanum.fieldOrientatedDrive(0.0, 0.0, -0.8);
-                }
-
-                MainTeleOp.odometry.updatePosition();
-            }
-        }
-
-        // Pivot seesaw up / down to desired position. Due to the behavior described in the previous step, this step (for now) doesn't have to account for swinging beyond 90˚ vertical
-        /*
-          /|
-         / |
-        /\_| <- Angle
-         */
-
-        if(mecanumDrive == null){ // Case teleOp
-            if(Math.abs(angleDisplacement - MainTeleOp.odometry.getRotationRadians()) > Math.PI){ // Case backwards scoring
-                this.pivotTo(Math.PI + Math.atan(displacement[3] /
-                        Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + displacement[0]*displacement[0] + displacement[1]*displacement[1])));
-            }else{
-                this.pivotTo(Math.atan(displacement[3] /
-                        Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + displacement[0]*displacement[0] + displacement[1]*displacement[1])));
-            }
-        }else{
-            if(Math.abs(angleDisplacement - Autonomous.odometry.getRotationRadians()) > Math.PI){ // Case backwards scoring
-                this.pivotTo(Math.PI + Math.atan(displacement[3] /
-                        Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + displacement[0]*displacement[0] + displacement[1]*displacement[1])));
-            }else{
-                this.pivotTo(Math.atan(displacement[3] /
-                        Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + displacement[0]*displacement[0] + displacement[1]*displacement[1])));
-            }
-        }
+//                }
+//
+//                MainTeleOp.odometry.updatePosition();
+//            }
+//        }
+//
+//        // Pivot seesaw up / down to desired position. Due to the behavior described in the previous step, this step (for now) doesn't have to account for swinging beyond 90˚ vertical
+//        /*
+//          /|
+//         / |
+//        /\_| <- Angle
+//         */
+//
+//        if(mecanumDrive == null){ // Case teleOp
+//            if(Math.abs(angleDisplacement - MainTeleOp.odometry.getRotationRadians()) > Math.PI){ // Case backwards scoring
+//                this.pivotTo(Math.PI + Math.atan(displacement[3] /
+//                        Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + displacement[0]*displacement[0] + displacement[1]*displacement[1])));
+//            }else{
+//                this.pivotTo(Math.atan(displacement[3] /
+//                        Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + displacement[0]*displacement[0] + displacement[1]*displacement[1])));
+//            }
+//        }else{
+//            if(Math.abs(angleDisplacement - Autonomous.odometry.getRotationRadians()) > Math.PI){ // Case backwards scoring
+//                this.pivotTo(Math.PI + Math.atan(displacement[3] /
+//                        Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + displacement[0]*displacement[0] + displacement[1]*displacement[1])));
+//            }else{
+//                this.pivotTo(Math.atan(displacement[3] /
+//                        Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + displacement[0]*displacement[0] + displacement[1]*displacement[1])));
+//            }
+//        }
 
         // Extend
-        this.extendTo(Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + // Added to accomodate backset manipulator
-                displacement[0]*displacement[0] + displacement[1]*displacement[1] + displacement[2]*displacement[2]));
+//        this.extendTo(Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + // Added to accomodate backset manipulator
+//                displacement[0]*displacement[0] + displacement[1]*displacement[1] + displacement[2]*displacement[2]));
     }
 
     public void extendTo(double inches){ // Inches
@@ -227,18 +219,18 @@ public class LinearSlides {
 
     // Temporary, first tournament
     public void grabFromDefaultScoringPosition(){
-        claw.openClaw();
-        claw.waitForOpenClaw();
-        this.goPointAt(DEFAULT_INTAKE_DISPLACEMENT);
-        claw.closeClaw();
+//        claw.openClaw();
+//        claw.waitForOpenClaw();
+//        this.goPointAt(DEFAULT_INTAKE_DISPLACEMENT);
+//        claw.closeClaw();
     }
 
     public void scoreFromDefaultScoringPosition() {
-        if(Vector.lengthOf(Vector.add(Vector.neg(getClawCoordinates()), DEFAULT_SCORING_DISPLACEMENT)) > 0.1){
-            this.goPointAt(DEFAULT_SCORING_DISPLACEMENT);
-        }
-
-        claw.openClaw();
+//        if(Vector.lengthOf(Vector.add(Vector.neg(getClawCoordinates()), DEFAULT_SCORING_DISPLACEMENT)) > 0.1){
+//            this.goPointAt(DEFAULT_SCORING_DISPLACEMENT);
+//        }
+//
+//        claw.openClaw();
     }
 
     public void resetEncoders() {

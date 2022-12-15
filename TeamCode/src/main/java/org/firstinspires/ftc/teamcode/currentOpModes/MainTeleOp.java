@@ -223,7 +223,17 @@ public class MainTeleOp extends OpMode {
         }
 
         if (gamepad1.triangle) {
-            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[0]);
+            while(Math.abs(pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[0]) - Math.abs(odometry.getRotationRadians()) > 0.08){ // Not at aimbot angle
+                if(pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[0] > odometry.getRotationRadians()){
+                    mecanum.drive(0.0, 0.0, 0.3);
+                }else{
+                    mecanum.drive(0.0, 0.0, 0.3);
+                }
+
+                if(gamepad1.left_trigger > 1.0){
+                    break;
+                }
+            }
         }
 
         // Autonomous testing

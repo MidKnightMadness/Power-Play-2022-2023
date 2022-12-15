@@ -58,8 +58,8 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
     Timer coneTimer;
     double time;
 
-    public static Odometry odometry;
-    public static MecanumDrive mecanumDrive;
+    public Odometry odometry;
+    public MecanumDrive mecanumDrive;
 
     private BNO055IMU imu;
     Orientation angles;
@@ -107,7 +107,6 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
-//        telemetry.setAutoClear(false);
 
         mecanumDrive = new MecanumDrive(hardwareMap);
         odometry = new Odometry(hardwareMap, getStartingPosition(), getStartingRotation());
@@ -147,8 +146,12 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
                     }
                 }
             }
+            odometry.updatePosition();
+            telemetry.addLine(String.format("Current Coordinates: (%3.2f, %3.2f)", odometry.getXCoordinate(), odometry.getYCoordinate()));
+            telemetry.addLine(String.format("Radians: %3.2f", odometry.getRotationRadians()));
+            telemetry.addLine(String.format("Degrees: %3.2f", odometry.getRotationDegrees()));
             telemetry.addData("Signal location", mostRecentDetection);
-            telemetry.addData("Signal finds", signalFinds);
+            telemetry.addData("Signal finds", "" + signalFinds[0], signalFinds[1], signalFinds[2]);
             telemetry.update();
             sleep(20);
         }
@@ -156,56 +159,40 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
 //----------------START----------------------------------------------------------------------------------------------------
 
-        telemetry.setAutoClear(false);
-
-        telemetry.addData("Signal location", mostRecentDetection);
-        telemetry.addData("Signal finds", signalFinds);
-
         telemetry.update();
 
         if (mostRecentDetection != 0) {
             signalLocationX = signalLocations[startingPos][mostRecentDetection - 1].x;
             signalLocationY = signalLocations[startingPos][mostRecentDetection - 1].y;
-            telemetry.addLine("SIGNAL TAG FOUND, GOING TO POSITION " + mostRecentDetection);
         } else {
             signalLocationX = signalLocations[startingPos][1].x;
             signalLocationY = signalLocations[startingPos][1].y;
-
-            telemetry.addLine("SIGNAL TAG NOT FOUND, GOING TO POSITION 2");
         }
 
-        telemetry.setAutoClear(true);
-
 //        goToScoringLocation();
+        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
+        sleep(3000);
+        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation() - Math.PI / 4);
+        sleep(3000);
+        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
+        sleep(3000);
 //        linearSlides.scoreFromDefaultScoringPosition();
 
 
 //----------------LOOP----------------------------------------------------------------------------------------------------
 
         while (opModeIsActive()) {
-//            switch(tagOfInterest.id){
-//                case 1:
-//                    goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 31, getStartingRotation());
-//                    break;
-//                case 2:
-//                    break;
-//                case 3:
-//                    goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 31, getStartingRotation());
-//                    break;
-//                default:
-//                    break;
-//            }
-
-
-//            telemetry.addData("Signal #", mostRecentDetection);
-//            telemetry.addData("Signal finds", "" + signalFinds[0], signalFinds[1], signalFinds[2]);
-//            telemetry.addData("Signal location", signalLocations[startingPos][mostRecentDetection - 1]);
-
             time = coneTimer.getTime();
 
 //            if (time > 26.35729278100687712039158d) {
-                  goToPosition(getStartingPosition().x, getStartingPosition().y + 28, getStartingRotation());
-                  goToPosition(getStartingPosition().x + 24, getStartingPosition().y + 28, getStartingRotation());
+                goToPosition(getStartingPosition().x, getStartingPosition().y + 26, getStartingRotation());
+                sleep(3000);
+                if(mostRecentDetection == 1) {
+                    goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 26, getStartingRotation());
+                } else if (mostRecentDetection == 3) {
+                    goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 26, getStartingRotation());
+                }
+//            }
 //                goToSignalLocation((int)odometry.getXCoordinate(), (int) odometry.getYCoordinate(), (int) signalLocationX, (int) signalLocationY);
                 requestOpModeStop();
 //            } else {
@@ -217,10 +204,6 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 //                    telemetry.update();
 //                }
 //            }
-
-            //telemetry.addLine("\n\n");
-            //Autonomous.mecanumDrive.telemetry(this.telemetry);
-            //telemetry.update();
             sleep(20);
         }
     }
@@ -295,11 +278,17 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         boolean atLocation = false;
 
         while (!atLocation) {
-            telemetry.addLine(String.format("Current Coordinates: (%3.2f, %3.2f, %3.2f)", odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians()));
+            if (mostRecentDetection != 0) { telemetry.addLine("SIGNAL TAG FOUND, GOING TO POSITION " + mostRecentDetection); }
+            else { telemetry.addLine("SIGNAL TAG NOT FOUND, GOING TO POSITION 2"); }
+            telemetry.addData("\nCone timer", coneTimer.getTime());
+
+            telemetry.addLine(String.format("\nCurrent Coordinates: (%3.2f, %3.2f, %3.2f)", odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians()));
             telemetry.addLine(String.format("Target Coordinates: (%3.2f, %3.2f, %3.2f)", targetX, targetY, targetAngle));
             telemetry.addLine(String.format("Target - current: (%3.2f, %3.2f, %3.2f)", targetX - odometry.getXCoordinate(), targetY - odometry.getYCoordinate(), targetAngle - odometry.getRotationRadians()));
-            telemetry.addLine(String.format("Angle: (%3.2f, %3.2f, )", odometry.getRotationDegrees(), targetAngle*180/Math.PI));
-//            odometry.telemetry(telemetry);
+            telemetry.addData("Signal #", mostRecentDetection);
+            telemetry.addData("Signal finds", "" + signalFinds[0], signalFinds[1], signalFinds[2]);
+            if (mostRecentDetection != 0)
+                telemetry.addData("Signal location", signalLocations[startingPos][mostRecentDetection - 1]);
             telemetry.update();
 
             odometry.updatePosition();
