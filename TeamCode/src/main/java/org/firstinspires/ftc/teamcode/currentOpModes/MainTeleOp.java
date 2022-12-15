@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.currentOpModes;
 
-import static org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive.preciseDisplacement;
-import static org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive.preciseRotation;
+//import static org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive.preciseDisplacement;
+//import static org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive.preciseRotation;
 import static org.firstinspires.ftc.teamcode.highlevel.GridSystem.pointAtJunction;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -238,23 +238,63 @@ public class MainTeleOp extends OpMode {
 //        }else if(gamepad1.dpad_down){
 //            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate() - 12, targetAngle);
 //        }
+
+        // Adjusting extension length and angle
+        if(gamepad2.left_trigger > 0.5){
+            adjustingExtensionLength = !adjustingExtensionLength;
+        }
+        if(gamepad2.dpad_up && adjustingExtensionLength){
+            targetExtension += 0.001;
+        }else if(gamepad2.dpad_down && adjustingExtensionLength){
+            targetExtension -= 0.001;
+        }else if(gamepad2.dpad_up && !adjustingExtensionLength){
+            targetAngle += 0.001;
+        }else if(gamepad2.dpad_down && !adjustingExtensionLength){
+            targetAngle -= 0.001;
+        }
+
+        if(gamepad2.right_trigger > 0.5){
+            while(true){
+                slides.pivotTo(targetAngle);
+                slides.extendTo(targetAngle);
+
+                telemetry.addData("\nController target angle (degrees)", targetAngle * 180 / Math.PI);
+                telemetry.addData("Controller target extension length", targetExtension);
+                telemetry.addData("Adjusting extension length", adjustingExtensionLength);
+
+                slides.update();
+                telemetry.addData("\nPivot angle (degrees)", slides.seesawAngle * 180 / Math.PI);
+                telemetry.addData("Extended length", slides.seesawExtensionLength);
+                telemetry.update();
+
+                if(gamepad1.left_trigger > 0.5){
+                    break;
+                }
+            }
+        }
+
         telemetry.addData("Pivot Motor reading", slides.seeSawMotor.getCurrentPosition());
         telemetry.addData("Extension Motor 1 reading", slides.extensionMotor.getCurrentPosition());
         telemetry.addData("Extension Motor 2 reading", slides.extensionMotor2.getCurrentPosition());
         telemetry.addData("power", -gamepad2.right_stick_y);
         telemetry.addData("Left stick y", -gamepad2.left_stick_y);
-        telemetry.addData("\nController target angle", targetAngle);
+
+        telemetry.addData("\nController target angle (degrees)", targetAngle * 180 / Math.PI);
+        telemetry.addData("Controller target extension length", targetExtension);
+        telemetry.addData("Adjusting extension length", adjustingExtensionLength);
+
 
         slides.update();
-        telemetry.addData("\nPivot angle", slides.seesawAngle * 180 / Math.PI);
+        telemetry.addData("\nPivot angle (degrees)", slides.seesawAngle * 180 / Math.PI);
         telemetry.addData("Extended length", slides.seesawExtensionLength);
 
 //        odometry.updatePosition();
-        telemetry();
+        telemetry.update();
     }
 
     static double targetAngle = 0.0;
-    static boolean cancel = false;
+    public static boolean adjustingExtensionLength = false;
+    public static double targetExtension = 19.0;
     public static boolean newFieldOriented = false;
 
     // TELEMETRY
@@ -292,15 +332,15 @@ public class MainTeleOp extends OpMode {
             if(gamepad1.left_trigger >= 0.5){
                 atLocation = true;
                break;
-            }
-            telemetry.addData("Precise position adjustment", preciseDisplacement);
-            telemetry.addData("Precise rotation adjustment", preciseRotation);
-            telemetry.addData("At Location", atLocation);
+//            }
+//            telemetry.addData("Precise position adjustment", preciseDisplacement);
+//            telemetry.addData("Precise rotation adjustment", preciseRotation);
+//            telemetry.addData("At Location", atLocation);
 //            telemetry.addLine(String.format("Current Coordinates: (%3.2f, %3.2f, %3.2f)", odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationDegrees()));
 //            telemetry.addLine(String.format("Target Coordinates: (%3.2f, %3.2f, %3.2f)", targetX, targetY, targetAngle));
 //            telemetry.addLine(String.format("Target - current: (%3.2f, %3.2f, %3.2f)", targetX - odometry.getXCoordinate(), targetY - odometry.getYCoordinate(), targetAngle - odometry.getRotationDegrees()));
 //            odometry.telemetry(telemetry);
-            telemetry.update();
+//            telemetry.update();
 
 //            odometry.updatePosition();
 
@@ -312,4 +352,4 @@ public class MainTeleOp extends OpMode {
 
     }
 
-}
+}}

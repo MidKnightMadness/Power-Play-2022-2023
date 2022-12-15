@@ -152,6 +152,14 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             telemetry.addLine(String.format("Degrees: %3.2f", odometry.getRotationDegrees()));
             telemetry.addData("Signal location", mostRecentDetection);
             telemetry.addData("Signal finds", "" + signalFinds[0], signalFinds[1], signalFinds[2]);
+
+            telemetry.addData("\nPivot Motor reading", linearSlides.seeSawMotor.getCurrentPosition());
+            telemetry.addData("Extension Motor 1 reading", linearSlides.extensionMotor.getCurrentPosition());
+            telemetry.addData("Extension Motor 2 reading", linearSlides.extensionMotor2.getCurrentPosition());
+
+            telemetry.addData("\nManipulator pivot Angle", linearSlides.seesawAngle * 180 / Math.PI);
+            telemetry.addData("\nManipulator extension length", linearSlides.seesawExtensionLength);
+
             telemetry.update();
             sleep(20);
         }
@@ -185,14 +193,36 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             time = coneTimer.getTime();
 
 //            if (time > 26.35729278100687712039158d) {
-                goToPosition(getStartingPosition().x, getStartingPosition().y + 26, getStartingRotation());
-                sleep(3000);
-                if(mostRecentDetection == 1) {
-                    goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 26, getStartingRotation());
-                } else if (mostRecentDetection == 3) {
-                    goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 26, getStartingRotation());
-                }
+//                goToPosition(getStartingPosition().x, getStartingPosition().y + 26, getStartingRotation());
+//                sleep(3000);
+//                if(mostRecentDetection == 1) {
+//                    goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 26, getStartingRotation());
+//                } else if (mostRecentDetection == 3) {
+//                    goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 26, getStartingRotation());
+//                }
 //            }
+
+                // Making sure cone is grabbed, needs to lift manipulator off support first
+                claw.openClaw();
+                linearSlides.pivotTo(Math.PI / 2);
+                sleep(3000);
+                linearSlides.pivotTo(0);
+                claw.closeClaw();
+                sleep(3000);
+
+                // Scoring preloaded cone
+                goToPosition(getStartingPosition().x, getStartingPosition().y + 60.375, getStartingRotation());
+                sleep(5000);
+                goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), 1.107148718); // Junction
+                sleep(5000);
+                linearSlides.pivotTo(1.174268847);
+                sleep(5000);
+                linearSlides.extendTo(34.01424334);
+                sleep(5000);
+                claw.openClaw();
+
+
+
 //                goToSignalLocation((int)odometry.getXCoordinate(), (int) odometry.getYCoordinate(), (int) signalLocationX, (int) signalLocationY);
                 requestOpModeStop();
 //            } else {
