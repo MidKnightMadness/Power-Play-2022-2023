@@ -177,16 +177,16 @@ public class MainTeleOp extends OpMode {
 
 
         // claw pivot
-        if (gamepad2.left_bumper && !lastPressedClawPivot) {
-            clawPivotToggle = !clawPivotToggle;
-        }
-        lastPressedClawPivot = gamepad2.left_bumper;
-
-        if (clawPivotToggle) {
-            claw.rotateClaw(0);
-        } else {
-            claw.rotateClaw(1);
-        }
+//        if (gamepad2.left_bumper && !lastPressedClawPivot) {
+//            clawPivotToggle = !clawPivotToggle;
+//        }
+//        lastPressedClawPivot = gamepad2.left_bumper;
+//
+//        if (clawPivotToggle) {
+//            claw.rotateClaw(0);
+//        } else {
+//            claw.rotateClaw(1);
+//        }
 //        claw.rotateClaw(gamepad2.left_trigger);
 
         // Adjusting angle target
@@ -213,21 +213,21 @@ public class MainTeleOp extends OpMode {
 //        }
 
         // Adjusting extension length and angle
-//        if(gamepad2.left_trigger > 0.5){
-//            adjustingExtensionLength = !adjustingExtensionLength;
-//        }
-//        if(gamepad2.dpad_up && adjustingExtensionLength){
-//            targetExtension += 0.001;
-//        }else if(gamepad2.dpad_down && adjustingExtensionLength){
-//            targetExtension -= 0.001;
-//        }else if(gamepad2.dpad_up && !adjustingExtensionLength){
-//            targetAngle += 0.001;
-//        }else if(gamepad2.dpad_down && !adjustingExtensionLength){
-//            targetAngle -= 0.001;
-//        }
+        if(gamepad2.left_trigger > 0.5){
+            adjustingExtensionLength = !adjustingExtensionLength;
+        }
+        if(gamepad2.dpad_up && adjustingExtensionLength){
+            targetExtension += 0.001;
+        }else if(gamepad2.dpad_down && adjustingExtensionLength){
+            targetExtension -= 0.001;
+        }else if(gamepad2.dpad_up && !adjustingExtensionLength){
+            targetAngle += 0.001;
+        }else if(gamepad2.dpad_down && !adjustingExtensionLength){
+            targetAngle -= 0.001;
+        }
 
-        if(gamepad2.right_trigger > 0.5){
-            while(true){
+
+            while(gamepad2.right_trigger > 0.5){
                 slides.pivotTo(targetAngle);
                 slides.extendTo(targetAngle);
 
@@ -235,16 +235,16 @@ public class MainTeleOp extends OpMode {
                 telemetry.addData("Controller target extension length", targetExtension);
                 telemetry.addData("Adjusting extension length", adjustingExtensionLength);
 
+                telemetry.addData("\nPivot Motor reading", slides.seeSawMotor.getCurrentPosition());
+                telemetry.addData("Extension Motor 1 reading", slides.extensionMotor.getCurrentPosition());
+                telemetry.addData("Extension Motor 2 reading", slides.extensionMotor2.getCurrentPosition());
+
                 slides.update();
                 telemetry.addData("\nPivot angle (degrees)", slides.seesawAngle * 180 / Math.PI);
                 telemetry.addData("Extended length", slides.seesawExtensionLength);
                 telemetry.update();
-
-                if(gamepad1.left_trigger > 0.5){
-                    break;
-                }
             }
-        }
+
 
         telemetry.addData("Pivot Motor reading", slides.seeSawMotor.getCurrentPosition());
         telemetry.addData("Extension Motor 1 reading", slides.extensionMotor.getCurrentPosition());
@@ -341,8 +341,10 @@ public class MainTeleOp extends OpMode {
         // 0.0 (backwards) if at 180˚, 1.0 (forwards) if at 0˚
 
         // Servo only takes inputs in intervals of 0.1
-        clawPivotInput = (int) (clawPivotInput * 10.0);
+        clawPivotInput = (int) (clawPivotInput * 6.0);
         clawPivotInput /= 10.0;
+
+
 
         claw.rotateClaw(clawPivotInput);
         // Upper may be 0.8 ish, NOT 1.0

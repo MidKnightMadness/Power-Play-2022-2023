@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.manipulator.Turntable.turntableAngl
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
@@ -213,17 +214,16 @@ public class LinearSlides {
     }
 
     public void extendTo(double inches){ // Inches
-        extensionMotor.setTargetPosition((int) ((inches - STARTING_EXTENDER_LENGTH) / EXTENDER_OVERALL_RATIO));
-        extensionMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        extensionMotor2.setTargetPosition(extensionMotor.getCurrentPosition());
-        extensionMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        if(Math.abs((-inches + STARTING_EXTENDER_LENGTH) - seesawExtensionLength) > .1) {
 
-        if(extensionMotor.getTargetPosition() > extensionMotor.getCurrentPosition()){
-            extensionMotor.setPower(.5);
-            extensionMotor2.setPower(-.5);
-        }else{
-            extensionMotor.setPower(-.5);
-            extensionMotor2.setPower(.5);
+            extensionMotor.setTargetPosition((int) ((-inches + STARTING_EXTENDER_LENGTH) / EXTENDER_OVERALL_RATIO));
+            extensionMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            extensionMotor2.setTargetPosition(extensionMotor.getTargetPosition());
+            extensionMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            extensionMotor.setPower(0.5);
+            extensionMotor2.setPower(-0.5);
         }
     }
 
@@ -237,11 +237,7 @@ public class LinearSlides {
                 extensionMotor2.setTargetPosition(extensionMotor.getCurrentPosition());
                 extensionMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-                if(extensionMotor2.getTargetPosition() > extensionMotor2.getCurrentPosition()){
-                    extensionMotor2.setPower(0.5);
-                }else{
-                    extensionMotor2.setPower(-0.5);
-                }
+                extensionMotor2.setPower(0.5);
 //            }else{
 //                extensionMotor.setPower(0);
 //                extensionMotor2.setPower(0);
