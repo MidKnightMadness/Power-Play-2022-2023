@@ -41,7 +41,7 @@ public class MainTeleOp extends OpMode {
     public static MecanumDrive mecanum;
     public static Odometry odometry;
     LinearSlides slides;
-//    Claw claw;
+    Claw claw;
 
     public static double [] currentPosition = {0.0, 0.0};
 
@@ -70,7 +70,7 @@ public class MainTeleOp extends OpMode {
 
         mecanum = new MecanumDrive(hardwareMap);
         odometry = new Odometry(hardwareMap, new Vector2(0, 0), Math.PI / 2);
-//        claw = new Claw(hardwareMap);
+        claw = new Claw(hardwareMap);
         slides = new LinearSlides(hardwareMap);
     }
 
@@ -167,7 +167,7 @@ public class MainTeleOp extends OpMode {
 
 
         // SEESAW
-        slides.pivotBy(gamepad2.left_stick_y);
+        rotateArm(-gamepad2.left_stick_y);
 //
 //        if (gamepad2.b && !lastPressedSeesaw) {
 //            seesawToggle = !seesawToggle;
@@ -185,27 +185,21 @@ public class MainTeleOp extends OpMode {
 
 
         // CLAW
-        if (gamepad2.right_bumper && !lastClawOpenToggle) {
-            isClawOpenToggle = !isClawOpenToggle;
-        }
-        lastClawOpenToggle = gamepad2.right_bumper;
-
-        if (isClawOpenToggle) {
-//            claw.openClaw();
+//        if (gamepad2.right_bumper && !lastClawOpenToggle) {
+//            isClawOpenToggle = !isClawOpenToggle;
+//        }
+//        lastClawOpenToggle = gamepad2.right_bumper;
+//
+        if (gamepad2.right_bumper) {
+            claw.openClaw();
         } else {
-//            claw.closeClaw();
+            claw.closeClaw();
         }
 
 
 
         // claw pivot
-        if (gamepad2.dpad_up) {
-//            claw.rotateClaw(1);
-        } else if (gamepad2.dpad_down) {
-//            claw.rotateClaw(-1);
-        } else {
-//            claw.rotateClaw(0);
-        }
+        claw.rotateClaw(gamepad2.left_trigger);
 
         // Adjusting angle target
 //        if(gamepad1.left_trigger >= 0.5){ // Adjsting angle
@@ -231,18 +225,18 @@ public class MainTeleOp extends OpMode {
 //        }
 
         // Adjusting extension length and angle
-        if(gamepad2.left_trigger > 0.5){
-            adjustingExtensionLength = !adjustingExtensionLength;
-        }
-        if(gamepad2.dpad_up && adjustingExtensionLength){
-            targetExtension += 0.001;
-        }else if(gamepad2.dpad_down && adjustingExtensionLength){
-            targetExtension -= 0.001;
-        }else if(gamepad2.dpad_up && !adjustingExtensionLength){
-            targetAngle += 0.001;
-        }else if(gamepad2.dpad_down && !adjustingExtensionLength){
-            targetAngle -= 0.001;
-        }
+//        if(gamepad2.left_trigger > 0.5){
+//            adjustingExtensionLength = !adjustingExtensionLength;
+//        }
+//        if(gamepad2.dpad_up && adjustingExtensionLength){
+//            targetExtension += 0.001;
+//        }else if(gamepad2.dpad_down && adjustingExtensionLength){
+//            targetExtension -= 0.001;
+//        }else if(gamepad2.dpad_up && !adjustingExtensionLength){
+//            targetAngle += 0.001;
+//        }else if(gamepad2.dpad_down && !adjustingExtensionLength){
+//            targetAngle -= 0.001;
+//        }
 
         if(gamepad2.right_trigger > 0.5){
             while(true){
@@ -274,6 +268,8 @@ public class MainTeleOp extends OpMode {
         telemetry.addData("Controller target extension length", targetExtension);
         telemetry.addData("Adjusting extension length", adjustingExtensionLength);
 
+        telemetry.addData("\nClaw pivot ticks", clawPivotInput);
+        telemetry.addData("Manual claw control ticks", gamepad2.left_trigger);
 
         slides.update();
         telemetry.addData("\nPivot angle (degrees)", slides.seesawAngle * 180 / Math.PI);
@@ -340,6 +336,30 @@ public class MainTeleOp extends OpMode {
         telemetry.addData("At Location", atLocation);
         telemetry.update();
 
+    }
+
+    public static double clawPivotInput = 0.0;
+
+    public void rotateArm(double power){
+        slides.pivotBy(power, claw);
+
+        // Needs something to get only 0.1, 0.2, 0.3, etc...
+
+//        clawPivotInput = (- slides.seesawAngle / Math.PI + 1) - ((- slides.seesawAngle / Math.PI + 1) % 0.01);
+
+        clawPivotInput = - slides.seesawAngle / Math.PI;
+        // -1.0 (undefined position) if at 180˚, 0.0 if at 0˚ (backwards)
+        clawPivotInput += 1;
+        // 0.0 (backwards) if at 180˚, 1.0 (forwards) if at 0˚
+
+        // Servo only takes inputs in intervals of 0.1
+        clawPivotInput = (int) (clawPivotInput * 10.0);
+        clawPivotInput /= 10.0;
+
+        claw.rotateClaw(clawPivotInput);
+        // Upper may be 0.8 ish, NOT 1.0
+        //  0.0  to  1.0
+        // (back) (forward)
     }
 
 }
