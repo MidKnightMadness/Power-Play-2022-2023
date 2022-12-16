@@ -200,7 +200,7 @@ public class MainTeleOp extends OpMode {
 
 
         // claw pivot
-        claw.rotateClaw(gamepad2.left_trigger);
+//        claw.rotateClaw(gamepad2.left_trigger);
 
         // Adjusting angle target
 //        if(gamepad1.left_trigger >= 0.5){ // Adjsting angle
