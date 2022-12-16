@@ -43,7 +43,7 @@ public class MainTeleOp extends OpMode {
     public static MecanumDrive mecanum;
     public static Odometry odometry;
     LinearSlides slides;
-//    Claw claw;
+    Claw claw;
 
     public static double [] currentPosition = {0.0, 0.0};
 
@@ -74,7 +74,7 @@ public class MainTeleOp extends OpMode {
 
         mecanum = new MecanumDrive(hardwareMap);
         odometry = new Odometry(hardwareMap, new Vector2(0, 0), Math.PI / 2);
-//        claw = new Claw(hardwareMap);
+        claw = new Claw(hardwareMap);
         slides = new LinearSlides(hardwareMap);
     }
 
@@ -172,7 +172,7 @@ public class MainTeleOp extends OpMode {
 
 
         // SEESAW
-        slides.pivotBy(-gamepad2.left_stick_y);
+        slides.pivotBy(-gamepad2.left_stick_y, claw);
 //
 //        if (gamepad2.b && !lastPressedSeesaw) {
 //            seesawToggle = !seesawToggle;
@@ -190,26 +190,24 @@ public class MainTeleOp extends OpMode {
 
 
         // CLAW
-        if (gamepad2.right_bumper && !lastClawOpenToggle) {
-            isClawOpenToggle = !isClawOpenToggle;
-        }
-        lastClawOpenToggle = gamepad2.right_bumper;
-
-        if (isClawOpenToggle) {
+//        if (gamepad2.right_bumper && !lastClawOpenToggle) {
+//            isClawOpenToggle = !isClawOpenToggle;
+//        }
+//        lastClawOpenToggle = gamepad2.right_bumper;
+//
+//        if (isClawOpenToggle) {
 //            claw.openClaw();
-        } else {
+//        } else {
 //            claw.closeClaw();
-        }
+//        }
 
 
 
         // claw pivot
         if (gamepad2.dpad_up) {
-//            claw.rotateClaw(1);
+            claw.rotateClaw(1);
         } else if (gamepad2.dpad_down) {
-//            claw.rotateClaw(-1);
-        } else {
-//            claw.rotateClaw(0);
+            claw.rotateClaw(-1);
         }
 
         // Adjusting angle target
@@ -236,18 +234,18 @@ public class MainTeleOp extends OpMode {
 //        }
 
         // Adjusting extension length and angle
-        if(gamepad2.left_trigger > 0.5){
-            adjustingExtensionLength = !adjustingExtensionLength;
-        }
-        if(gamepad2.dpad_up && adjustingExtensionLength){
-            targetExtension += 0.001;
-        }else if(gamepad2.dpad_down && adjustingExtensionLength){
-            targetExtension -= 0.001;
-        }else if(gamepad2.dpad_up && !adjustingExtensionLength){
-            targetAngle += 0.001;
-        }else if(gamepad2.dpad_down && !adjustingExtensionLength){
-            targetAngle -= 0.001;
-        }
+//        if(gamepad2.left_trigger > 0.5){
+//            adjustingExtensionLength = !adjustingExtensionLength;
+//        }
+//        if(gamepad2.dpad_up && adjustingExtensionLength){
+//            targetExtension += 0.001;
+//        }else if(gamepad2.dpad_down && adjustingExtensionLength){
+//            targetExtension -= 0.001;
+//        }else if(gamepad2.dpad_up && !adjustingExtensionLength){
+//            targetAngle += 0.001;
+//        }else if(gamepad2.dpad_down && !adjustingExtensionLength){
+//            targetAngle -= 0.001;
+//        }
 
         if(gamepad2.right_trigger > 0.5){
             while(true){
@@ -278,6 +276,9 @@ public class MainTeleOp extends OpMode {
         telemetry.addData("\nController target angle (degrees)", targetAngle * 180 / Math.PI);
         telemetry.addData("Controller target extension length", targetExtension);
         telemetry.addData("Adjusting extension length", adjustingExtensionLength);
+
+        telemetry.addData("\nClaw pivot ticks", claw.rotationServo.getPosition());
+
 
 
         slides.update();
@@ -345,6 +346,11 @@ public class MainTeleOp extends OpMode {
         telemetry.addData("At Location", atLocation);
         telemetry.update();
 
+    }
+
+    public void rotateArm(double power){
+        slides.pivotBy(power, claw);
+        claw.rotateClaw(-power* LinearSlides.SEESAW_OVERALL_RATIO / Math.PI);
     }
 
 }

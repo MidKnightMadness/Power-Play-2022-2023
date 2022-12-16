@@ -215,15 +215,23 @@ public class LinearSlides {
     public void extendTo(double inches){ // Inches
         extensionMotor.setTargetPosition((int) ((inches - STARTING_EXTENDER_LENGTH) / EXTENDER_OVERALL_RATIO));
         extensionMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        extensionMotor.setPower(.5);
+        extensionMotor2.setTargetPosition(extensionMotor.getCurrentPosition());
+        extensionMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        if(extensionMotor.getTargetPosition() > extensionMotor.getCurrentPosition()){
+            extensionMotor.setPower(.5);
+            extensionMotor2.setPower(.5);
+        }else{
+            extensionMotor.setPower(-.5);
+            extensionMotor2.setPower(-.5);
+        }
     }
 
     public void extendBy(double power){
 //        if(extensionMotor.getCurrentPosition() <= 0) {
 //            extensionMotor.setVelocity(power * 100, AngleUnit.RADIANS);
 //            extensionMotor2.setVelocity(- power * 100, AngleUnit.RADIANS);
-            if((extensionMotor.getCurrentPosition() > -10 && extensionMotor2.getCurrentPosition() > -10) &&
-                    power > 0.0){
+            if(extensionMotor.getCurrentPosition() > -10 && extensionMotor2.getCurrentPosition() > -10){
                 extensionMotor2.setTargetPosition(extensionMotor.getCurrentPosition());
                 extensionMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 extensionMotor.setPower(power);
@@ -244,13 +252,19 @@ public class LinearSlides {
 //        if(seesawAngle < Math.PI / 2 && seesawAngle > 0.0) {
             seeSawMotor.setTargetPosition((int) (angleRadians / SEESAW_OVERALL_RATIO));
             seeSawMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            seeSawMotor.setPower(.5);
+
+            if(seeSawMotor.getTargetPosition() > seeSawMotor.getCurrentPosition()){
+                seeSawMotor.setPower(.5);
+            }else{
+                seeSawMotor.setPower(-.5);
+            }
 //        }
     }
 
-    public void pivotBy(double power) {
+    public void pivotBy(double power, Claw claw) {
 
         seeSawMotor.setPower(power);
+        claw.rotateClaw(- seesawAngle / Math.PI);
 
 
 //        seeSawMotor.setTargetPosition((int)(power * 100 + seeSawMotor.getCurrentPosition()));
