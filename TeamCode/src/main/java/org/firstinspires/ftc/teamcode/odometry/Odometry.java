@@ -17,7 +17,7 @@ interface OdometryVariables {
     double inPerTick = wheelCircumference / ticksPerRotation;
 
     double lateralWheelDistance = 12;
-    double verticalWheelDistance = 7.5 - 2.5;// 12.4 - 7.5;
+    double verticalWheelDistance = 7.5 - 2.9;
     long sleepTime = 100;
 }
 

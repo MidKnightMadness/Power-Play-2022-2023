@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.highlevel.GridSystem;
 import org.firstinspires.ftc.teamcode.manipulator.Claw;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -30,7 +31,6 @@ import java.util.ArrayList;
 public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, pickUpConeData
 {
     public int startingPos = 0;  // 0: A2, 1: A5, 2: F2, 3: F5
-    Thread thread;
 
     public static int numberOfConesInStack = 5;
     int[] signalFinds = new int[] {0, 0, 0};
@@ -45,6 +45,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
     LinearSlides linearSlides;
 
     Claw claw;
+    GridSystem gridSystem;
 
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
@@ -161,38 +162,47 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         }
 
         // SCORE PRE-LOAD
-        // score at high junction
-//        goToScoringLocation();
-//        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
-//        sleep(3000);
-//        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation() - Math.PI / 4);
-//        sleep(3000);
-//        linearSlides.pivotTo(1.174268847);
-//        sleep(5000);
-//        linearSlides.extendTo(34.01424334);
-//        sleep(5000);
-//        claw.openClaw();
-//        sleep(5000);
-//        claw.closeClaw();
-//        sleep(5000);
-//        linearSlides.extendTo(0);
-//        sleep(5000);
-//        linearSlides.pivotTo(0);
-//        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
-//        sleep(3000);
-//        linearSlides.scoreFromDefaultScoringPosition();
-
         // score at terminal
+//        if (getStartingPos() == 2) {
+//            goToPosition(getStartingPosition().x + 20, getStartingPosition().y, getStartingRotation());
+////            sleep(3000);
+//            goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation());
+////            sleep(3000);
+//        }
+
+        // score at high junction
         if (getStartingPos() == 1) {
-            goToPosition(getStartingPosition().x - 20, getStartingPosition().y, getStartingRotation());
-            sleep(3000);
-            goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation());
-            sleep(3000);
+//            goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
+//            goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation() - Math.PI / 4);
+//            linearSlides.pivotTo(1.174268847);
+//            sleep(5000);
+//            linearSlides.extendTo(34.01424334);
+//            sleep(5000);
+//            claw.openClaw();
+//            sleep(5000);
+//            claw.closeClaw();
+//            sleep(5000);
+//            linearSlides.extendTo(0);
+//            sleep(5000);
+//            linearSlides.pivotTo(0);
+//            goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
         } else if (getStartingPos() == 2) {
-            goToPosition(getStartingPosition().x + 20, getStartingPosition().y, getStartingRotation());
-            sleep(3000);
-            goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation());
-            sleep(3000);
+            goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
+            sleep(1000);
+            goToPosition(getStartingPosition().x, getStartingPosition().y + 51, GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[0]);
+            sleep(10000);
+//            linearSlides.pivotTo(1.174268847);
+//            sleep(5000);
+//            linearSlides.extendTo(34.01424334);
+//            sleep(5000);
+//            claw.openClaw();
+//            sleep(5000);
+//            claw.closeClaw();
+//            sleep(5000);
+//            linearSlides.extendTo(0);
+//            sleep(5000);
+//            linearSlides.pivotTo(0);
+            goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
         }
 
 
@@ -203,11 +213,13 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             time = coneTimer.getTime();
 
 //            if (time > 26.35729278100687712039158d) {
-                goToPosition(getStartingPosition().x, getStartingPosition().y + 26, getStartingRotation());
-                sleep(3000);
+                goToPosition(getStartingPosition().x, getStartingPosition().y + 30, getStartingRotation());
+//                sleep(3000);
                 if(mostRecentDetection == 1) {
                     goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 26, getStartingRotation());
                     goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 32, getStartingRotation());
+                } else if (mostRecentDetection == 2) {
+                    goToPosition(getStartingPosition().x, getStartingPosition().y + 32, getStartingRotation());
                 } else if (mostRecentDetection == 3) {
                     goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 26, getStartingRotation());
                     goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 32, getStartingRotation());
@@ -316,6 +328,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
             atLocation = mecanum.driveTo(targetX, targetY, targetAngle, odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians());
 
+            sleep(20);
         }
     }
 

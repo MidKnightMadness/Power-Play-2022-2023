@@ -263,7 +263,8 @@ public class MainTeleOp extends OpMode {
         telemetry.addData("\nPivot angle (degrees)", slides.seesawAngle * 180 / Math.PI);
         telemetry.addData("Extended length", slides.seesawExtensionLength);
 
-//        odometry.updatePosition();
+        odometry.updatePosition();
+        telemetry();
         telemetry.update();
     }
 
