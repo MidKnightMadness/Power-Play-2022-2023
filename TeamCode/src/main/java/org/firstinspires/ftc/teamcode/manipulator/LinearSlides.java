@@ -38,8 +38,8 @@ public class LinearSlides {
     public static final double STARTING_EXTENDER_LENGTH = 17.0; // Starting length from pivot axle
     // Rotation
     private static final double SEESAW_MOTOR_RATIO = 100; // 60:1 or 40:1 motor?
-    public static final double SEESAW_OVERALL_RATIO = Math.PI / (2 * 1400);// 2 * Math.PI * (30.0 / 64.0) / (288 * SEESAW_MOTOR_RATIO); // Angle per tick
-    private static final double STARTING_ANGLE = 0.0;// Of the Manipulator, factor in end-effector's center (cone center), in inches
+    public static final double SEESAW_OVERALL_RATIO = Math.PI / (2 * 1400); // Angle per tick
+    private static final double STARTING_ANGLE = 41.59285714285714 * Math.PI / 180;// Of the Manipulator, factor in end-effector's center (cone center), in inches
     // Extension
     private static final double EXTENDER_MOTOR_RATIO = 20; // 20:1 or 40:1 motor?
     private static final double EXTENDER_WINCH_RADIUS = 9.4 / 2;
@@ -213,14 +213,20 @@ public class LinearSlides {
 //                displacement[0]*displacement[0] + displacement[1]*displacement[1] + displacement[2]*displacement[2]));
     }
 
-    public void extendTo(double inches){ // Inches
-        if(Math.abs((-inches + STARTING_EXTENDER_LENGTH) - seesawExtensionLength) > .1) {
+    public void extendTo(double inches, Telemetry telemetry){ // Inches
+        if(true) {
 
-            extensionMotor.setTargetPosition((int) ((-inches + STARTING_EXTENDER_LENGTH) / EXTENDER_OVERALL_RATIO));
+            telemetry.addData("Extenders at position", Math.abs((inches - STARTING_EXTENDER_LENGTH) - seesawExtensionLength) > .1);
+            telemetry.addData("Extension Motor 1 Target ticks", extensionMotor.getTargetPosition());
+            telemetry.addData("Extension Motor 2 Target ticks", extensionMotor2.getTargetPosition());
+
+            extensionMotor.setTargetPosition((int) (( inches - STARTING_EXTENDER_LENGTH) / EXTENDER_OVERALL_RATIO));
             extensionMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            extensionMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
             extensionMotor2.setTargetPosition(extensionMotor.getTargetPosition());
             extensionMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            extensionMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
             extensionMotor.setPower(0.5);
             extensionMotor2.setPower(-0.5);
@@ -253,7 +259,12 @@ public class LinearSlides {
 //        }
     }
 
-    public void pivotTo(double angleRadians) { // Radians, zero is horizontal
+    public void pivotTo(double angleRadians, Telemetry telemetry) { // Radians, zero is horizontal
+
+        telemetry.addData("\nTarget angle", angleRadians);
+        telemetry.addData("Target pivot ticks", seeSawMotor.getTargetPosition());
+        telemetry.addData("Pivot current ticks", seeSawMotor.getCurrentPosition());
+
         seesawAngle = seeSawMotor.getCurrentPosition() * SEESAW_OVERALL_RATIO;
 //        if(seesawAngle < Math.PI / 2 && seesawAngle > 0.0) {
             seeSawMotor.setTargetPosition((int) (angleRadians / SEESAW_OVERALL_RATIO));
@@ -281,7 +292,7 @@ public class LinearSlides {
     public void update(){ // Run this as much as applicable
         seesawExtensionLength = ((.5 * extensionMotor.getCurrentPosition() + .5 * extensionMotor2.getCurrentPosition()) * EXTENDER_OVERALL_RATIO) + STARTING_EXTENDER_LENGTH;
 //        if(seesawAngle > -1.0){
-            seesawAngle = (seeSawMotor.getCurrentPosition() * SEESAW_OVERALL_RATIO); // Assuming starting angle is 0
+            seesawAngle = (seeSawMotor.getCurrentPosition() * SEESAW_OVERALL_RATIO) + STARTING_ANGLE;
 //        }
 
 //        manipulatorPosition[0] = seesawExtensionLength * Math.cos(Master.turntableAngle) * Math.cos(seesawAngle);

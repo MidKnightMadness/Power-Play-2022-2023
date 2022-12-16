@@ -29,7 +29,7 @@ public class Claw {
         servo = hardwareMap.get(Servo.class, "Claw");
 
         rotationServo = hardwareMap.get(Servo.class, "CP");
-//        rotationServo.resetDeviceConfigurationForOpMode();
+        rotationServo.resetDeviceConfigurationForOpMode();
 
         servo.scaleRange(0.0, 1.0);
         rotationServo.scaleRange(0.0, 1.0);
