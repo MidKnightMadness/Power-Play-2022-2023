@@ -271,7 +271,7 @@ public class LinearSlides {
 //        }
     }
 
-    public void pivotBy(double power, Claw claw) {
+    public void pivotBy(double power) {
 
         seeSawMotor.setPower(power);
 

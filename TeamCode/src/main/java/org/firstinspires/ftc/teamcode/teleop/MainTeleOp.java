@@ -54,8 +54,10 @@ public class MainTeleOp extends OpMode {
 
     private boolean lastPressedDriveMode = false;
     private boolean driveModeToggle = false;
-    private boolean lastClawOpenToggle = false;
-    private boolean isClawOpenToggle = false;
+    private boolean lastPressedClawOpen = false;
+    private boolean clawOpenToggle = false;
+    private boolean lastPressedClawPivot = false;
+    private boolean clawPivotToggle = false;
 
     //testing ??
     private boolean lastPressedSeesaw = false;
@@ -152,46 +154,21 @@ public class MainTeleOp extends OpMode {
 
         // LINEAR SLIDES
         slides.extendBy(-gamepad2.right_stick_y);
-//
-//        if (gamepad2.y && !lastPressedLinearSlides) {
-//            linearSlidesToggle = !linearSlidesToggle;
-//        }
-//        lastPressedLinearSlides = gamepad2.y;
-//
-//        if (linearSlidesToggle) {
-//            slides.extendTo(6);
-//        } else {
-//            slides.extendTo(0);
-//        }
-
 
 
 
         // SEESAW
         rotateArm(-gamepad2.left_stick_y);
-//
-//        if (gamepad2.b && !lastPressedSeesaw) {
-//            seesawToggle = !seesawToggle;
-//        }
-//        lastPressedSeesaw = gamepad2.b;
-//
-//        if (seesawToggle) {
-//            slides.pivotTo(Math.PI);
-//        } else {
-//            slides.pivotTo(0);
-//        }
-
-
 
 
 
         // CLAW
-//        if (gamepad2.right_bumper && !lastClawOpenToggle) {
-//            isClawOpenToggle = !isClawOpenToggle;
-//        }
-//        lastClawOpenToggle = gamepad2.right_bumper;
-//
-        if (gamepad2.right_bumper) {
+        if (gamepad2.right_bumper && !lastPressedClawOpen) {
+            clawOpenToggle = !clawOpenToggle;
+        }
+        lastPressedClawOpen = gamepad2.right_bumper;
+
+        if (clawOpenToggle) {
             claw.openClaw();
         } else {
             claw.closeClaw();
@@ -200,6 +177,16 @@ public class MainTeleOp extends OpMode {
 
 
         // claw pivot
+        if (gamepad2.left_bumper && !lastPressedClawPivot) {
+            clawPivotToggle = !clawPivotToggle;
+        }
+        lastPressedClawPivot = gamepad2.left_bumper;
+
+        if (clawPivotToggle) {
+            claw.rotateClaw(0);
+        } else {
+            claw.rotateClaw(1);
+        }
 //        claw.rotateClaw(gamepad2.left_trigger);
 
         // Adjusting angle target
@@ -226,18 +213,18 @@ public class MainTeleOp extends OpMode {
 //        }
 
         // Adjusting extension length and angle
-        if(gamepad2.left_trigger > 0.5){
-            adjustingExtensionLength = !adjustingExtensionLength;
-        }
-        if(gamepad2.dpad_up && adjustingExtensionLength){
-            targetExtension += 0.1;
-        }else if(gamepad2.dpad_down && adjustingExtensionLength){
-            targetExtension -= 0.1;
-        }else if(gamepad2.dpad_up && !adjustingExtensionLength){
-            targetAngle += 0.01;
-        }else if(gamepad2.dpad_down && !adjustingExtensionLength){
-            targetAngle -= 0.01;
-        }
+//        if(gamepad2.left_trigger > 0.5){
+//            adjustingExtensionLength = !adjustingExtensionLength;
+//        }
+//        if(gamepad2.dpad_up && adjustingExtensionLength){
+//            targetExtension += 0.001;
+//        }else if(gamepad2.dpad_down && adjustingExtensionLength){
+//            targetExtension -= 0.001;
+//        }else if(gamepad2.dpad_up && !adjustingExtensionLength){
+//            targetAngle += 0.001;
+//        }else if(gamepad2.dpad_down && !adjustingExtensionLength){
+//            targetAngle -= 0.001;
+//        }
 
         if(gamepad2.right_trigger > 0.5){
             while(true){
@@ -342,7 +329,7 @@ public class MainTeleOp extends OpMode {
     public static double clawPivotInput = 0.0;
 
     public void rotateArm(double power){
-        slides.pivotBy(power, claw);
+        slides.pivotBy(power);
 
         // Needs something to get only 0.1, 0.2, 0.3, etc...
 

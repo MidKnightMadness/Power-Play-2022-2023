@@ -39,10 +39,6 @@ public class Claw {
 //        rotationServo2 = hardwareMap.get(Servo.class, "CP2");
 //        rotationServo2.setDirection(Servo.Direction.REVERSE);
 
-        servo.resetDeviceConfigurationForOpMode();
-//        rotationServo.resetDeviceConfigurationForOpMode();
-//        rotationServo2.resetDeviceConfigurationForOpMode();
-
     }
 
     public void openClaw() {
