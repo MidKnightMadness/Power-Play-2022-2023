@@ -104,7 +104,7 @@ public class Odometry implements OdometryVariables {
 
         // angles
         deltaRadians = getDeltaRotation(leftDistanceMoved, rightDistanceMoved);
-        rotationRadians += deltaRadians;
+        rotationRadians += deltaRadians / 2;
 
         forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0;
         trueLateralMovement = topDistanceMoved + deltaRadians * verticalWheelDistance;
@@ -114,6 +114,8 @@ public class Odometry implements OdometryVariables {
 
         netX = forwardMovement * cosine + trueLateralMovement * sin;
         netY = forwardMovement * sin - trueLateralMovement * cosine;
+
+        rotationRadians += deltaRadians / 2;
 
 //        if (false) {
 //            netX = forwardMovement * Math.cos(rotationRadians);

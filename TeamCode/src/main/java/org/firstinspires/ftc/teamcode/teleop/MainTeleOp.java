@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.common.Timer;
 import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
 import org.firstinspires.ftc.teamcode.manipulator.Claw;
@@ -177,17 +179,16 @@ public class MainTeleOp extends OpMode {
 
 
         // claw pivot
-//        if (gamepad2.left_bumper && !lastPressedClawPivot) {
-//            clawPivotToggle = !clawPivotToggle;
-//        }
-//        lastPressedClawPivot = gamepad2.left_bumper;
-//
-//        if (clawPivotToggle) {
-//            claw.rotateClaw(0);
-//        } else {
+        if (gamepad2.left_bumper && !lastPressedClawPivot) {
+            clawPivotToggle = !clawPivotToggle;
+        }
+        lastPressedClawPivot = gamepad2.left_bumper;
+
+        if (clawPivotToggle) {
+            claw.rotateClaw(0);
+        } //else if (!clawPivotToggle){
 //            claw.rotateClaw(1);
 //        }
-//        claw.rotateClaw(gamepad2.left_trigger);
 
         // Adjusting angle target
 //        if(gamepad1.left_trigger >= 0.5){ // Adjsting angle
@@ -217,19 +218,19 @@ public class MainTeleOp extends OpMode {
             adjustingExtensionLength = !adjustingExtensionLength;
         }
         if(gamepad2.dpad_up && adjustingExtensionLength){
-            targetExtension += 0.001;
+            targetExtension += 0.1;
         }else if(gamepad2.dpad_down && adjustingExtensionLength){
-            targetExtension -= 0.001;
+            targetExtension -= 0.1;
         }else if(gamepad2.dpad_up && !adjustingExtensionLength){
-            targetAngle += 0.001;
+            targetAngle += 0.1;
         }else if(gamepad2.dpad_down && !adjustingExtensionLength){
-            targetAngle -= 0.001;
+            targetAngle -= 0.1;
         }
 
 
             while(gamepad2.right_trigger > 0.5){
-                slides.pivotTo(targetAngle);
-                slides.extendTo(targetAngle);
+                rotateArmTo(targetAngle, telemetry);
+                slides.extendTo(targetExtension, telemetry);
 
                 telemetry.addData("\nController target angle (degrees)", targetAngle * 180 / Math.PI);
                 telemetry.addData("Controller target extension length", targetExtension);
@@ -344,7 +345,27 @@ public class MainTeleOp extends OpMode {
         clawPivotInput = (int) (clawPivotInput * 6.0);
         clawPivotInput /= 10.0;
 
+        claw.rotateClaw(clawPivotInput);
+        // Upper may be 0.8 ish, NOT 1.0
+        //  0.0  to  1.0
+        // (back) (forward)
+    }
 
+    public void rotateArmTo(double power, Telemetry telemetry){
+        slides.pivotTo(power, telemetry);
+
+        // Needs something to get only 0.1, 0.2, 0.3, etc...
+
+//        clawPivotInput = (- slides.seesawAngle / Math.PI + 1) - ((- slides.seesawAngle / Math.PI + 1) % 0.01);
+
+        clawPivotInput = - slides.seesawAngle / Math.PI;
+        // -1.0 (undefined position) if at 180˚, 0.0 if at 0˚ (backwards)
+        clawPivotInput += 1;
+        // 0.0 (backwards) if at 180˚, 1.0 (forwards) if at 0˚
+
+        // Servo only takes inputs in intervals of 0.1
+        clawPivotInput = (int) (clawPivotInput * 600.0);
+        clawPivotInput /= 1000.0;
 
         claw.rotateClaw(clawPivotInput);
         // Upper may be 0.8 ish, NOT 1.0
