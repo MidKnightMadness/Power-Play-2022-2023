@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.test;
 
 import static org.firstinspires.ftc.teamcode.odometry.TestingOdometryAlgorithm.DISTANCE_TO_BACK_WHEEL;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,6 +11,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.drivetrain.Vector;
 
 @TeleOp (group = "Test")
+@Disabled
+@Deprecated
 public class TestOdometry extends OpMode {
 
     //    ––––––––

@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.odometry.Vector2;
 public class AutonomousOne extends Autonomous {
     @Override
     public int getStartingPos() {
-        return 0;
+        return 1;
     }
 
     public double getStartingRotation() {

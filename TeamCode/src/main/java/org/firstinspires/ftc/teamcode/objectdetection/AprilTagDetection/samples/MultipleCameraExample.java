@@ -19,12 +19,13 @@
  * SOFTWARE.
  */
 
-package org.firstinspires.ftc.teamcode.AprilTagDetection.samples;
+package org.firstinspires.ftc.teamcode.objectdetection.AprilTagDetection.samples;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
@@ -33,20 +34,19 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
-import org.openftc.easyopencv.OpenCvTracker;
-import org.openftc.easyopencv.OpenCvTrackerApiPipeline;
+import org.openftc.easyopencv.OpenCvPipeline;
 
 /**
- * In this sample, we demonstrate how to use the {@link OpenCvTrackerApiPipeline()}
- * class to run multiple {@link OpenCvTracker} instances on each frame from the camera.
+ * In this sample, we demonstrate how to use the {@link OpenCvCameraFactory#splitLayoutForMultipleViewports(int, int, OpenCvCameraFactory.ViewportSplitMethod)}
+ * method in order to concurrently display the preview of two cameras, using
+ * OpenCV on both.
  */
 @TeleOp
 @Disabled
-public class TrackerApiExample extends LinearOpMode
+public class MultipleCameraExample extends LinearOpMode
 {
     OpenCvCamera phoneCam;
-    OpenCvTrackerApiPipeline trackerApiPipeline;
-    UselessColorBoxDrawingTracker tracker1, tracker2, tracker3;
+    OpenCvCamera webcam;
 
     @Override
     public void runOpMode()
@@ -59,21 +59,29 @@ public class TrackerApiExample extends LinearOpMode
          */
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
 
         /**
-         * Create an instance of the {@link OpenCvTrackerApiPipeline}
-         * pipeline (included with EasyOpenCV), and tell the camera
-         * to use it.
+         * This is the only thing you need to do differently when using multiple cameras.
+         * Instead of obtaining the camera monitor view and directly passing that to the
+         * camera constructor, we invoke {@link OpenCvCameraFactory#splitLayoutForMultipleViewports(int, int, OpenCvCameraFactory.ViewportSplitMethod)}
+         * on that view in order to split that view into multiple equal-sized child views,
+         * and then pass those child views to the constructor.
          */
-        trackerApiPipeline = new OpenCvTrackerApiPipeline();
-        phoneCam.setPipeline(trackerApiPipeline);
+        int[] viewportContainerIds = OpenCvCameraFactory.getInstance()
+                .splitLayoutForMultipleViewports(
+                        cameraMonitorViewId, //The container we're splitting
+                        2, //The number of sub-containers to create
+                        OpenCvCameraFactory.ViewportSplitMethod.VERTICALLY); //Whether to split the container vertically or horizontally
+
+        phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, viewportContainerIds[0]);
+        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), viewportContainerIds[1]);
 
         phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
             public void onOpened()
             {
+                phoneCam.setPipeline(new UselessGreenBoxDrawingPipeline());
                 phoneCam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
             }
 
@@ -86,47 +94,38 @@ public class TrackerApiExample extends LinearOpMode
             }
         });
 
-        /*
-         * Create some trackers we want to run
-         */
-        tracker1 = new UselessColorBoxDrawingTracker(new Scalar(255, 0, 0));
-        tracker2 = new UselessColorBoxDrawingTracker(new Scalar(0, 255, 0));
-        tracker3 = new UselessColorBoxDrawingTracker(new Scalar(0, 0, 255));
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
+            @Override
+            public void onOpened()
+            {
+                webcam.setPipeline(new UselessGreenBoxDrawingPipeline());
+                webcam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+            }
 
-        /*
-         * Add those trackers to the pipeline. All trackers added to the
-         * trackerApiPipeline will be run upon receipt of a frame from the
-         * camera. Note: the trackerApiPipeline will handle switching
-         * the viewport view on tap between the output of each of the trackers
-         * for you.
-         */
-        trackerApiPipeline.addTracker(tracker1);
-        trackerApiPipeline.addTracker(tracker2);
-        trackerApiPipeline.addTracker(tracker3);
+            @Override
+            public void onError(int errorCode)
+            {
+                /*
+                 * This will be called if the camera could not be opened
+                 */
+            }
+        });
 
         waitForStart();
 
         while (opModeIsActive())
         {
-            /*
-             * If you later want to stop running a tracker on each frame,
-             * you can remove it from the trackerApiPipeline like so:
-             */
-            //trackerApiPipeline.removeTracker(tracker1);
+            telemetry.addData("Internal cam FPS", phoneCam.getFps());
+            telemetry.addData("Webcam FPS", webcam.getFps());
+            telemetry.update();
 
             sleep(100);
         }
     }
 
-    class UselessColorBoxDrawingTracker extends OpenCvTracker
+    class UselessGreenBoxDrawingPipeline extends OpenCvPipeline
     {
-        Scalar color;
-
-        UselessColorBoxDrawingTracker(Scalar color)
-        {
-            this.color = color;
-        }
-
         @Override
         public Mat processFrame(Mat input)
         {
@@ -138,7 +137,7 @@ public class TrackerApiExample extends LinearOpMode
                     new Point(
                             input.cols()*(3f/4f),
                             input.rows()*(3f/4f)),
-                    color, 4);
+                    new Scalar(0, 255, 0), 4);
 
             return input;
         }

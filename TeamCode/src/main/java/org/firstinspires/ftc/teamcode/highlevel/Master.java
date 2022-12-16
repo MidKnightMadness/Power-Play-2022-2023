@@ -25,6 +25,7 @@ import java.util.Timer;
 
 
 // Everything public except for in-class default values!!!!!!!!!
+@Deprecated
 public class Master {
 
     // Robot dimensions

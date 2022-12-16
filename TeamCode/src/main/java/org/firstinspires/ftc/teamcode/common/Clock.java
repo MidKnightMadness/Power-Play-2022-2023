@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.util.EventListener;
 import java.util.concurrent.TimeUnit;
 
+@Deprecated
 public class Clock {
     public ElapsedTime elapsedTime;
     private double lastTime;

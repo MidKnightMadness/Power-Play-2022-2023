@@ -19,7 +19,7 @@
  * SOFTWARE.
  */
 
-package org.firstinspires.ftc.teamcode.AprilTagDetection.samples;
+package org.firstinspires.ftc.teamcode.objectdetection.AprilTagDetection.samples;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -37,6 +37,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
  * command is issued. The pipeline is re-used from SkystoneDeterminationExample
  */
 @TeleOp
+@Disabled
 public class AutonomousInitDetectionExample extends LinearOpMode
 {
     OpenCvWebcam webcam;

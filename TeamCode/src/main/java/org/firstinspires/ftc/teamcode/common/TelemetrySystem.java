@@ -4,6 +4,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.ArrayList;
 
+@Deprecated
 public class TelemetrySystem {
     ArrayList<String> staticMessages;
     boolean staticMessagesHaveChanged = false;

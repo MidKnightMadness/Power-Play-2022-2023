@@ -1,13 +1,8 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import static org.firstinspires.ftc.teamcode.highlevel.Master.invSqrt;
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -16,8 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.manipulator.Claw;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.AprilTagDetection.AprilTagDetectionPipeline;
-import org.firstinspires.ftc.teamcode.drivetrain.Vector;
+import org.firstinspires.ftc.teamcode.objectdetection.AprilTagDetection.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.manipulator.LinearSlides;
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
 import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
@@ -25,7 +19,6 @@ import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.firstinspires.ftc.teamcode.highlevel.Master;
 import org.firstinspires.ftc.teamcode.highlevel.fieldData;
 import org.firstinspires.ftc.teamcode.common.Timer;
 import org.firstinspires.ftc.teamcode.odometry.Vector2;
@@ -59,7 +52,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
     double time;
 
     public Odometry odometry;
-    public MecanumDrive mecanumDrive;
+    public MecanumDrive mecanum;
 
     private BNO055IMU imu;
     Orientation angles;
@@ -85,8 +78,6 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
 //----------------INIT----------------------------------------------------------------------------------------------------
 
-        mecanumDrive = new MecanumDrive(hardwareMap);
-
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -108,7 +99,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
 
-        mecanumDrive = new MecanumDrive(hardwareMap);
+        mecanum = new MecanumDrive(hardwareMap);
         odometry = new Odometry(hardwareMap, getStartingPosition(), getStartingRotation());
 
         camera.setPipeline(aprilTagDetectionPipeline);
@@ -169,15 +160,41 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             signalLocationY = signalLocations[startingPos][1].y;
         }
 
+        // SCORE PRE-LOAD
+        // score at high junction
 //        goToScoringLocation();
-        goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation() - Math.PI / 4);
 //        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
 //        sleep(3000);
 //        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation() - Math.PI / 4);
 //        sleep(3000);
+//        linearSlides.pivotTo(1.174268847);
+//        sleep(5000);
+//        linearSlides.extendTo(34.01424334);
+//        sleep(5000);
+//        claw.openClaw();
+//        sleep(5000);
+//        claw.closeClaw();
+//        sleep(5000);
+//        linearSlides.extendTo(0);
+//        sleep(5000);
+//        linearSlides.pivotTo(0);
 //        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
 //        sleep(3000);
 //        linearSlides.scoreFromDefaultScoringPosition();
+
+        // score at terminal
+        if (getStartingPos() == 1) {
+            goToPosition(getStartingPosition().x - 20, getStartingPosition().y, getStartingRotation());
+            sleep(3000);
+            goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation());
+            sleep(3000);
+        } else if (getStartingPos() == 2) {
+            goToPosition(getStartingPosition().x + 20, getStartingPosition().y, getStartingRotation());
+            sleep(3000);
+            goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation());
+            sleep(3000);
+        }
+
 
 
 //----------------LOOP----------------------------------------------------------------------------------------------------
@@ -186,34 +203,15 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             time = coneTimer.getTime();
 
 //            if (time > 26.35729278100687712039158d) {
-//                goToPosition(getStartingPosition().x, getStartingPosition().y + 26, getStartingRotation());
-//                sleep(3000);
-//                if(mostRecentDetection == 1) {
-//                    goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 26, getStartingRotation());
-//                    goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 32, getStartingRotation());
-//                } else if (mostRecentDetection == 3) {
-//                    goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 26, getStartingRotation());
-//                    goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 32, getStartingRotation());
-//                }
-
-                // Making sure cone is grabbed, needs to lift manipulator off support first
-                claw.openClaw();
-                linearSlides.pivotTo(Math.PI / 2);
+                goToPosition(getStartingPosition().x, getStartingPosition().y + 26, getStartingRotation());
                 sleep(3000);
-                linearSlides.pivotTo(0);
-                claw.closeClaw();
-                sleep(3000);
-
-                // Scoring preloaded cone
-                goToPosition(getStartingPosition().x, getStartingPosition().y + 60.375, getStartingRotation());
-                sleep(5000);
-                goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), 1.107148718); // Junction
-                sleep(5000);
-                linearSlides.pivotTo(1.174268847);
-                sleep(5000);
-                linearSlides.extendTo(34.01424334);
-                sleep(5000);
-                claw.openClaw();
+                if(mostRecentDetection == 1) {
+                    goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 26, getStartingRotation());
+                    goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 32, getStartingRotation());
+                } else if (mostRecentDetection == 3) {
+                    goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 26, getStartingRotation());
+                    goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 32, getStartingRotation());
+                }
 //            }
 
 //                goToSignalLocation((int)odometry.getXCoordinate(), (int) odometry.getYCoordinate(), (int) signalLocationX, (int) signalLocationY);
@@ -316,7 +314,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
             odometry.updatePosition();
 
-            atLocation = mecanumDrive.driveTo(targetX, targetY, targetAngle, odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians());
+            atLocation = mecanum.driveTo(targetX, targetY, targetAngle, odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians());
 
         }
     }

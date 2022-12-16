@@ -17,6 +17,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+@Deprecated
 public class TestingOdometryAlgorithm {
     private double [] travel = {0.0, 0.0};
     private double [] travel1 = {0.0, 0.0};

@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.highlevel.Master.telemetry;
 
 
 //import org.firstinspires.ftc.teamcode.drivetrain.Vector;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -18,7 +19,9 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-@TeleOp(name = "main")
+@TeleOp
+@Disabled
+@Deprecated
 public class TeleOp1 extends OpMode {
     MecanumDrive driver;
     TestingOdometryAlgorithm odometry;

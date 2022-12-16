@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.common;
 
+@Deprecated
 public class TelemetryVariable<E> {
     E[] value;
 

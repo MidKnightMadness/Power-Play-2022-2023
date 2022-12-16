@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robots.freightfrenzy15385;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -26,6 +27,7 @@ dpad right      (hold)      spin carousel right
 */
 
 @TeleOp(name="Freight Frenzy - 15385 Mayhem", group="Practice Robots")
+@Disabled
 public class FF15385_TeleOp extends OpMode {
     SampleDrive drive;
     Catapult catapult;

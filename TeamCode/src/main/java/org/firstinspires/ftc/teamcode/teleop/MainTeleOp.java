@@ -1,6 +1,4 @@
-package org.firstinspires.ftc.teamcode.currentOpModes;
-
-import static org.firstinspires.ftc.teamcode.highlevel.GridSystem.pointAtJunction;
+package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -33,6 +31,7 @@ import org.firstinspires.ftc.teamcode.odometry.Vector2;
 /*
  * Controls
  * Player 1:
+ * 
  * Player 2:
  *
  */
@@ -51,8 +50,6 @@ public class MainTeleOp extends OpMode {
     double[] lastInputs = {0, 0};
     double[] currentInputs = {0, 0};
 
-    Timer timer;
-
     final double DEADZONE_TOLERANCE = 0.05;
 
     private boolean lastPressedDriveMode = false;
@@ -70,7 +67,7 @@ public class MainTeleOp extends OpMode {
 
     @Override
     public void init() {
-        timer = new Timer();
+        Timer timer = new Timer();
 
         mecanum = new MecanumDrive(hardwareMap);
         odometry = new Odometry(hardwareMap, new Vector2(0, 0), Math.PI / 2);
@@ -124,7 +121,6 @@ public class MainTeleOp extends OpMode {
 
         // slow mode (change driving power multiplier)
         powerMultiplier = staticPowerMultiplier * (1 - gamepad1.right_trigger * 0.95); // slows the driving as trigger is pressed
-
 
 
         // DRIVE

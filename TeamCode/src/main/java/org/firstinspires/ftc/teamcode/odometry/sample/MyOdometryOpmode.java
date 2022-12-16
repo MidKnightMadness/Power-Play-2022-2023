@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @TeleOp(name = "My Odometry OpMode")
 @Disabled
+@Deprecated
 public class MyOdometryOpmode extends LinearOpMode {
     //Drive motors
     DcMotor right_front, right_back, left_front, left_back;
