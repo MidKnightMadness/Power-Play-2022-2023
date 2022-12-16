@@ -231,12 +231,22 @@ public class LinearSlides {
 //        if(extensionMotor.getCurrentPosition() <= 0) {
 //            extensionMotor.setVelocity(power * 100, AngleUnit.RADIANS);
 //            extensionMotor2.setVelocity(- power * 100, AngleUnit.RADIANS);
-            if(extensionMotor.getCurrentPosition() > -10 && extensionMotor2.getCurrentPosition() > -10){
+//            if(extensionMotor.getCurrentPosition() > -50 && extensionMotor2.getCurrentPosition() > -50){
+                extensionMotor.setPower(power);
+
                 extensionMotor2.setTargetPosition(extensionMotor.getCurrentPosition());
                 extensionMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                extensionMotor.setPower(power);
-                extensionMotor2.setPower(power);
-            }
+
+                if(extensionMotor2.getTargetPosition() > extensionMotor2.getCurrentPosition()){
+                    extensionMotor2.setPower(0.5);
+                }else{
+                    extensionMotor2.setPower(-0.5);
+                }
+//            }else{
+//                extensionMotor.setPower(0);
+//                extensionMotor2.setPower(0);
+
+//            }
 //                while(extensionMotor.getCurrentPosition() < 0.0 || extensionMotor2.getCurrentPosition() < 0.0){
 //                    extensionMotor.setPower(0.5);
 //                    extensionMotor2.setPower(0.5);
@@ -264,7 +274,6 @@ public class LinearSlides {
     public void pivotBy(double power, Claw claw) {
 
         seeSawMotor.setPower(power);
-        claw.rotateClaw(- seesawAngle / Math.PI);
 
 
 //        seeSawMotor.setTargetPosition((int)(power * 100 + seeSawMotor.getCurrentPosition()));
@@ -275,7 +284,9 @@ public class LinearSlides {
 
     public void update(){ // Run this as much as applicable
         seesawExtensionLength = ((.5 * extensionMotor.getCurrentPosition() + .5 * extensionMotor2.getCurrentPosition()) * EXTENDER_OVERALL_RATIO) + STARTING_EXTENDER_LENGTH;
-        seesawAngle = (seeSawMotor.getCurrentPosition() * SEESAW_OVERALL_RATIO); // Assuming starting angle is 0
+//        if(seesawAngle > -1.0){
+            seesawAngle = (seeSawMotor.getCurrentPosition() * SEESAW_OVERALL_RATIO); // Assuming starting angle is 0
+//        }
 
 //        manipulatorPosition[0] = seesawExtensionLength * Math.cos(Master.turntableAngle) * Math.cos(seesawAngle);
 //        manipulatorPosition[1] = seesawExtensionLength * Math.sin(Master.turntableAngle) * Math.cos(seesawAngle);
