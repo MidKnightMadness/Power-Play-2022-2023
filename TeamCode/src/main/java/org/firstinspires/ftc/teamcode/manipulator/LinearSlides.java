@@ -220,10 +220,10 @@ public class LinearSlides {
 
         if(extensionMotor.getTargetPosition() > extensionMotor.getCurrentPosition()){
             extensionMotor.setPower(.5);
-            extensionMotor2.setPower(.5);
+            extensionMotor2.setPower(-.5);
         }else{
             extensionMotor.setPower(-.5);
-            extensionMotor2.setPower(-.5);
+            extensionMotor2.setPower(.5);
         }
     }
 

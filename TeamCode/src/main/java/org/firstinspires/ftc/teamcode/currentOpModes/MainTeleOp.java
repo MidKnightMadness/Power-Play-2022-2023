@@ -230,18 +230,18 @@ public class MainTeleOp extends OpMode {
 //        }
 
         // Adjusting extension length and angle
-//        if(gamepad2.left_trigger > 0.5){
-//            adjustingExtensionLength = !adjustingExtensionLength;
-//        }
-//        if(gamepad2.dpad_up && adjustingExtensionLength){
-//            targetExtension += 0.001;
-//        }else if(gamepad2.dpad_down && adjustingExtensionLength){
-//            targetExtension -= 0.001;
-//        }else if(gamepad2.dpad_up && !adjustingExtensionLength){
-//            targetAngle += 0.001;
-//        }else if(gamepad2.dpad_down && !adjustingExtensionLength){
-//            targetAngle -= 0.001;
-//        }
+        if(gamepad2.left_trigger > 0.5){
+            adjustingExtensionLength = !adjustingExtensionLength;
+        }
+        if(gamepad2.dpad_up && adjustingExtensionLength){
+            targetExtension += 0.1;
+        }else if(gamepad2.dpad_down && adjustingExtensionLength){
+            targetExtension -= 0.1;
+        }else if(gamepad2.dpad_up && !adjustingExtensionLength){
+            targetAngle += 0.01;
+        }else if(gamepad2.dpad_down && !adjustingExtensionLength){
+            targetAngle -= 0.01;
+        }
 
         if(gamepad2.right_trigger > 0.5){
             while(true){
