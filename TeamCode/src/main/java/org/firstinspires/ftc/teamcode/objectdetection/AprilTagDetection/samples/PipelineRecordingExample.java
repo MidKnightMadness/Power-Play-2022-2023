@@ -19,7 +19,7 @@
  * SOFTWARE.
  */
 
-package org.firstinspires.ftc.teamcode.AprilTagDetection.samples;
+package org.firstinspires.ftc.teamcode.objectdetection.AprilTagDetection.samples;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -34,21 +34,18 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
+import org.openftc.easyopencv.PipelineRecordingParameters;
 
-/**
- * In this sample, we demonstrate how to use the advanced features provided
- * by the {@link OpenCvInternalCamera} interface
+/*
+ * This sample shows use of EOCV's pipeline recording API to start/stop recording
+ * when the viewport is tapped. The statistics box will turn red to indicate that
+ * recording is active.
  */
 @TeleOp
 @Disabled
-public class InternalCamera1AdvancedFeaturesExample extends LinearOpMode
+public class PipelineRecordingExample extends LinearOpMode
 {
-    /**
-     * NB: we declare our camera as the {@link OpenCvInternalCamera} type,
-     * as opposed to simply {@link OpenCvCamera}. This allows us to access
-     * the advanced features supported only by the internal camera.
-     */
-    OpenCvInternalCamera phoneCam;
+    OpenCvCamera phoneCam;
 
     @Override
     public void runOpMode()
@@ -63,48 +60,15 @@ public class InternalCamera1AdvancedFeaturesExample extends LinearOpMode
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
 
+        phoneCam.setPipeline(new SamplePipeline());
+        phoneCam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
+        phoneCam.setViewportRenderer(OpenCvCamera.ViewportRenderer.GPU_ACCELERATED);
         phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
             public void onOpened()
             {
-                phoneCam.setPipeline(new UselessColorBoxDrawingPipeline(new Scalar(255, 0, 0)));
-
-                /*
-                 * We use the most verbose version of #startStreaming(), which allows us to specify whether we want to use double
-                 * (default) or single buffering. See the JavaDoc for this method for more details
-                 */
-                phoneCam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT, OpenCvInternalCamera.BufferMethod.DOUBLE);
-
-                /*
-                 * Demonstrate how to turn on the flashlight
-                 */
-                phoneCam.setFlashlightEnabled(true);
-
-                /*
-                 * Demonstrate how to use the zoom. Here we zoom
-                 * in as much as is supported.
-                 */
-                phoneCam.setZoom(phoneCam.getMaxSupportedZoom());
-
-                /*
-                 * Demonstrate how to set the recording hint on the
-                 * camera hardware. See the JavDoc for this method
-                 * for more details.
-                 */
-                phoneCam.setRecordingHint(true);
-
-                /*
-                 * Demonstrate how to lock the camera hardware to sending frames at 30FPS, if it supports that
-                 */
-                for (OpenCvInternalCamera.FrameTimingRange r : phoneCam.getFrameTimingRangesSupportedByHardware())
-                {
-                    if(r.max == 30 && r.min == 30)
-                    {
-                        phoneCam.setHardwareFrameTimingRange(r);
-                        break;
-                    }
-                }
+                phoneCam.startStreaming(640, 480, OpenCvCameraRotation.SIDEWAYS_LEFT);
             }
 
             @Override
@@ -116,26 +80,47 @@ public class InternalCamera1AdvancedFeaturesExample extends LinearOpMode
             }
         });
 
+        telemetry.addLine("Waiting for start");
+        telemetry.update();
+
+        /*
+         * Wait for the user to press start on the Driver Station
+         */
         waitForStart();
 
         while (opModeIsActive())
         {
+            /*
+             * Send some stats to the telemetry
+             */
+            telemetry.addData("Frame Count", phoneCam.getFrameCount());
+            telemetry.addData("FPS", String.format("%.2f", phoneCam.getFps()));
+            telemetry.addData("Total frame time ms", phoneCam.getTotalFrameTimeMs());
+            telemetry.addData("Pipeline time ms", phoneCam.getPipelineTimeMs());
+            telemetry.addData("Overhead time ms", phoneCam.getOverheadTimeMs());
+            telemetry.addData("Theoretical max FPS", phoneCam.getCurrentPipelineMaxFps());
+            telemetry.update();
+
+            /*
+             * For the purposes of this sample, throttle ourselves to 10Hz loop to avoid burning
+             * excess CPU cycles for no reason. (By default, telemetry is only sent to the DS at 4Hz
+             * anyway). Of course in a real OpMode you will likely not want to do this.
+             */
             sleep(100);
         }
     }
 
-    class UselessColorBoxDrawingPipeline extends OpenCvPipeline
-    {
-        Scalar color;
 
-        UselessColorBoxDrawingPipeline(Scalar color)
-        {
-            this.color = color;
-        }
+    class SamplePipeline extends OpenCvPipeline
+    {
+        boolean toggleRecording = false;
 
         @Override
         public Mat processFrame(Mat input)
         {
+            /*
+             * Draw a simple box around the middle 1/2 of the entire frame
+             */
             Imgproc.rectangle(
                     input,
                     new Point(
@@ -144,9 +129,38 @@ public class InternalCamera1AdvancedFeaturesExample extends LinearOpMode
                     new Point(
                             input.cols()*(3f/4f),
                             input.rows()*(3f/4f)),
-                    color, 4);
+                    new Scalar(0, 255, 0), 4);
 
             return input;
+        }
+
+        @Override
+        public void onViewportTapped()
+        {
+            toggleRecording = !toggleRecording;
+
+            if(toggleRecording)
+            {
+                /*
+                 * This is all you need to do to start recording.
+                 */
+                phoneCam.startRecordingPipeline(
+                        new PipelineRecordingParameters.Builder()
+                                .setBitrate(4, PipelineRecordingParameters.BitrateUnits.Mbps)
+                                .setEncoder(PipelineRecordingParameters.Encoder.H264)
+                                .setOutputFormat(PipelineRecordingParameters.OutputFormat.MPEG_4)
+                                .setFrameRate(30)
+                                .setPath("/sdcard/pipeline_rec.mp4")
+                                .build());
+            }
+            else
+            {
+                /*
+                 * Note: if you don't stop recording by yourself, it will be automatically
+                 * stopped for you at the end of your OpMode
+                 */
+                phoneCam.stopRecordingPipeline();
+            }
         }
     }
 }

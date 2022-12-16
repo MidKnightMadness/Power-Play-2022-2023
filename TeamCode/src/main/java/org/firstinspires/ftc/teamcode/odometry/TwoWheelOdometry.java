@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.concurrent.TimeUnit;
 
+@Deprecated
 interface OdometryVariablesab {
     double wheelRadius = 2.1232;
     double wheelCircumference = wheelRadius * Math.PI * 2;
@@ -28,6 +29,7 @@ interface OdometryVariablesab {
     long sleepTime = 100;
 }
 
+@Deprecated
 public class TwoWheelOdometry implements OdometryVariablesab {
     double deltaTime = 0;
     double lastTime = 0;

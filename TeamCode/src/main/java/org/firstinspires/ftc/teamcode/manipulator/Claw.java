@@ -18,8 +18,6 @@ import org.firstinspires.ftc.teamcode.common.Timer;
  */
 
 public class Claw {
-    public Timer calibrationTimer;
-
     public Servo servo;
     public Servo rotationServo;
     public Servo rotationServo2;
@@ -28,8 +26,6 @@ public class Claw {
     double CLOSED = 0.750;
 
     public Claw(HardwareMap hardwareMap) {
-        calibrationTimer = new Timer();
-
         servo = hardwareMap.get(Servo.class, "Claw");
 
         rotationServo = hardwareMap.get(Servo.class, "CP");

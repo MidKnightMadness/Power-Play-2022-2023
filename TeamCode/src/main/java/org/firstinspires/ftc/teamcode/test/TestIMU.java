@@ -13,7 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 
-@TeleOp(group = "test")
+@TeleOp(name = "Test IMU", group = "Test")
 public class TestIMU extends LinearOpMode {
 
     private BNO055IMU imu;

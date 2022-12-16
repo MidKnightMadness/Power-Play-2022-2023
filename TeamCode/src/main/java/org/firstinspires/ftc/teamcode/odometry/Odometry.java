@@ -9,6 +9,18 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.concurrent.TimeUnit;
 
+interface OdometryVariables {
+    double wheelRadius = 1.41546666667;
+    double wheelCircumference = wheelRadius * Math.PI * 2;
+
+    int ticksPerRotation = 8192;
+    double inPerTick = wheelCircumference / ticksPerRotation;
+
+    double lateralWheelDistance = 12;
+    double verticalWheelDistance = 7.5 - 2.5;// 12.4 - 7.5;
+    long sleepTime = 100;
+}
+
 public class Odometry implements OdometryVariables {
     double deltaTime = 0;
     double lastTime = 0;

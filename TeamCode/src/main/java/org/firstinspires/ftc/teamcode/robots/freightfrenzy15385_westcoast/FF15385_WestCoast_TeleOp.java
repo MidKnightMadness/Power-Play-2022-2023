@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.robots.freightfrenzy15385_westcoast;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name="Freight Frenzy Mayhem West Coast TeleOp", group="Practice Robots")
+@Disabled
 public class FF15385_WestCoast_TeleOp extends OpMode {
 
     WestCoastDrive westcoast;

@@ -30,7 +30,6 @@ public class MecanumDrive {
     public DcMotorEx BLMotor;
 
 
-    private Odometry odometry;
 
     // Navigation
     public static final double [] NULL_POSITION = {0.0, 0.0};
@@ -39,12 +38,6 @@ public class MecanumDrive {
     public static final double MAX = 3.1416; //Max speed
 
     public BNO055IMU imu;
-
-    private double correctedX;
-    private double correctedY;
-    private double gyro_degrees;
-    private double gyro_radians;
-    private double offAngle;
 
     private Orientation angles;
 
@@ -60,10 +53,10 @@ public class MecanumDrive {
 //        FLMotor.setDirection(DcMotor.Direction.REVERSE);
 //        BRMotor.setDirection(DcMotor.Direction.FORWARD);
 //        BLMotor.setDirection(DcMotor.Direction.FORWARD);
-        FRMotor.setDirection(DcMotor.Direction.REVERSE);
-        FLMotor.setDirection(DcMotor.Direction.REVERSE);
-        BRMotor.setDirection(DcMotor.Direction.FORWARD);
-        BLMotor.setDirection(DcMotor.Direction.REVERSE);
+        FRMotor.setDirection(DcMotor.Direction.FORWARD);
+        FLMotor.setDirection(DcMotor.Direction.FORWARD);
+        BRMotor.setDirection(DcMotor.Direction.REVERSE);
+        BLMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Set Motor Mode
         FRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -143,7 +136,7 @@ public class MecanumDrive {
         double spd = Math.min(Math.hypot(dy, dx), 4.0) / 5;
         spd *= spd * spd; // Cube, still needed more precise adjustment
 
-        if((dx * dx) + (dy * dy) > 0.5 || (targetAngle - currentAngle) * (targetAngle - currentAngle) > 5) {
+        if((dx * dx) + (dy * dy) > 0.5 || (targetAngle - currentAngle) > Math.PI / 45) {
             drive(newx * spd, newy * spd, -pointTo(targetAngle, currentAngle));
             return false;
         }
@@ -163,8 +156,6 @@ public class MecanumDrive {
         telemetry.addLine("\nMECANUM WHEELS");
         telemetry.addLine(String.format("Front Motor Power: %f %f", FLMotor.getPower(), FRMotor.getPower()));
         telemetry.addLine(String.format(" Back Motor Power: %f %f", BLMotor.getPower(), BRMotor.getPower()));
-        telemetry.addData("Corrected X", correctedX);
-        telemetry.addData("Corrected Y", correctedY);
         telemetry.addData("First Angle", angles.firstAngle);
     }
 

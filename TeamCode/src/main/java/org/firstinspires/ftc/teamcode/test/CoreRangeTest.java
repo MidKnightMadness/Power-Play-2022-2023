@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.test;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-@TeleOp
+@TeleOp(group = "Test")
+@Disabled
 public class CoreRangeTest extends OpMode {
     ModernRoboticsI2cRangeSensor modernRoboticsI2cRangeSensor;
 

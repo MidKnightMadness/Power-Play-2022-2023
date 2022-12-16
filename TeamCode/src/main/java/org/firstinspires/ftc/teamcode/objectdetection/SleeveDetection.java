@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.objectdetection;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import java.util.List;
@@ -58,6 +59,7 @@ interface TfodConfig {
 }
 
 @TeleOp(name = "Sleeve Detection")
+@Disabled
 public class SleeveDetection extends LinearOpMode implements TfodConfig {
 
     /*

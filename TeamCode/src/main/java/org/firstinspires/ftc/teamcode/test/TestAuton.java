@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.test;
 
 import static org.firstinspires.ftc.teamcode.highlevel.Master.invSqrt;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
@@ -10,6 +11,8 @@ import org.firstinspires.ftc.teamcode.odometry.Vector2;
 import java.util.ArrayList;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
+@Disabled
+@Deprecated
 public class TestAuton extends OpMode
 {
 

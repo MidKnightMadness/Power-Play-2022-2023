@@ -9,12 +9,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.highlevel.Master;
 
+@Deprecated
 public class Turntable {
     // Make sure that motor starts at 0 ticks
-    public static DcMotorEx tableMotor; // Add this to Master
-    private static final double TURNTABLE_RATIO = 0.16; // Ratio for angle change
-    private static final double TURNTABLE_MOTOR_GEARING =  (double) 1 / 60; // Inherent gearing for turntable motor
-    private static final double OVERALL_RATIO = TURNTABLE_RATIO * TURNTABLE_MOTOR_GEARING;
+    DcMotorEx tableMotor; // Add this to Master
+    private final double TURNTABLE_RATIO = 0.16; // Ratio for angle change
+    private final double TURNTABLE_MOTOR_GEARING =  (double) 1 / 60; // Inherent gearing for turntable motor
+    private final double OVERALL_RATIO = TURNTABLE_RATIO * TURNTABLE_MOTOR_GEARING;
 
     // Auxillary variables, add these to Master
     public static double turntableAngle; // Radians, as always
