@@ -363,7 +363,6 @@ public class MainTeleOp extends OpMode {
     private static double DEFAULT_SCORING_RADIUS = 21.0;
     public void cycle(int targetRow, int targetColumn){ // Row number, column number
         // Cone pickup
-        claw.openClaw();
         claw.closeClaw();
 
         // Rotate

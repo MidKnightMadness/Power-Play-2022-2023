@@ -4,6 +4,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -163,33 +164,14 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
         // SCORE PRE-LOAD
         // score at terminal
-//        if (getStartingPos() == 2) {
-//            goToPosition(getStartingPosition().x + 20, getStartingPosition().y + 1, getStartingRotation());
-//            goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation());
-//        } else if (getStartingPos() == 3) {
-//            goToPosition(getStartingPosition().x - 20, getStartingPosition().y + 1, getStartingRotation());
-//            goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation());
-//        }
-
-        // score at high junction
-        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
-        sleep(3000);
-        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[0]);
-        sleep(3000);
-
-        linearSlides.pivotTo(GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[1], telemetry);
-        sleep(5000);
-        linearSlides.pivotTo(GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[2], telemetry);
-        sleep(5000);
-        claw.openClaw();
+        if (getStartingPos() == 2) {
+            goToPosition(getStartingPosition().x + 20, getStartingPosition().y + 1, getStartingRotation());
+            goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation());
+        } else if (getStartingPos() == 3) {
+            goToPosition(getStartingPosition().x - 20, getStartingPosition().y + 1, getStartingRotation());
+            goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation());
+        }
         sleep(1000);
-        claw.closeClaw();
-
-        sleep(5000);
-        linearSlides.pivotTo(0, telemetry);
-        sleep(3000);
-        linearSlides.extendTo(0, telemetry);
-        sleep(5000);
 
 //        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
 
@@ -200,18 +182,39 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         while (opModeIsActive()) {
             time = coneTimer.getTime();
 
-//            if (time > 26.35729278100687712039158d) {
-                goToPosition(getStartingPosition().x, getStartingPosition().y + 30, getStartingRotation());
-                if(mostRecentDetection == 1) {
-                    goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 26, getStartingRotation());
-                    goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 32, getStartingRotation());
-                } else if (mostRecentDetection == 2) {
-                    goToPosition(getStartingPosition().x, getStartingPosition().y + 32, getStartingRotation());
-                } else if (mostRecentDetection == 3) {
-                    goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 26, getStartingRotation());
-                    goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 32, getStartingRotation());
-                }
-//            }
+//            double [] manipulatorInputs = {0.0, 0.0, 0.0};
+//            // score at high junction w/ preloaded cone, will need to take off terminal scoring code
+//            claw.closeClaw();
+//            goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
+//            sleep(3000);
+//            manipulatorInputs = GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians());
+//
+//            goToPosition(getStartingPosition().x, getStartingPosition().y + 51, manipulatorInputs[0]);
+//            sleep(3000);
+//            linearSlides.pivotTo(manipulatorInputs[1], telemetry);
+//            sleep(3000);
+//            linearSlides.extendTo(manipulatorInputs[2], telemetry);
+//            sleep(3000);
+//            claw.openClaw();
+//            sleep(1000);
+//
+//            sleep(5000);
+//            linearSlides.pivotTo(0, telemetry);
+//            sleep(3000);
+//            linearSlides.extendTo(0, telemetry);
+//            sleep(5000);
+
+
+            goToPosition(getStartingPosition().x, getStartingPosition().y + 30, getStartingRotation());
+            if(mostRecentDetection == 1) {
+                goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 26, getStartingRotation());
+                goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 32, getStartingRotation());
+            } else if (mostRecentDetection == 2) {
+                goToPosition(getStartingPosition().x, getStartingPosition().y + 32, getStartingRotation());
+            } else if (mostRecentDetection == 3) {
+                goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 26, getStartingRotation());
+                goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 32, getStartingRotation());
+            }
 
 //                goToSignalLocation((int)odometry.getXCoordinate(), (int) odometry.getYCoordinate(), (int) signalLocationX, (int) signalLocationY);
                 requestOpModeStop();
@@ -299,14 +302,19 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
     }
 
     // Cycles once to specified junction idicies
-    private static double DEFAULT_SCORING_RADIUS = 21.0;
+    private static double DEFAULT_SCORING_RADIUS = 8.0;
     public void cycle(int targetRow, int targetColumn){ // Indices from
         // Cone pickup
         claw.openClaw();
         claw.closeClaw();
 
-        // Rotate
+        // Rotate to starting orientation
         goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI / 2);
+
+        sleep(1000);
+        //                            __________________________________________
+        // ==========================|      NAVIGATING TO SCORING LOCATION      |
+        //                            ------------------------------------------
 
         // Assumes starting at at substation
         // Move to center of square
@@ -332,6 +340,11 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             goToPosition(odometry.getXCoordinate(), (targetColumn + 1) * 23.50 + (DEFAULT_SCORING_RADIUS * Math.cos(Math.PI / 4)),
                     odometry.getRotationRadians());
         }
+
+        sleep(1000);
+        //                            ____________________________________________
+        // ==========================|          TURN AND MOVE MANIPULATOR         |
+        //                            --------------------------------------------
 
         // Turn, pivot manipulator, and extend manipulator
         double [] manipulatorInputs = {0.0, 0.0, 0.0};
@@ -379,10 +392,17 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
         claw.openClaw();
 
+        sleep(1000);
+        //                            ____________________________________________
+        // ==========================|            RETURNING TO SUBSTATION         |
+        //                            --------------------------------------------
+
         // Reset for cone pickup
         linearSlides.extendTo(linearSlides.STARTING_EXTENDER_LENGTH, telemetry);
         linearSlides.pivotTo(0, telemetry);
         goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians());
+
+        sleep(1000);
 
         // Go back to substation location
         // Go to center of square
@@ -408,5 +428,48 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI * 7 / 4);
         }
     }
+
+    // Cycle from medium junction across from left
+    private int numberOfCycles = 0;
+    public static double clawPivotInput = 0.0;
+    public void cycleFromLeftMediumJunction() { // Make sure to remove scoring on terminal; CALL BEFORE PARKING
+        numberOfCycles++;
+        double[] manipulatorInputs = new double[3];
+        claw.openClaw();
+
+        // Position robot for picking up cone
+        goToPosition(getStartingPosition().x + (23.50 * 2) + 11.75, getStartingPosition().y, getStartingRotation());
+        goToPosition(getStartingPosition().x + (23.50 * 2) + 11.75, getStartingPosition().y, Math.PI);
+        goToPosition(getStartingPosition().x - 18.75, getStartingPosition().y, Math.PI);
+        claw.closeClaw();
+        sleep(1000);
+
+        // Move to scoring position for scoring backwards
+        manipulatorInputs = GridSystem.pointAtJunction((23.5 * 2) - (DEFAULT_SCORING_RADIUS * Math.cos(Math.PI / 4)), (23.5 * 2) + (DEFAULT_SCORING_RADIUS * Math.sin(Math.PI / 4)), odometry.getRotationRadians());
+    }
+
+    public void rotateArmTo(double angle, Telemetry telemetry){
+        linearSlides.pivotTo(angle, telemetry);
+
+        // Needs something to get only 0.1, 0.2, 0.3, etc...
+
+//        clawPivotInput = (- slides.seesawAngle / Math.PI + 1) - ((- slides.seesawAngle / Math.PI + 1) % 0.01);
+
+        clawPivotInput = - linearSlides.seesawAngle / Math.PI;
+        // -1.0 (undefined position) if at 180˚, 0.0 if at 0˚ (backwards)
+        clawPivotInput += 1;
+        // 0.0 (backwards) if at 180˚, 1.0 (forwards) if at 0˚
+
+        // Servo only takes inputs in intervals of 0.1
+        clawPivotInput = (int) (clawPivotInput * 600.0);
+        clawPivotInput /= 1000.0;
+
+        claw.rotateClaw(clawPivotInput);
+        // Upper may be 0.8 ish, NOT 1.0
+        //  0.0  to  1.0
+        // (back) (forward)
+    }
 }
+
+
 

@@ -171,7 +171,13 @@ public class LinearSlides {
 
     public void pivotBy(double power) {
 
-        seeSawMotor.setPower(power);
+        if(seesawAngle > (Math.PI / 2) - 0.16){
+            seeSawMotor.setPower(power / 2);
+        }else {
+            seeSawMotor.setPower(power);
+        }
+
+
 
 
 //        seeSawMotor.setTargetPosition((int)(power * 100 + seeSawMotor.getCurrentPosition()));
