@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import static java.lang.Thread.sleep;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.common.Timer;
 import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
+import org.firstinspires.ftc.teamcode.highlevel.GridSystem;
 import org.firstinspires.ftc.teamcode.manipulator.Claw;
 import org.firstinspires.ftc.teamcode.manipulator.LinearSlides;
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
@@ -104,7 +107,7 @@ public class MainTeleOp extends OpMode {
                 previousInputWeight = 1;
             }
             try {
-                Thread.sleep(75);
+                sleep(75);
             } catch (InterruptedException e) {
                 telemetry.addLine(e.toString());
             }
@@ -116,7 +119,7 @@ public class MainTeleOp extends OpMode {
                 previousInputWeight = 0;
             }
             try {
-                Thread.sleep(75);
+                sleep(75);
             } catch (InterruptedException e) {
             }
         }
@@ -355,8 +358,97 @@ public class MainTeleOp extends OpMode {
         // (back) (forward)
     }
 
-    // Cycling
+    // Cycles once to closest tall junction to substation
+    public void cycleToClosestTallJunction(){
+        // Grab cone
+        claw.openClaw();
+        slides.pivotTo(0, telemetry);
+        slides.extendTo(34 - (7.5 - 3.5), telemetry);
+        claw.closeClaw();
+
+        // Raise to position
+        slides.pivotTo(Math.PI - Math.atan((37.5 - slides.ROOT_HEIGHT) / (7.5 - 3.5)), telemetry);
+        slides.extendTo(Math.sqrt((37.5 - slides.ROOT_HEIGHT) * (37.5 - slides.ROOT_HEIGHT)  + (7.5 - 3.5) * (7.5 - 3.5)), telemetry);
+        while((!slides.seeSawMotor.isBusy() && !slides.extensionMotor.isBusy() && !slides.extensionMotor2.isBusy())){
+            claw.openClaw();
+        }
+    }
+
+    // Cycles once to specified junction idicies
+    private static double DEFAULT_SCORING_RADIUS = 21.0;
+    public void cycle(int targetRow, int targetColumn){ // Row number, column number
+        // Assumes starting at at substation
+        // Move to center of square
+        goToPosition(odometry.getXCoordinate() - (odometry.getXCoordinate() % 23.50) + 11.75,
+                odometry.getYCoordinate() - (odometry.getYCoordinate() % 23.50) + 11.75, odometry.getRotationRadians());
+
+        // Go to x coordinate
+        if((targetColumn + 1) * 23.50 >= odometry.getXCoordinate()){ // Case: junction should be right of robot
+            goToPosition((targetColumn + 1) * 23.50 - (DEFAULT_SCORING_RADIUS * Math.cos(Math.PI / 4)),
+                    odometry.getYCoordinate(), odometry.getRotationRadians());
+
+        }else if((targetColumn + 1) * 23.50 < odometry.getXCoordinate()){ // Case: junction should be left of robot
+            goToPosition((targetColumn + 1) * 23.50 + (DEFAULT_SCORING_RADIUS * Math.cos(Math.PI / 4)),
+                    odometry.getYCoordinate(), odometry.getRotationRadians());
+        }
+
+        // Go to y coordinate
+        if((targetRow + 1) * 23.50 >= odometry.getYCoordinate()){ // Case: junction should be in front of robot
+            goToPosition(odometry.getXCoordinate(), (targetColumn + 1) * 23.50 - (DEFAULT_SCORING_RADIUS * Math.cos(Math.PI / 4)),
+                    odometry.getRotationRadians());
+
+        }else if((targetRow + 1) * 23.50 < odometry.getYCoordinate()){ // Case: junction should be behind robot
+            goToPosition(odometry.getXCoordinate(), (targetColumn + 1) * 23.50 + (DEFAULT_SCORING_RADIUS * Math.cos(Math.PI / 4)),
+                    odometry.getRotationRadians());
+        }
+
+        // Turn, pivot manipulator, and extend manipulator
+        double [] manipulatorInputs = {0.0, 0.0, 0.0};
+        if((targetRow + 1) * 23.50 >= odometry.getYCoordinate() &&
+                (targetColumn + 1) * 23.50 >= odometry.getXCoordinate()){ // Top right
+            // Aimbot with 45˚
+            manipulatorInputs = GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI / 4);
+            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(),
+                    manipulatorInputs[0]);
+            // Rotate to angle
+            slides.pivotTo(manipulatorInputs[1], telemetry);
+            slides.extendTo(manipulatorInputs[2], telemetry);
 
 
+        }else if((targetRow + 1) * 23.50 >= odometry.getYCoordinate() &&
+                (targetColumn + 1) * 23.50 < odometry.getXCoordinate()){ // Top left
+            // Aimbot with 135˚
+            manipulatorInputs = GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI * 3 / 4);
+            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(),
+                    manipulatorInputs[0]);
+            // Rotate to angle
+            slides.pivotTo(manipulatorInputs[1], telemetry);
+            slides.extendTo(manipulatorInputs[2], telemetry);
 
+        }else if((targetRow + 1) * 23.50 < odometry.getYCoordinate() &&
+                (targetColumn + 1) * 23.50 < odometry.getXCoordinate()){ // Bottom left
+            // Aimbot with 225˚
+            manipulatorInputs = GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI * 5 / 4);
+            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(),
+                    manipulatorInputs[0]);
+            // Rotate to angle
+            slides.pivotTo(manipulatorInputs[1], telemetry);
+            slides.extendTo(manipulatorInputs[2], telemetry);
+
+        }else if((targetRow + 1) * 23.50 < odometry.getYCoordinate() &&
+                (targetColumn + 1) * 23.50 >= odometry.getXCoordinate()){ // Bottom right
+            // Aimbot with 315˚
+            manipulatorInputs = GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI * 7 / 4);
+            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(),
+                    manipulatorInputs[0]);
+            // Rotate to angle
+            slides.pivotTo(manipulatorInputs[1], telemetry);
+            slides.extendTo(manipulatorInputs[2], telemetry);
+        }
+
+        claw.openClaw();
+
+        // Go back to substation location
+
+    }
 }
