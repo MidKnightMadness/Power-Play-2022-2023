@@ -110,108 +110,6 @@ public class LinearSlides {
     }
 
     private static final double MANIPULATOR_BACKSET_DISTANCE = 3.5;
-    public void goPointAt(double [] xyzDisplacement){
-
-//        // Make sure to input 3-array for targeted scoring position!!!!!!!! Will have to get angle of robot once it gets to junction, then correct a second time. This is not a one-time algorithm!!!
-//        // Actually does everything at the same time, will need to edit based on extension speed (want to minimize extended time for reliability purposes)
-//        displacement = xyzDisplacement; // Screw it I don't wanna run the method over and over haha
-//        //  Note: displacement from pivot point of linear slide
-//        // Move turntable, note that this will turn the turntable 180˚ back if target is behind the pivot, will need to account for ability to swing beyond 90˚ vertical (behind) later
-//        if(displacement[0] <= 0){ // Getting displacement angle
-//            angleDisplacement = Math.PI + Math.atan(displacement[1] / displacement[0]); // Might wanna use taylor series to approximate atan later since calculation times are gonna be annoying
-//        }else{
-//            angleDisplacement = Math.atan(displacement[1] / displacement[0]);
-//        }
-
-
-//        // Make sure to input 3-array for targeted scoring position!!!!!!!! Will have to get angle of robot once it gets to junction, then correct a second time. This is not a one-time algorithm!!!
-//        // Actually does everything at the same time, will need to edit based on extension speed (want to minimize extended time for reliability purposes)
-//        displacement = xyzDisplacement; // Screw it I don't wanna run the method over and over haha
-//        //  Note: displacement from pivot point of linear slide
-//        // Move turntable, note that this will turn the turntable 180˚ back if target is behind the pivot, will need to account for ability to swing beyond 90˚ vertical (behind) later
-//        if(displacement[0] <= 0){ // Getting displacement angle
-//            angleDisplacement = Math.PI + Math.atan(displacement[1] / displacement[0]); // Might wanna use taylor series to approximate atan later since calculation times are gonna be annoying
-//        }else{
-//            angleDisplacement = Math.atan(displacement[1] / displacement[0]);
-//        }
-//
-
-
-//        if(!(mecanumDrive == null)){ // For autonomous
-//            while(!(Math.abs(angleDisplacement - Autonomous.odometry.getRotationRadians()) < 0.1)){
-//                if(angleDisplacement >= Autonomous.odometry.getRotationRadians()){
-
-////                    mecanumDrive.fieldOrientatedDrive(0.0, 0.0, 0.8, mecanumDrive.odometry.getRotationRadians());
-//                }else{
-////                    mecanumDrive.fieldOrientatedDrive(0.0, 0.0, -0.8);
-
-//                    mecanumDrive.fieldOrientatedDrive(0.0, 0.0, 0.8, mecanumDrive.odometry.getRotationRadians());
-//                }else{
-//                    mecanumDrive.fieldOrientatedDrive(0.0, 0.0, -0.8);
-
-//                }
-//
-//                Autonomous.odometry.updatePosition();
-//            }
-//
-//        }else{
-//            while(!(Math.abs(angleDisplacement - MainTeleOp.odometry.getRotationRadians()) < 0.1)){
-//                if(angleDisplacement >= MainTeleOp.odometry.getRotationRadians()){
-
-////                    MainTeleOp.mecanum.fieldOrientatedDrive(0.0, 0.0, 0.8);
-//                }else{
-////                    MainTeleOp.mecanum.fieldOrientatedDrive(0.0, 0.0, -0.8);
-
-//                    MainTeleOp.mecanum.fieldOrientatedDrive(0.0, 0.0, 0.8);
-//                }else{
-//                    MainTeleOp.mecanum.fieldOrientatedDrive(0.0, 0.0, -0.8);
-
-//                }
-//
-//                MainTeleOp.odometry.updatePosition();
-//            }
-//        }
-
-
-        // Pivot seesaw up / down to desired position. Due to the behavior described in the previous step, this step (for now) doesn't have to account for swinging beyond 90˚ vertical
-        /*
-          /|
-         / |
-        /\_| <- Angle
-         */
-
-
-//
-//        // Pivot seesaw up / down to desired position. Due to the behavior described in the previous step, this step (for now) doesn't have to account for swinging beyond 90˚ vertical
-//        /*
-//          /|
-//         / |
-//        /\_| <- Angle
-//         */
-//
-
-//        if(mecanumDrive == null){ // Case teleOp
-//            if(Math.abs(angleDisplacement - MainTeleOp.odometry.getRotationRadians()) > Math.PI){ // Case backwards scoring
-//                this.pivotTo(Math.PI + Math.atan(displacement[3] /
-//                        Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + displacement[0]*displacement[0] + displacement[1]*displacement[1])));
-//            }else{
-//                this.pivotTo(Math.atan(displacement[3] /
-//                        Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + displacement[0]*displacement[0] + displacement[1]*displacement[1])));
-//            }
-//        }else{
-//            if(Math.abs(angleDisplacement - Autonomous.odometry.getRotationRadians()) > Math.PI){ // Case backwards scoring
-//                this.pivotTo(Math.PI + Math.atan(displacement[3] /
-//                        Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + displacement[0]*displacement[0] + displacement[1]*displacement[1])));
-//            }else{
-//                this.pivotTo(Math.atan(displacement[3] /
-//                        Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + displacement[0]*displacement[0] + displacement[1]*displacement[1])));
-//            }
-//        }
-
-        // Extend
-//        this.extendTo(Math.sqrt(MANIPULATOR_BACKSET_DISTANCE*MANIPULATOR_BACKSET_DISTANCE + // Added to accomodate backset manipulator
-//                displacement[0]*displacement[0] + displacement[1]*displacement[1] + displacement[2]*displacement[2]));
-    }
 
     public void extendTo(double inches, Telemetry telemetry){ // Inches
         if(true) {
@@ -259,23 +157,17 @@ public class LinearSlides {
 //        }
     }
 
-    public void pivotTo(double angleRadians, Telemetry telemetry) { // Radians, zero is horizontal
+    private int ticksDifference = 0;
 
-        telemetry.addData("\nTarget angle", angleRadians);
-        telemetry.addData("Target pivot ticks", seeSawMotor.getTargetPosition());
+    public void pivotTo(double targetAngle, Telemetry telemetry) { // Radians, zero is horizontal
+
+        telemetry.addData("\nTarget angle", targetAngle);
+        telemetry.addData("Target pivot ticks", (int) (targetAngle / SEESAW_OVERALL_RATIO));
         telemetry.addData("Pivot current ticks", seeSawMotor.getCurrentPosition());
 
-        seesawAngle = seeSawMotor.getCurrentPosition() * SEESAW_OVERALL_RATIO;
-//        if(seesawAngle < Math.PI / 2 && seesawAngle > 0.0) {
-            seeSawMotor.setTargetPosition((int) (angleRadians / SEESAW_OVERALL_RATIO));
-            seeSawMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        ticksDifference = (int) ((targetAngle - seesawAngle) / SEESAW_OVERALL_RATIO);
+        seeSawMotor.setPower(ticksDifference *.25 / Math.max(Math.abs(ticksDifference), 500));
 
-            if(seeSawMotor.getTargetPosition() > seeSawMotor.getCurrentPosition()){
-                seeSawMotor.setPower(.5);
-            }else{
-                seeSawMotor.setPower(-.5);
-            }
-//        }
     }
 
     public void pivotBy(double power) {
@@ -289,11 +181,17 @@ public class LinearSlides {
 
     }
 
+    private double previousAngle = 0.0;
+
     public void update(){ // Run this as much as applicable
+        previousAngle = seesawAngle;
+
         seesawExtensionLength = ((.5 * extensionMotor.getCurrentPosition() + .5 * extensionMotor2.getCurrentPosition()) * EXTENDER_OVERALL_RATIO) + STARTING_EXTENDER_LENGTH;
-//        if(seesawAngle > -1.0){
+
+        if((seesawAngle < 0.0 && (seeSawMotor.getCurrentPosition() * SEESAW_OVERALL_RATIO) + STARTING_ANGLE > previousAngle) ||
+        seesawAngle > 0.0){
             seesawAngle = (seeSawMotor.getCurrentPosition() * SEESAW_OVERALL_RATIO) + STARTING_ANGLE;
-//        }
+        }
 
 //        manipulatorPosition[0] = seesawExtensionLength * Math.cos(Master.turntableAngle) * Math.cos(seesawAngle);
 //        manipulatorPosition[1] = seesawExtensionLength * Math.sin(Master.turntableAngle) * Math.cos(seesawAngle);

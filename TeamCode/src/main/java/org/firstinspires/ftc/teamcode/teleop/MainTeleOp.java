@@ -77,6 +77,10 @@ public class MainTeleOp extends OpMode {
         odometry = new Odometry(hardwareMap, new Vector2(0, 0), Math.PI / 2);
         claw = new Claw(hardwareMap);
         slides = new LinearSlides(hardwareMap);
+
+        // Taking manipulator off of support
+//        rotateArmTo(Math.PI / 4, telemetry);
+//        rotateArmTo(0, telemetry);
     }
 
     double time;
@@ -159,7 +163,7 @@ public class MainTeleOp extends OpMode {
 
 
         // SEESAW
-        rotateArm(-gamepad2.left_stick_y);
+        rotateArm(gamepad2.left_stick_y);
 
 
 
@@ -189,28 +193,6 @@ public class MainTeleOp extends OpMode {
 //            claw.rotateClaw(1);
 //        }
 
-        // Adjusting angle target
-//        if(gamepad1.left_trigger >= 0.5){ // Adjsting angle
-//            if(gamepad1.square){
-//                targetAngle -= 0.001;
-//            }else if(gamepad1.circle){
-//                targetAngle += 0.001;
-//            }
-//        }
-
-//        if (gamepad1.triangle) {
-//            while(Math.abs(pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[0]) - Math.abs(odometry.getRotationRadians()) > 0.08){ // Not at aimbot angle
-//                if(pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[0] > odometry.getRotationRadians()){
-//                    mecanum.drive(0.0, 0.0, 0.3);
-//                }else{
-//                    mecanum.drive(0.0, 0.0, 0.3);
-//                }
-//
-//                if(gamepad1.left_trigger > 1.0){
-//                    break;
-//                }
-//            }
-//        }
 
         // Adjusting extension length and angle
         if(gamepad2.left_trigger > 0.5){
@@ -351,8 +333,8 @@ public class MainTeleOp extends OpMode {
         // (back) (forward)
     }
 
-    public void rotateArmTo(double power, Telemetry telemetry){
-        slides.pivotTo(power, telemetry);
+    public void rotateArmTo(double angle, Telemetry telemetry){
+        slides.pivotTo(angle, telemetry);
 
         // Needs something to get only 0.1, 0.2, 0.3, etc...
 
@@ -372,5 +354,9 @@ public class MainTeleOp extends OpMode {
         //  0.0  to  1.0
         // (back) (forward)
     }
+
+    // Cycling
+
+
 
 }
