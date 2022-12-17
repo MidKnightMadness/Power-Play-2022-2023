@@ -101,34 +101,28 @@ public class MainTeleOp extends OpMode {
             odometry.resetEncoders();
         }
 
-        if (gamepad1.a || gamepad1.cross) {
-            previousInputWeight += 0.01;
-            if (previousInputWeight > 1) {
-                previousInputWeight = 1;
-            }
-            try {
-                sleep(75);
-            } catch (InterruptedException e) {
-                telemetry.addLine(e.toString());
-            }
-        }
+//        if (gamepad1.a || gamepad1.cross) {
+//            previousInputWeight += 0.01;
+//            if (previousInputWeight > 1) {
+//                previousInputWeight = 1;
+//            }
+//            try {
+//                sleep(75);
+//            } catch (InterruptedException e) {
+//                telemetry.addLine(e.toString());
+//            }
+//        }
 
-        if (gamepad1.b || gamepad1.circle) {
-            previousInputWeight -= 0.01;
-            if (previousInputWeight < 0) {
-                previousInputWeight = 0;
-            }
-            try {
-                sleep(75);
-            } catch (InterruptedException e) {
-            }
-        }
-
-        currentInputs[0] = gamepad1.left_stick_x * previousInputWeight + lastInputs[0] * (1 - previousInputWeight);
-        currentInputs[1] = gamepad1.left_stick_y * previousInputWeight + lastInputs[1] * (1 - previousInputWeight);
-
-        lastInputs[0] = currentInputs[0];
-        lastInputs[1] = currentInputs[1];
+//        if (gamepad1.b || gamepad1.circle) {
+//            previousInputWeight -= 0.01;
+//            if (previousInputWeight < 0) {
+//                previousInputWeight = 0;
+//            }
+//            try {
+//                sleep(75);
+//            } catch (InterruptedException e) {
+//            }
+//        }
 
         powerMultiplier = staticPowerMultiplier * (1 - gamepad1.right_trigger * 0.8); // slows the driving as trigger is pressed
 
@@ -143,18 +137,9 @@ public class MainTeleOp extends OpMode {
             mecanum.fieldOrientatedDrive(gamepad1.left_stick_x, -gamepad1.left_stick_y,
                     (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier, odometry.getRotationRadians());
 
-//            if (gamepad1.dpad_up) { mecanum.fieldOrientatedDrive(0, -powerMultiplier, 0); }
-//            if (gamepad1.dpad_down) { mecanum.fieldOrientatedDrive(0, powerMultiplier, 0); }
-//            if (gamepad1.dpad_right) { mecanum.fieldOrientatedDrive(powerMultiplier, 0, 0); }
-//            if (gamepad1.dpad_left) { mecanum.fieldOrientatedDrive(-powerMultiplier, 0, 0); }
         } else {
             mecanum.drive(currentInputs[0] * powerMultiplier, -currentInputs[1] * powerMultiplier,
                     (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier); // normal drive
-
-//            if (gamepad1.dpad_up) { mecanum.drive(0, -powerMultiplier, 0); }
-//            if (gamepad1.dpad_down) { mecanum.drive(0, powerMultiplier, 0); }
-//            if (gamepad1.dpad_right) { mecanum.drive(powerMultiplier, 0, 0); }
-//            if (gamepad1.dpad_left) { mecanum.drive(-powerMultiplier, 0, 0); }
         }
 
 
@@ -377,6 +362,13 @@ public class MainTeleOp extends OpMode {
     // Cycles once to specified junction idicies
     private static double DEFAULT_SCORING_RADIUS = 21.0;
     public void cycle(int targetRow, int targetColumn){ // Row number, column number
+        // Cone pickup
+        claw.openClaw();
+        claw.closeClaw();
+
+        // Rotate
+        goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians());
+
         // Assumes starting at at substation
         // Move to center of square
         goToPosition(odometry.getXCoordinate() - (odometry.getXCoordinate() % 23.50) + 11.75,
@@ -448,7 +440,33 @@ public class MainTeleOp extends OpMode {
 
         claw.openClaw();
 
-        // Go back to substation location
+        // Reset for cone pickup
+        slides.extendTo(slides.STARTING_EXTENDER_LENGTH, telemetry);
+        slides.pivotTo(0, telemetry);
+        goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians());
 
+        // Go back to substation location
+        // Go to center of square
+        goToPosition(odometry.getXCoordinate() - (odometry.getXCoordinate() % 23.50) + 11.75,
+                odometry.getYCoordinate() - (odometry.getYCoordinate() % 23.50) + 11.75, odometry.getRotationRadians());
+
+        // x coordinates
+        if(23.50 * 3 <= odometry.getXCoordinate()){ // Case: needs to go left
+            goToPosition((23.50 * 3) + 11.75, odometry.getYCoordinate(), odometry.getRotationRadians());
+
+        }else if(23.50 * 3 > odometry.getXCoordinate()){ // Case: needs to go right
+            goToPosition((23.50 * 3) - 11.75, odometry.getYCoordinate(), odometry.getRotationRadians());
+        }
+
+        // y coordinates
+        goToPosition(odometry.getXCoordinate(), 23.50, odometry.getRotationRadians());
+
+        // Rotate
+        if(23.50 * 3 <= odometry.getXCoordinate()){ // Case: needs to go left
+            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI * 5 / 4);
+
+        }else if(23.50 * 3 > odometry.getXCoordinate()){ // Case: needs to go right
+            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI * 7 / 4);
+        }
     }
 }
