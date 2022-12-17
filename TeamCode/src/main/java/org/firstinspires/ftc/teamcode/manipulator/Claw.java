@@ -34,7 +34,7 @@ public class Claw {
         servo.scaleRange(0.0, 1.0);
         rotationServo.scaleRange(0.0, 1.0);
 
-        rotationServo.setPosition(0.0);
+//        rotationServo.setPosition(0.0);
 
 //        rotationServo2 = hardwareMap.get(Servo.class, "CP2");
 //        rotationServo2.setDirection(Servo.Direction.REVERSE);

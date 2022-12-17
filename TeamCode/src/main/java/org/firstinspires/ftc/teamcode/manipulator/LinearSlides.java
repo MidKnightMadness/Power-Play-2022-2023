@@ -38,7 +38,7 @@ public class LinearSlides {
     // Rotation
     private static final double SEESAW_MOTOR_RATIO = 100; // 60:1 or 40:1 motor?
     public static final double SEESAW_OVERALL_RATIO = Math.PI / (2 * 1400); // Angle per tick
-    private static final double STARTING_ANGLE = 41.59285714285714 * Math.PI / 180;// Of the Manipulator, factor in end-effector's center (cone center), in inches
+    private static final double STARTING_ANGLE = 0; //41.59285714285714 * Math.PI / 180; // Of the Manipulator, factor in end-effector's center (cone center), in inches
     // Extension
     private static final double EXTENDER_MOTOR_RATIO = 20; // 20:1 or 40:1 motor?
     private static final double EXTENDER_WINCH_RADIUS = 9.4 / 2;
@@ -72,7 +72,7 @@ public class LinearSlides {
         seeSawMotor.setDirection(DcMotor.Direction.FORWARD); // set direction, this was made for 1 gear transfer from drive to axle
         seeSawMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // set motor mode
         seeSawMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER); // Run to posi  tion?
-        seeSawMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); // set zero power behavior
+//        seeSawMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); // set zero power behavior
 
         // Extension Motor specifics need to be edited ig
         extensionMotor.setDirection(DcMotor.Direction.REVERSE); // set direction, probably need to change
@@ -111,49 +111,36 @@ public class LinearSlides {
     private static final double MANIPULATOR_BACKSET_DISTANCE = 3.5;
 
     public void extendTo(double inches, Telemetry telemetry){ // Inches
-        if(true) {
 
-            telemetry.addData("Extenders at position", Math.abs((inches - STARTING_EXTENDER_LENGTH) - seesawExtensionLength) > .1);
-            telemetry.addData("Extension Motor 1 Target ticks", extensionMotor.getTargetPosition());
-            telemetry.addData("Extension Motor 2 Target ticks", extensionMotor2.getTargetPosition());
+        telemetry.addData("Extenders at position", Math.abs((inches - STARTING_EXTENDER_LENGTH) - seesawExtensionLength) > .1);
+        //telemetry.addData("Extension Motor 1 Target ticks", extensionMotor.getTargetPosition());
+        //telemetry.addData("Extension Motor 2 Target ticks", extensionMotor2.getTargetPosition());
+        telemetry.addData("Extension Motor 1 ticks", extensionMotor.getCurrentPosition());
+        //telemetry.addData("Extension Motor 2 ticks", extensionMotor2.getCurrentPosition());
+        double distance1 = (inches - STARTING_EXTENDER_LENGTH)*1.25 / EXTENDER_OVERALL_RATIO-extensionMotor.getCurrentPosition();
+        //double distance2 = (inches - STARTING_EXTENDER_LENGTH)*1.25 / EXTENDER_OVERALL_RATIO-extensionMotor2.getCurrentPosition();
+        double power = distance1/Math.max(100, Math.abs(distance1));
+        //double power2 = distance1*.5/Math.max(100, Math.abs(distance2));
 
-            extensionMotor.setTargetPosition((int) (( inches - STARTING_EXTENDER_LENGTH) / EXTENDER_OVERALL_RATIO));
-            extensionMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //extensionMotor.setTargetPosition((int) (( inches - STARTING_EXTENDER_LENGTH)*1.25 / EXTENDER_OVERALL_RATIO));
+        //extensionMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //            extensionMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-            extensionMotor2.setTargetPosition(extensionMotor.getTargetPosition());
-            extensionMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //extensionMotor2.setTargetPosition(extensionMotor.getTargetPosition());
+        //extensionMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //            extensionMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
-            extensionMotor.setPower(0.5);
-            extensionMotor2.setPower(-0.5);
-        }
+        extensionMotor.setPower(power);
+        extensionMotor2.setPower(power);
     }
 
     public void extendBy(double power){
-//        if(extensionMotor.getCurrentPosition() <= 0) {
-//            extensionMotor.setVelocity(power * 100, AngleUnit.RADIANS);
-//            extensionMotor2.setVelocity(- power * 100, AngleUnit.RADIANS);
-//            if(extensionMotor.getCurrentPosition() > -50 && extensionMotor2.getCurrentPosition() > -50){
-                extensionMotor.setPower(power);
-
-                extensionMotor2.setTargetPosition(extensionMotor.getCurrentPosition());
-                extensionMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                extensionMotor2.setPower(0.5);
-//            }else{
-//                extensionMotor.setPower(0);
-//                extensionMotor2.setPower(0);
-
-//            }
-//                while(extensionMotor.getCurrentPosition() < 0.0 || extensionMotor2.getCurrentPosition() < 0.0){
-//                    extensionMotor.setPower(0.5);
-//                    extensionMotor2.setPower(0.5);
-//                }
-
-//        } else {
-//            extensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        }
+//        extensionMotor2.setTargetPosition(extensionMotor.getCurrentPosition());
+//        extensionMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        extensionMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        extensionMotor.setPower(power * 0.5);
+        extensionMotor2.setPower(power * 0.5);
     }
 
     private int ticksDifference = 0;
@@ -165,14 +152,17 @@ public class LinearSlides {
         telemetry.addData("Pivot current ticks", seeSawMotor.getCurrentPosition());
 
         ticksDifference = (int) ((targetAngle - seesawAngle) / SEESAW_OVERALL_RATIO);
-        seeSawMotor.setPower(ticksDifference *.25 / Math.max(Math.abs(ticksDifference), 500));
+        seeSawMotor.setPower(ticksDifference *.5 / Math.max(Math.abs(ticksDifference), 500));
 
     }
 
     public void pivotBy(double power) {
+        if(Math.abs(power) < 0.1){
+            seeSawMotor.setPower(0.0005 * (seesawExtensionLength / 2) * Math.cos(seesawAngle));
 
-        seeSawMotor.setPower(power);
-
+        }else{
+            seeSawMotor.setPower(power);
+        }
 
 //        seeSawMotor.setTargetPosition((int)(power * 100 + seeSawMotor.getCurrentPosition()));
 //        seeSawMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -187,10 +177,10 @@ public class LinearSlides {
 
         seesawExtensionLength = ((.5 * extensionMotor.getCurrentPosition() + .5 * extensionMotor2.getCurrentPosition()) * EXTENDER_OVERALL_RATIO) + STARTING_EXTENDER_LENGTH;
 
-        if((seesawAngle < 0.0 && (seeSawMotor.getCurrentPosition() * SEESAW_OVERALL_RATIO) + STARTING_ANGLE > previousAngle) ||
-        seesawAngle > 0.0){
+//        if((seesawAngle < -0.5 && (seeSawMotor.getCurrentPosition() * SEESAW_OVERALL_RATIO) + STARTING_ANGLE > previousAngle) ||
+//        seesawAngle > 0.0){
             seesawAngle = (seeSawMotor.getCurrentPosition() * SEESAW_OVERALL_RATIO) + STARTING_ANGLE;
-        }
+//        }
 
 //        manipulatorPosition[0] = seesawExtensionLength * Math.cos(Master.turntableAngle) * Math.cos(seesawAngle);
 //        manipulatorPosition[1] = seesawExtensionLength * Math.sin(Master.turntableAngle) * Math.cos(seesawAngle);

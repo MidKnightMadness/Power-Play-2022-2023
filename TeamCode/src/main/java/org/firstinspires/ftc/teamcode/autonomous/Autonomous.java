@@ -42,10 +42,10 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
     AprilTagDetection tagOfInterest = null;
 
-    LinearSlides linearSlides;
 
     Claw claw;
     GridSystem gridSystem;
+    LinearSlides linearSlides;
 
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
@@ -101,6 +101,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
 
         mecanum = new MecanumDrive(hardwareMap);
+        linearSlides = new LinearSlides(hardwareMap);
         odometry = new Odometry(hardwareMap, getStartingPosition(), getStartingRotation());
 
         camera.setPipeline(aprilTagDetectionPipeline);
@@ -163,33 +164,33 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
         // SCORE PRE-LOAD
         // score at terminal
-//        if (getStartingPos() == 2) {
-//            goToPosition(getStartingPosition().x + 20, getStartingPosition().y + 1, getStartingRotation());
-//            goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation());
-//        } else if (getStartingPos() == 3) {
-//            goToPosition(getStartingPosition().x - 20, getStartingPosition().y + 1, getStartingRotation());
-//            goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation());
-//        }
+        if (getStartingPos() == 2) {
+            goToPosition(getStartingPosition().x + 20, getStartingPosition().y + 1, getStartingRotation());
+            goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation());
+        } else if (getStartingPos() == 3) {
+            goToPosition(getStartingPosition().x - 20, getStartingPosition().y + 1, getStartingRotation());
+            goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation());
+        }
 
         // score at high junction
-        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
-        sleep(3000);
-        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[0]);
-        sleep(3000);
-
-        linearSlides.pivotTo(GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[1], telemetry);
-        sleep(5000);
-        linearSlides.pivotTo(GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[2], telemetry);
-        sleep(5000);
-        claw.openClaw();
-        sleep(1000);
-        claw.closeClaw();
-
-        sleep(5000);
-        linearSlides.pivotTo(0, telemetry);
-        sleep(3000);
-        linearSlides.extendTo(0, telemetry);
-        sleep(5000);
+//        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
+//        sleep(3000);
+//        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[0]);
+//        sleep(3000);
+//
+//        linearSlides.pivotTo(GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[1], telemetry);
+//        sleep(5000);
+//        linearSlides.pivotTo(GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[2], telemetry);
+//        sleep(5000);
+//        claw.openClaw();
+//        sleep(1000);
+//        claw.closeClaw();
+//
+//        sleep(5000);
+//        linearSlides.pivotTo(0, telemetry);
+//        sleep(3000);
+//        linearSlides.extendTo(0, telemetry);
+//        sleep(5000);
 
 //        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
 
@@ -214,6 +215,9 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 //            }
 
 //                goToSignalLocation((int)odometry.getXCoordinate(), (int) odometry.getYCoordinate(), (int) signalLocationX, (int) signalLocationY);
+                rotateTo(.3);
+                sleep(2000);
+                rotateTo(-.5);
                 requestOpModeStop();
 //            } else {
 //                try {
@@ -271,6 +275,13 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         goToPosition(centerX, centerY, 0);
         goToPosition(centerX, targetY, 0);
         goToPosition(targetX, targetY, 0);
+    }
+    void rotateTo(double angle) {
+        while (linearSlides.seesawAngle<angle) {
+            linearSlides.pivotTo(angle, telemetry);
+            linearSlides.update();
+            telemetry.update();
+        }
     }
 
     void goToPosition(double targetX, double targetY, double targetAngle) {
