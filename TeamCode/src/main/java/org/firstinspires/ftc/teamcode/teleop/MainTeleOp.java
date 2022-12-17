@@ -26,8 +26,8 @@ import org.firstinspires.ftc.teamcode.odometry.Vector2;
  * 2    LSEM2   NeveRest 20 Gearmotor
  * Servos:
  * 0    Claw    Servo
- * 1    CP      CRServo
- * 2    CP2     CRServo
+ * 1    CP      Servo
+ * 2    CP2     Servo
  */
 
 /*
