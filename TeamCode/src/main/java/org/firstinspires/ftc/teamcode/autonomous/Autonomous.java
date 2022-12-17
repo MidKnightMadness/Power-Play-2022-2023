@@ -163,31 +163,35 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
         // SCORE PRE-LOAD
         // score at terminal
-        if (getStartingPos() == 2) {
-            goToPosition(getStartingPosition().x + 20, getStartingPosition().y + 1, getStartingRotation());
-            goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation());
-        } else if (getStartingPos() == 3) {
-            goToPosition(getStartingPosition().x - 20, getStartingPosition().y + 1, getStartingRotation());
-            goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation());
-        }
+//        if (getStartingPos() == 2) {
+//            goToPosition(getStartingPosition().x + 20, getStartingPosition().y + 1, getStartingRotation());
+//            goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation());
+//        } else if (getStartingPos() == 3) {
+//            goToPosition(getStartingPosition().x - 20, getStartingPosition().y + 1, getStartingRotation());
+//            goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation());
+//        }
 
         // score at high junction
         goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
         sleep(3000);
         goToPosition(getStartingPosition().x, getStartingPosition().y + 51, GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[0]);
         sleep(3000);
-//        linearSlides.pivotTo(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[1]);
-//        sleep(5000);
-//        linearSlides.extendTo(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[2]);
-//        sleep(5000);
-//        claw.openClaw();
-//        sleep(1000);
-//        claw.closeClaw();
-//        sleep(5000);
-//        linearSlides.extendTo(0);
-//        sleep(5000);
-//        linearSlides.pivotTo(0);
-        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
+
+        linearSlides.pivotTo(GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[1], telemetry);
+        sleep(5000);
+        linearSlides.pivotTo(GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[2], telemetry);
+        sleep(5000);
+        claw.openClaw();
+        sleep(1000);
+        claw.closeClaw();
+
+        sleep(5000);
+        linearSlides.pivotTo(0, telemetry);
+        sleep(3000);
+        linearSlides.extendTo(0, telemetry);
+        sleep(5000);
+
+//        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
 
 
 
@@ -294,5 +298,115 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         }
     }
 
+    // Cycles once to specified junction idicies
+    private static double DEFAULT_SCORING_RADIUS = 21.0;
+    public void cycle(int targetRow, int targetColumn){ // Indices from
+        // Cone pickup
+        claw.openClaw();
+        claw.closeClaw();
+
+        // Rotate
+        goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI / 2);
+
+        // Assumes starting at at substation
+        // Move to center of square
+        goToPosition(odometry.getXCoordinate() - (odometry.getXCoordinate() % 23.50) + 11.75,
+                odometry.getYCoordinate() - (odometry.getYCoordinate() % 23.50) + 11.75, odometry.getRotationRadians());
+
+        // Go to x coordinate
+        if((targetColumn + 1) * 23.50 >= odometry.getXCoordinate()){ // Case: junction should be right of robot
+            goToPosition((targetColumn + 1) * 23.50 - (DEFAULT_SCORING_RADIUS * Math.cos(Math.PI / 4)),
+                    odometry.getYCoordinate(), odometry.getRotationRadians());
+
+        }else if((targetColumn + 1) * 23.50 < odometry.getXCoordinate()){ // Case: junction should be left of robot
+            goToPosition((targetColumn + 1) * 23.50 + (DEFAULT_SCORING_RADIUS * Math.cos(Math.PI / 4)),
+                    odometry.getYCoordinate(), odometry.getRotationRadians());
+        }
+
+        // Go to y coordinate
+        if((targetRow + 1) * 23.50 >= odometry.getYCoordinate()){ // Case: junction should be in front of robot
+            goToPosition(odometry.getXCoordinate(), (targetColumn + 1) * 23.50 - (DEFAULT_SCORING_RADIUS * Math.cos(Math.PI / 4)),
+                    odometry.getRotationRadians());
+
+        }else if((targetRow + 1) * 23.50 < odometry.getYCoordinate()){ // Case: junction should be behind robot
+            goToPosition(odometry.getXCoordinate(), (targetColumn + 1) * 23.50 + (DEFAULT_SCORING_RADIUS * Math.cos(Math.PI / 4)),
+                    odometry.getRotationRadians());
+        }
+
+        // Turn, pivot manipulator, and extend manipulator
+        double [] manipulatorInputs = {0.0, 0.0, 0.0};
+        if((targetRow + 1) * 23.50 >= odometry.getYCoordinate() &&
+                (targetColumn + 1) * 23.50 >= odometry.getXCoordinate()){ // Top right
+            // Aimbot with 45˚
+            manipulatorInputs = GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI / 4);
+            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(),
+                    manipulatorInputs[0]);
+            // Rotate to angle
+            linearSlides.pivotTo(manipulatorInputs[1], telemetry);
+            linearSlides.extendTo(manipulatorInputs[2], telemetry);
+
+
+        }else if((targetRow + 1) * 23.50 >= odometry.getYCoordinate() &&
+                (targetColumn + 1) * 23.50 < odometry.getXCoordinate()){ // Top left
+            // Aimbot with 135˚
+            manipulatorInputs = GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI * 3 / 4);
+            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(),
+                    manipulatorInputs[0]);
+            // Rotate to angle
+            linearSlides.pivotTo(manipulatorInputs[1], telemetry);
+            linearSlides.extendTo(manipulatorInputs[2], telemetry);
+
+        }else if((targetRow + 1) * 23.50 < odometry.getYCoordinate() &&
+                (targetColumn + 1) * 23.50 < odometry.getXCoordinate()){ // Bottom left
+            // Aimbot with 225˚
+            manipulatorInputs = GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI * 5 / 4);
+            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(),
+                    manipulatorInputs[0]);
+            // Rotate to angle
+            linearSlides.pivotTo(manipulatorInputs[1], telemetry);
+            linearSlides.extendTo(manipulatorInputs[2], telemetry);
+
+        }else if((targetRow + 1) * 23.50 < odometry.getYCoordinate() &&
+                (targetColumn + 1) * 23.50 >= odometry.getXCoordinate()){ // Bottom right
+            // Aimbot with 315˚
+            manipulatorInputs = GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI * 7 / 4);
+            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(),
+                    manipulatorInputs[0]);
+            // Rotate to angle
+            linearSlides.pivotTo(manipulatorInputs[1], telemetry);
+            linearSlides.extendTo(manipulatorInputs[2], telemetry);
+        }
+
+        claw.openClaw();
+
+        // Reset for cone pickup
+        linearSlides.extendTo(linearSlides.STARTING_EXTENDER_LENGTH, telemetry);
+        linearSlides.pivotTo(0, telemetry);
+        goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians());
+
+        // Go back to substation location
+        // Go to center of square
+        goToPosition(odometry.getXCoordinate() - (odometry.getXCoordinate() % 23.50) + 11.75,
+                odometry.getYCoordinate() - (odometry.getYCoordinate() % 23.50) + 11.75, odometry.getRotationRadians());
+
+        // x coordinates
+        if(23.50 * 3 <= odometry.getXCoordinate()){ // Case: needs to go left
+            goToPosition((23.50 * 3) + 11.75, odometry.getYCoordinate(), odometry.getRotationRadians());
+
+        }else if(23.50 * 3 > odometry.getXCoordinate()){ // Case: needs to go right
+            goToPosition((23.50 * 3) - 11.75, odometry.getYCoordinate(), odometry.getRotationRadians());
+        }
+
+        // y coordinates
+        goToPosition(odometry.getXCoordinate(), 23.50, odometry.getRotationRadians());
+
+        // Rotate
+        if(23.50 * 3 <= odometry.getXCoordinate()){ // Case: needs to go left
+            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI * 5 / 4);
+
+        }else if(23.50 * 3 > odometry.getXCoordinate()){ // Case: needs to go right
+            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI * 7 / 4);
+        }
+    }
 }
 
