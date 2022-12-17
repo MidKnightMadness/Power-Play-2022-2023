@@ -163,47 +163,31 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
         // SCORE PRE-LOAD
         // score at terminal
-//        if (getStartingPos() == 2) {
-//            goToPosition(getStartingPosition().x + 20, getStartingPosition().y, getStartingRotation());
-////            sleep(3000);
-//            goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation());
-////            sleep(3000);
-//        }
+        if (getStartingPos() == 2) {
+            goToPosition(getStartingPosition().x + 20, getStartingPosition().y + 1, getStartingRotation());
+            goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation());
+        } else if (getStartingPos() == 3) {
+            goToPosition(getStartingPosition().x - 20, getStartingPosition().y + 1, getStartingRotation());
+            goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation());
+        }
 
         // score at high junction
-        if (getStartingPos() == 1) {
-//            goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
-//            goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation() - Math.PI / 4);
-//            linearSlides.pivotTo(1.174268847);
-//            sleep(5000);
-//            linearSlides.extendTo(34.01424334);
-//            sleep(5000);
-//            claw.openClaw();
-//            sleep(5000);
-//            claw.closeClaw();
-//            sleep(5000);
-//            linearSlides.extendTo(0);
-//            sleep(5000);
-//            linearSlides.pivotTo(0);
-//            goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
-        } else if (getStartingPos() == 2) {
-            goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
-            sleep(1000);
-            goToPosition(getStartingPosition().x, getStartingPosition().y + 51, GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[0]);
-            sleep(10000);
-//            linearSlides.pivotTo(1.174268847);
-//            sleep(5000);
-//            linearSlides.extendTo(34.01424334);
-//            sleep(5000);
-//            claw.openClaw();
-//            sleep(5000);
-//            claw.closeClaw();
-//            sleep(5000);
-//            linearSlides.extendTo(0);
-//            sleep(5000);
-//            linearSlides.pivotTo(0);
-            goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
-        }
+        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
+        sleep(3000);
+        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[0]);
+        sleep(3000);
+//        linearSlides.pivotTo(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[1]);
+//        sleep(5000);
+//        linearSlides.extendTo(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[2]);
+//        sleep(5000);
+//        claw.openClaw();
+//        sleep(1000);
+//        claw.closeClaw();
+//        sleep(5000);
+//        linearSlides.extendTo(0);
+//        sleep(5000);
+//        linearSlides.pivotTo(0);
+        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
 
 
 
@@ -214,7 +198,6 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
 //            if (time > 26.35729278100687712039158d) {
                 goToPosition(getStartingPosition().x, getStartingPosition().y + 30, getStartingRotation());
-//                sleep(3000);
                 if(mostRecentDetection == 1) {
                     goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 26, getStartingRotation());
                     goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 32, getStartingRotation());

@@ -123,8 +123,7 @@ public class MainTeleOp extends OpMode {
         lastInputs[0] = currentInputs[0];
         lastInputs[1] = currentInputs[1];
 
-        // slow mode (change driving power multiplier)
-        powerMultiplier = staticPowerMultiplier * (1 - gamepad1.right_trigger * 0.95); // slows the driving as trigger is pressed
+        powerMultiplier = staticPowerMultiplier * (1 - gamepad1.right_trigger * 0.8); // slows the driving as trigger is pressed
 
 
         // DRIVE
@@ -134,7 +133,7 @@ public class MainTeleOp extends OpMode {
         lastPressedDriveMode = gamepad1.left_bumper;
 
         if (driveModeToggle) {
-            mecanum.fieldOrientatedDrive(currentInputs[0] * powerMultiplier, -currentInputs[1] * powerMultiplier,
+            mecanum.fieldOrientatedDrive(gamepad1.left_stick_x, -gamepad1.left_stick_y,
                     (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier, odometry.getRotationRadians());
 
 //            if (gamepad1.dpad_up) { mecanum.fieldOrientatedDrive(0, -powerMultiplier, 0); }
@@ -165,10 +164,10 @@ public class MainTeleOp extends OpMode {
 
 
         // CLAW
-        if (gamepad2.right_bumper && !lastPressedClawOpen) {
+        if ((gamepad2.right_bumper || gamepad1.right_bumper) && !lastPressedClawOpen) {
             clawOpenToggle = !clawOpenToggle;
         }
-        lastPressedClawOpen = gamepad2.right_bumper;
+        lastPressedClawOpen = (gamepad2.right_bumper || gamepad1.right_bumper);
 
         if (clawOpenToggle) {
             claw.openClaw();

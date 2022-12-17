@@ -4,7 +4,7 @@ import org.firstinspires.ftc.teamcode.autonomous.Autonomous;
 import org.firstinspires.ftc.teamcode.odometry.Vector2;
 
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Blue Left")
 public class AutonomousOne extends Autonomous {
     @Override
     public int getStartingPos() {

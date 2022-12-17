@@ -103,26 +103,22 @@ public class MecanumDrive {
     private double drivenX = 0.0;
     private double drivenY = 0.0;
 
-    public void fieldOrientatedDrive(double x, double y, double rotate, double angle) { // Angle is angle of robot relative to horizontal right, 0 ≤ rotate, x, y ≤ 1
+    public void fieldOrientatedDrive(double x, double y, double rotate, double angle) {
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        double gyroRadians = angles.firstAngle * Math.PI/180;
+        double offAngle = Math.acos(x);
 
-            // Rotation of perpendicular unit drive vectors back to basis vectors
-            drivenX = Math.cos(-angle) * x - Math.sin(-angle) * y;
-            drivenY = Math.sin(-angle) * x + Math.cos(-angle) * y;
+        if (x == 0 && y == 0) {
+            drive(0, 0, rotate);
+            return;
+        }
 
-            // Cap values for translation
-            drivenX *= TRANSLATION_LIMIT / (Math.abs(drivenX) + Math.abs(drivenY));
-            drivenY *= TRANSLATION_LIMIT / (Math.abs(drivenX) + Math.abs(drivenY));
+        if (y < 0) { offAngle = -offAngle; }
 
-            // Precise adjustments
-            if(x < TRANSLATION_LIMIT / 2){
-                drivenX /= 2;
-            }
-            if(y < TRANSLATION_LIMIT / 2){
-                drivenY /= 2;
-            }
+        double correctedX = Math.cos(-gyroRadians + offAngle);
+        double correctedY = Math.sin(-gyroRadians + offAngle);
 
-            drive(drivenX, drivenY, ROTATION_LIMIT * rotate / Math.abs(rotate));
-
+        drive(correctedX * .5, correctedY * .5, rotate * .5);
     }
 
     public boolean driveTo(double targetX, double targetY, double targetAngle, double currentX, double currentY, double currentAngle) {
@@ -131,22 +127,23 @@ public class MecanumDrive {
         double rotato = Math.acos(dx / Math.hypot(dy, dx));
         if (dy < 0) rotato = 0 - rotato; //finds angle of approach
 
-        double newx = Math.cos(rotato - currentAngle+Math.PI / 2); //drives without turning to the point
-        double newy = Math.sin(rotato - currentAngle+Math.PI / 2);
-        double spd = Math.min(Math.hypot(dy, dx), 3.0) / 5;
+        double newx = Math.cos(rotato - currentAngle + Math.PI / 2); //drives without turning to the point
+        double newy = Math.sin(rotato - currentAngle + Math.PI / 2);
+        double spd = Math.min(Math.hypot(dy, dx), 4.0) / 5;
         spd *= spd * spd; // Cube, still needed more precise adjustment
 
-        if((dx * dx) + (dy * dy) > 1 || (targetAngle - currentAngle) > Math.PI / 180) {
+        if((dx * dx) + (dy * dy) > 1 || (targetAngle - currentAngle) > Math.PI / 45) {
             drive(newx * spd, newy * spd, -pointTo(targetAngle, currentAngle));
             return false;
         }
+        drive(0, 0, 0);
         return true;
     }
 
 
     public double pointTo(double targetAngle, double currentAngle) { //forward is 0
-        double rotato = (targetAngle - currentAngle + 3.1416) % 6.283 - 3.1416; //reference angle
-        if (rotato < -3.1416) rotato += 6.283;
+        double rotato = (targetAngle - currentAngle + Math.PI) % (Math.PI * 2) - Math.PI; //reference angle
+        if (rotato < -Math.PI) rotato += (Math.PI * 2);
         if (Math.abs(rotato) < .087) return rotato / .087 / 4;
         return rotato / Math.abs(rotato) / 4;
     }
