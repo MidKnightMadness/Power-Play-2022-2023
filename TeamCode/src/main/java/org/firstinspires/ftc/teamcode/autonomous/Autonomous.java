@@ -252,19 +252,6 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
     int upDown = startingPos == 0 || startingPos == 2 ? -1 : 1;
 
-    void pickUpCone() throws InterruptedException {
-        double coneHeight = INITIAL_CONE_ABOVE_GROUND + INCHES_ABOVE_CONE + INCHES_ABOVE_PER_CONE * numberOfConesInStack;
-
-        goToConeStack();
-        linearSlides.goPointAt(new double[] {0, upDown * 12 , coneHeight });
-
-        sleep(1000);
-
-        claw.openClaw();
-        sleep(100);
-        claw.closeClaw();
-    }
-
     void cycle() throws InterruptedException{
         linearSlides.grabFromDefaultScoringPosition();
         sleep(100);
@@ -284,14 +271,6 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         goToPosition((int) coneStackLocation.x, (int) scoringLocation.y, 0);
     }
 
-
-    void scoreCone() {
-        double junctionHeight = junctionHeights[1][2];
-        goToScoringLocation();
-
-        linearSlides.goPointAt(new double[] {upDown * 12, 0, junctionHeight});
-        claw.openClaw();
-    }
 
     void goToSignalLocation(int posX, int posY, int targetX, int targetY) {
         // go to center of square
