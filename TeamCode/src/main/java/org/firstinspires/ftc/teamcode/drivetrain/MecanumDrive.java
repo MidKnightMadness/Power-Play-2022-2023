@@ -117,7 +117,7 @@ public class MecanumDrive {
     }
 
     private final double SENSITIVITY = 0.5;
-    public void fieldOrientatedDrive(double x, double y, double rotate, double rotation) {
+    public void fieldOrientatedDrive(double x, double y, double rotate, double currentRotation) {
         if (x == 0 && y == 0) {
             drive(0, 0, rotate);
             return;
@@ -125,8 +125,8 @@ public class MecanumDrive {
 
         if (x < 0) { offAngle = Math.PI + offAngle; }
 
-        correctedX = Math.cos(-rotation + offAngle);
-        correctedY = Math.sin(-rotation + offAngle);
+        correctedX = Math.cos(-currentRotation + offAngle);
+        correctedY = Math.sin(-currentRotation + offAngle);
 
         drive(correctedX * SENSITIVITY, correctedY * SENSITIVITY, rotate * SENSITIVITY);
     }
@@ -159,7 +159,7 @@ public class MecanumDrive {
             double rotato = (targetAngle-currentAngle+3.1416)%6.283-3.1416;
             if (rotato < -3.1416) rotato += 6.283;
             rotato = Math.cbrt(3.1416/rotato);
-            rotato = 0;
+            // rotato = 0;
                 fieldOrientatedDrive((targetX - currentX) / (20), (targetY - currentY) / (20), (rotato / 8), currentAngle); // 0 on rotational component is temporary, needs correction
 //            }else {
 //                fieldOrientatedDrive((targetX - currentX) / (replacement * 10), (targetY - currentY) / (replacement * 10), (targetAngle - currentAngle) / 360); // 0 on rotational component is temporary, needs correction
@@ -175,6 +175,7 @@ public class MecanumDrive {
 
         return true;
     }
+
     public void pointTo(double x, double y) {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         gyro_degrees = angles.firstAngle;
