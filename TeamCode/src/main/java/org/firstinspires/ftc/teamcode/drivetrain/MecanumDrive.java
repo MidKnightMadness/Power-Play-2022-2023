@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.drivetrain;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.currentPosition;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.invSqrt;
 import static org.firstinspires.ftc.teamcode.highlevel.Master.odometryAlg;
-import static org.firstinspires.ftc.teamcode.highlevel.Master.telemetry;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
@@ -17,9 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.autonomous.Autonomous;
 import org.firstinspires.ftc.teamcode.autonomous.AutonomousNew;
-import org.firstinspires.ftc.teamcode.currentOpModes.MainTeleOp;
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
 
 /*
@@ -117,20 +114,6 @@ public class MecanumDrive {
     }
 
     private final double SENSITIVITY = 0.5;
-    public void fieldOrientatedDrive(double x, double y, double rotate, double currentRotation) {
-        if (x == 0 && y == 0) {
-            drive(0, 0, rotate);
-            return;
-        }
-
-        if (x < 0) { offAngle = Math.PI + offAngle; }
-
-        correctedX = Math.cos(-currentRotation + offAngle);
-        correctedY = Math.sin(-currentRotation + offAngle);
-
-        drive(correctedX * SENSITIVITY, correctedY * SENSITIVITY, rotate * SENSITIVITY);
-    }
-
     public void fieldOrientatedDrive(double x, double y, double rotate) {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         gyro_degrees = angles.firstAngle;
@@ -154,13 +137,10 @@ public class MecanumDrive {
 
     public boolean driveTo(double targetX, double targetY, double targetAngle, double currentX, double currentY, double currentAngle){
         if(Math.sqrt(((targetX - currentX) * (targetX - currentX)) + ((targetY - currentY) * (targetY - currentY))) > 1) {
+
 //            replacement = Math.max(Math.abs(targetX - currentX), Math.abs(targetY - currentY));
 //            if(Math.sqrt(((targetX - currentX) * (targetX - currentX)) + ((targetY - currentY) * (targetY - currentY))) < 10.0){ // CHange this later
-            double rotato = (targetAngle-currentAngle+3.1416)%6.283-3.1416;
-            if (rotato < -3.1416) rotato += 6.283;
-            rotato = Math.cbrt(3.1416/rotato);
-            // rotato = 0;
-                fieldOrientatedDrive((targetX - currentX) / (20), (targetY - currentY) / (20), (rotato / 8), currentAngle); // 0 on rotational component is temporary, needs correction
+                fieldOrientatedDrive((targetX - currentX) / (10), (targetY - currentY) / (10), (0)); // 0 on rotational component is temporary, needs correction
 //            }else {
 //                fieldOrientatedDrive((targetX - currentX) / (replacement * 10), (targetY - currentY) / (replacement * 10), (targetAngle - currentAngle) / 360); // 0 on rotational component is temporary, needs correction
 //            }
@@ -168,14 +148,11 @@ public class MecanumDrive {
 //            FLMotor.setPower( 0 + -((targetY - currentY) / replacement) * 0.1 + 0);
 //            BRMotor.setPower( 0 + -((targetY - currentY) / replacement) * 0.1 - 0);
 //            BLMotor.setPower(-0 + -((targetY - currentY) / replacement) * 0.1 + 0);
-
-
             return false;
         }
-
+        fieldOrientatedDrive(0, 0, 0);
         return true;
     }
-
     public void pointTo(double x, double y) {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         gyro_degrees = angles.firstAngle;
@@ -199,7 +176,6 @@ public class MecanumDrive {
         telemetry.addData("Corrected X", correctedX);
         telemetry.addData("Corrected Y", correctedY);
         telemetry.addData("First Angle", angles.firstAngle);
-
     }
 
 

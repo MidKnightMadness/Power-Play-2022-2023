@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.concurrent.TimeUnit;
 
+@Deprecated
 interface OdometryVariablesa {
     double wheelRadius = 1.41546666667;
     double wheelCircumference = wheelRadius * Math.PI * 2;
@@ -26,6 +27,8 @@ interface OdometryVariablesa {
 }
 
 @TeleOp
+@Disabled
+@Deprecated
 public class TwoWheelOdometryTest extends OpMode implements OdometryVariablesa {
     double deltaTime = 0;
     double lastTime = 0;

@@ -49,7 +49,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * @see <a href="http://modernroboticsinc.com/range-sensor">MR Range Sensor</a>
  */
 @TeleOp(name = "Sensor: Ultrasonic", group = "Test")
-//@Disabled
+@Disabled
 public class UltrasonicTest extends LinearOpMode {
 
     ModernRoboticsI2cRangeSensor rangeSensor;

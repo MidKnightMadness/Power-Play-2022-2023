@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.robots.ultimategoal7854;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name = "2 Player Carnival UG7854", group = "Carnival")
+@Disabled
 public class UltimateGoal7854 extends OpMode {
 
     Chassis chassis;

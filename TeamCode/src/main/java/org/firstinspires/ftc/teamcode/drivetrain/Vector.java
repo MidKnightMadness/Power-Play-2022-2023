@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.highlevel.Master;
 import java.util.*;
 import java.math.*;
 
+@Deprecated
 public class Vector { // Vector-based methods deprecated, use double []
     // Current issue: references for all objects within MecanumDrive not working
     // Note that arrays are given by their reference address

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.drivetrain;
 
+@Deprecated
 public class Coord {
     private double x;
     private double y;

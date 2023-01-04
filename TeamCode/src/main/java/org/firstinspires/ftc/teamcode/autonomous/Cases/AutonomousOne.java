@@ -4,18 +4,18 @@ import org.firstinspires.ftc.teamcode.autonomous.Autonomous;
 import org.firstinspires.ftc.teamcode.odometry.Vector2;
 
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Blue Left")
 public class AutonomousOne extends Autonomous {
     @Override
     public int getStartingPos() {
-        return 0;
+        return 1;
     }
 
     public double getStartingRotation() {
         return Math.PI / 2;
     }
 
-    public Vector2 getStartingPostition() {
-        return new Vector2(halfRobotWidth, realSquareWidth * 1.5);
+    public Vector2 getStartingPosition() {
+        return new Vector2(35, halfRobotWidth);
     }
 }
