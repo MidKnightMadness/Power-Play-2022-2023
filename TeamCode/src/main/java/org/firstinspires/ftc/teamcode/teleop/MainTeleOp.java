@@ -66,14 +66,15 @@ public class MainTeleOp extends OpMode {
     private boolean lastPressedLinearSlides = false;
     private boolean linearSlidesToggle = false;
 
-
+    double lastInputX = 0.0;
+    double lastInputY = 0.0;
 
     @Override
     public void init() {
         Timer timer = new Timer();
 
         mecanum = new MecanumDrive(hardwareMap);
-        odometry = new Odometry(hardwareMap, new Vector2(0, 0), Math.PI / 2);
+        odometry = new Odometry(hardwareMap, Math.PI / 2, new Vector2(0, 0));
         claw = new Claw(hardwareMap);
         slides = new LinearSlides(hardwareMap);
 
@@ -84,7 +85,7 @@ public class MainTeleOp extends OpMode {
 
     double time;
     double deltaTime;
-    double previousInputWeight = 0.95;
+    double previousInputWeight = 0.75;
     final double staticPowerMultiplier = 0.7;
     double powerMultiplier = staticPowerMultiplier;
     double manualC = 0;
@@ -98,31 +99,30 @@ public class MainTeleOp extends OpMode {
             odometry.resetEncoders();
         }
 
-//        if (gamepad1.a || gamepad1.cross) {
-//            previousInputWeight += 0.01;
-//            if (previousInputWeight > 1) {
-//                previousInputWeight = 1;
-//            }
-//            try {
-//                sleep(75);
-//            } catch (InterruptedException e) {
-//                telemetry.addLine(e.toString());
-//            }
-//        }
+        if (gamepad1.a || gamepad1.cross) {
+            previousInputWeight += 0.01;
+            if (previousInputWeight > 1) {
+                previousInputWeight = 1;
+            }
+            try {
+                sleep(75);
+            } catch (InterruptedException e) {
+                telemetry.addLine(e.toString());
+            }
+        }
 
-//        if (gamepad1.b || gamepad1.circle) {
-//            previousInputWeight -= 0.01;
-//            if (previousInputWeight < 0) {
-//                previousInputWeight = 0;
-//            }
-//            try {
-//                sleep(75);
-//            } catch (InterruptedException e) {
-//            }
-//        }
+        if (gamepad1.b || gamepad1.circle) {
+            previousInputWeight -= 0.01;
+            if (previousInputWeight < 0) {
+                previousInputWeight = 0;
+            }
+            try {
+                sleep(75);
+            } catch (InterruptedException e) {
+            }
+        }
 
         powerMultiplier = staticPowerMultiplier * (1 - gamepad1.right_trigger * 0.6); // slows the driving as trigger is pressed
-
 
         // DRIVE
         if (gamepad1.left_bumper && !lastPressedDriveMode) {
@@ -130,6 +130,8 @@ public class MainTeleOp extends OpMode {
         }
         lastPressedDriveMode = gamepad1.left_bumper;
 
+        double adjustedInputX = gamepad1.left_stick_x * (1 - previousInputWeight) + lastInputX * previousInputWeight;
+        double adjustedInputY = gamepad1.left_stick_y * (1 - previousInputWeight) + lastInputY * previousInputWeight;
         if (driveModeToggle) {
             mecanum.fieldOrientatedDrive(gamepad1.left_stick_x, -gamepad1.left_stick_y,
                     (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier, odometry.getRotationRadians());
@@ -139,6 +141,8 @@ public class MainTeleOp extends OpMode {
                     (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier * 0.5); // normal drive
         }
 
+        lastInputX = adjustedInputX;
+        lastInputY = adjustedInputY;
 
 
 

@@ -162,8 +162,8 @@ public class LinearSlides {
             seeSawMotor.setPower(brake);
 
         }else{
-            if (seesawAngle <= 0) power = Math.max(power, brake);
-            seeSawMotor.setPower(power);
+            if (seesawAngle <= 0) power = Math.max(power, 0);
+            seeSawMotor.setPower(power*.5+brake);
         }
 
 //        seeSawMotor.setTargetPosition((int)(power * 100 + seeSawMotor.getCurrentPosition()));
