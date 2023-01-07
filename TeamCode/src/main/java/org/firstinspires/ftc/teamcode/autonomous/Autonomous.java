@@ -200,6 +200,9 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
         while (opModeIsActive()) {
             time = coneTimer.getTime();
+            rotateTo(.5);
+            sleep(1000);
+            rotateTo(-.7);
 
 //            if (time > 26.35729278100687712039158d) {
                 goToPosition(getStartingPosition().x, getStartingPosition().y + 30, getStartingRotation());
@@ -215,10 +218,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 //            }
 
 //                goToSignalLocation((int)odometry.getXCoordinate(), (int) odometry.getYCoordinate(), (int) signalLocationX, (int) signalLocationY);
-                rotateTo(.5);
-                sleep(1000);
-                rotateTo(-.7);
-                requestOpModeStop();
+
 //            } else {
 //                try {
 //                    cycle();
@@ -229,6 +229,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 //                }
 //            }
             sleep(20);
+            requestOpModeStop();
         }
     }
 
