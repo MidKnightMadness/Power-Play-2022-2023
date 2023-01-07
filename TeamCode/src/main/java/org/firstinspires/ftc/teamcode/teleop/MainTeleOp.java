@@ -184,7 +184,14 @@ public class MainTeleOp extends OpMode {
         }
 //        lastPressedClawPivot = gamepad2.left_bumper;
 
+        // Auto-aim
+        if(gamepad2.triangle){
+            double [] manipulatorInputs = GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(),odometry.getRotationRadians());
 
+            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), manipulatorInputs[0]);
+            rotateArmTo(manipulatorInputs[1], telemetry);
+            slides.extendTo(manipulatorInputs[2], telemetry);
+        }
 
         // Adjusting extension length and angle
 //        if(gamepad2.left_trigger > 0.5){
@@ -333,7 +340,7 @@ public class MainTeleOp extends OpMode {
         clawPivotInput += 1;
         // 0.0 (backwards) if at 180˚, 1.0 (forwards) if at 0˚
 
-        // Servo only takes inputs in intervals of 0.1
+        // Servo only takes inputs in intervals of 0.001
         clawPivotInput = (int) (clawPivotInput * 600.0);
         clawPivotInput /= 1000.0;
 
