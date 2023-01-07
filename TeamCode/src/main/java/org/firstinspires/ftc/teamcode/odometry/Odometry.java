@@ -7,15 +7,18 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.autonomous.AutonomousNew;
-import org.firstinspires.ftc.teamcode.currentOpModes.MainTeleOp;
-import static org.firstinspires.ftc.teamcode.currentOpModes.MainTeleOp.currentPosition;
+import org.firstinspires.ftc.teamcode.teleop.MainTeleOp;
+import static org.firstinspires.ftc.teamcode.teleop.MainTeleOp.currentPosition;
 
 import java.util.concurrent.TimeUnit;
 
-public class Odometry implements OdometryVariables {
+public class Odometry {
     double deltaTime = 0;
     double lastTime = 0;
+
+    double inPerTick = 0.5;
+    double verticalWheelDistance = 9;
+    double lateralWheelDistance = 10;
 
     public Vector2 position = new Vector2();
     Vector2 velocity = new Vector2();

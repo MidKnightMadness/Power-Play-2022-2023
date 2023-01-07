@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.autonomous.AutonomousNew;
+
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
 
 /*
@@ -129,6 +129,22 @@ public class MecanumDrive {
 
         correctedX = Math.cos(-gyro_radians + offAngle);
         correctedY = Math.sin(-gyro_radians + offAngle);
+
+        drive(correctedX * SENSITIVITY, correctedY * SENSITIVITY, rotate * SENSITIVITY);
+    }
+
+    public void fieldOrientatedDrive(double x, double y, double rotate, double rotation) {
+        offAngle = Math.atan(y / x);
+
+        if (x == 0 && y == 0) {
+            drive(0, 0, rotate);
+            return;
+        }
+
+        if (x < 0) { offAngle = Math.PI + offAngle; }
+
+        correctedX = Math.cos(-rotation + offAngle);
+        correctedY = Math.sin(-rotation + offAngle);
 
         drive(correctedX * SENSITIVITY, correctedY * SENSITIVITY, rotate * SENSITIVITY);
     }

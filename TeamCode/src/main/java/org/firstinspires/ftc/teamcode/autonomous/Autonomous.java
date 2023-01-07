@@ -102,7 +102,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
         mecanum = new MecanumDrive(hardwareMap);
         linearSlides = new LinearSlides(hardwareMap);
-        odometry = new Odometry(hardwareMap, getStartingPosition(), getStartingRotation());
+        odometry = new Odometry(hardwareMap, getStartingRotation(), getStartingPosition());
 
         camera.setPipeline(aprilTagDetectionPipeline);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
