@@ -215,9 +215,9 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 //            }
 
 //                goToSignalLocation((int)odometry.getXCoordinate(), (int) odometry.getYCoordinate(), (int) signalLocationX, (int) signalLocationY);
-                rotateTo(.3);
-                sleep(2000);
-                rotateTo(-.5);
+                rotateTo(.5);
+                sleep(1000);
+                rotateTo(-.7);
                 requestOpModeStop();
 //            } else {
 //                try {

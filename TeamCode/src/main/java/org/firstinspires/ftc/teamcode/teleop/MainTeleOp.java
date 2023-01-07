@@ -87,6 +87,7 @@ public class MainTeleOp extends OpMode {
     double previousInputWeight = 0.95;
     final double staticPowerMultiplier = 0.7;
     double powerMultiplier = staticPowerMultiplier;
+    double manualC = 0;
 
     @Override
     public void loop() {
@@ -175,9 +176,12 @@ public class MainTeleOp extends OpMode {
 
 
         // claw pivot
-//        if (gamepad2.left_bumper && !lastPressedClawPivot) {
-//            clawPivotToggle = !clawPivotToggle;
-//        }
+        if (gamepad2.dpad_up) {
+            manualC = manualC +.05;
+        }
+        if (gamepad2.dpad_down) {
+            manualC = manualC -.05;
+        }
 //        lastPressedClawPivot = gamepad2.left_bumper;
 
 
@@ -314,7 +318,7 @@ public class MainTeleOp extends OpMode {
         clawPivotInput = (int) (clawPivotInput * 700.0);
         clawPivotInput /= 1000.0;
 
-        claw.rotateClaw(clawPivotInput);
+        claw.rotateClaw(clawPivotInput + manualC);
     }
 
     public void rotateArmTo(double angle, Telemetry telemetry){
@@ -340,7 +344,7 @@ public class MainTeleOp extends OpMode {
     }
     public void presetMediumJunction(){
             rotateArmTo(1.98, telemetry);
-            slides.extendTo(25.5, telemetry);
+            slides.extendTo(26.5, telemetry);
     }
 
     // Cycles once to closest tall junction to substation
