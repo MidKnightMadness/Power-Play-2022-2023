@@ -161,7 +161,7 @@ public class LinearSlides {
             seeSawMotor.setPower(0.0005 * (seesawExtensionLength / 2) * Math.cos(seesawAngle));
 
         }else{
-            seeSawMotor.setPower(power);
+            seeSawMotor.setPower(power*.5);
         }
 
 //        seeSawMotor.setTargetPosition((int)(power * 100 + seeSawMotor.getCurrentPosition()));
