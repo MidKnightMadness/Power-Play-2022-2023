@@ -69,6 +69,8 @@ public class MainTeleOp extends OpMode {
     double lastInputX = 0.0;
     double lastInputY = 0.0;
 
+    double lastSeesawInput = 0.0;
+
     @Override
     public void init() {
         Timer timer = new Timer();
@@ -85,11 +87,29 @@ public class MainTeleOp extends OpMode {
 
     double time;
     double deltaTime;
-    double previousInputWeight = 0.75;
+    double previousInputWeight = 0.9;
+    double seesawLastInputWeight = 0.95;
+
     final double staticPowerMultiplier = 0.7;
     double powerMultiplier = staticPowerMultiplier;
     double manualC = 0;
 
+    void drive() {
+        double adjustedInputX = gamepad1.left_stick_x * (1 - previousInputWeight) + lastInputX * previousInputWeight;
+        double adjustedInputY = gamepad1.left_stick_y * (1 - previousInputWeight) + lastInputY * previousInputWeight;
+
+        if (driveModeToggle) {
+            mecanum.fieldOrientatedDrive(adjustedInputX, -adjustedInputY,
+                    (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier, odometry.getRotationRadians());
+
+        } else {
+            mecanum.drive(adjustedInputX * powerMultiplier, -adjustedInputY * powerMultiplier,
+                    (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier * 0.5); // normal drive
+        }
+
+        lastInputX = adjustedInputX;
+        lastInputY = adjustedInputY;
+    }
     @Override
     public void loop() {
 
@@ -130,34 +150,21 @@ public class MainTeleOp extends OpMode {
         }
         lastPressedDriveMode = gamepad1.left_bumper;
 
-        double adjustedInputX = gamepad1.left_stick_x * (1 - previousInputWeight) + lastInputX * previousInputWeight;
-        double adjustedInputY = gamepad1.left_stick_y * (1 - previousInputWeight) + lastInputY * previousInputWeight;
-        if (driveModeToggle) {
-            mecanum.fieldOrientatedDrive(gamepad1.left_stick_x, -gamepad1.left_stick_y,
-                    (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier, odometry.getRotationRadians());
-
-        } else {
-            mecanum.drive(gamepad1.left_stick_x * powerMultiplier, -gamepad1.left_stick_y * powerMultiplier,
-                    (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier * 0.5); // normal drive
-        }
-
-        lastInputX = adjustedInputX;
-        lastInputY = adjustedInputY;
-
-
+        drive();
 
         // LINEAR SLIDES
         slides.extendBy(-gamepad2.right_stick_y);
 
-
+        double adjustedSeesawInput = gamepad2.left_stick_y * (1 - seesawLastInputWeight) + lastSeesawInput * seesawLastInputWeight;
 
         // SEESAW
         if (gamepad2.left_trigger > 0) {
             claw.rotateClaw(gamepad2.left_trigger);
         } else {
-            rotateArm(-gamepad2.left_stick_y);
+            rotateArm(-adjustedSeesawInput);
         }
 
+        lastSeesawInput = adjustedSeesawInput;
 
 
         // CLAW
@@ -203,7 +210,6 @@ public class MainTeleOp extends OpMode {
 //        }else if(gamepad2.dpad_down && !adjustingExtensionLength){
 //            targetAngle -= 0.1;
 //        }
-
 
 //        while(gamepad2.right_trigger > 0.5){
 //            rotateArmTo(targetAngle, telemetry);
