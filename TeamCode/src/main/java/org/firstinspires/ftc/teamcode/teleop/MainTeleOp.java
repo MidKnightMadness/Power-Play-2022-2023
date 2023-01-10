@@ -191,16 +191,6 @@ public class MainTeleOp extends OpMode {
             goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), manipulatorInputs[0]);
             rotateArmTo(manipulatorInputs[1], telemetry);
             slides.extendTo(manipulatorInputs[2], telemetry);
-
-
-
-
-
-
-
-
-
-
         }
 
 
