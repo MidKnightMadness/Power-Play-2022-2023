@@ -2,30 +2,25 @@ package org.firstinspires.ftc.teamcode.odometry;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.teleop.MainTeleOp;
+import static org.firstinspires.ftc.teamcode.teleop.MainTeleOp.currentPosition;
 
 import java.util.concurrent.TimeUnit;
 
-interface OdometryVariables {
-    double wheelRadius = 1.41546666667;
-    double wheelCircumference = wheelRadius * Math.PI * 2;
-
-    int ticksPerRotation = 8192;
-    double inPerTick = wheelCircumference / ticksPerRotation;
-
-    double lateralWheelDistance = 12;
-    double verticalWheelDistance = 7.5 - 2.9;
-    long sleepTime = 100;
-}
-
-public class Odometry implements OdometryVariables {
+public class Odometry {
     double deltaTime = 0;
     double lastTime = 0;
 
-    Vector2 position = new Vector2();
+    double inPerTick = 0.5;
+    double verticalWheelDistance = 9;
+    double lateralWheelDistance = 10;
+
+    public Vector2 position = new Vector2();
     Vector2 velocity = new Vector2();
 
     int lastLeftTicks = 0;
@@ -40,7 +35,7 @@ public class Odometry implements OdometryVariables {
     int deltaTopTicks = 0;
     double topDistanceMoved;
 
-    double rotationRadians;
+    public double rotationRadians;
 
     ElapsedTime elapsedTime;
 
@@ -48,17 +43,21 @@ public class Odometry implements OdometryVariables {
     public DcMotorEx horizontalEncoder;
     public DcMotorEx rightEncoder;
 
-    public Odometry(HardwareMap hardwareMap, Vector2 startingPosition, double startingAngleRadians) {
+    public Odometry(HardwareMap hardwareMap, double startingAngleRadians, Vector2 startingPosition) {
         elapsedTime = new ElapsedTime();
 
         leftEncoder = hardwareMap.get(DcMotorEx.class, "FL");
+//        leftEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        leftEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
+
         rightEncoder = hardwareMap.get(DcMotorEx.class, "FR");
+//        rightEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         horizontalEncoder = hardwareMap.get(DcMotorEx.class, "BR");
+//        horizontalEncoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        resetEncoders();
-
-        position = startingPosition;// startingPosition;
-        rotationRadians = startingAngleRadians;
+        this.rotationRadians = startingAngleRadians;
+        this.position = startingPosition;
     }
 
     public void updateTime() {
@@ -104,7 +103,7 @@ public class Odometry implements OdometryVariables {
 
         // angles
         deltaRadians = getDeltaRotation(leftDistanceMoved, rightDistanceMoved);
-        rotationRadians += deltaRadians / 2;
+        rotationRadians += deltaRadians;
 
         forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0;
         trueLateralMovement = topDistanceMoved + deltaRadians * verticalWheelDistance;
@@ -113,9 +112,7 @@ public class Odometry implements OdometryVariables {
         cosine = Math.cos(rotationRadians);
 
         netX = forwardMovement * cosine + trueLateralMovement * sin;
-        netY = forwardMovement * sin - trueLateralMovement * cosine;
-
-        rotationRadians += deltaRadians / 2;
+        netY = forwardMovement * sin + trueLateralMovement * cosine;
 
 //        if (false) {
 //            netX = forwardMovement * Math.cos(rotationRadians);
@@ -128,11 +125,26 @@ public class Odometry implements OdometryVariables {
 //        }
 
 
-        position.x += netX;
-        position.y += netY;
+        this.position.y += netX;
+        this.position.x += netY;
+
+//        // Temporary
+//        AutonomousNew.currentPosition[0] += netX;
+//        AutonomousNew.currentPosition[1] += netY;
+//
+//        MainTeleOp.currentPosition[0] += netX;
+//        MainTeleOp.currentPosition[1] += netY;
 
         velocity.x = netX / deltaTime;
         velocity.y = netY / deltaTime;
+    }
+
+    public void setPostion(Vector2 pos) {
+        this.position = pos;
+    }
+
+    public void setRotation(double rotation) {
+        this.rotationRadians = rotation;
     }
 
     public double getDeltaRotation(double leftChange, double rightChange) {
@@ -186,8 +198,6 @@ public class Odometry implements OdometryVariables {
         telemetry.addLine("--------");
 
         telemetry.addLine("Velocity " + velocity.toString());
-
-
         telemetry.addData("Left Dead Wheel Position", leftEncoder.getCurrentPosition());
         telemetry.addData("Right Dead Wheel Position", rightEncoder.getCurrentPosition());
         telemetry.addData("Top Dead Wheel Position", horizontalEncoder.getCurrentPosition());
