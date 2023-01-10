@@ -76,7 +76,7 @@ public class MainTeleOp extends OpMode {
         Timer timer = new Timer();
 
         mecanum = new MecanumDrive(hardwareMap);
-        odometry = new Odometry(hardwareMap, Math.PI / 2, new Vector2(0, 0));
+        odometry = new Odometry(hardwareMap, new Vector2(7.5, 7.5), Math.PI / 2);
         claw = new Claw(hardwareMap);
         slides = new LinearSlides(hardwareMap);
 
@@ -89,7 +89,7 @@ public class MainTeleOp extends OpMode {
     double deltaTime;
     double previousInputWeight = 0.9;
     double seesawLastInputWeight = 0.95;
-    double inputDeadZone = 0.05;
+
     final double staticPowerMultiplier = 0.7;
     double powerMultiplier = staticPowerMultiplier;
     double manualC = 0;
@@ -97,14 +97,6 @@ public class MainTeleOp extends OpMode {
     void drive() {
         double adjustedInputX = gamepad1.left_stick_x * (1 - previousInputWeight) + lastInputX * previousInputWeight;
         double adjustedInputY = gamepad1.left_stick_y * (1 - previousInputWeight) + lastInputY * previousInputWeight;
-
-        if (Math.abs(gamepad1.left_stick_x) < inputDeadZone) {
-            adjustedInputX = adjustedInputX / 2;
-        }
-
-        if (Math.abs(gamepad1.left_stick_y) < inputDeadZone) {
-            adjustedInputY = adjustedInputY / 2;
-        }
 
         if (driveModeToggle) {
             mecanum.fieldOrientatedDrive(adjustedInputX, -adjustedInputY,
@@ -118,9 +110,10 @@ public class MainTeleOp extends OpMode {
         lastInputX = adjustedInputX;
         lastInputY = adjustedInputY;
     }
-
     @Override
     public void loop() {
+
+
         // DRIVER ASSIST
         if (gamepad1.x || gamepad1.square) {
             odometry.resetEncoders();
@@ -190,6 +183,8 @@ public class MainTeleOp extends OpMode {
         if (gamepad2.left_bumper) {
             presetMediumJunction();
         }
+
+
 
         // claw pivot
         if (gamepad2.dpad_up) {
@@ -274,8 +269,7 @@ public class MainTeleOp extends OpMode {
 
         telemetry.addLine(String.format("\nPosition: [%5.2f, %5.2f]", odometry.getXCoordinate(), odometry.getYCoordinate())); // Check if x and y are still reversed
         telemetry.addData("Angle", odometry.getRotationRadians() * 180 / Math.PI);
-        telemetry.addLine("Ease Coefficient movement " + previousInputWeight);
-        telemetry.addLine("Ease Coefficient  seesaw " + seesawLastInputWeight);
+        telemetry.addLine("Ease Coefficient " + previousInputWeight);
 
 //        odometry.telemetry(telemetry);
         mecanum.telemetry(telemetry);
