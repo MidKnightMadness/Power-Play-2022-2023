@@ -200,9 +200,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
         while (opModeIsActive()) {
             time = coneTimer.getTime();
-            rotateTo(.5);
-            sleep(1000);
-            rotateTo(-.7);
+
 
 //            if (time > 26.35729278100687712039158d) {
                 goToPosition(getStartingPosition().x, getStartingPosition().y + 30, getStartingRotation());
@@ -229,6 +227,9 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 //                }
 //            }
             sleep(20);
+            rotateTo(0.5);
+            sleep(1000);
+            rotateTo(-.7);
             requestOpModeStop();
         }
     }
@@ -278,7 +279,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         goToPosition(targetX, targetY, 0);
     }
     void rotateTo(double angle) {
-        while (linearSlides.seesawAngle<angle) {
+        while (Math.abs(linearSlides.seesawAngle - angle) > .05) {
             linearSlides.pivotTo(angle, telemetry);
             linearSlides.update();
             telemetry.update();
@@ -289,6 +290,8 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         boolean atLocation = false;
 
         while (!atLocation) {
+            linearSlides.update();
+            telemetry.addLine();
             if (mostRecentDetection != 0) { telemetry.addLine("SIGNAL TAG FOUND, GOING TO POSITION " + mostRecentDetection); }
             else { telemetry.addLine("SIGNAL TAG NOT FOUND, GOING TO POSITION 2"); }
             telemetry.addData("\nCone timer", coneTimer.getTime());
@@ -300,9 +303,9 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             telemetry.addData("Signal finds", "" + signalFinds[0], signalFinds[1], signalFinds[2]);
             if (mostRecentDetection != 0)
                 telemetry.addData("Signal location", signalLocations[startingPos][mostRecentDetection - 1]);
+            odometry.updatePosition();
             telemetry.update();
 
-            odometry.updatePosition();
 
             atLocation = mecanum.driveTo(targetX, targetY, targetAngle, odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians());
 

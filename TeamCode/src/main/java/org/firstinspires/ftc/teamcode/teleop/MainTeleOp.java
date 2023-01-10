@@ -73,7 +73,7 @@ public class MainTeleOp extends OpMode {
         Timer timer = new Timer();
 
         mecanum = new MecanumDrive(hardwareMap);
-        odometry = new Odometry(hardwareMap, new Vector2(0, 0), Math.PI / 2);
+        odometry = new Odometry(hardwareMap, new Vector2(7.5, 7.5), Math.PI / 2);
         claw = new Claw(hardwareMap);
         slides = new LinearSlides(hardwareMap);
 
@@ -183,6 +183,25 @@ public class MainTeleOp extends OpMode {
             manualC = manualC -.05;
         }
 //        lastPressedClawPivot = gamepad2.left_bumper;
+
+        // Auto-aim
+        if(gamepad2.triangle){
+            double [] manipulatorInputs = GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(),odometry.getRotationRadians());
+
+            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), manipulatorInputs[0]);
+            rotateArmTo(manipulatorInputs[1], telemetry);
+            slides.extendTo(manipulatorInputs[2], telemetry);
+
+
+
+
+
+
+
+
+
+
+        }
 
 
 
