@@ -111,26 +111,9 @@ public class LinearSlides {
 
     public static final double MANIPULATOR_BACKSET_DISTANCE = 3.5;
 
-    public void extendTo(double inches, Telemetry telemetry){ // Inches
-
-        telemetry.addData("Extenders at position", Math.abs((inches - STARTING_EXTENDER_LENGTH) - seesawExtensionLength) > .1);
-        //telemetry.addData("Extension Motor 1 Target ticks", extensionMotor.getTargetPosition());
-        //telemetry.addData("Extension Motor 2 Target ticks", extensionMotor2.getTargetPosition());
-        telemetry.addData("Extension Motor 1 ticks", extensionMotor.getCurrentPosition());
-        //telemetry.addData("Extension Motor 2 ticks", extensionMotor2.getCurrentPosition());
+    public void extendTo(double inches){ // Inches
         double distance1 = (inches - STARTING_EXTENDER_LENGTH)*1.25 / EXTENDER_OVERALL_RATIO-extensionMotor.getCurrentPosition();
-        //double distance2 = (inches - STARTING_EXTENDER_LENGTH)*1.25 / EXTENDER_OVERALL_RATIO-extensionMotor2.getCurrentPosition();
         double power = distance1/Math.max(100, Math.abs(distance1));
-        //double power2 = distance1*.5/Math.max(100, Math.abs(distance2));
-
-        //extensionMotor.setTargetPosition((int) (( inches - STARTING_EXTENDER_LENGTH)*1.25 / EXTENDER_OVERALL_RATIO));
-        //extensionMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            extensionMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        //extensionMotor2.setTargetPosition(extensionMotor.getTargetPosition());
-        //extensionMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            extensionMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-
         extensionMotor.setPower(power);
         extensionMotor2.setPower(power);
     }
@@ -146,12 +129,7 @@ public class LinearSlides {
 
     private int ticksDifference = 0;
 
-    public void pivotTo(double targetAngle, Telemetry telemetry) { // Radians, zero is horizontal
-
-        telemetry.addData("\nTarget angle", targetAngle);
-        telemetry.addData("Target pivot ticks", (int) (targetAngle / SEESAW_OVERALL_RATIO));
-        telemetry.addData("Pivot current ticks", seeSawMotor.getCurrentPosition());
-
+    public void pivotTo(double targetAngle) { // Radians, zero is horizontal
         // To account for play, ~10˚
         // Note: only has significant play after 100˚
         if(seesawAngle * 180 / Math.PI > 90){
