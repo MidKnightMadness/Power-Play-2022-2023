@@ -172,6 +172,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation());
         }
 
+
         // score at high junction
         goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
         sleep(3000);
