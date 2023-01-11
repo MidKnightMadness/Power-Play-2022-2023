@@ -168,19 +168,11 @@ public class LinearSlides {
         previousAngle = seesawAngle;
 
         seesawExtensionLength = ((.5 * extensionMotor.getCurrentPosition() + .5 * extensionMotor2.getCurrentPosition()) * EXTENDER_OVERALL_RATIO) + STARTING_EXTENDER_LENGTH;
-
-//        if((seesawAngle < -0.5 && (seeSawMotor.getCurrentPosition() * SEESAW_OVERALL_RATIO) + STARTING_ANGLE > previousAngle) ||
-//        seesawAngle > 0.0){
             if(seesawAngle > Math.PI / 2){
                 seesawAngle = (seeSawMotor.getCurrentPosition() * SEESAW_OVERALL_RATIO) + STARTING_ANGLE + 7.5 * Math.PI / 180;
             }else {
                 seesawAngle = (seeSawMotor.getCurrentPosition() * SEESAW_OVERALL_RATIO) + STARTING_ANGLE;
             }
-//        }
-
-//        manipulatorPosition[0] = seesawExtensionLength * Math.cos(Master.turntableAngle) * Math.cos(seesawAngle);
-//        manipulatorPosition[1] = seesawExtensionLength * Math.sin(Master.turntableAngle) * Math.cos(seesawAngle);
-//        manipulatorPosition[2] = seesawExtensionLength * Math.sin(seesawAngle);
     }
 
 
@@ -216,7 +208,5 @@ public class LinearSlides {
         telemetry.addLine(String.format("Extension Motors Velocities: %f %f", extensionMotor.getVelocity(), extensionMotor2.getVelocity()));
         telemetry.addLine(String.format("Extensions Current Positions: %d %d", extensionMotor.getCurrentPosition(), extensionMotor2.getCurrentPosition()));
         telemetry.addLine(String.format("Extensions Target Positions: %d %d", extensionMotor.getTargetPosition(), extensionMotor2.getTargetPosition()));
-
-//        telemetry.addData("\nController target angle",);
     }
 }
