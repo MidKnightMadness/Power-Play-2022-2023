@@ -110,25 +110,9 @@ public class LinearSlides {
 
     private static final double MANIPULATOR_BACKSET_DISTANCE = 3.5;
 
-    public void extendTo(double inches, Telemetry telemetry){ // Inches
-
-        telemetry.addData("Extenders at position", Math.abs((inches - STARTING_EXTENDER_LENGTH) - seesawExtensionLength) > .1);
-        //telemetry.addData("Extension Motor 1 Target ticks", extensionMotor.getTargetPosition());
-        //telemetry.addData("Extension Motor 2 Target ticks", extensionMotor2.getTargetPosition());
-        telemetry.addData("Extension Motor 1 ticks", extensionMotor.getCurrentPosition());
-        //telemetry.addData("Extension Motor 2 ticks", extensionMotor2.getCurrentPosition());
-        double distance1 = (inches - STARTING_EXTENDER_LENGTH)*1.25 / EXTENDER_OVERALL_RATIO-extensionMotor.getCurrentPosition();
-        //double distance2 = (inches - STARTING_EXTENDER_LENGTH)*1.25 / EXTENDER_OVERALL_RATIO-extensionMotor2.getCurrentPosition();
+    public void extendTo(double inches){ // Inches
+        double distance1 = (inches - STARTING_EXTENDER_LENGTH) * 1.25 / EXTENDER_OVERALL_RATIO - extensionMotor.getCurrentPosition();
         double power = distance1/Math.max(100, Math.abs(distance1));
-        //double power2 = distance1*.5/Math.max(100, Math.abs(distance2));
-
-        //extensionMotor.setTargetPosition((int) (( inches - STARTING_EXTENDER_LENGTH)*1.25 / EXTENDER_OVERALL_RATIO));
-        //extensionMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            extensionMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        //extensionMotor2.setTargetPosition(extensionMotor.getTargetPosition());
-        //extensionMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            extensionMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         extensionMotor.setPower(power);
         extensionMotor2.setPower(power);
@@ -145,25 +129,19 @@ public class LinearSlides {
 
     private int ticksDifference = 0;
 
-    public void pivotTo(double targetAngle, Telemetry telemetry) { // Radians, zero is horizontal
-
-        telemetry.addData("\nTarget angle", targetAngle);
-        telemetry.addData("Target pivot ticks", (int) (targetAngle / SEESAW_OVERALL_RATIO));
-        telemetry.addData("Pivot current ticks", seeSawMotor.getCurrentPosition());
-
+    public void pivotTo(double targetAngle) { // Radians, zero is horizontal
         ticksDifference = (int) ((targetAngle - seesawAngle) / SEESAW_OVERALL_RATIO);
         seeSawMotor.setPower(ticksDifference *.5 / Math.max(Math.abs(ticksDifference), 500));
-
     }
 
-    public void pivotBy(double power) {
+    public void pivotBy(double radians) {
         double brake = 0.0005 * (seesawExtensionLength / 2) * Math.cos(seesawAngle);
-        if(Math.abs(power) < 0.1){
+        if (Math.abs(radians) < 0.1) {
             seeSawMotor.setPower(brake);
 
-        }else{
-            if (seesawAngle <= 0) power = Math.max(power, 0);
-            seeSawMotor.setPower(power*.5+brake);
+        } else {
+            if (seesawAngle <= 0) radians = Math.max(radians, 0);
+            seeSawMotor.setPower(radians * .5 + brake);
         }
 
 //        seeSawMotor.setTargetPosition((int)(power * 100 + seeSawMotor.getCurrentPosition()));
