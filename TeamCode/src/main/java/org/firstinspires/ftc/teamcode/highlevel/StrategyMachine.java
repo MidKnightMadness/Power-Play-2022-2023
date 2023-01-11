@@ -23,9 +23,9 @@ public class StrategyMachine {
     public StrategyMachine(boolean autonomous, double timeLimit, int currentScore, Odometry odometry){
         // Copy over numerical data
         for(int i = 0; i < scored.length; i++){ // ith row
-            for(int j = 0; ){
-
-            }
+//            for(int j = 0; ){
+//
+//            }
         }
 
     }
