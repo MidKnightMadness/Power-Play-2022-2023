@@ -174,7 +174,26 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
 
         // score at high junction
-        //
+        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
+        sleep(3000);
+        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[0]);
+        sleep(3000);
+
+        linearSlides.pivotTo(1.75);
+        sleep(5000);
+        linearSlides.extendTo(34);
+        sleep(5000);
+        claw.openClaw();
+        sleep(1000);
+        claw.closeClaw();
+        sleep(5000);
+        linearSlides.extendTo(0);
+        sleep(5000);
+        linearSlides.pivotTo(0);
+        sleep(3000);
+
+        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
+
 
 
 //----------------LOOP----------------------------------------------------------------------------------------------------
@@ -182,31 +201,17 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         while (opModeIsActive()) {
             time = coneTimer.getTime();
 
+            goToPosition(getStartingPosition().x, getStartingPosition().y + 30, getStartingRotation());
+            if(mostRecentDetection == 1) {
+                goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 26, getStartingRotation());
+                goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 32, getStartingRotation());
+            } else if (mostRecentDetection == 2) {
+                goToPosition(getStartingPosition().x, getStartingPosition().y + 32, getStartingRotation());
+            } else if (mostRecentDetection == 3) {
+                goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 26, getStartingRotation());
+                goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 32, getStartingRotation());
+            }
 
-//            if (time > 26.35729278100687712039158d) {
-                goToPosition(getStartingPosition().x, getStartingPosition().y + 30, getStartingRotation());
-                if(mostRecentDetection == 1) {
-                    goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 26, getStartingRotation());
-                    goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 32, getStartingRotation());
-                } else if (mostRecentDetection == 2) {
-                    goToPosition(getStartingPosition().x, getStartingPosition().y + 32, getStartingRotation());
-                } else if (mostRecentDetection == 3) {
-                    goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 26, getStartingRotation());
-                    goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 32, getStartingRotation());
-                }
-//            }
-
-//                goToSignalLocation((int)odometry.getXCoordinate(), (int) odometry.getYCoordinate(), (int) signalLocationX, (int) signalLocationY);
-
-//            } else {
-//                try {
-//                    cycle();
-//                }
-//                catch (InterruptedException e) {
-//                    telemetry.addLine(e.toString());
-//                    telemetry.update();
-//                }
-//            }
             sleep(20);
             rotateTo(0.5);
             sleep(1000);
@@ -261,7 +266,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
     }
     void rotateTo(double angle) {
         while (Math.abs(linearSlides.seesawAngle - angle) > .05) {
-            linearSlides.pivotTo(angle, telemetry);
+            linearSlides.pivotTo(angle);
             linearSlides.update();
             telemetry.update();
         }
@@ -338,8 +343,8 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(),
                     manipulatorInputs[0]);
             // Rotate to angle
-            linearSlides.pivotTo(manipulatorInputs[1], telemetry);
-            linearSlides.extendTo(manipulatorInputs[2], telemetry);
+            linearSlides.pivotTo(manipulatorInputs[1]);
+            linearSlides.extendTo(manipulatorInputs[2]);
 
 
         }else if((targetRow + 1) * 23.50 >= odometry.getYCoordinate() &&
@@ -349,8 +354,8 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(),
                     manipulatorInputs[0]);
             // Rotate to angle
-            linearSlides.pivotTo(manipulatorInputs[1], telemetry);
-            linearSlides.extendTo(manipulatorInputs[2], telemetry);
+            linearSlides.pivotTo(manipulatorInputs[1]);
+            linearSlides.extendTo(manipulatorInputs[2]);
 
         }else if((targetRow + 1) * 23.50 < odometry.getYCoordinate() &&
                 (targetColumn + 1) * 23.50 < odometry.getXCoordinate()){ // Bottom left
@@ -359,8 +364,8 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(),
                     manipulatorInputs[0]);
             // Rotate to angle
-            linearSlides.pivotTo(manipulatorInputs[1], telemetry);
-            linearSlides.extendTo(manipulatorInputs[2], telemetry);
+            linearSlides.pivotTo(manipulatorInputs[1]);
+            linearSlides.extendTo(manipulatorInputs[2]);
 
         }else if((targetRow + 1) * 23.50 < odometry.getYCoordinate() &&
                 (targetColumn + 1) * 23.50 >= odometry.getXCoordinate()){ // Bottom right
@@ -369,15 +374,15 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(),
                     manipulatorInputs[0]);
             // Rotate to angle
-            linearSlides.pivotTo(manipulatorInputs[1], telemetry);
-            linearSlides.extendTo(manipulatorInputs[2], telemetry);
+            linearSlides.pivotTo(manipulatorInputs[1]);
+            linearSlides.extendTo(manipulatorInputs[2]);
         }
 
         claw.openClaw();
 
         // Reset for cone pickup
-        linearSlides.extendTo(linearSlides.STARTING_EXTENDER_LENGTH, telemetry);
-        linearSlides.pivotTo(0, telemetry);
+        linearSlides.extendTo(linearSlides.STARTING_EXTENDER_LENGTH);
+        linearSlides.pivotTo(0);
         goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians());
 
         // Go back to substation location

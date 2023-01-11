@@ -36,7 +36,8 @@ import org.firstinspires.ftc.teamcode.odometry.Vector2;
 /*
  * Controls
  * Player 1:
- * 
+ *
+ *
  * Player 2:
  *
  */
@@ -66,104 +67,81 @@ public class MainTeleOp extends OpMode {
     private boolean lastPressedLinearSlides = false;
     private boolean linearSlidesToggle = false;
 
-    double lastInputX = 0.0;
-    double lastInputY = 0.0;
 
-    double lastSeesawInput = 0.0;
 
     @Override
     public void init() {
-        Timer timer = new Timer();
-
         mecanum = new MecanumDrive(hardwareMap);
-        odometry = new Odometry(hardwareMap,Math.PI / 2,  new Vector2(7.5, 7.5));
+        odometry = new Odometry(hardwareMap, Math.PI / 2, new Vector2(7.5, 7.5));
         claw = new Claw(hardwareMap);
         slides = new LinearSlides(hardwareMap);
-
-        // Taking manipulator off of support
-      //  rotateArmTo(Math.PI / 4, telemetry);
-//        rotateArmTo(0, telemetry);
     }
 
     double time;
     double deltaTime;
-    double drivePreviousInputWeight = 0.9;
-    double seesawPreviousInputWeight = 0.95;
-
-    final double staticPowerMultiplier = 0.7;
+    double previousInputWeight = 0.95;
+    final double staticPowerMultiplier = 0.3;
     double powerMultiplier = staticPowerMultiplier;
     double manualC = 0;
 
-    void drive() {
-        double adjustedInputX = gamepad1.left_stick_x * (1 - drivePreviousInputWeight) + lastInputX * drivePreviousInputWeight;
-        double adjustedInputY = gamepad1.left_stick_y * (1 - drivePreviousInputWeight) + lastInputY * drivePreviousInputWeight;
-
-        if (driveModeToggle) {
-            mecanum.fieldOrientatedDrive(adjustedInputX, -adjustedInputY,
-                    (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier, odometry.getRotationRadians());
-
-        } else {
-            mecanum.drive(adjustedInputX * powerMultiplier, -adjustedInputY * powerMultiplier,
-                    (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier * 0.5); // normal drive
-        }
-
-        lastInputX = adjustedInputX;
-        lastInputY = adjustedInputY;
-    }
-
     @Override
     public void loop() {
+
+
         // DRIVER ASSIST
-        if (gamepad1.x || gamepad1.square) {
-            odometry.resetEncoders();
-        }
+//        if (gamepad1.x || gamepad1.square) {
+//            odometry.resetEncoders();
+//        }
 
-        if (gamepad1.a || gamepad1.cross) {
-            drivePreviousInputWeight += 0.01;
-            if (drivePreviousInputWeight > 1) {
-                drivePreviousInputWeight = 1;
-            }
-            try {
-                sleep(75);
-            } catch (InterruptedException e) {
-                telemetry.addLine(e.toString());
-            }
-        }
+//        if (gamepad1.a || gamepad1.cross) {
+//            previousInputWeight += 0.01;
+//            if (previousInputWeight > 1) {
+//                previousInputWeight = 1;
+//            }
+//            try {
+//                sleep(75);
+//            } catch (InterruptedException e) {
+//                telemetry.addLine(e.toString());
+//            }
+//        }
 
-        if (gamepad1.b || gamepad1.circle) {
-            drivePreviousInputWeight -= 0.01;
-            if (drivePreviousInputWeight < 0) {
-                drivePreviousInputWeight = 0;
-            }
-            try {
-                sleep(75);
-            } catch (InterruptedException e) {
-            }
-        }
+//        if (gamepad1.b || gamepad1.circle) {
+//            previousInputWeight -= 0.01;
+//            if (previousInputWeight < 0) {
+//                previousInputWeight = 0;
+//            }
+//            try {
+//                sleep(75);
+//            } catch (InterruptedException e) {
+//            }
+//        }
 
-        powerMultiplier = staticPowerMultiplier * (1 - gamepad1.right_trigger * 0.6); // slows the driving as trigger is pressed
+        powerMultiplier = staticPowerMultiplier + 0.4 * gamepad1.right_trigger; // speeds the driving as trigger is pressed
 
-        // DRIVE
         if (gamepad1.left_bumper && !lastPressedDriveMode) {
             driveModeToggle = !driveModeToggle;
         }
         lastPressedDriveMode = gamepad1.left_bumper;
 
-        drive();
+        if (driveModeToggle) {
+            mecanum.fieldOrientatedDrive(gamepad1.left_stick_x, -gamepad1.left_stick_y,
+                    (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier, odometry.getRotationRadians());
+
+        } else {
+            mecanum.drive(gamepad1.left_stick_x * powerMultiplier, -gamepad1.left_stick_y * powerMultiplier,
+                    (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier * 0.5); // normal drive
+        }
+
+
+
 
         // LINEAR SLIDES
         slides.extendBy(-gamepad2.right_stick_y);
 
-        double adjustedSeesawInput = gamepad2.left_stick_y * (1 - seesawPreviousInputWeight) + lastSeesawInput * seesawPreviousInputWeight;
+
 
         // SEESAW
-        if (gamepad2.left_trigger > 0) {
-            claw.rotateClaw(gamepad2.left_trigger);
-        } else {
-            rotateArm(-adjustedSeesawInput);
-        }
-
-        lastSeesawInput = adjustedSeesawInput;
+        rotateArm(-gamepad2.left_stick_y);
 
 
         // CLAW
@@ -178,9 +156,14 @@ public class MainTeleOp extends OpMode {
             claw.closeClaw();
         }
 
-        //testing preset
-        if (gamepad2.left_bumper) {
-            presetMediumJunction();
+        if (gamepad2.left_bumper) { // preset medium junction
+            rotateArmTo(1.98);
+            slides.extendTo(26.5);
+        }
+
+        if (gamepad2.left_trigger > 0) { // preset high junction
+            rotateArmTo(1.75);
+            slides.extendTo(34);
         }
 
 
@@ -192,16 +175,17 @@ public class MainTeleOp extends OpMode {
         if (gamepad2.dpad_down) {
             manualC = manualC -.05;
         }
-//        lastPressedClawPivot = gamepad2.left_bumper;
 
         // Auto-aim
         if(gamepad2.triangle){
             double [] manipulatorInputs = GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(),odometry.getRotationRadians());
 
             goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), manipulatorInputs[0]);
-            rotateArmTo(manipulatorInputs[1], telemetry);
-            slides.extendTo(manipulatorInputs[2], telemetry);
+            rotateArmTo(manipulatorInputs[1]);
+            slides.extendTo(manipulatorInputs[2]);
         }
+
+
 
         // Adjusting extension length and angle
 //        if(gamepad2.left_trigger > 0.5){
@@ -216,6 +200,7 @@ public class MainTeleOp extends OpMode {
 //        }else if(gamepad2.dpad_down && !adjustingExtensionLength){
 //            targetAngle -= 0.1;
 //        }
+
 
 //        while(gamepad2.right_trigger > 0.5){
 //            rotateArmTo(targetAngle, telemetry);
@@ -268,7 +253,7 @@ public class MainTeleOp extends OpMode {
 
         telemetry.addLine(String.format("\nPosition: [%5.2f, %5.2f]", odometry.getXCoordinate(), odometry.getYCoordinate())); // Check if x and y are still reversed
         telemetry.addData("Angle", odometry.getRotationRadians() * 180 / Math.PI);
-        telemetry.addLine("Ease Coefficient " + drivePreviousInputWeight);
+        telemetry.addLine("Ease Coefficient " + previousInputWeight);
 
 //        odometry.telemetry(telemetry);
         mecanum.telemetry(telemetry);
@@ -279,14 +264,6 @@ public class MainTeleOp extends OpMode {
         telemetry.addLine("DeltaTime " + deltaTime);
         telemetry.addLine("Time" + time);
         telemetry.update();
-    }
-
-    double deadZone(double input) {
-        if (Math.abs(input) < DEADZONE_TOLERANCE) {
-            return 0;
-        }
-
-        return input;
     }
 
     void goToPosition(double targetX, double targetY, double targetAngle) {
@@ -318,8 +295,8 @@ public class MainTeleOp extends OpMode {
 
     public static double clawPivotInput = 0.0;
 
-    public void rotateArm(double power){
-        slides.pivotBy(power);
+    public void rotateArm(double radians){
+        slides.pivotBy(radians);
 
         // Needs something to get only 0.1, 0.2, 0.3, etc...
 
@@ -337,8 +314,8 @@ public class MainTeleOp extends OpMode {
         claw.rotateClaw(clawPivotInput + manualC);
     }
 
-    public void rotateArmTo(double angle, Telemetry telemetry){
-        slides.pivotTo(angle, telemetry);
+    public void rotateArmTo(double angle){
+        slides.pivotTo(angle);
 
         // Needs something to get only 0.1, 0.2, 0.3, etc...
 
@@ -349,7 +326,7 @@ public class MainTeleOp extends OpMode {
         clawPivotInput += 1;
         // 0.0 (backwards) if at 180˚, 1.0 (forwards) if at 0˚
 
-        // Servo only takes inputs in intervals of 0.001
+        // Servo only takes inputs in intervals of 0.1
         clawPivotInput = (int) (clawPivotInput * 600.0);
         clawPivotInput /= 1000.0;
 
@@ -358,22 +335,18 @@ public class MainTeleOp extends OpMode {
         //  0.0  to  1.0
         // (back) (forward)
     }
-    public void presetMediumJunction(){
-            rotateArmTo(1.98, telemetry);
-            slides.extendTo(26.5, telemetry);
-    }
 
     // Cycles once to closest tall junction to substation
     public void cycleToClosestTallJunction(){
         // Grab cone
         claw.openClaw();
-        slides.pivotTo(0, telemetry);
-        slides.extendTo(34 - (7.5 - 3.5), telemetry);
+        slides.pivotTo(0);
+        slides.extendTo(34 - (7.5 - 3.5));
         claw.closeClaw();
 
         // Raise to position
-        slides.pivotTo(Math.PI - Math.atan((37.5 - slides.ROOT_HEIGHT) / (7.5 - 3.5)), telemetry);
-        slides.extendTo(Math.sqrt((37.5 - slides.ROOT_HEIGHT) * (37.5 - slides.ROOT_HEIGHT)  + (7.5 - 3.5) * (7.5 - 3.5)), telemetry);
+        slides.pivotTo(Math.PI - Math.atan((37.5 - slides.ROOT_HEIGHT) / (7.5 - 3.5)));
+        slides.extendTo(Math.sqrt((37.5 - slides.ROOT_HEIGHT) * (37.5 - slides.ROOT_HEIGHT)  + (7.5 - 3.5) * (7.5 - 3.5)));
         while((!slides.seeSawMotor.isBusy() && !slides.extensionMotor.isBusy() && !slides.extensionMotor2.isBusy())){
             claw.openClaw();
         }
@@ -383,6 +356,7 @@ public class MainTeleOp extends OpMode {
     private static double DEFAULT_SCORING_RADIUS = 21.0;
     public void cycle(int targetRow, int targetColumn){ // Row number, column number
         // Cone pickup
+        claw.openClaw();
         claw.closeClaw();
 
         // Rotate
@@ -422,8 +396,8 @@ public class MainTeleOp extends OpMode {
             goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(),
                     manipulatorInputs[0]);
             // Rotate to angle
-            slides.pivotTo(manipulatorInputs[1], telemetry);
-            slides.extendTo(manipulatorInputs[2], telemetry);
+            slides.pivotTo(manipulatorInputs[1]);
+            slides.extendTo(manipulatorInputs[2]);
 
 
         }else if((targetRow + 1) * 23.50 >= odometry.getYCoordinate() &&
@@ -433,8 +407,8 @@ public class MainTeleOp extends OpMode {
             goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(),
                     manipulatorInputs[0]);
             // Rotate to angle
-            slides.pivotTo(manipulatorInputs[1], telemetry);
-            slides.extendTo(manipulatorInputs[2], telemetry);
+            slides.pivotTo(manipulatorInputs[1]);
+            slides.extendTo(manipulatorInputs[2]);
 
         }else if((targetRow + 1) * 23.50 < odometry.getYCoordinate() &&
                 (targetColumn + 1) * 23.50 < odometry.getXCoordinate()){ // Bottom left
@@ -443,8 +417,8 @@ public class MainTeleOp extends OpMode {
             goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(),
                     manipulatorInputs[0]);
             // Rotate to angle
-            slides.pivotTo(manipulatorInputs[1], telemetry);
-            slides.extendTo(manipulatorInputs[2], telemetry);
+            slides.pivotTo(manipulatorInputs[1]);
+            slides.extendTo(manipulatorInputs[2]);
 
         }else if((targetRow + 1) * 23.50 < odometry.getYCoordinate() &&
                 (targetColumn + 1) * 23.50 >= odometry.getXCoordinate()){ // Bottom right
@@ -453,15 +427,15 @@ public class MainTeleOp extends OpMode {
             goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(),
                     manipulatorInputs[0]);
             // Rotate to angle
-            slides.pivotTo(manipulatorInputs[1], telemetry);
-            slides.extendTo(manipulatorInputs[2], telemetry);
+            slides.pivotTo(manipulatorInputs[1]);
+            slides.extendTo(manipulatorInputs[2]);
         }
 
         claw.openClaw();
 
         // Reset for cone pickup
-        slides.extendTo(slides.STARTING_EXTENDER_LENGTH, telemetry);
-        slides.pivotTo(0, telemetry);
+        slides.extendTo(slides.STARTING_EXTENDER_LENGTH);
+        slides.pivotTo(0);
         goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians());
 
         // Go back to substation location
