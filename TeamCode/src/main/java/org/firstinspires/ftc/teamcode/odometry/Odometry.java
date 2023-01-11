@@ -114,26 +114,9 @@ public class Odometry {
         netX = forwardMovement * cosine + trueLateralMovement * sin;
         netY = forwardMovement * sin + trueLateralMovement * cosine;
 
-//        if (false) {
-//            netX = forwardMovement * Math.cos(rotationRadians);
-//            netY = forwardMovement * Math.sin(rotationRadians);
-////                 (D1 + D2) / 2      Orientation Vector
-//            // third wheel component
-//            netX -= (trueLateralMovement) * (Math.sin(rotationRadians));
-//            netY += (trueLateralMovement) * (Math.cos(rotationRadians));
-//            //       Horizontal movement       Normal Vector
-//        }
-
 
         this.position.y += netX;
         this.position.x += netY;
-
-//        // Temporary
-//        AutonomousNew.currentPosition[0] += netX;
-//        AutonomousNew.currentPosition[1] += netY;
-//
-//        MainTeleOp.currentPosition[0] += netX;
-//        MainTeleOp.currentPosition[1] += netY;
 
         velocity.x = netX / deltaTime;
         velocity.y = netY / deltaTime;
