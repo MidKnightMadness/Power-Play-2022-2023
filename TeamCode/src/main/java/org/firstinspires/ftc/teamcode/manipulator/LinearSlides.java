@@ -24,6 +24,7 @@ public class LinearSlides {
     public static DcMotorEx extensionMotor;
     public static DcMotorEx extensionMotor2;
 
+
     public static double [] manipulatorPosition = {0.0, 0.0, 0.0};
     public static double seesawAngle;
     public static double seesawExtensionLength;
@@ -38,7 +39,7 @@ public class LinearSlides {
     // Rotation
     private static final double SEESAW_MOTOR_RATIO = 100; // 60:1 or 40:1 motor?
     public static final double SEESAW_OVERALL_RATIO = Math.PI / (2 * 1400); // Angle per tick
-    private static final double STARTING_ANGLE = 0; //41.59285714285714 * Math.PI / 180; // Of the Manipulator, factor in end-effector's center (cone center), in inches
+    private static final double STARTING_ANGLE = -.14835;// Temporary, for testing MainTeleOp w/ manipulator starting down
     // Extension
     private static final double EXTENDER_MOTOR_RATIO = 20; // 20:1 or 40:1 motor?
     private static final double EXTENDER_WINCH_RADIUS = 9.4 / 2;
@@ -108,7 +109,7 @@ public class LinearSlides {
         return new double[] { x, y, height };
     }
 
-    private static final double MANIPULATOR_BACKSET_DISTANCE = 3.5;
+    public static final double MANIPULATOR_BACKSET_DISTANCE = 3.5;
 
     public void extendTo(double inches, Telemetry telemetry){ // Inches
 
@@ -151,13 +152,24 @@ public class LinearSlides {
         telemetry.addData("Target pivot ticks", (int) (targetAngle / SEESAW_OVERALL_RATIO));
         telemetry.addData("Pivot current ticks", seeSawMotor.getCurrentPosition());
 
-        ticksDifference = (int) ((targetAngle - seesawAngle) / SEESAW_OVERALL_RATIO);
+        // To account for play, ~10˚
+        // Note: only has significant play after 100˚
+        if(seesawAngle * 180 / Math.PI > 90){
+            ticksDifference = (int) (((targetAngle - 7.5 * Math.PI / 180) - seesawAngle) / SEESAW_OVERALL_RATIO);
+
+        }else if(seesawAngle * 180 / Math.PI < 80) {
+            ticksDifference = (int) (((targetAngle + 7.5 * Math.PI / 180) - seesawAngle) / SEESAW_OVERALL_RATIO);
+
+        }else {
+            ticksDifference = (int) ((targetAngle - seesawAngle) / SEESAW_OVERALL_RATIO);
+        }
+
         seeSawMotor.setPower(ticksDifference *.5 / Math.max(Math.abs(ticksDifference), 500));
 
     }
 
     public void pivotBy(double power) {
-        double brake = 0.0005 * (seesawExtensionLength / 2) * Math.cos(seesawAngle);
+        double brake = 0.0002 * (seesawExtensionLength / 2) * Math.cos(seesawAngle);
         if(Math.abs(power) < 0.1){
             seeSawMotor.setPower(brake);
 
@@ -181,7 +193,11 @@ public class LinearSlides {
 
 //        if((seesawAngle < -0.5 && (seeSawMotor.getCurrentPosition() * SEESAW_OVERALL_RATIO) + STARTING_ANGLE > previousAngle) ||
 //        seesawAngle > 0.0){
-            seesawAngle = (seeSawMotor.getCurrentPosition() * SEESAW_OVERALL_RATIO) + STARTING_ANGLE;
+            if(seesawAngle > Math.PI / 2){
+                seesawAngle = (seeSawMotor.getCurrentPosition() * SEESAW_OVERALL_RATIO) + STARTING_ANGLE + 7.5 * Math.PI / 180;
+            }else {
+                seesawAngle = (seeSawMotor.getCurrentPosition() * SEESAW_OVERALL_RATIO) + STARTING_ANGLE;
+            }
 //        }
 
 //        manipulatorPosition[0] = seesawExtensionLength * Math.cos(Master.turntableAngle) * Math.cos(seesawAngle);

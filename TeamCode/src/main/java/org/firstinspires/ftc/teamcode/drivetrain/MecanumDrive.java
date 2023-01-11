@@ -18,6 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
+import org.firstinspires.ftc.teamcode.odometry.Vector2;
 
 /*
  * (Control Hub)
@@ -194,5 +195,6 @@ public class MecanumDrive {
         telemetry.addData("First Angle", angles.firstAngle);
     }
 
+    public static Vector2 endOdometryPosition;
 
 }

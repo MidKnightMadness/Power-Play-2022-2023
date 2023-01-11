@@ -16,9 +16,9 @@ public class Odometry {
     double deltaTime = 0;
     double lastTime = 0;
 
-    double inPerTick = 0.5;
-    double verticalWheelDistance = 9;
-    double lateralWheelDistance = 10;
+    double inPerTick = 0.001107163087698; // 1 - 7 recalibrated distances
+    double verticalWheelDistance = 7.50 - 3.0; // 1 - 7 recalibrated dimensions
+    double lateralWheelDistance = 12.40; // 1 - 7 recalibrated dimensions
 
     public Vector2 position = new Vector2();
     Vector2 velocity = new Vector2();
@@ -101,9 +101,10 @@ public class Odometry {
         rightDistanceMoved = inPerTick * deltaRightTicks;
         topDistanceMoved = inPerTick * deltaTopTicks;
 
+        // 1 - 7 Restored +1/2 rotation trapezoidal integration method
         // angles
-        deltaRadians = getDeltaRotation(leftDistanceMoved, rightDistanceMoved);
-        rotationRadians += deltaRadians;
+        deltaRadians = -getDeltaRotation(leftDistanceMoved, rightDistanceMoved);
+        rotationRadians += .5 * deltaRadians;
 
         forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0;
         trueLateralMovement = topDistanceMoved + deltaRadians * verticalWheelDistance;
@@ -111,8 +112,10 @@ public class Odometry {
         sin = Math.sin(rotationRadians);
         cosine = Math.cos(rotationRadians);
 
-        netX = forwardMovement * cosine + trueLateralMovement * sin;
-        netY = forwardMovement * sin + trueLateralMovement * cosine;
+        netX = forwardMovement * cosine - trueLateralMovement * sin;
+        netY = forwardMovement * sin - trueLateralMovement * cosine;
+
+        rotationRadians += .5 * deltaRadians;
 
 //        if (false) {
 //            netX = forwardMovement * Math.cos(rotationRadians);
@@ -124,9 +127,9 @@ public class Odometry {
 //            //       Horizontal movement       Normal Vector
 //        }
 
-
-        this.position.y += netX;
-        this.position.x += netY;
+        // 1 - 7 Changed signs since was reversed, had to re-swap variables
+        this.position.x += netX;
+        this.position.y -= netY;
 
 //        // Temporary
 //        AutonomousNew.currentPosition[0] += netX;

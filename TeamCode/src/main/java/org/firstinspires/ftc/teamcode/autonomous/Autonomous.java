@@ -173,27 +173,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         }
 
         // score at high junction
-//        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
-//        sleep(3000);
-//        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[0]);
-//        sleep(3000);
-//
-//        linearSlides.pivotTo(GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[1], telemetry);
-//        sleep(5000);
-//        linearSlides.pivotTo(GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[2], telemetry);
-//        sleep(5000);
-//        claw.openClaw();
-//        sleep(1000);
-//        claw.closeClaw();
-//
-//        sleep(5000);
-//        linearSlides.pivotTo(0, telemetry);
-//        sleep(3000);
-//        linearSlides.extendTo(0, telemetry);
-//        sleep(5000);
-
-//        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
-
+        //
 
 
 //----------------LOOP----------------------------------------------------------------------------------------------------

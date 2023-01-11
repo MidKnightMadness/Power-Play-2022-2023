@@ -76,7 +76,7 @@ public class MainTeleOp extends OpMode {
         Timer timer = new Timer();
 
         mecanum = new MecanumDrive(hardwareMap);
-        odometry = new Odometry(hardwareMap, new Vector2(7.5, 7.5), Math.PI / 2);
+        odometry = new Odometry(hardwareMap, Math.PI / 2, new Vector2(7.5, 7.5));
         claw = new Claw(hardwareMap);
         slides = new LinearSlides(hardwareMap);
 
@@ -205,36 +205,36 @@ public class MainTeleOp extends OpMode {
         }
 
         // Adjusting extension length and angle
-//        if(gamepad2.left_trigger > 0.5){
-//            adjustingExtensionLength = !adjustingExtensionLength;
-//        }
-//        if(gamepad2.dpad_up && adjustingExtensionLength){
-//            targetExtension += 0.1;
-//        }else if(gamepad2.dpad_down && adjustingExtensionLength){
-//            targetExtension -= 0.1;
-//        }else if(gamepad2.dpad_up && !adjustingExtensionLength){
-//            targetAngle += 0.1;
-//        }else if(gamepad2.dpad_down && !adjustingExtensionLength){
-//            targetAngle -= 0.1;
-//        }
+        if(gamepad2.left_trigger > 0.5){
+            adjustingExtensionLength = !adjustingExtensionLength;
+        }
+        if(gamepad2.dpad_up && adjustingExtensionLength){
+            targetExtension += 0.1;
+        }else if(gamepad2.dpad_down && adjustingExtensionLength){
+            targetExtension -= 0.1;
+        }else if(gamepad2.dpad_up && !adjustingExtensionLength){
+            targetAngle += 0.1;
+        }else if(gamepad2.dpad_down && !adjustingExtensionLength){
+            targetAngle -= 0.1;
+        }
 
-//        while(gamepad2.right_trigger > 0.5){
-//            rotateArmTo(targetAngle, telemetry);
-//            slides.extendTo(targetExtension, telemetry);
-//
-//            telemetry.addData("\nController target angle (degrees)", targetAngle * 180 / Math.PI);
-//            telemetry.addData("Controller target extension length", targetExtension);
-//            telemetry.addData("Adjusting extension length", adjustingExtensionLength);
-//
-//            telemetry.addData("\nPivot Motor reading", slides.seeSawMotor.getCurrentPosition());
-//            telemetry.addData("Extension Motor 1 reading", slides.extensionMotor.getCurrentPosition());
-//            telemetry.addData("Extension Motor 2 reading", slides.extensionMotor2.getCurrentPosition());
-//
-//            slides.update();
-//            telemetry.addData("\nPivot angle (degrees)", slides.seesawAngle * 180 / Math.PI);
-//            telemetry.addData("Extended length", slides.seesawExtensionLength);
-//            telemetry.update();
-//        }
+        while(gamepad2.right_trigger > 0.5){
+            rotateArmTo(targetAngle, telemetry);
+            slides.extendTo(targetExtension, telemetry);
+
+            telemetry.addData("\nController target angle (degrees)", targetAngle * 180 / Math.PI);
+            telemetry.addData("Controller target extension length", targetExtension);
+            telemetry.addData("Adjusting extension length", adjustingExtensionLength);
+
+            telemetry.addData("\nPivot Motor reading", slides.seeSawMotor.getCurrentPosition());
+            telemetry.addData("Extension Motor 1 reading", slides.extensionMotor.getCurrentPosition());
+            telemetry.addData("Extension Motor 2 reading", slides.extensionMotor2.getCurrentPosition());
+
+            slides.update();
+            telemetry.addData("\nPivot angle (degrees)", slides.seesawAngle * 180 / Math.PI);
+            telemetry.addData("Extended length", slides.seesawExtensionLength);
+            telemetry.update();
+        }
 
 
         telemetry.addData("Pivot Motor reading", slides.seeSawMotor.getCurrentPosition());
@@ -316,6 +316,8 @@ public class MainTeleOp extends OpMode {
         telemetry.update();
 
     }
+
+
 
     public static double clawPivotInput = 0.0;
 
