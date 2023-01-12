@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.common;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import java.util.EventListener;
 import java.util.concurrent.TimeUnit;
 
@@ -14,7 +13,6 @@ public class Timer {
     public Timer() {
         this.elapsedTime = new ElapsedTime();
         lastTime = elapsedTime.startTime();
-
     }
 
     public Timer(ElapsedTime elapsedTime) {

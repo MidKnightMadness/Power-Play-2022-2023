@@ -167,8 +167,6 @@ public class MainTeleOp extends OpMode {
             slides.extendTo(34);
         }
 
-
-
         // claw pivot
         if (gamepad2.dpad_up) {
             manualC = manualC +.05;

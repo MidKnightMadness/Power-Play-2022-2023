@@ -31,6 +31,8 @@ public class Odometry {
     int deltaRightTicks = 0;
     double rightDistanceMoved;
 
+    public double trueLateralMovement;
+
     int lastTopTicks = 0;
     int deltaTopTicks = 0;
     double topDistanceMoved;
@@ -75,7 +77,6 @@ public class Odometry {
     double forwardMovement;
 
     double lateralMovementFromRotation;
-    double trueLateralMovement;
 
     double sin;
     double cosine;
@@ -107,7 +108,7 @@ public class Odometry {
         rotationRadians += .5 * deltaRadians;
 
         forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0;
-        trueLateralMovement = topDistanceMoved + deltaRadians * verticalWheelDistance;
+        trueLateralMovement = topDistanceMoved - deltaRadians * verticalWheelDistance;
 
         sin = Math.sin(rotationRadians);
         cosine = Math.cos(rotationRadians);
@@ -208,4 +209,3 @@ public class Odometry {
     }
 
 }
-
