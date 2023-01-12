@@ -84,6 +84,8 @@ public class Odometry {
     double netX;
     double netY;
 
+    public int ticksPerSecon = 0;
+
     public void updatePosition() {
         leftTicks = leftEncoder.getCurrentPosition();
         rightTicks = -rightEncoder.getCurrentPosition();
@@ -139,8 +141,11 @@ public class Odometry {
 //        MainTeleOp.currentPosition[0] += netX;
 //        MainTeleOp.currentPosition[1] += netY;
 
+
         velocity.x = netX / deltaTime;
         velocity.y = netY / deltaTime;
+
+        ticksPerSecon = 1.0 / deltaTime;
     }
 
     public void setPostion(Vector2 pos) {
