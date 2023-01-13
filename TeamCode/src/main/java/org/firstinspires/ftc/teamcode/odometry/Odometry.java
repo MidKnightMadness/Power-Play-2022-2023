@@ -84,7 +84,7 @@ public class Odometry {
     double netX;
     double netY;
 
-    public int ticksPerSecon = 0;
+    public double ticksPerSecon = 0;
 
     public void updatePosition() {
         leftTicks = leftEncoder.getCurrentPosition();
