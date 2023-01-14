@@ -17,8 +17,8 @@ public class Odometry {
     double lastTime = 0;
 
     double inPerTick = 0.001107163087698; // 1 - 7 recalibrated distances
-    double verticalWheelDistance = 7.50 - 3.0; // 1 - 7 recalibrated dimensions
-    double lateralWheelDistance = 12.40; // 1 - 7 recalibrated dimensions
+    double verticalWheelDistance = 4.875; // 1 - 7 recalibrated dimensions
+    double lateralWheelDistance = 12; // 1 - 7 recalibrated dimensions
 
     public Vector2 position = new Vector2();
     Vector2 velocity = new Vector2();
@@ -30,8 +30,6 @@ public class Odometry {
     int lastRightTicks = 0;
     int deltaRightTicks = 0;
     double rightDistanceMoved;
-
-    public double trueLateralMovement;
 
     int lastTopTicks = 0;
     int deltaTopTicks = 0;
@@ -77,6 +75,7 @@ public class Odometry {
     double forwardMovement;
 
     double lateralMovementFromRotation;
+    double trueLateralMovement;
 
     double sin;
     double cosine;
@@ -84,7 +83,7 @@ public class Odometry {
     double netX;
     double netY;
 
-    public double ticksPerSecon = 0;
+    public int ticksPerSecon = 0;
 
     public void updatePosition() {
         leftTicks = leftEncoder.getCurrentPosition();
@@ -110,13 +109,13 @@ public class Odometry {
         rotationRadians += .5 * deltaRadians;
 
         forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0;
-        trueLateralMovement = topDistanceMoved - deltaRadians * verticalWheelDistance;
+        trueLateralMovement = -topDistanceMoved + deltaRadians * verticalWheelDistance;
 
         sin = Math.sin(rotationRadians);
         cosine = Math.cos(rotationRadians);
 
         netX = forwardMovement * cosine - trueLateralMovement * sin;
-        netY = forwardMovement * sin - trueLateralMovement * cosine;
+        netY = forwardMovement * sin + trueLateralMovement * cosine;
 
         rotationRadians += .5 * deltaRadians;
 
@@ -131,7 +130,7 @@ public class Odometry {
 //        }
 
         // 1 - 7 Changed signs since was reversed, had to re-swap variables
-        this.position.x += netX;
+        this.position.x -= netX;
         this.position.y -= netY;
 
 //        // Temporary
@@ -145,7 +144,7 @@ public class Odometry {
         velocity.x = netX / deltaTime;
         velocity.y = netY / deltaTime;
 
-        ticksPerSecon = 1.0 / deltaTime;
+
     }
 
     public void setPostion(Vector2 pos) {
@@ -210,7 +209,10 @@ public class Odometry {
         telemetry.addData("Left Dead Wheel Position", leftEncoder.getCurrentPosition());
         telemetry.addData("Right Dead Wheel Position", rightEncoder.getCurrentPosition());
         telemetry.addData("Top Dead Wheel Position", horizontalEncoder.getCurrentPosition());
-
+        telemetry.addData("netX", netX);
+        telemetry.addData("netY", netY);
+        telemetry.addData("trueLateralMovement", trueLateralMovement);
     }
 
 }
+

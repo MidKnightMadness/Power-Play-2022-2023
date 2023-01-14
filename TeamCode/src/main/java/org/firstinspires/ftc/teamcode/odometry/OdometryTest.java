@@ -16,7 +16,7 @@ public class OdometryTest extends OpMode{
     @Override
     public void init() {
         timer = new Timer();
-        odometry = new Odometry(hardwareMap, 0, new Vector2(0.0, 0.0));
+        odometry = new Odometry(hardwareMap, Math.PI / 2, new Vector2(0.0, 0.0));
         mecanum = new MecanumDrive(hardwareMap);
     }
 
@@ -65,12 +65,14 @@ public class OdometryTest extends OpMode{
         double adjustedInputY = gamepad1.left_stick_y * (1 - drivePreviousInputWeight) + lastInputY * drivePreviousInputWeight;
 
 
-        mecanum.drive(adjustedInputX * powerMultiplier, -adjustedInputY * powerMultiplier,
-                    (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier * 0.5); // normal drive
+//        mecanum.drive(adjustedInputX * powerMultiplier, -adjustedInputY * powerMultiplier,
+//                    (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier * 0.5); // normal drive
 
         lastInputX = adjustedInputX;
         lastInputY = adjustedInputY;
     }
+
+    double ticksPerSecond = 0.0;
 
     @Override
     public void loop() {
@@ -82,6 +84,9 @@ public class OdometryTest extends OpMode{
 
         odometry.updateTime();
         odometry.updatePosition();
+        ticksPerSecond = 1.0 / odometry.deltaTime;
+        telemetry.addData("Ticks per second", ticksPerSecond);
+
 
         telemetry.addLine("PRESS X OR SQUARE to RESET ENCODERS");
         odometry.telemetry(telemetry);

@@ -75,8 +75,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
  * is explained below.
  */
 
-@TeleOp(name="Vuforia Field Nav Webcam", group ="Concept")
-@Disabled
+@TeleOp(name="Vuforia Field Nav Webcam")
 public class ConceptVuforiaFieldNavigationWebcam extends LinearOpMode {
 
     /*
