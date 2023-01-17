@@ -176,7 +176,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         // score at high junction
         goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
         sleep(3000);
-        goToPosition(getStartingPosition().x, getStartingPosition().y + 51,  2 * Math.PI + GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[0] + 2 * Math.PI);
+        goToPosition(getStartingPosition().x, getStartingPosition().y + 51,   GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[0] + 2 * Math.PI);
 //        sleep(3000);
 
 ////        linearSlides.pivotTo(1.75);
@@ -283,9 +283,9 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             else { telemetry.addLine("SIGNAL TAG NOT FOUND, GOING TO POSITION 2"); }
             telemetry.addData("\nCone timer", coneTimer.getTime());
 
-            telemetry.addLine(String.format("\nCurrent Coordinates: (%3.2f, %3.2f, %3.2f)", odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians()));
+            telemetry.addLine(String.format("\nCurrent Coordinates: (%3.2f, %3.2f, %3.2f)", odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians() * 180 / Math.PI));
             telemetry.addLine(String.format("Target Coordinates: (%3.2f, %3.2f, %3.2f)", targetX, targetY, targetAngle));
-            telemetry.addLine(String.format("Target - current: (%3.2f, %3.2f, %3.2f)", targetX - odometry.getXCoordinate(), targetY - odometry.getYCoordinate(), targetAngle - odometry.getRotationRadians()));
+            telemetry.addLine(String.format("Target - current: (%3.2f, %3.2f, %3.2f)", targetX - odometry.getXCoordinate(), targetY - odometry.getYCoordinate(), targetAngle - odometry.getRotationRadians() * 180 / Math.PI));
             telemetry.addData("Signal #", mostRecentDetection);
             telemetry.addData("Signal finds", "" + signalFinds[0], signalFinds[1], signalFinds[2]);
             if (mostRecentDetection != 0)
