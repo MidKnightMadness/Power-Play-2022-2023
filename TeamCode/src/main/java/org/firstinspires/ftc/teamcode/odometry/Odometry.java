@@ -16,8 +16,8 @@ public class Odometry {
     double deltaTime = 0;
     double lastTime = 0;
 
-    double inPerTick = 0.001107163087698; // 1 - 7 recalibrated distances
-    double verticalWheelDistance = 4.875; // 1 - 7 recalibrated dimensions
+    double inPerTick = 0.0010819; // 1 - 7 recalibrated distances
+    double verticalWheelDistance = 4.5; // 1 - 7 recalibrated dimensions
     double lateralWheelDistance = 12; // 1 - 7 recalibrated dimensions
 
     public Vector2 position = new Vector2();

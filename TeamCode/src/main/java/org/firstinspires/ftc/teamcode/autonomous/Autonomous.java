@@ -43,9 +43,9 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
     AprilTagDetection tagOfInterest = null;
 
 
-    Claw claw;
+//    Claw claw;
     GridSystem gridSystem;
-    LinearSlides linearSlides;
+//    LinearSlides linearSlides;
 
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
@@ -101,7 +101,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
 
         mecanum = new MecanumDrive(hardwareMap);
-        linearSlides = new LinearSlides(hardwareMap);
+//        linearSlides = new LinearSlides(hardwareMap);
         odometry = new Odometry(hardwareMap, getStartingRotation(), getStartingPosition());
 
         camera.setPipeline(aprilTagDetectionPipeline);
@@ -164,32 +164,32 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
         // SCORE PRE-LOAD
         // score at terminal
-        if (getStartingPos() == 2) {
-            goToPosition(getStartingPosition().x + 20, getStartingPosition().y + 1, getStartingRotation());
-            goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation());
-        } else if (getStartingPos() == 3) {
-            goToPosition(getStartingPosition().x - 20, getStartingPosition().y + 1, getStartingRotation());
-            goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation());
-        }
+//        if (getStartingPos() == 2) {
+//            goToPosition(getStartingPosition().x + 20, getStartingPosition().y + 1, getStartingRotation());
+//            goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation());
+//        } else if (getStartingPos() == 3) {
+//            goToPosition(getStartingPosition().x - 20, getStartingPosition().y + 1, getStartingRotation());
+//            goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation());
+//        }
 
 
         // score at high junction
         goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
         sleep(3000);
-        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[0]);
-        sleep(3000);
+//        goToPosition(getStartingPosition().x, getStartingPosition().y + 51,  Math.PI / 4 + 2 * Math.PI); // GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians())[0] + 2 * Math.PI);
+//        sleep(3000);
 
-        linearSlides.pivotTo(1.75);
+//        linearSlides.pivotTo(1.75);
         sleep(5000);
-        linearSlides.extendTo(34);
+//        linearSlides.extendTo(34);
         sleep(5000);
-        claw.openClaw();
+//        claw.openClaw();
         sleep(1000);
-        claw.closeClaw();
+//        claw.closeClaw();
         sleep(5000);
-        linearSlides.extendTo(19.0);
+//        linearSlides.extendTo(19.0);
         sleep(5000);
-        linearSlides.pivotTo(0);
+//        linearSlides.pivotTo(0);
         sleep(3000);
 
         goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
@@ -198,26 +198,27 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
 //----------------LOOP----------------------------------------------------------------------------------------------------
 
-        while (opModeIsActive()) {
-            time = coneTimer.getTime();
-
-            goToPosition(getStartingPosition().x, getStartingPosition().y + 30, getStartingRotation());
-            if(mostRecentDetection == 1) {
-                goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 26, getStartingRotation());
-                goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 32, getStartingRotation());
-            } else if (mostRecentDetection == 2) {
-                goToPosition(getStartingPosition().x, getStartingPosition().y + 32, getStartingRotation());
-            } else if (mostRecentDetection == 3) {
-                goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 26, getStartingRotation());
-                goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 32, getStartingRotation());
-            }
-
-            sleep(20);
-            rotateTo(0.5);
-            sleep(1000);
-            rotateTo(-.7);
-            requestOpModeStop();
-        }
+//        while (opModeIsActive()) {
+//            time = coneTimer.getTime();
+//
+//            goToPosition(getStartingPosition().x, getStartingPosition().y + 30, getStartingRotation());
+//            sleep(1000);
+//            if(mostRecentDetection == 1) {
+//                goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 26, getStartingRotation());
+//                goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 32, getStartingRotation());
+//            } else if (mostRecentDetection == 2) {
+//                goToPosition(getStartingPosition().x, getStartingPosition().y + 32, getStartingRotation());
+//            } else if (mostRecentDetection == 3) {
+//                goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 26, getStartingRotation());
+//                goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 32, getStartingRotation());
+//            }
+//
+//            sleep(20);
+////            rotateTo(0.5);
+//            sleep(1000);
+////            rotateTo(-.7);
+//            requestOpModeStop();
+//        }
     }
 
     void tagToTelemetry(AprilTagDetection detection)
@@ -232,9 +233,9 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
     int upDown = startingPos == 0 || startingPos == 2 ? -1 : 1;
 
     void cycle() throws InterruptedException{
-        linearSlides.grabFromDefaultScoringPosition();
+//        linearSlides.grabFromDefaultScoringPosition();
         sleep(100);
-        linearSlides.scoreFromDefaultScoringPosition();
+//        linearSlides.scoreFromDefaultScoringPosition();
         sleep(100);
 //
 //        if(Vector.lengthOf(Vector.add(Vector.neg(linearSlides.getClawCoordinates()), linearSlides.DEFAULT_SCORING_DISPLACEMENT)) > 0.1){
@@ -264,19 +265,19 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         goToPosition(centerX, targetY, 0);
         goToPosition(targetX, targetY, 0);
     }
-    void rotateTo(double angle) {
-        while (Math.abs(linearSlides.seesawAngle - angle) > .05) {
-            linearSlides.pivotTo(angle);
-            linearSlides.update();
-            telemetry.update();
-        }
-    }
+//    void rotateTo(double angle) {
+//        while (Math.abs(linearSlides.seesawAngle - angle) > .05) {
+//            linearSlides.pivotTo(angle);
+//            linearSlides.update();
+//            telemetry.update();
+//        }
+//    }
 
     void goToPosition(double targetX, double targetY, double targetAngle) {
         boolean atLocation = false;
 
         while (!atLocation) {
-            linearSlides.update();
+//            linearSlides.update();
             telemetry.addLine();
             if (mostRecentDetection != 0) { telemetry.addLine("SIGNAL TAG FOUND, GOING TO POSITION " + mostRecentDetection); }
             else { telemetry.addLine("SIGNAL TAG NOT FOUND, GOING TO POSITION 2"); }
@@ -298,116 +299,116 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             sleep(20);
         }
     }
-
-    // Cycles once to specified junction idicies
-    private static double DEFAULT_SCORING_RADIUS = 21.0;
-    public void cycle(int targetRow, int targetColumn){ // Indices from
-        // Cone pickup
-        claw.openClaw();
-        claw.closeClaw();
-
-        // Rotate
-        goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI / 2);
-
-        // Assumes starting at at substation
-        // Move to center of square
-        goToPosition(odometry.getXCoordinate() - (odometry.getXCoordinate() % 23.50) + 11.75,
-                odometry.getYCoordinate() - (odometry.getYCoordinate() % 23.50) + 11.75, odometry.getRotationRadians());
-
-        // Go to x coordinate
-        if((targetColumn + 1) * 23.50 >= odometry.getXCoordinate()){ // Case: junction should be right of robot
-            goToPosition((targetColumn + 1) * 23.50 - (DEFAULT_SCORING_RADIUS * Math.cos(Math.PI / 4)),
-                    odometry.getYCoordinate(), odometry.getRotationRadians());
-
-        }else if((targetColumn + 1) * 23.50 < odometry.getXCoordinate()){ // Case: junction should be left of robot
-            goToPosition((targetColumn + 1) * 23.50 + (DEFAULT_SCORING_RADIUS * Math.cos(Math.PI / 4)),
-                    odometry.getYCoordinate(), odometry.getRotationRadians());
-        }
-
-        // Go to y coordinate
-        if((targetRow + 1) * 23.50 >= odometry.getYCoordinate()){ // Case: junction should be in front of robot
-            goToPosition(odometry.getXCoordinate(), (targetColumn + 1) * 23.50 - (DEFAULT_SCORING_RADIUS * Math.cos(Math.PI / 4)),
-                    odometry.getRotationRadians());
-
-        }else if((targetRow + 1) * 23.50 < odometry.getYCoordinate()){ // Case: junction should be behind robot
-            goToPosition(odometry.getXCoordinate(), (targetColumn + 1) * 23.50 + (DEFAULT_SCORING_RADIUS * Math.cos(Math.PI / 4)),
-                    odometry.getRotationRadians());
-        }
-
-        // Turn, pivot manipulator, and extend manipulator
-        double [] manipulatorInputs = {0.0, 0.0, 0.0};
-        if((targetRow + 1) * 23.50 >= odometry.getYCoordinate() &&
-                (targetColumn + 1) * 23.50 >= odometry.getXCoordinate()){ // Top right
-            // Aimbot with 45˚
-            manipulatorInputs = GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI / 4);
-            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(),
-                    manipulatorInputs[0]);
-            // Rotate to angle
-            linearSlides.pivotTo(manipulatorInputs[1]);
-            linearSlides.extendTo(manipulatorInputs[2]);
-
-
-        }else if((targetRow + 1) * 23.50 >= odometry.getYCoordinate() &&
-                (targetColumn + 1) * 23.50 < odometry.getXCoordinate()){ // Top left
-            // Aimbot with 135˚
-            manipulatorInputs = GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI * 3 / 4);
-            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(),
-                    manipulatorInputs[0]);
-            // Rotate to angle
-            linearSlides.pivotTo(manipulatorInputs[1]);
-            linearSlides.extendTo(manipulatorInputs[2]);
-
-        }else if((targetRow + 1) * 23.50 < odometry.getYCoordinate() &&
-                (targetColumn + 1) * 23.50 < odometry.getXCoordinate()){ // Bottom left
-            // Aimbot with 225˚
-            manipulatorInputs = GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI * 5 / 4);
-            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(),
-                    manipulatorInputs[0]);
-            // Rotate to angle
-            linearSlides.pivotTo(manipulatorInputs[1]);
-            linearSlides.extendTo(manipulatorInputs[2]);
-
-        }else if((targetRow + 1) * 23.50 < odometry.getYCoordinate() &&
-                (targetColumn + 1) * 23.50 >= odometry.getXCoordinate()){ // Bottom right
-            // Aimbot with 315˚
-            manipulatorInputs = GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI * 7 / 4);
-            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(),
-                    manipulatorInputs[0]);
-            // Rotate to angle
-            linearSlides.pivotTo(manipulatorInputs[1]);
-            linearSlides.extendTo(manipulatorInputs[2]);
-        }
-
-        claw.openClaw();
-
-        // Reset for cone pickup
-        linearSlides.extendTo(linearSlides.STARTING_EXTENDER_LENGTH);
-        linearSlides.pivotTo(0);
-        goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians());
-
-        // Go back to substation location
-        // Go to center of square
-        goToPosition(odometry.getXCoordinate() - (odometry.getXCoordinate() % 23.50) + 11.75,
-                odometry.getYCoordinate() - (odometry.getYCoordinate() % 23.50) + 11.75, odometry.getRotationRadians());
-
-        // x coordinates
-        if(23.50 * 3 <= odometry.getXCoordinate()){ // Case: needs to go left
-            goToPosition((23.50 * 3) + 11.75, odometry.getYCoordinate(), odometry.getRotationRadians());
-
-        }else if(23.50 * 3 > odometry.getXCoordinate()){ // Case: needs to go right
-            goToPosition((23.50 * 3) - 11.75, odometry.getYCoordinate(), odometry.getRotationRadians());
-        }
-
-        // y coordinates
-        goToPosition(odometry.getXCoordinate(), 23.50, odometry.getRotationRadians());
-
-        // Rotate
-        if(23.50 * 3 <= odometry.getXCoordinate()){ // Case: needs to go left
-            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI * 5 / 4);
-
-        }else if(23.50 * 3 > odometry.getXCoordinate()){ // Case: needs to go right
-            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI * 7 / 4);
-        }
-    }
+//
+//    // Cycles once to specified junction idicies
+//    private static double DEFAULT_SCORING_RADIUS = 21.0;
+//    public void cycle(int targetRow, int targetColumn){ // Indices from
+//        // Cone pickup
+//        claw.openClaw();
+//        claw.closeClaw();
+//
+//        // Rotate
+//        goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI / 2);
+//
+//        // Assumes starting at at substation
+//        // Move to center of square
+//        goToPosition(odometry.getXCoordinate() - (odometry.getXCoordinate() % 23.50) + 11.75,
+//                odometry.getYCoordinate() - (odometry.getYCoordinate() % 23.50) + 11.75, odometry.getRotationRadians());
+//
+//        // Go to x coordinate
+//        if((targetColumn + 1) * 23.50 >= odometry.getXCoordinate()){ // Case: junction should be right of robot
+//            goToPosition((targetColumn + 1) * 23.50 - (DEFAULT_SCORING_RADIUS * Math.cos(Math.PI / 4)),
+//                    odometry.getYCoordinate(), odometry.getRotationRadians());
+//
+//        }else if((targetColumn + 1) * 23.50 < odometry.getXCoordinate()){ // Case: junction should be left of robot
+//            goToPosition((targetColumn + 1) * 23.50 + (DEFAULT_SCORING_RADIUS * Math.cos(Math.PI / 4)),
+//                    odometry.getYCoordinate(), odometry.getRotationRadians());
+//        }
+//
+//        // Go to y coordinate
+//        if((targetRow + 1) * 23.50 >= odometry.getYCoordinate()){ // Case: junction should be in front of robot
+//            goToPosition(odometry.getXCoordinate(), (targetColumn + 1) * 23.50 - (DEFAULT_SCORING_RADIUS * Math.cos(Math.PI / 4)),
+//                    odometry.getRotationRadians());
+//
+//        }else if((targetRow + 1) * 23.50 < odometry.getYCoordinate()){ // Case: junction should be behind robot
+//            goToPosition(odometry.getXCoordinate(), (targetColumn + 1) * 23.50 + (DEFAULT_SCORING_RADIUS * Math.cos(Math.PI / 4)),
+//                    odometry.getRotationRadians());
+//        }
+//
+//        // Turn, pivot manipulator, and extend manipulator
+//        double [] manipulatorInputs = {0.0, 0.0, 0.0};
+//        if((targetRow + 1) * 23.50 >= odometry.getYCoordinate() &&
+//                (targetColumn + 1) * 23.50 >= odometry.getXCoordinate()){ // Top right
+//            // Aimbot with 45˚
+//            manipulatorInputs = GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI / 4);
+//            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(),
+//                    manipulatorInputs[0]);
+//            // Rotate to angle
+//            linearSlides.pivotTo(manipulatorInputs[1]);
+//            linearSlides.extendTo(manipulatorInputs[2]);
+//
+//
+//        }else if((targetRow + 1) * 23.50 >= odometry.getYCoordinate() &&
+//                (targetColumn + 1) * 23.50 < odometry.getXCoordinate()){ // Top left
+//            // Aimbot with 135˚
+//            manipulatorInputs = GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI * 3 / 4);
+//            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(),
+//                    manipulatorInputs[0]);
+//            // Rotate to angle
+//            linearSlides.pivotTo(manipulatorInputs[1]);
+//            linearSlides.extendTo(manipulatorInputs[2]);
+//
+//        }else if((targetRow + 1) * 23.50 < odometry.getYCoordinate() &&
+//                (targetColumn + 1) * 23.50 < odometry.getXCoordinate()){ // Bottom left
+//            // Aimbot with 225˚
+//            manipulatorInputs = GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI * 5 / 4);
+//            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(),
+//                    manipulatorInputs[0]);
+//            // Rotate to angle
+//            linearSlides.pivotTo(manipulatorInputs[1]);
+//            linearSlides.extendTo(manipulatorInputs[2]);
+//
+//        }else if((targetRow + 1) * 23.50 < odometry.getYCoordinate() &&
+//                (targetColumn + 1) * 23.50 >= odometry.getXCoordinate()){ // Bottom right
+//            // Aimbot with 315˚
+//            manipulatorInputs = GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI * 7 / 4);
+//            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(),
+//                    manipulatorInputs[0]);
+//            // Rotate to angle
+//            linearSlides.pivotTo(manipulatorInputs[1]);
+//            linearSlides.extendTo(manipulatorInputs[2]);
+//        }
+//
+//        claw.openClaw();
+//
+//        // Reset for cone pickup
+//        linearSlides.extendTo(linearSlides.STARTING_EXTENDER_LENGTH);
+//        linearSlides.pivotTo(0);
+//        goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians());
+//
+//        // Go back to substation location
+//        // Go to center of square
+//        goToPosition(odometry.getXCoordinate() - (odometry.getXCoordinate() % 23.50) + 11.75,
+//                odometry.getYCoordinate() - (odometry.getYCoordinate() % 23.50) + 11.75, odometry.getRotationRadians());
+//
+//        // x coordinates
+//        if(23.50 * 3 <= odometry.getXCoordinate()){ // Case: needs to go left
+//            goToPosition((23.50 * 3) + 11.75, odometry.getYCoordinate(), odometry.getRotationRadians());
+//
+//        }else if(23.50 * 3 > odometry.getXCoordinate()){ // Case: needs to go right
+//            goToPosition((23.50 * 3) - 11.75, odometry.getYCoordinate(), odometry.getRotationRadians());
+//        }
+//
+//        // y coordinates
+//        goToPosition(odometry.getXCoordinate(), 23.50, odometry.getRotationRadians());
+//
+//        // Rotate
+//        if(23.50 * 3 <= odometry.getXCoordinate()){ // Case: needs to go left
+//            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI * 5 / 4);
+//
+//        }else if(23.50 * 3 > odometry.getXCoordinate()){ // Case: needs to go right
+//            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), Math.PI * 7 / 4);
+//        }
+//    }
 }
 

@@ -79,10 +79,10 @@ public class MecanumDrive {
         BLMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Set Zero Power Behavior
-//        FRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        FLMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        BRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        BLMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FLMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BRMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BLMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Stops Motors on INIT
         FRMotor.setPower(0);
@@ -102,88 +102,130 @@ public class MecanumDrive {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
-
-        replacement = 0.0;
     }
 
     public void drive(double x, double y, double rotate) {
-        FRMotor.setPower(-x + y - rotate);
-        FLMotor.setPower( x + y + rotate);
-        BRMotor.setPower( x + y - rotate);
-        BLMotor.setPower(-x + y + rotate);
+        FRMotor.setPower( x - y + rotate);
+        FLMotor.setPower(-x - y - rotate);
+        BRMotor.setPower(-x - y + rotate);
+        BLMotor.setPower( x - y - rotate);
     }
 
-    private final double SENSITIVITY = 0.5;
-    public void fieldOrientatedDrive(double x, double y, double rotate) {
+//    private final double SENSITIVITY = 0.5;
+//    public void fieldOrientatedDrive(double x, double y, double rotate) {
+//        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+//        gyro_degrees = angles.firstAngle;
+//        gyro_radians = gyro_degrees * Math.PI / 180;
+//        offAngle = Math.atan(y / x);
+//
+//        if (x == 0 && y == 0) {
+//            drive(0, 0, rotate);
+//            return;
+//        }
+//
+//        if (x < 0) { offAngle = Math.PI + offAngle; }
+//
+//        correctedX = Math.cos(-gyro_radians + offAngle);
+//        correctedY = Math.sin(-gyro_radians + offAngle);
+//
+//        drive(correctedX * SENSITIVITY, correctedY * SENSITIVITY, rotate * SENSITIVITY);
+//    }
+//
+//    public void fieldOrientatedDrive(double x, double y, double rotate, double rotation) {
+//        offAngle = Math.atan(y / x);
+//
+//        if (x == 0 && y == 0) {
+//            drive(0, 0, rotate);
+//            return;
+//        }
+//
+//        if (x < 0) { offAngle = Math.PI + offAngle; }
+//
+//        correctedX = Math.cos(-rotation + offAngle);
+//        correctedY = Math.sin(-rotation + offAngle);
+//
+//        drive(correctedX * SENSITIVITY, correctedY * SENSITIVITY, rotate * SENSITIVITY);
+//    }
+//
+//    double replacement;
+//
+//    public boolean driveTo(double targetX, double targetY, double targetAngle, double currentX, double currentY, double currentAngle){
+//        if(Math.sqrt(((targetX - currentX) * (targetX - currentX)) + ((targetY - currentY) * (targetY - currentY))) > 1) {
+//
+////            replacement = Math.max(Math.abs(targetX - currentX), Math.abs(targetY - currentY));
+////            if(Math.sqrt(((targetX - currentX) * (targetX - currentX)) + ((targetY - currentY) * (targetY - currentY))) < 10.0){ // CHange this later
+//                fieldOrientatedDrive((targetX - currentX) / (10), (targetY - currentY) / (10), (0)); // 0 on rotational component is temporary, needs correction
+////            }else {
+////                fieldOrientatedDrive((targetX - currentX) / (replacement * 10), (targetY - currentY) / (replacement * 10), (targetAngle - currentAngle) / 360); // 0 on rotational component is temporary, needs correction
+////            }
+////            FRMotor.setPower(-0 + -((targetY - currentY) / replacement) * 0.1 - 0);
+////            FLMotor.setPower( 0 + -((targetY - currentY) / replacement) * 0.1 + 0);
+////            BRMotor.setPower( 0 + -((targetY - currentY) / replacement) * 0.1 - 0);
+////            BLMotor.setPower(-0 + -((targetY - currentY) / replacement) * 0.1 + 0);
+//            return false;
+//        }
+//        fieldOrientatedDrive(0, 0, 0);
+//        return true;
+//    }
+
+    public void fieldOrientatedDrive(double x, double y, double rotate, double angle) {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        gyro_degrees = angles.firstAngle;
-        gyro_radians = gyro_degrees * Math.PI / 180;
-        offAngle = Math.atan(y / x);
+        double gyroRadians = angles.firstAngle * Math.PI/180;
+        double offAngle = Math.acos(x);
 
         if (x == 0 && y == 0) {
             drive(0, 0, rotate);
             return;
         }
 
-        if (x < 0) { offAngle = Math.PI + offAngle; }
+        if (y < 0) { offAngle = -offAngle; }
 
-        correctedX = Math.cos(-gyro_radians + offAngle);
-        correctedY = Math.sin(-gyro_radians + offAngle);
+        double correctedX = Math.cos(-gyroRadians + offAngle);
+        double correctedY = Math.sin(-gyroRadians + offAngle);
 
-        drive(correctedX * SENSITIVITY, correctedY * SENSITIVITY, rotate * SENSITIVITY);
+        drive(correctedX * .5, correctedY * .5, rotate * .5);
     }
 
-    public void fieldOrientatedDrive(double x, double y, double rotate, double rotation) {
-        offAngle = Math.atan(y / x);
+    public boolean driveTo(double targetX, double targetY, double targetAngle, double currentX, double currentY, double currentAngle) {
+        double dy = (targetY - currentY);
+        double dx = (targetX - currentX);
+        double rotato = Math.acos(dx / Math.hypot(dy, dx));
+        if (dy < 0) rotato = 0 - rotato; //finds angle of approach
 
-        if (x == 0 && y == 0) {
-            drive(0, 0, rotate);
-            return;
-        }
+        double newx = Math.cos(rotato - currentAngle + Math.PI / 2); //drives without turning to the point
+        double newy = Math.sin(rotato - currentAngle + Math.PI / 2);
+        double spd = Math.min(Math.hypot(dy, dx), 4.0) / 6;
+        spd *= Math.sqrt(spd); // Cube, still needed more precise adjustment
 
-        if (x < 0) { offAngle = Math.PI + offAngle; }
-
-        correctedX = Math.cos(-rotation + offAngle);
-        correctedY = Math.sin(-rotation + offAngle);
-
-        drive(correctedX * SENSITIVITY, correctedY * SENSITIVITY, rotate * SENSITIVITY);
-    }
-
-    double replacement;
-
-    public boolean driveTo(double targetX, double targetY, double targetAngle, double currentX, double currentY, double currentAngle){
-        if(Math.sqrt(((targetX - currentX) * (targetX - currentX)) + ((targetY - currentY) * (targetY - currentY))) > 1) {
-
-//            replacement = Math.max(Math.abs(targetX - currentX), Math.abs(targetY - currentY));
-//            if(Math.sqrt(((targetX - currentX) * (targetX - currentX)) + ((targetY - currentY) * (targetY - currentY))) < 10.0){ // CHange this later
-                fieldOrientatedDrive((targetX - currentX) / (10), (targetY - currentY) / (10), (0)); // 0 on rotational component is temporary, needs correction
-//            }else {
-//                fieldOrientatedDrive((targetX - currentX) / (replacement * 10), (targetY - currentY) / (replacement * 10), (targetAngle - currentAngle) / 360); // 0 on rotational component is temporary, needs correction
-//            }
-//            FRMotor.setPower(-0 + -((targetY - currentY) / replacement) * 0.1 - 0);
-//            FLMotor.setPower( 0 + -((targetY - currentY) / replacement) * 0.1 + 0);
-//            BRMotor.setPower( 0 + -((targetY - currentY) / replacement) * 0.1 - 0);
-//            BLMotor.setPower(-0 + -((targetY - currentY) / replacement) * 0.1 + 0);
+        if((dx * dx) + (dy * dy) > 5 || (targetAngle - currentAngle) > Math.PI / 45) {
+            drive(newx * spd, newy * spd, -pointTo(targetAngle, currentAngle));
             return false;
         }
-        fieldOrientatedDrive(0, 0, 0);
+        drive(0, 0, 0);
         return true;
     }
-    public void pointTo(double x, double y) {
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        gyro_degrees = angles.firstAngle;
-        gyro_radians = (gyro_degrees * Math.PI / 180);
-        double newAngle = Math.acos(x);
-        if (y < 0) newAngle = 0-newAngle;
-        double rotato = (newAngle-gyro_radians+3.1416)%6.283-3.1416;//reference angle
-        if (rotato < -3.1416) rotato += 6.283;
-        rotato = Math.cbrt(3.1416/rotato);
-        //double amt = rotato-gyro_radians;
-        //if (Math.abs(amt) > 3.1416) {//if difference > 180 degrees
-            //amt = 0-amt;//flip direction
-        //}
 
+//    public void pointTo(double x, double y) {
+//        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+//        gyro_degrees = angles.firstAngle;
+//        gyro_radians = (gyro_degrees * Math.PI / 180);
+//        double newAngle = Math.acos(x);
+//        if (y < 0) newAngle = 0-newAngle;
+//        double rotato = (newAngle-gyro_radians+3.1416)%6.283-3.1416;//reference angle
+//        if (rotato < -3.1416) rotato += 6.283;
+//        rotato = Math.cbrt(3.1416/rotato);
+//        //double amt = rotato-gyro_radians;
+//        //if (Math.abs(amt) > 3.1416) {//if difference > 180 degrees
+//            //amt = 0-amt;//flip direction
+//        //}
+//
+//    }
+
+    public double pointTo(double targetAngle, double currentAngle) { //forward is 0
+        double rotato = (targetAngle - currentAngle + Math.PI) % (Math.PI * 2) - Math.PI; //reference angle
+        if (rotato < -Math.PI) rotato += (Math.PI * 2);
+        if (Math.abs(rotato) < .087) return rotato / .087 / 4;
+        return rotato / Math.abs(rotato) / 4;
     }
 
     public void telemetry(Telemetry telemetry) {

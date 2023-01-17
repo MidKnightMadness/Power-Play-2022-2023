@@ -65,8 +65,8 @@ public class OdometryTest extends OpMode{
         double adjustedInputY = gamepad1.left_stick_y * (1 - drivePreviousInputWeight) + lastInputY * drivePreviousInputWeight;
 
 
-//        mecanum.drive(adjustedInputX * powerMultiplier, -adjustedInputY * powerMultiplier,
-//                    (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier * 0.5); // normal drive
+        mecanum.drive(adjustedInputX * powerMultiplier, -adjustedInputY * powerMultiplier,
+                    (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier * 0.5); // normal drive
 
         lastInputX = adjustedInputX;
         lastInputY = adjustedInputY;
