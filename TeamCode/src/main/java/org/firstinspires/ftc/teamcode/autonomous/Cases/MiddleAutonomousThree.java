@@ -3,12 +3,11 @@ package org.firstinspires.ftc.teamcode.autonomous.Cases;
 import org.firstinspires.ftc.teamcode.autonomous.Autonomous;
 import org.firstinspires.ftc.teamcode.odometry.Vector2;
 
-
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Blue Left")
-public class AutonomousOne extends Autonomous {
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Red Left Middle")
+public class MiddleAutonomousThree extends Autonomous {
     @Override
     public int getStartingPos() {
-        return 1;
+        return 3;
     }
     @Override
     public double getStartingRotation() {
@@ -21,5 +20,4 @@ public class AutonomousOne extends Autonomous {
 
     @Override
     public int getScoringJunction() { return 1; }
-
 }

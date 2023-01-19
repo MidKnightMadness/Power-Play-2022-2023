@@ -4,8 +4,8 @@ import org.firstinspires.ftc.teamcode.autonomous.Autonomous;
 import org.firstinspires.ftc.teamcode.odometry.Vector2;
 
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Blue Left")
-public class AutonomousOne extends Autonomous {
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Blue Left Middle")
+public class MiddleAutonomousOne extends Autonomous {
     @Override
     public int getStartingPos() {
         return 1;
@@ -21,5 +21,4 @@ public class AutonomousOne extends Autonomous {
 
     @Override
     public int getScoringJunction() { return 1; }
-
 }

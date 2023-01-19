@@ -73,6 +73,8 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         return new Vector2(35, halfRobotWidth);
     }
 
+    public int getScoringJunction() { return 0; }
+
     @Override
     public void runOpMode() {
 //----------------INIT----------------------------------------------------------------------------------------------------
@@ -192,8 +194,11 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 ////        linearSlides.pivotTo(0);
 //        sleep(3000);
 
-        scoreOneMiddle();
-        park(28.5);
+        scoreOneForward();
+        park(51);
+
+//        scoreOneMiddle();
+       // park(28.5);
 
 
 
@@ -228,6 +233,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 55, getStartingRotation() + Math.PI);
         sleep(1000);
     }
+
 
     void scoreOneMiddle() {
         double xOffset = (getStartingPos() == 1 || getStartingPos() == 3) ? 23.5 * 1.5 : -23.5 * 1.5;
