@@ -118,29 +118,10 @@ public class MecanumDrive {
         yDrive = y;
         rotateDrive = rotate;
 
-        if(Math.abs(x - y + rotate) < 0.1){
-            FRMotor.setPower(0);
-        }else{
-            FRMotor.setPower( x - y + rotate);
-        }
-
-        if(Math.abs(-x - y - rotate) < 0.1){
-            FLMotor.setPower(0);
-        }else{
-            FLMotor.setPower(-x - y - rotate);
-        }
-
-        if(Math.abs(-x - y - rotate) < 0.1){
-            BRMotor.setPower(0);
-        }else{
-            BRMotor.setPower(-x - y + rotate);
-        }
-
-        if(Math.abs(x - y - rotate) < 0.1){
-            BLMotor.setPower(0);
-        }else{
-            BLMotor.setPower( x - y - rotate);
-        }
+        FRMotor.setPower( x - y + rotate);
+        FLMotor.setPower(-x - y - rotate);
+        BRMotor.setPower(-x - y + rotate);
+        BLMotor.setPower( x - y - rotate);
     }
 
 //    private final double SENSITIVITY = 0.5;
@@ -252,7 +233,7 @@ public class MecanumDrive {
             return false;
         }
 
-        drive(0, 0, 0);
+        //drive(0, 0, 0);
         return true;
     }
 
