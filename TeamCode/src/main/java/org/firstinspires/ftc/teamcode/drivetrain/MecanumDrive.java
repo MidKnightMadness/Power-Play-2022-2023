@@ -118,10 +118,29 @@ public class MecanumDrive {
         yDrive = y;
         rotateDrive = rotate;
 
-        FRMotor.setPower( x - y + rotate);
-        FLMotor.setPower(-x - y - rotate);
-        BRMotor.setPower(-x - y + rotate);
-        BLMotor.setPower( x - y - rotate);
+        if(Math.abs(x - y + rotate) < 0.1){
+            FRMotor.setPower(0);
+        }else{
+            FRMotor.setPower( x - y + rotate);
+        }
+
+        if(Math.abs(-x - y - rotate) < 0.1){
+            FLMotor.setPower(0);
+        }else{
+            FLMotor.setPower(-x - y - rotate);
+        }
+
+        if(Math.abs(-x - y - rotate) < 0.1){
+            BRMotor.setPower(0);
+        }else{
+            BRMotor.setPower(-x - y + rotate);
+        }
+
+        if(Math.abs(x - y - rotate) < 0.1){
+            BLMotor.setPower(0);
+        }else{
+            BLMotor.setPower( x - y - rotate);
+        }
     }
 
 //    private final double SENSITIVITY = 0.5;
@@ -211,16 +230,22 @@ public class MecanumDrive {
         spd = Math.max(spd * Math.sqrt(spd) * .6, 0.2);
         // 3/2 power
 
-        if((dx * dx) + (dy * dy) > 1){
-            XYInput[0] = newx * spd;
-            XYInput[1] = newy * spd;
-        }
+//        if((dx * dx) + (dy * dy) > 1){
+//            XYInput[0] = newx * spd;
+//            XYInput[1] = newy * spd;
+//        }
+//
+//        if(Math.abs(pointTo(targetAngle, currentAngle)) > 0.1){
+//            rotationInput = -0.6 * pointTo(targetAngle, currentAngle);
+//        }
+//
+//        drive(XYInput[0], XYInput[1], rotationInput);
 
-        if(Math.abs(pointTo(targetAngle, currentAngle)) > .1){
-            rotationInput = -pointTo(targetAngle, currentAngle);
-        }
+        if((dx * dx) + (dy * dy) > 1 || Math.abs(pointTo(targetAngle, currentAngle)) > 0.05){
 
-        drive(XYInput[0], XYInput[1], rotationInput);
+            drive(newx * spd, newy * spd, -0.6 * pointTo(targetAngle, currentAngle));
+            return false;
+        }
 
         drive(0, 0, 0);
         return true;
@@ -260,10 +285,7 @@ public class MecanumDrive {
         telemetry.addData("Corrected Y", correctedY);
         telemetry.addData("First Angle", angles.firstAngle);
 
-        telemetry.addLine(String.format("\nDrive function inputs(low level):\n" +
-                "x: %5.2d\n" +
-                "y: %5.2d\n" +
-                "rotate: %5.2d",
+        telemetry.addLine(String.format("\nDrive function inputs(low level):\nx: %5.2f\ny: %5.2f\nrotate: %5.2f",
                 xDrive, yDrive, rotateDrive));
     }
 

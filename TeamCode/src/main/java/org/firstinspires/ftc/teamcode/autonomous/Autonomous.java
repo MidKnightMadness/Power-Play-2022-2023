@@ -320,6 +320,10 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
             telemetry.addData("Signal #", mostRecentDetection);
             telemetry.addData("Signal finds", "" + signalFinds[0], signalFinds[1], signalFinds[2]);
+
+            telemetry.addLine("\n");
+            mecanum.telemetry(telemetry);
+
             if (mostRecentDetection != 0)
                 telemetry.addData("Signal location", signalLocations[startingPos][mostRecentDetection - 1]);
             odometry.updatePosition();
