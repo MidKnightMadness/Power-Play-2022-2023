@@ -233,10 +233,15 @@ public class MecanumDrive {
 //        if((dx * dx) + (dy * dy) > 1){
 //            XYInput[0] = newx * spd;
 //            XYInput[1] = newy * spd;
+//        }else{
+//            XYInput[0] = 0;
+//            XYInput[1] = 0;
 //        }
 //
-//        if(Math.abs(pointTo(targetAngle, currentAngle)) > 0.1){
+//        if(Math.abs(pointTo(targetAngle, currentAngle)) > 0.05){
 //            rotationInput = -0.6 * pointTo(targetAngle, currentAngle);
+//        }else{
+//            rotationInput = 0;
 //        }
 //
 //        drive(XYInput[0], XYInput[1], rotationInput);
