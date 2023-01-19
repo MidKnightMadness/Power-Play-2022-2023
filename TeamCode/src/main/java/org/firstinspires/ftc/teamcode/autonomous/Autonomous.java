@@ -221,7 +221,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
         goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
         sleep(1000);
-        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
+        turn(3 * Math.PI / 4);
         sleep(1000);
         goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
         sleep(500);
@@ -234,7 +234,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
         goToPosition(getStartingPosition().x, getStartingPosition().y + 23.5, getStartingRotation());
         sleep(1000);
-        goToPosition(getStartingPosition().x, getStartingPosition().y + 23.5, getStartingRotation() + Math.PI);
+        turn(3 * Math.PI / 4);
         sleep(1000);
         goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 23.5, getStartingRotation() + Math.PI);
         sleep(500);
@@ -334,6 +334,41 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
 
             atLocation = mecanum.driveTo(targetX, targetY, targetAngle, odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians());
+
+            sleep(20);
+        }
+    }
+
+    void turn(double targetAngle) {
+        boolean atLocation = false;
+
+        while (!atLocation) {
+//            linearSlides.update();
+            telemetry.addLine();
+            if (mostRecentDetection != 0) { telemetry.addLine("SIGNAL TAG FOUND, GOING TO POSITION " + mostRecentDetection); }
+            else { telemetry.addLine("SIGNAL TAG NOT FOUND, GOING TO POSITION 2"); }
+            telemetry.addData("\nCone timer", coneTimer.getTime());
+
+            telemetry.addLine(String.format("\nCurrent Coordinates: (%3.2f, %3.2f, %3.2f)", odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationDegrees()));
+            telemetry.addLine(String.format("Target angle: %3.2f", targetAngle * 180 / Math.PI));
+            telemetry.addLine(String.format("Target - current: %3.2f", targetAngle * 180 / Math.PI - odometry.getRotationDegrees()));
+
+            telemetry.addData("Signal #", mostRecentDetection);
+            telemetry.addData("Signal finds", "" + signalFinds[0], signalFinds[1], signalFinds[2]);
+
+            telemetry.addLine("\n");
+            mecanum.telemetry(telemetry);
+
+            if (mostRecentDetection != 0)
+                telemetry.addData("Signal location", signalLocations[startingPos][mostRecentDetection - 1]);
+            odometry.updatePosition();
+
+            telemetry.addLine();
+            mecanum.telemetry(telemetry);
+            telemetry.update();
+
+
+            atLocation = mecanum.rotateTo(targetAngle, odometry.getRotationRadians());
 
             sleep(20);
         }
@@ -456,7 +491,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         // "Wet dress rehearsal" for cone stack cycle
         goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
         sleep(3000);
-        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, 0.0);
+        turn(0.0);
         sleep(1000);
 
         // Grab cone and score
@@ -475,7 +510,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             goToPosition(getStartingPosition().x, getStartingPosition().y + 51, 0.0);
             sleep(1000);
         }
-        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, manipulatorInputs[0]);
+        turn(manipulatorInputs[0]);
     }
 }
 
