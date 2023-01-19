@@ -39,7 +39,7 @@ public class LinearSlides {
     // Rotation
     private static final double SEESAW_MOTOR_RATIO = 100; // 60:1 or 40:1 motor?
     public static final double SEESAW_OVERALL_RATIO = Math.PI / (2 * 1441); // Angle per tick
-    private static final double STARTING_ANGLE = -.14835;// Temporary, for testing MainTeleOp w/ manipulator starting down
+    private static double STARTING_ANGLE = 0.0;// Temporary, for testing MainTeleOp w/ manipulator starting down
     // Extension
     private static final double EXTENDER_MOTOR_RATIO = 20; // 20:1 or 40:1 motor?
     private static final double EXTENDER_WINCH_RADIUS = 9.4 / 2;
@@ -65,7 +65,7 @@ public class LinearSlides {
      3. Pull string to extend, roll back to retract
      */
 
-    public LinearSlides(HardwareMap hardwareMap){
+    public LinearSlides(HardwareMap hardwareMap, double startingAngle){
         seeSawMotor = hardwareMap.get(DcMotorEx.class, "SSM");
         extensionMotor = hardwareMap.get(DcMotorEx.class, "LSEM");
         extensionMotor2 = hardwareMap.get(DcMotorEx.class, "LSEM2");
@@ -92,6 +92,7 @@ public class LinearSlides {
 
         // Motor kinematics ;)
         // Change this
+        STARTING_ANGLE = startingAngle;
         manipulatorPosition[0] = STARTING_EXTENDER_LENGTH * Math.cos(turntableAngle) * Math.cos(STARTING_ANGLE);
         manipulatorPosition[1] = STARTING_EXTENDER_LENGTH * Math.sin(turntableAngle) * Math.cos(STARTING_ANGLE);
         manipulatorPosition[2] =  ROOT_HEIGHT + (STARTING_EXTENDER_LENGTH * Math.sin(STARTING_ANGLE));

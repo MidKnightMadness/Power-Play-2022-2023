@@ -74,7 +74,7 @@ public class MainTeleOp extends OpMode {
         mecanum = new MecanumDrive(hardwareMap);
         odometry = new Odometry(hardwareMap, Math.PI / 2, new Vector2(7.5, 7.5));
         claw = new Claw(hardwareMap);
-        slides = new LinearSlides(hardwareMap);
+        slides = new LinearSlides(hardwareMap, -.14835);
 
         // Temporary, assumes that auton turns back to 90˚
 //        odometry.setRotation(Math.PI / 2);

@@ -99,7 +99,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
 
         mecanum = new MecanumDrive(hardwareMap);
-//        linearSlides = new LinearSlides(hardwareMap);
+//        linearSlides = new LinearSlides(hardwareMap, Math.PI * 41 / 180);
         odometry = new Odometry(hardwareMap, getStartingRotation(), getStartingPosition());
         odometry.resetEncoders();
         odometry.setPostion(getStartingPosition());
@@ -422,12 +422,32 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 //        }
 //    }
 
-    public void cycleFromRightConeStack(){
+    public void cycleFromConeStackToHighJunction(){
+        double [] manipulatorInputs = {0.0, 0.0, 0.0};
+
         // "Wet dress rehearsal" for cone stack cycle
         goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
         sleep(3000);
         goToPosition(getStartingPosition().x, getStartingPosition().y + 51, 0.0);
+        sleep(1000);
 
+        // Grab cone and score
+        if(getStartingPosition().x == 104.5){
+            manipulatorInputs = GridSystem.pointAtJunction(getStartingPosition().x, getStartingPosition().y + 51, 3 * Math.PI / 4);
+
+            goToPosition(getStartingPosition().x + 22, getStartingPosition().y + 51, 0.0);
+            sleep(1000);
+            goToPosition(getStartingPosition().x, getStartingPosition().y + 51, 0.0);
+            sleep(1000);
+        }else{
+            manipulatorInputs = GridSystem.pointAtJunction(getStartingPosition().x, getStartingPosition().y + 51, Math.PI / 4);
+
+            goToPosition(getStartingPosition().x - 22, getStartingPosition().y + 51, 0.0);
+            sleep(1000);
+            goToPosition(getStartingPosition().x, getStartingPosition().y + 51, 0.0);
+            sleep(1000);
+        }
+        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, manipulatorInputs[0]);
     }
 }
 
