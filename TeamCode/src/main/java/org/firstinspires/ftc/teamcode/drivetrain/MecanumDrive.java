@@ -198,7 +198,7 @@ public class MecanumDrive {
         spd = Math.max(spd * Math.sqrt(spd) * .6, 0.2);
         // Cube, still needed more precise adjustment
 
-        if((dx * dx) + (dy * dy) > 1 || Math.abs(targetAngle - currentAngle) > Math.PI / 60) {
+        if((dx * dx) + (dy * dy) > 1 || Math.abs(pointTo(targetAngle, currentAngle)) > .1) {
             drive(newx * spd, newy * spd, -pointTo(targetAngle, currentAngle));
             return false;
         }

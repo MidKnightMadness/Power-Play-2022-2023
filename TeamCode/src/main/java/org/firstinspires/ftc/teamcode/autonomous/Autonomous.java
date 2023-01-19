@@ -34,7 +34,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
     public static int numberOfConesInStack = 5;
     int[] signalFinds = new int[] {0, 0, 0};
-    int mostRecentDetection = 0;
+    int mostRecentDetection = 1;
 
 
     Vector2 coneStackLocation = coneStackLocations[startingPos];
@@ -75,8 +75,6 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
     @Override
     public void runOpMode() {
-
-
 //----------------INIT----------------------------------------------------------------------------------------------------
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -103,6 +101,9 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         mecanum = new MecanumDrive(hardwareMap);
 //        linearSlides = new LinearSlides(hardwareMap);
         odometry = new Odometry(hardwareMap, getStartingRotation(), getStartingPosition());
+        odometry.resetEncoders();
+        odometry.setPostion(getStartingPosition());
+        odometry.setRotation(getStartingRotation());
 
         camera.setPipeline(aprilTagDetectionPipeline);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
@@ -172,65 +173,63 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 //            goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation());
 //        }
 
-
+        double xOffset = (getStartingPos() == 1 || getStartingPos() == 3) ? 23.5 / 2.0 : -23.5 / 2.0;
 
         // score at high junction
         goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
         sleep(1000);
-
-        if(startingPos == 2 || startingPos == 4) {
-            goToPosition(getStartingPosition().x, getStartingPosition().y + 51, -0.25 * Math.PI);
-            sleep(1000);
-            goToPosition(getStartingPosition().x- 6.325, getStartingPosition().y + 51 + 6.325, -.25 * Math.PI);
-
-        } else {
-            goToPosition(getStartingPosition().x, getStartingPosition().y + 51, 0.25 * Math.PI);
-            sleep(1000);
-            goToPosition(getStartingPosition().x + 6.325, getStartingPosition().y + 51 + 6.325, .25 * Math.PI);
-        }
+        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
         sleep(1000);
+        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
+        sleep(500);
+        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 55, getStartingRotation() + Math.PI);
+        sleep(1000);
+
+
+//        linearSlides.pivotTo(1.75);
+        sleep(5000);
+//        linearSlides.extendTo(34);
+        sleep(5000);
+//        claw.openClaw();
+        sleep(1000);
+//        claw.closeClaw();
+        sleep(5000);
+//        linearSlides.extendTo(19.0);
+        sleep(5000);
+//        linearSlides.pivotTo(0);
+        sleep(3000);
+
+        park();
+
+
+
+
+
+//        if(startingPos == 2 || startingPos == 4) {
+//            goToPosition(getStartingPosition().x, getStartingPosition().y + 51, -0.25 * Math.PI);
+//            sleep(1000);
+//            goToPosition(getStartingPosition().x- 6.325, getStartingPosition().y + 51 + 6.325, -.25 * Math.PI);
+//
+//        } else {
+//            goToPosition(getStartingPosition().x, getStartingPosition().y + 51, 0.25 * Math.PI);
+//            sleep(1000);
+//            goToPosition(getStartingPosition().x + 6.325, getStartingPosition().y + 51 + 6.325, Math.PI);
+//        }
+//        sleep(1000);
 //        sleep(3000);
 
-////        linearSlides.pivotTo(1.75);
-//        sleep(5000);
-////        linearSlides.extendTo(34);
-//        sleep(5000);
-////        claw.openClaw();
-//        sleep(1000);
-////        claw.closeClaw();
-//        sleep(5000);
-////        linearSlides.extendTo(19.0);
-//        sleep(5000);
-////        linearSlides.pivotTo(0);
-//        sleep(3000);
 
 //        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
+    }
 
-
-
-//----------------LOOP----------------------------------------------------------------------------------------------------
-
-//        while (opModeIsActive()) {
-//            time = coneTimer.getTime();
-//
-//            goToPosition(getStartingPosition().x, getStartingPosition().y + 30, getStartingRotation());
-//            sleep(1000);
-//            if(mostRecentDetection == 1) {
-//                goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 26, getStartingRotation());
-//                goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 32, getStartingRotation());
-//            } else if (mostRecentDetection == 2) {
-//                goToPosition(getStartingPosition().x, getStartingPosition().y + 32, getStartingRotation());
-//            } else if (mostRecentDetection == 3) {
-//                goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 26, getStartingRotation());
-//                goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 32, getStartingRotation());
-//            }
-//
-//            sleep(20);
-////            rotateTo(0.5);
-//            sleep(1000);
-////            rotateTo(-.7);
-//            requestOpModeStop();
-//        }
+    void park() {
+        if(mostRecentDetection == 1) {
+            goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
+        } else if (mostRecentDetection == 2) {
+            goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
+        } else if (mostRecentDetection == 3) {
+            goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
+        }
     }
 
     void tagToTelemetry(AprilTagDetection detection)
