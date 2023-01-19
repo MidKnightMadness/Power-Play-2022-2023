@@ -99,7 +99,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
 
         mecanum = new MecanumDrive(hardwareMap);
-//        linearSlides = new LinearSlides(hardwareMap, Math.PI * 41 / 180);
+//        linearSlides = new LinearSlides(hardwareMap);
         odometry = new Odometry(hardwareMap, getStartingRotation(), getStartingPosition());
         odometry.resetEncoders();
         odometry.setPostion(getStartingPosition());
@@ -173,20 +173,11 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 //            goToPosition(getStartingPosition().x, getStartingPosition().y, getStartingRotation());
 //        }
 
-        double xOffset = (getStartingPos() == 1 || getStartingPos() == 3) ? 23.5 / 2.0 : -23.5 / 2.0;
+
 
         // score at high junction
-        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
-        sleep(1000);
-        cycleFromConeStackToHighJunction();
-        sleep(5000);
-//        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
-//        sleep(1000);
-//        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
-//        sleep(500);
-//        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 55, getStartingRotation() + Math.PI);
-//        sleep(1000);
-//
+
+
 //
 ////        linearSlides.pivotTo(1.75);
 //        sleep(5000);
@@ -201,7 +192,8 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 ////        linearSlides.pivotTo(0);
 //        sleep(3000);
 
-        park();
+        scoreOneMiddle();
+        park(34.75);
 
 
 
@@ -224,13 +216,39 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 //        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
     }
 
-    void park() {
+    void scoreOneForward() {
+        double xOffset = (getStartingPos() == 1 || getStartingPos() == 3) ? 23.5 / 2.0 : -23.5 / 2.0;
+
+        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
+        sleep(1000);
+        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
+        sleep(1000);
+        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
+        sleep(500);
+        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 55, getStartingRotation() + Math.PI);
+        sleep(1000);
+    }
+
+    void scoreOneMiddle() {
+        double xOffset = (getStartingPos() == 1 || getStartingPos() == 3) ? 23.5 * 2.0 : -23.5 * 2.0;
+
+        goToPosition(getStartingPosition().x, getStartingPosition().y + 35, getStartingRotation());
+        sleep(1000);
+        goToPosition(getStartingPosition().x, getStartingPosition().y + 35, getStartingRotation() + Math.PI);
+        sleep(1000);
+        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 35, getStartingRotation() + Math.PI);
+        sleep(500);
+        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 39, getStartingRotation() + Math.PI);
+        sleep(1000);
+    }
+
+    void park(double yPos) {
         if(mostRecentDetection == 1) {
-            goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
+            goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + yPos, getStartingRotation() + Math.PI);
         } else if (mostRecentDetection == 2) {
-            goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
+            goToPosition(getStartingPosition().x, getStartingPosition().y + yPos, getStartingRotation() + Math.PI);
         } else if (mostRecentDetection == 3) {
-            goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
+            goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + yPos, getStartingRotation() + Math.PI);
         }
     }
 
