@@ -10,12 +10,16 @@ public class AutonomousOne extends Autonomous {
     public int getStartingPos() {
         return 1;
     }
-
+    @Override
     public double getStartingRotation() {
         return Math.PI / 2;
     }
-
+    @Override
     public Vector2 getStartingPosition() {
         return new Vector2(35, halfRobotWidth);
     }
+
+    @Override
+    public int getScoringJunction() { return 0; }
+
 }

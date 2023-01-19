@@ -235,6 +235,18 @@ public class MecanumDrive {
     double [] XYInput = {0.0, 0.0};
     double rotationInput = 0.0;
 
+    public boolean rotateTo(double targetAngle, double currentAngle) {
+        if(Math.abs(pointTo(targetAngle, currentAngle)) > Math.PI / 180){
+            rotationInput = -pointTo(targetAngle, currentAngle);
+            drive(0, 0, rotationInput);
+            return false;
+        }else{
+            rotationInput = 0;
+            drive(0, 0, 0);
+            return true;
+        }
+    }
+
 //    public void pointTo(double x, double y) {
 //        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 //        gyro_degrees = angles.firstAngle;
