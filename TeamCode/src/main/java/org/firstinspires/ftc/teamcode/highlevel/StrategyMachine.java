@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.odometry.Odometry;
 
 // Auxillary imports
 
-
+@Deprecated
 public class StrategyMachine {
     /* Class description:
 
@@ -38,6 +38,7 @@ public class StrategyMachine {
 
 }
 
+@Deprecated
 class StrategyTimer implements Runnable{
     org.firstinspires.ftc.teamcode.common.Timer timer;
 

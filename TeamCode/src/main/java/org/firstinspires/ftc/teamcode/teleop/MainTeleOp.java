@@ -65,6 +65,10 @@ public class MainTeleOp extends OpMode {
     private boolean lastPressedLinearSlides = false;
     private boolean linearSlidesToggle = false;
 
+    double lastInputY;
+    double lastInputX;
+
+    double drivePreviousInputWeight;
 
 
     @Override
@@ -85,19 +89,17 @@ public class MainTeleOp extends OpMode {
     double powerMultiplier = staticPowerMultiplier;
     double manualC = 0;
 
-    @Override
-    public void loop() {
-
-
-        // DRIVER ASSIST
+    void drive() {
         if (gamepad1.x || gamepad1.square) {
             odometry.resetEncoders();
         }
 
+        mecanum.drive(gamepad1.left_stick_x, -gamepad1.left_stick_y,
+                (gamepad1.right_stick_x + gamepad2.left_stick_x) * 0.5); // normal drive
         if (gamepad1.a || gamepad1.cross) {
-            previousInputWeight += 0.01;
-            if (previousInputWeight > 1) {
-                previousInputWeight = 1;
+            drivePreviousInputWeight += 0.01;
+            if (drivePreviousInputWeight > 1) {
+                drivePreviousInputWeight = 1;
             }
             try {
                 sleep(75);
@@ -107,14 +109,33 @@ public class MainTeleOp extends OpMode {
         }
 
         if (gamepad1.b || gamepad1.circle) {
-            previousInputWeight -= 0.01;
-            if (previousInputWeight < 0) {
-                previousInputWeight = 0;
+            drivePreviousInputWeight -= 0.01;
+            if (drivePreviousInputWeight < 0) {
+                drivePreviousInputWeight = 0;
             }
             try {
                 sleep(75);
             } catch (InterruptedException e) {
             }
+        }
+
+        double adjustedInputX = gamepad1.left_stick_x * (1 - drivePreviousInputWeight) + lastInputX * drivePreviousInputWeight;
+        double adjustedInputY = gamepad1.left_stick_y * (1 - drivePreviousInputWeight) + lastInputY * drivePreviousInputWeight;
+
+
+        mecanum.drive(adjustedInputX * powerMultiplier, -adjustedInputY * powerMultiplier,
+                (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier * 0.5); // normal drive
+
+        lastInputX = adjustedInputX;
+        lastInputY = adjustedInputY;
+    }
+    @Override
+    public void loop() {
+
+
+        // DRIVER ASSIST
+        if (gamepad1.x || gamepad1.square) {
+            odometry.resetEncoders();
         }
 
         powerMultiplier = staticPowerMultiplier + 0.4 * gamepad1.right_trigger; // speeds the driving as trigger is pressed
@@ -138,12 +159,6 @@ public class MainTeleOp extends OpMode {
 
         // LINEAR SLIDES
         slides.extendBy(-gamepad2.right_stick_y);
-
-
-
-
-
-
 
         // CLAW
         if ((gamepad2.right_bumper || gamepad1.right_bumper) && !lastPressedClawOpen) {

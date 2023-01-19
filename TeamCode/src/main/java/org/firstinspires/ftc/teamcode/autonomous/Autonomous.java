@@ -193,7 +193,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 //        sleep(3000);
 
         scoreOneMiddle();
-        park(34.75);
+        park(28.5);
 
 
 
@@ -230,15 +230,15 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
     }
 
     void scoreOneMiddle() {
-        double xOffset = (getStartingPos() == 1 || getStartingPos() == 3) ? 23.5 * 2.0 : -23.5 * 2.0;
+        double xOffset = (getStartingPos() == 1 || getStartingPos() == 3) ? 23.5 * 1.5 : -23.5 * 1.5;
 
-        goToPosition(getStartingPosition().x, getStartingPosition().y + 35, getStartingRotation());
+        goToPosition(getStartingPosition().x, getStartingPosition().y + 23.5, getStartingRotation());
         sleep(1000);
-        goToPosition(getStartingPosition().x, getStartingPosition().y + 35, getStartingRotation() + Math.PI);
+        goToPosition(getStartingPosition().x, getStartingPosition().y + 23.5, getStartingRotation() + Math.PI);
         sleep(1000);
-        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 35, getStartingRotation() + Math.PI);
+        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 23.5, getStartingRotation() + Math.PI);
         sleep(500);
-        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 39, getStartingRotation() + Math.PI);
+        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 26, getStartingRotation() + Math.PI);
         sleep(1000);
     }
 
@@ -317,11 +317,15 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             telemetry.addLine(String.format("\nCurrent Coordinates: (%3.2f, %3.2f, %3.2f)", odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationDegrees()));
             telemetry.addLine(String.format("Target Coordinates: (%3.2f, %3.2f, %3.2f)", targetX, targetY, targetAngle * 180 / Math.PI));
             telemetry.addLine(String.format("Target - current: (%3.2f, %3.2f, %3.2f)", targetX - odometry.getXCoordinate(), targetY - odometry.getYCoordinate(), targetAngle * 180 / Math.PI - odometry.getRotationDegrees()));
+
             telemetry.addData("Signal #", mostRecentDetection);
             telemetry.addData("Signal finds", "" + signalFinds[0], signalFinds[1], signalFinds[2]);
             if (mostRecentDetection != 0)
                 telemetry.addData("Signal location", signalLocations[startingPos][mostRecentDetection - 1]);
             odometry.updatePosition();
+
+            telemetry.addLine();
+            mecanum.telemetry(telemetry);
             telemetry.update();
 
 
