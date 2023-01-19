@@ -89,6 +89,148 @@ public class MainTeleOp extends OpMode {
     double powerMultiplier = staticPowerMultiplier;
     double manualC = 0;
 
+    @Override
+    public void loop() {
+
+
+        // DRIVER ASSIST
+        if (gamepad1.x || gamepad1.square) {
+            odometry.resetEncoders();
+        }
+
+        powerMultiplier = staticPowerMultiplier + 0.4 * gamepad1.right_trigger; // speeds the driving as trigger is pressed
+//
+        if (gamepad1.left_bumper && !lastPressedDriveMode) {
+            driveModeToggle = !driveModeToggle;
+        }
+        lastPressedDriveMode = gamepad1.left_bumper;
+
+        if (driveModeToggle) {
+            mecanum.fieldOrientatedDrive(gamepad1.left_stick_x, -gamepad1.left_stick_y,
+                    (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier, odometry.getRotationRadians());
+
+        } else {
+            mecanum.drive(gamepad1.left_stick_x * powerMultiplier, -gamepad1.left_stick_y * powerMultiplier,
+                    (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier * 0.5); // normal drive
+        }
+
+
+
+
+        // LINEAR SLIDES
+        slides.extendBy(-gamepad2.right_stick_y);
+
+        // CLAW
+        if ((gamepad2.right_bumper || gamepad1.right_bumper) && !lastPressedClawOpen) {
+            clawOpenToggle = !clawOpenToggle;
+        }
+        lastPressedClawOpen = (gamepad2.right_bumper || gamepad1.right_bumper);
+
+        if (clawOpenToggle) {
+            claw.openClaw();
+        } else {
+            claw.closeClaw();
+        }
+
+        while (gamepad2.left_bumper) { // preset medium junction
+            slides.update();
+            rotateArmTo(1.98);
+            slides.extendTo(26.5);
+            if ((gamepad2.right_bumper || gamepad1.right_bumper) && !lastPressedClawOpen) {
+                clawOpenToggle = !clawOpenToggle;
+            }
+            lastPressedClawOpen = (gamepad2.right_bumper || gamepad1.right_bumper);
+
+            if (clawOpenToggle) {
+                claw.openClaw();
+            } else {
+                claw.closeClaw();
+            }
+        }
+        rotateArm(-gamepad2.left_stick_y);
+
+        while (gamepad2.left_trigger > .5) { // preset high junction
+            slides.update();
+            rotateArmTo(100 * Math.PI / 180);
+            slides.extendTo(34);
+            if ((gamepad2.right_bumper || gamepad1.right_bumper) && !lastPressedClawOpen) {
+                clawOpenToggle = !clawOpenToggle;
+            }
+            lastPressedClawOpen = (gamepad2.right_bumper || gamepad1.right_bumper);
+
+            if (clawOpenToggle) {
+                claw.openClaw();
+            } else {
+                claw.closeClaw();
+            }
+        }
+
+        // claw pivot
+//        if (gamepad2.dpad_up) {
+//            manualC = manualC +.05;
+//        }
+//        if (gamepad2.dpad_down) {
+//            manualC = manualC -.05;
+//        }
+
+        // Adjusting extension length and angle
+//        if(gamepad2.square){
+//            adjustingExtensionLength = !adjustingExtensionLength;
+//        }
+//        if(gamepad2.dpad_up && adjustingExtensionLength){
+//            targetExtension += 0.1;
+//        }else if(gamepad2.dpad_down && adjustingExtensionLength){
+//            targetExtension -= 0.1;
+//        }else if(gamepad2.dpad_up && !adjustingExtensionLength){
+//            targetAngle += 0.1;
+//        }else if(gamepad2.dpad_down && !adjustingExtensionLength){
+//            targetAngle -= 0.1;
+//        }
+//
+//
+//        while(gamepad2.right_trigger > 0.5){
+//            rotateArmTo(targetAngle);
+//            slides.extendTo(targetExtension);
+//            if ((gamepad2.right_bumper || gamepad1.right_bumper) && !lastPressedClawOpen) {
+//                clawOpenToggle = !clawOpenToggle;
+//            }
+//            lastPressedClawOpen = (gamepad2.right_bumper || gamepad1.right_bumper);
+//
+//            if (clawOpenToggle) {
+//                claw.openClaw();
+//            } else {
+//                claw.closeClaw();
+//            }
+//            slides.update();
+//        }
+
+        telemetry.addData("\nController target angle (degrees)", targetAngle * 180 / Math.PI);
+        telemetry.addData("Controller target extension length", targetExtension);
+        telemetry.addData("Adjusting extension length", adjustingExtensionLength);
+
+        telemetry.addData("Pivot Motor reading", slides.seeSawMotor.getCurrentPosition());
+        telemetry.addData("Extension Motor 1 reading", slides.extensionMotor.getCurrentPosition());
+        telemetry.addData("Extension Motor 2 reading", slides.extensionMotor2.getCurrentPosition());
+        telemetry.addData("power", -gamepad2.right_stick_y);
+        telemetry.addData("Left stick y", -gamepad2.left_stick_y);
+
+        telemetry.addData("\nController target angle (degrees)", targetAngle * 180 / Math.PI);
+        telemetry.addData("Controller target extension length", targetExtension);
+        telemetry.addData("Adjusting extension length", adjustingExtensionLength);
+
+        telemetry.addData("\nClaw pivot ticks", clawPivotInput);
+        telemetry.addData("Manual claw control ticks", gamepad2.left_trigger);
+
+        slides.update();
+        telemetry.addData("\nPivot angle (degrees)", slides.seesawAngle * 180 / Math.PI);
+        telemetry.addData("Extended length", slides.seesawExtensionLength);
+
+        odometry.updatePosition();
+        telemetry();
+        telemetry.update();
+    }
+
+
     void drive() {
         if (gamepad1.x || gamepad1.square) {
             odometry.resetEncoders();
@@ -129,34 +271,8 @@ public class MainTeleOp extends OpMode {
         lastInputX = adjustedInputX;
         lastInputY = adjustedInputY;
     }
-    @Override
-    public void loop() {
 
-
-        // DRIVER ASSIST
-        if (gamepad1.x || gamepad1.square) {
-            odometry.resetEncoders();
-        }
-
-        powerMultiplier = staticPowerMultiplier + 0.4 * gamepad1.right_trigger; // speeds the driving as trigger is pressed
-//
-//        if (gamepad1.left_bumper && !lastPressedDriveMode) {
-//            driveModeToggle = !driveModeToggle;
-//        }
-//        lastPressedDriveMode = gamepad1.left_bumper;
-//
-//        if (driveModeToggle) {
-//            mecanum.fieldOrientatedDrive(gamepad1.left_stick_x, -gamepad1.left_stick_y,
-//                    (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier, odometry.getRotationRadians());
-//
-//        } else {
-//            mecanum.drive(gamepad1.left_stick_x * powerMultiplier, -gamepad1.left_stick_y * powerMultiplier,
-//                    (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier * 0.5); // normal drive
-//        }
-
-
-
-
+    void linearSlides() {
         // LINEAR SLIDES
         slides.extendBy(-gamepad2.right_stick_y);
 
@@ -187,7 +303,7 @@ public class MainTeleOp extends OpMode {
                 claw.closeClaw();
             }
         }
-            rotateArm(-gamepad2.left_stick_y);
+        rotateArm(-gamepad2.left_stick_y);
 
         while (gamepad2.left_trigger > .5) { // preset high junction
             slides.update();
@@ -204,91 +320,6 @@ public class MainTeleOp extends OpMode {
                 claw.closeClaw();
             }
         }
-
-        // claw pivot
-//        if (gamepad2.dpad_up) {
-//            manualC = manualC +.05;
-//        }
-//        if (gamepad2.dpad_down) {
-//            manualC = manualC -.05;
-//        }
-
-        // Auto-aim
-        if(gamepad2.triangle){
-            double [] manipulatorInputs = GridSystem.pointAtJunction(odometry.getXCoordinate(), odometry.getYCoordinate(),odometry.getRotationRadians());
-
-            goToPosition(odometry.getXCoordinate(), odometry.getYCoordinate(), manipulatorInputs[0]);
-            rotateArmTo(manipulatorInputs[1]);
-            slides.extendTo(manipulatorInputs[2]);
-        }
-            rotateArm(-gamepad2.left_stick_y);
-
-
-
-        // Adjusting extension length and angle
-        if(gamepad2.square){
-            adjustingExtensionLength = !adjustingExtensionLength;
-        }
-        if(gamepad2.dpad_up && adjustingExtensionLength){
-            targetExtension += 0.1;
-        }else if(gamepad2.dpad_down && adjustingExtensionLength){
-            targetExtension -= 0.1;
-        }else if(gamepad2.dpad_up && !adjustingExtensionLength){
-            targetAngle += 0.1;
-        }else if(gamepad2.dpad_down && !adjustingExtensionLength){
-            targetAngle -= 0.1;
-        }
-
-
-        while(gamepad2.right_trigger > 0.5){
-            rotateArmTo(targetAngle);
-            slides.extendTo(targetExtension);
-            if ((gamepad2.right_bumper || gamepad1.right_bumper) && !lastPressedClawOpen) {
-                clawOpenToggle = !clawOpenToggle;
-            }
-            lastPressedClawOpen = (gamepad2.right_bumper || gamepad1.right_bumper);
-
-            if (clawOpenToggle) {
-                claw.openClaw();
-            } else {
-                claw.closeClaw();
-            }
-
-
-            telemetry.addData("\nPivot Motor reading", slides.seeSawMotor.getCurrentPosition());
-            telemetry.addData("Extension Motor 1 reading", slides.extensionMotor.getCurrentPosition());
-            telemetry.addData("Extension Motor 2 reading", slides.extensionMotor2.getCurrentPosition());
-
-            slides.update();
-            telemetry.addData("\nPivot angle (degrees)", slides.seesawAngle * 180 / Math.PI);
-            telemetry.addData("Extended length", slides.seesawExtensionLength);
-            telemetry.update();
-        }
-
-            telemetry.addData("\nController target angle (degrees)", targetAngle * 180 / Math.PI);
-            telemetry.addData("Controller target extension length", targetExtension);
-            telemetry.addData("Adjusting extension length", adjustingExtensionLength);
-
-        telemetry.addData("Pivot Motor reading", slides.seeSawMotor.getCurrentPosition());
-        telemetry.addData("Extension Motor 1 reading", slides.extensionMotor.getCurrentPosition());
-        telemetry.addData("Extension Motor 2 reading", slides.extensionMotor2.getCurrentPosition());
-        telemetry.addData("power", -gamepad2.right_stick_y);
-        telemetry.addData("Left stick y", -gamepad2.left_stick_y);
-
-        telemetry.addData("\nController target angle (degrees)", targetAngle * 180 / Math.PI);
-        telemetry.addData("Controller target extension length", targetExtension);
-        telemetry.addData("Adjusting extension length", adjustingExtensionLength);
-
-        telemetry.addData("\nClaw pivot ticks", clawPivotInput);
-        telemetry.addData("Manual claw control ticks", gamepad2.left_trigger);
-
-        slides.update();
-        telemetry.addData("\nPivot angle (degrees)", slides.seesawAngle * 180 / Math.PI);
-        telemetry.addData("Extended length", slides.seesawExtensionLength);
-
-        odometry.updatePosition();
-        telemetry();
-        telemetry.update();
     }
 
     public static boolean adjustingExtensionLength = false;

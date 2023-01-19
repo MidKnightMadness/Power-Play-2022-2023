@@ -113,11 +113,6 @@ public class MecanumDrive {
     double rotateDrive;
 
     public void drive(double x, double y, double rotate) {
-        // .09 back, .03 front
-        xDrive = x;
-        yDrive = y;
-        rotateDrive = rotate;
-
         FRMotor.setPower( x - y + rotate);
         FLMotor.setPower(-x - y - rotate);
         BRMotor.setPower(-x - y + rotate);
@@ -270,9 +265,6 @@ public class MecanumDrive {
         telemetry.addData("Corrected X", correctedX);
         telemetry.addData("Corrected Y", correctedY);
         telemetry.addData("First Angle", angles.firstAngle);
-
-        telemetry.addLine(String.format("\nDrive function inputs(low level):\nx: %5.2f\ny: %5.2f\nrotate: %5.2f",
-                xDrive, yDrive, rotateDrive));
     }
 
     public static Vector2 endOdometryPosition;
