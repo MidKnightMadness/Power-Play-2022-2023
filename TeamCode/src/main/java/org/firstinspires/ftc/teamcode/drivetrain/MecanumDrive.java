@@ -230,27 +230,27 @@ public class MecanumDrive {
         spd = Math.max(spd * Math.sqrt(spd) * .6, 0.2);
         // 3/2 power
 
-//        if((dx * dx) + (dy * dy) > 1){
-//            XYInput[0] = newx * spd;
-//            XYInput[1] = newy * spd;
-//        }else{
-//            XYInput[0] = 0;
-//            XYInput[1] = 0;
-//        }
-//
-//        if(Math.abs(pointTo(targetAngle, currentAngle)) > 0.05){
-//            rotationInput = -0.6 * pointTo(targetAngle, currentAngle);
-//        }else{
-//            rotationInput = 0;
-//        }
-//
-//        drive(XYInput[0], XYInput[1], rotationInput);
-
-        if((dx * dx) + (dy * dy) > 1 || Math.abs(pointTo(targetAngle, currentAngle)) > 0.05){
-
-            drive(newx * spd, newy * spd, -0.6 * pointTo(targetAngle, currentAngle));
-            return false;
+        if((dx * dx) + (dy * dy) > 1){
+            XYInput[0] = newx * spd;
+            XYInput[1] = newy * spd;
+        }else{
+            XYInput[0] = 0;
+            XYInput[1] = 0;
         }
+
+        if(Math.abs(pointTo(targetAngle, currentAngle)) > 0.05){
+            rotationInput = -0.6 * pointTo(targetAngle, currentAngle);
+        }else{
+            rotationInput = 0;
+        }
+
+        drive(XYInput[0], XYInput[1], rotationInput);
+
+//        if((dx * dx) + (dy * dy) > 1 || Math.abs(pointTo(targetAngle, currentAngle)) > 0.05){
+//
+//            drive(newx * spd, newy * spd, -0.6 * pointTo(targetAngle, currentAngle));
+//            return false;
+//        }
 
         drive(0, 0, 0);
         return true;
