@@ -193,9 +193,15 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 //        sleep(5000);
 ////        linearSlides.pivotTo(0);
 //        sleep(3000);
+        if (getScoringJunction() == 0) {
+            scoreOneForward();
+            park(51);
+        }
+        else {
+            scoreOneMiddle();
+            park(25);
+        }
 
-        scoreOneForward();
-        park(51);
 
 //        scoreOneMiddle();
        // park(28.5);
@@ -238,13 +244,13 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
     void scoreOneMiddle() {
         double xOffset = (getStartingPos() == 1 || getStartingPos() == 3) ? 23.5 * 1.5 : -23.5 * 1.5;
 
-        goToPosition(getStartingPosition().x, getStartingPosition().y + 23.5, getStartingRotation());
+        goToPosition(getStartingPosition().x, getStartingPosition().y + 25, getStartingRotation());
         sleep(1000);
-        goToPosition(getStartingPosition().x, getStartingPosition().y + 23.5, getStartingRotation() + Math.PI);
+        goToPosition(getStartingPosition().x, getStartingPosition().y + 25, getStartingRotation() + Math.PI);
         sleep(1000);
-        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 23.5, getStartingRotation() + Math.PI);
+        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 25, getStartingRotation() + Math.PI);
         sleep(500);
-        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 26, getStartingRotation() + Math.PI);
+        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 27, getStartingRotation() + Math.PI);
         sleep(1000);
     }
 

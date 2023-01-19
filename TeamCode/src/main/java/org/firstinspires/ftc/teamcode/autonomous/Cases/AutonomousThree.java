@@ -19,5 +19,5 @@ public class AutonomousThree extends Autonomous {
     }
 
     @Override
-    public int getScoringJunction() { return 1; }
+    public int getScoringJunction() { return 0; }
 }
