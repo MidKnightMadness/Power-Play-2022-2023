@@ -233,7 +233,7 @@ public class MecanumDrive {
             return false;
         }
 
-        //drive(0, 0, 0);
+        drive(0, 0, 0);
         return true;
     }
 
