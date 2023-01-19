@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.odometry.Vector2;
 
 /*
  * Control Hub Configurations
- * Motors:
+ * Motors:f
  * 0    FL      REV Robotics 20:1 HD Hex Motor
  * 1    BR      REV Robotics 20:1 HD Hex Motor
  * 2    BL      REV Robotics 20:1 HD Hex Motor

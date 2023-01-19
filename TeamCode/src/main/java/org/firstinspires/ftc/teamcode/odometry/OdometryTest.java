@@ -65,7 +65,7 @@ public class OdometryTest extends OpMode{
         double adjustedInputY = gamepad1.left_stick_y * (1 - drivePreviousInputWeight) + lastInputY * drivePreviousInputWeight;
 
 
-        powerMultiplier = staticPowerMultiplier + 0.4 * gamepad1.right_trigger; // speeds the driving as trigger is pressed
+        powerMultiplier = staticPowerMultiplier + 0.5 * gamepad1.right_trigger; // speeds the driving as trigger is pressed
 
         mecanum.drive(adjustedInputX * powerMultiplier, -adjustedInputY * powerMultiplier,
                     (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier * 0.5); // normal drive

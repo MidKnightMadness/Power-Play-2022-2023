@@ -104,7 +104,16 @@ public class MecanumDrive {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
     }
 
+    double xDrive;
+    double yDrive;
+    double rotateDrive;
+
     public void drive(double x, double y, double rotate) {
+        // .09 back, .03 front
+        xDrive = x;
+        yDrive = y;
+        rotateDrive = rotate;
+
         FRMotor.setPower( x - y + rotate);
         FLMotor.setPower(-x - y - rotate);
         BRMotor.setPower(-x - y + rotate);
@@ -196,15 +205,25 @@ public class MecanumDrive {
         double newy = Math.sin(rotato - currentAngle + Math.PI / 2);
         double spd = Math.min(Math.hypot(dy, dx), 10) / 12;
         spd = Math.max(spd * Math.sqrt(spd) * .6, 0.2);
-        // Cube, still needed more precise adjustment
+        // 3/2 power
 
-        if((dx * dx) + (dy * dy) > 1 || Math.abs(pointTo(targetAngle, currentAngle)) > .1) {
-            drive(newx * spd, newy * spd, -pointTo(targetAngle, currentAngle));
-            return false;
+        if((dx * dx) + (dy * dy) > 1){
+            XYInput[0] = newx * spd;
+            XYInput[1] = newy * spd;
         }
+
+        if(Math.abs(pointTo(targetAngle, currentAngle)) > .1){
+            rotationInput = -pointTo(targetAngle, currentAngle);
+        }
+
+        drive(XYInput[0], XYInput[1], rotationInput);
+
         drive(0, 0, 0);
         return true;
     }
+
+    double [] XYInput = {0.0, 0.0};
+    double rotationInput = 0.0;
 
 //    public void pointTo(double x, double y) {
 //        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -236,6 +255,12 @@ public class MecanumDrive {
         telemetry.addData("Corrected X", correctedX);
         telemetry.addData("Corrected Y", correctedY);
         telemetry.addData("First Angle", angles.firstAngle);
+
+        telemetry.addLine(String.format("\nDrive function inputs(low level):\n" +
+                "x: %5.2d\n" +
+                "y: %5.2d\n" +
+                "rotate: %5.2d",
+                xDrive, yDrive, rotateDrive));
     }
 
     public static Vector2 endOdometryPosition;
