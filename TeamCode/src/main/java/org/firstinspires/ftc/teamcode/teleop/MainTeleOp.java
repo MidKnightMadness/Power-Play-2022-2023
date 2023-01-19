@@ -52,8 +52,6 @@ public class MainTeleOp extends OpMode {
 
     public static double [] currentPosition = {0.0, 0.0};
 
-    final double DEADZONE_TOLERANCE = 0.05;
-
     private boolean lastPressedDriveMode = false;
     private boolean driveModeToggle = false;
     private boolean lastPressedClawOpen = false;
