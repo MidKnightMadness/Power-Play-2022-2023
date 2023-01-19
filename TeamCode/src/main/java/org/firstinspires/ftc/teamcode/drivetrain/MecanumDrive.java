@@ -63,14 +63,18 @@ public class MecanumDrive {
         BLMotor = hardwareMap.get(DcMotorEx.class, "BL");
 
         // Set Directions
-//        FRMotor.setDirection(DcMotor.Direction.REVERSE);
-//        FLMotor.setDirection(DcMotor.Direction.REVERSE);
-//        BRMotor.setDirection(DcMotor.Direction.FORWARD);
+        FRMotor.setDirection(DcMotor.Direction.REVERSE);
+        FLMotor.setDirection(DcMotor.Direction.REVERSE);
+        BRMotor.setDirection(DcMotor.Direction.FORWARD);
+        BLMotor.setDirection(DcMotor.Direction.REVERSE);
+//        FRMotor.setDirection(DcMotor.Direction.FORWARD);
+//        FLMotor.setDirection(DcMotor.Direction.FORWARD);
+//        BRMotor.setDirection(DcMotor.Direction.REVERSE);
 //        BLMotor.setDirection(DcMotor.Direction.FORWARD);
-        FRMotor.setDirection(DcMotor.Direction.FORWARD);
-        FLMotor.setDirection(DcMotor.Direction.FORWARD);
-        BRMotor.setDirection(DcMotor.Direction.REVERSE);
-        BLMotor.setDirection(DcMotor.Direction.FORWARD);
+//        FRMotor.setDirection(DcMotor.Direction.FORWARD);
+//        FLMotor.setDirection(DcMotor.Direction.FORWARD);
+//        BRMotor.setDirection(DcMotor.Direction.REVERSE);
+//        BLMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Set Motor Mode
         FRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
