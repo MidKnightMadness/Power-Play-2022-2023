@@ -238,7 +238,7 @@ public class MecanumDrive {
             XYInput[1] = 0;
         }
 
-        if(Math.abs(pointTo(targetAngle, currentAngle)) > 0.05){
+        if(Math.abs(pointTo(targetAngle, currentAngle)) > Math.PI / 180){
             rotationInput = -0.6 * pointTo(targetAngle, currentAngle);
         }else{
             rotationInput = 0;
@@ -246,11 +246,11 @@ public class MecanumDrive {
 
         drive(XYInput[0], XYInput[1], rotationInput);
 
-//        if((dx * dx) + (dy * dy) > 1 || Math.abs(pointTo(targetAngle, currentAngle)) > 0.05){
-//
+        if((dx * dx) + (dy * dy) > 1 || Math.abs(pointTo(targetAngle, currentAngle)) > Math.PI / 180){
+
 //            drive(newx * spd, newy * spd, -0.6 * pointTo(targetAngle, currentAngle));
-//            return false;
-//        }
+            return false;
+        }
 
         drive(0, 0, 0);
         return true;
