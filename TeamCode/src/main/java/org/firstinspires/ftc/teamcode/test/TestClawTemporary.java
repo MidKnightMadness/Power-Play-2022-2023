@@ -27,7 +27,7 @@ public class TestClawTemporary  extends OpMode {
     @Override
     public void init() {
         claw = new Claw(hardwareMap);
-        slides = new LinearSlides(hardwareMap);
+        slides = new LinearSlides(hardwareMap, 0.0);
 
 //        claw.pivotTo(-Math.PI / 4);
     }

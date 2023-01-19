@@ -178,26 +178,28 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         // score at high junction
         goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
         sleep(1000);
-        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
-        sleep(1000);
-        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
-        sleep(500);
-        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 55, getStartingRotation() + Math.PI);
-        sleep(1000);
-
-
-//        linearSlides.pivotTo(1.75);
+        cycleFromConeStackToHighJunction();
         sleep(5000);
-//        linearSlides.extendTo(34);
-        sleep(5000);
-//        claw.openClaw();
-        sleep(1000);
-//        claw.closeClaw();
-        sleep(5000);
-//        linearSlides.extendTo(19.0);
-        sleep(5000);
-//        linearSlides.pivotTo(0);
-        sleep(3000);
+//        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
+//        sleep(1000);
+//        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
+//        sleep(500);
+//        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 55, getStartingRotation() + Math.PI);
+//        sleep(1000);
+//
+//
+////        linearSlides.pivotTo(1.75);
+//        sleep(5000);
+////        linearSlides.extendTo(34);
+//        sleep(5000);
+////        claw.openClaw();
+//        sleep(1000);
+////        claw.closeClaw();
+//        sleep(5000);
+////        linearSlides.extendTo(19.0);
+//        sleep(5000);
+////        linearSlides.pivotTo(0);
+//        sleep(3000);
 
         park();
 
