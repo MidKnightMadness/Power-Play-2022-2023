@@ -220,7 +220,7 @@ public class MecanumDrive {
         }
 
         if(Math.abs(pointTo(targetAngle, currentAngle)) > Math.PI / 180){
-            rotationInput = -0.6 * pointTo(targetAngle, currentAngle);
+            rotationInput = -pointTo(targetAngle, currentAngle);
         }else{
             rotationInput = 0;
         }
