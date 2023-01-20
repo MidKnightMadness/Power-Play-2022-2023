@@ -178,9 +178,6 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
 
         // score at high junction
-
-
-//
 ////        linearSlides.pivotTo(1.75);
 //        sleep(5000);
 ////        linearSlides.extendTo(34);
@@ -201,10 +198,6 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             scoreOneMiddle();
             park(25);
         }
-
-
-//        scoreOneMiddle();
-       // park(28.5);
 
 
 
