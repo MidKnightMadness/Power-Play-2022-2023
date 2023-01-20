@@ -17,19 +17,27 @@ public class SingleMotorTest extends OpMode {
     public void init() {
         motor = hardwareMap.get(DcMotorEx.class, "motor");
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motor.setDirection(DcMotorSimple.Direction.FORWARD);
+        motor.setDirection(DcMotorSimple.Direction.REVERSE);
 //        motor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.0, 0.0, 0.0, 0.0));
+        zeroPosition = motor.getCurrentPosition();
     }
 
     public double lastInput = 0.0;
     public double hysteresisCoefficient = 0.5;
     public double motorInput = 0.0;
+    int zeroPosition = 0;
 
     @Override
     public void loop() {
-        motorInput = lastInput * hysteresisCoefficient + (1 - hysteresisCoefficient) * gamepad1.right_stick_x;
-        motor.setPower(motorInput);
-        lastInput = motorInput;
+//        motorInput = lastInput * hysteresisCoefficient + (1 - hysteresisCoefficient) * gamepad1.right_stick_x;
+        motor.setPower(gamepad1.right_stick_y);
+
+//        if(motor.getCurrentPosition() > zeroPosition){
+//            motor.setPower(gamepad1.right_stick_y);
+//        }else{
+//            motor.setPower(Math.max(gamepad1.right_stick_y, 0));
+//        }
+//        lastInput = motorInput;
 
         if(gamepad1.x){
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
