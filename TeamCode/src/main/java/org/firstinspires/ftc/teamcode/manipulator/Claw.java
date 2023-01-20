@@ -60,7 +60,8 @@ public class Claw {
     }
 
     public void telemetry(Telemetry telemetry) {
-        telemetry.addLine("\nCLAW");
+        telemetry.addLine();
+        telemetry.addLine("CLAW");
         telemetry.addLine(String.format("Claw Servo Position: %f", servo.getPosition()));
 //        telemetry.addLine(String.format("Claw Rotation Servo Power: %f %f", rotationServo.getPosition(), rotationServo2.getPosition()));
 //        telemetry.addLine(String.format("Claw Rotation Servo Direction: %s %s", rotationServo.getDirection(), rotationServo2.getDirection()));

@@ -194,7 +194,8 @@ public class Odometry {
     public String positionToString() {return String.format("(%f, %f)", position.x, position.y); }
 
     public void telemetry(Telemetry telemetry) {
-        telemetry.addLine("\nTHREE WHEEL ODOMETRY");
+        telemetry.addLine();
+        telemetry.addLine("THREE WHEEL ODOMETRY");
 
         telemetry.addLine(String.valueOf(deltaTime));
 
