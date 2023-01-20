@@ -211,7 +211,8 @@ public class LinearSlides {
     }
 
     public void telemetry(Telemetry telemetry) {
-        telemetry.addLine("\nLINEAR SLIDES + SEESAW");
+        telemetry.addLine();
+        telemetry.addLine("LINEAR SLIDES + SEESAW");
         telemetry.addLine(String.format("Seesaw Motor Power: %f", seeSawMotor.getPower()));
         telemetry.addLine(String.format("Seesaw Motor Velocity: %f", seeSawMotor.getVelocity()));
         telemetry.addLine(String.format("Seesaw Current Position: %d", seeSawMotor.getCurrentPosition()));
