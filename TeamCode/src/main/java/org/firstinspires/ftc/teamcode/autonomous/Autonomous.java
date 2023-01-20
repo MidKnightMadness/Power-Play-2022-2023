@@ -156,14 +156,14 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 //----------------START----------------------------------------------------------------------------------------------------
 
         telemetry.update();
-
-        if (mostRecentDetection != 0) {
-            signalLocationX = signalLocations[startingPos][mostRecentDetection - 1].x;
-            signalLocationY = signalLocations[startingPos][mostRecentDetection - 1].y;
-        } else {
-            signalLocationX = signalLocations[startingPos][1].x;
-            signalLocationY = signalLocations[startingPos][1].y;
-        }
+//
+//        if (mostRecentDetection != 0) {
+//            signalLocationX = signalLocations[startingPos][mostRecentDetection - 1].x;
+//            signalLocationY = signalLocations[startingPos][mostRecentDetection - 1].y;
+//        } else {
+//            signalLocationX = signalLocations[startingPos][1].x;
+//            signalLocationY = signalLocations[startingPos][1].y;
+//        }
 
         // SCORE PRE-LOAD
         // score at terminal
@@ -231,8 +231,8 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         double xOffset = (getStartingPos() == 1 || getStartingPos() == 3) ? 23.5 / 2.0 : -23.5 / 2.0;
 
         goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
-        sleep(1000);
-        turn(3 * Math.PI / 4);
+//        sleep(1000);
+//        turn(3 * Math.PI / 2);
         sleep(1000);
         goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
         sleep(500);
@@ -245,8 +245,8 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         double xOffset = (getStartingPos() == 1 || getStartingPos() == 3) ? 23.5 * 1.5 : -23.5 * 1.5;
 
         goToPosition(getStartingPosition().x, getStartingPosition().y + 25, getStartingRotation());
-        sleep(1000);
-        turn(3 * Math.PI / 4);
+//        sleep(1000);
+//        turn(3 * Math.PI / 2);
         sleep(1000);
         goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 25, getStartingRotation() + Math.PI);
         sleep(500);
