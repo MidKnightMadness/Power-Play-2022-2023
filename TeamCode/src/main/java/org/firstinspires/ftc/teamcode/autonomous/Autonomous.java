@@ -169,9 +169,6 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         }
 
 
-
-
-
 //        if(startingPos == 2 || startingPos == 4) {
 //            goToPosition(getStartingPosition().x, getStartingPosition().y + 51, -0.25 * Math.PI);
 //            sleep(1000);
@@ -525,6 +522,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         coneTimer.updateTime();
         odometry.updatePosition();
         odometry.updateTime();
+        double jerkStartTime = 0.0;
         if((odometry.getVelocity().x) * (odometry.getVelocity().x) + (odometry.getVelocity().y) * (odometry.getVelocity().y) < 0.1 && // If slow
                 Math.abs(mecanum.FLMotor.getPower()) + Math.abs(mecanum.FRMotor.getPower()) + Math.abs(mecanum.BLMotor.getPower()) + Math.abs(mecanum.BRMotor.getPower()) > 0.1){ // If low power
 
@@ -537,6 +535,6 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         }
     }
 
-    double jerkStartTime = 0.0;
+
 }
 
