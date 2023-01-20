@@ -108,10 +108,6 @@ public class MecanumDrive {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
     }
 
-    double xDrive;
-    double yDrive;
-    double rotateDrive;
-
     public void drive(double x, double y, double rotate) {
         FRMotor.setPower( x - y + rotate);
         FLMotor.setPower(-x - y - rotate);

@@ -115,95 +115,6 @@ public class MainTeleOp extends OpMode {
         }
 
 
-
-
-        // LINEAR SLIDES
-        slides.extendBy(-gamepad2.right_stick_y);
-
-        // CLAW
-        if ((gamepad2.right_bumper || gamepad1.right_bumper) && !lastPressedClawOpen) {
-            clawOpenToggle = !clawOpenToggle;
-        }
-        lastPressedClawOpen = (gamepad2.right_bumper || gamepad1.right_bumper);
-
-        if (clawOpenToggle) {
-            claw.openClaw();
-        } else {
-            claw.closeClaw();
-        }
-
-        while (gamepad2.left_bumper) { // preset medium junction
-            slides.update();
-            rotateArmTo(1.98);
-            slides.extendTo(26.5);
-            if ((gamepad2.right_bumper || gamepad1.right_bumper) && !lastPressedClawOpen) {
-                clawOpenToggle = !clawOpenToggle;
-            }
-            lastPressedClawOpen = (gamepad2.right_bumper || gamepad1.right_bumper);
-
-            if (clawOpenToggle) {
-                claw.openClaw();
-            } else {
-                claw.closeClaw();
-            }
-        }
-        rotateArm(-gamepad2.left_stick_y);
-
-        while (gamepad2.left_trigger > .5) { // preset high junction
-            slides.update();
-            rotateArmTo(100 * Math.PI / 180);
-            slides.extendTo(34);
-            if ((gamepad2.right_bumper || gamepad1.right_bumper) && !lastPressedClawOpen) {
-                clawOpenToggle = !clawOpenToggle;
-            }
-            lastPressedClawOpen = (gamepad2.right_bumper || gamepad1.right_bumper);
-
-            if (clawOpenToggle) {
-                claw.openClaw();
-            } else {
-                claw.closeClaw();
-            }
-        }
-
-        // claw pivot
-//        if (gamepad2.dpad_up) {
-//            manualC = manualC +.05;
-//        }
-//        if (gamepad2.dpad_down) {
-//            manualC = manualC -.05;
-//        }
-
-        // Adjusting extension length and angle
-//        if(gamepad2.square){
-//            adjustingExtensionLength = !adjustingExtensionLength;
-//        }
-//        if(gamepad2.dpad_up && adjustingExtensionLength){
-//            targetExtension += 0.1;
-//        }else if(gamepad2.dpad_down && adjustingExtensionLength){
-//            targetExtension -= 0.1;
-//        }else if(gamepad2.dpad_up && !adjustingExtensionLength){
-//            targetAngle += 0.1;
-//        }else if(gamepad2.dpad_down && !adjustingExtensionLength){
-//            targetAngle -= 0.1;
-//        }
-//
-//
-//        while(gamepad2.right_trigger > 0.5){
-//            rotateArmTo(targetAngle);
-//            slides.extendTo(targetExtension);
-//            if ((gamepad2.right_bumper || gamepad1.right_bumper) && !lastPressedClawOpen) {
-//                clawOpenToggle = !clawOpenToggle;
-//            }
-//            lastPressedClawOpen = (gamepad2.right_bumper || gamepad1.right_bumper);
-//
-//            if (clawOpenToggle) {
-//                claw.openClaw();
-//            } else {
-//                claw.closeClaw();
-//            }
-//            slides.update();
-//        }
-
         telemetry.addData("\nController target angle (degrees)", targetAngle * 180 / Math.PI);
         telemetry.addData("Controller target extension length", targetExtension);
         telemetry.addData("Adjusting extension length", adjustingExtensionLength);
@@ -272,7 +183,7 @@ public class MainTeleOp extends OpMode {
         lastInputY = adjustedInputY;
     }
 
-    void linearSlides() {
+    void manipulate() {
         // LINEAR SLIDES
         slides.extendBy(-gamepad2.right_stick_y);
 
@@ -319,6 +230,47 @@ public class MainTeleOp extends OpMode {
             } else {
                 claw.closeClaw();
             }
+        }
+    }
+
+    void test() {
+//         claw pivot
+        if (gamepad2.dpad_up) {
+            manualC = manualC +.05;
+        }
+        if (gamepad2.dpad_down) {
+            manualC = manualC -.05;
+        }
+
+//         Adjusting extension length and angle
+        if(gamepad2.square){
+            adjustingExtensionLength = !adjustingExtensionLength;
+        }
+        if(gamepad2.dpad_up && adjustingExtensionLength){
+            targetExtension += 0.1;
+        }else if(gamepad2.dpad_down && adjustingExtensionLength){
+            targetExtension -= 0.1;
+        }else if(gamepad2.dpad_up && !adjustingExtensionLength){
+            targetAngle += 0.1;
+        }else if(gamepad2.dpad_down && !adjustingExtensionLength){
+            targetAngle -= 0.1;
+        }
+
+
+        while(gamepad2.right_trigger > 0.5){
+            rotateArmTo(targetAngle);
+            slides.extendTo(targetExtension);
+            if ((gamepad2.right_bumper || gamepad1.right_bumper) && !lastPressedClawOpen) {
+                clawOpenToggle = !clawOpenToggle;
+            }
+            lastPressedClawOpen = (gamepad2.right_bumper || gamepad1.right_bumper);
+
+            if (clawOpenToggle) {
+                claw.openClaw();
+            } else {
+                claw.closeClaw();
+            }
+            slides.update();
         }
     }
 
