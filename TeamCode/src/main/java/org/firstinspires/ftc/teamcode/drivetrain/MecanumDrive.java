@@ -36,15 +36,6 @@ public class MecanumDrive {
     public DcMotorEx BRMotor;
     public DcMotorEx BLMotor;
 
-
-    private Odometry odometry;
-
-    // Navigation
-    public static final double [] NULL_POSITION = {0.0, 0.0};
-    public static final double [] DEFAULT_DIRECTION = {1.0, 0.0}; //Unit direction vector
-
-    public static final double MAX = 3.1416; //Max speed
-
     public BNO055IMU imu;
 
     private double correctedX;
@@ -67,14 +58,6 @@ public class MecanumDrive {
         FLMotor.setDirection(DcMotor.Direction.REVERSE);
         BRMotor.setDirection(DcMotor.Direction.FORWARD);
         BLMotor.setDirection(DcMotor.Direction.REVERSE);
-//        FRMotor.setDirection(DcMotor.Direction.FORWARD);
-//        FLMotor.setDirection(DcMotor.Direction.FORWARD);
-//        BRMotor.setDirection(DcMotor.Direction.REVERSE);
-//        BLMotor.setDirection(DcMotor.Direction.FORWARD);
-//        FRMotor.setDirection(DcMotor.Direction.FORWARD);
-//        FLMotor.setDirection(DcMotor.Direction.FORWARD);
-//        BRMotor.setDirection(DcMotor.Direction.REVERSE);
-//        BLMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Set Motor Mode
         FRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
