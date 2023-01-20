@@ -542,9 +542,5 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
     }
 
     double jerkStartTime = 0.0;
-
-    public void checkIfStuckOnGroundJunction(){
-
-    }
 }
 
