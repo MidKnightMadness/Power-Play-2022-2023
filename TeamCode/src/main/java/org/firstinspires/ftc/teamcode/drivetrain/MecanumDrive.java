@@ -157,6 +157,7 @@ public class MecanumDrive {
 
     public void fieldOrientatedDrive(double x, double y, double rotate, double angle) {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        angle = angle - Math.PI/2;
         double gyroRadians = angles.firstAngle * Math.PI/180;
         double offAngle = Math.acos(x);
 
@@ -167,8 +168,8 @@ public class MecanumDrive {
 
         if (y < 0) { offAngle = -offAngle; }
 
-        double correctedX = Math.cos(-gyroRadians + offAngle);
-        double correctedY = Math.sin(-gyroRadians + offAngle);
+        double correctedX = Math.cos(-angle + offAngle);
+        double correctedY = Math.sin(-angle + offAngle);
 
         drive(correctedX * .5, correctedY * .5, rotate * .5);
     }
