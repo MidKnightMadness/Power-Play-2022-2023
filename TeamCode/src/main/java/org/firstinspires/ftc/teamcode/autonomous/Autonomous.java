@@ -157,20 +157,6 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
         telemetry.update();
 
-//
-////        linearSlides.pivotTo(1.75);
-//        sleep(5000);
-////        linearSlides.extendTo(34);
-//        sleep(5000);
-////        claw.openClaw();
-//        sleep(1000);
-////        claw.closeClaw();
-//        sleep(5000);
-////        linearSlides.extendTo(19.0);
-//        sleep(5000);
-////        linearSlides.pivotTo(0);
-//        sleep(3000);
-
 
 //        movementTestSequence();
         if (getScoringJunction() == 0) {
@@ -179,7 +165,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         }
         else {
             scoreOneMiddle();
-            park(25);
+            park(24);
         }
 
 
@@ -207,29 +193,52 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         double xOffset = (getStartingPos() == 1 || getStartingPos() == 3) ? 23.5 / 2.0 : -23.5 / 2.0;
 
         goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
-        // goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
-//        sleep(1000);
-//        turn(3 * Math.PI / 2);
+        sleep(1000);
+        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
         sleep(1000);
         goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
         sleep(500);
         goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 55, getStartingRotation() + Math.PI);
-        sleep(1000);
+        sleep(3000);
+////        linearSlides.pivotTo(1.75);
+//        sleep(5000);
+////        linearSlides.extendTo(34);
+//        sleep(5000);
+////        claw.openClaw();
+//        sleep(1000);
+////        claw.closeClaw();
+//        sleep(5000);
+////        linearSlides.extendTo(19.0);
+//        sleep(5000);
+////        linearSlides.pivotTo(0);
+//        sleep(3000);
     }
 
 
     void scoreOneMiddle() {
         double xOffset = (getStartingPos() == 1 || getStartingPos() == 3) ? 23.5 * 1.5 : -23.5 * 1.5;
 
-        goToPosition(getStartingPosition().x, getStartingPosition().y + 25, getStartingRotation());
-        // goToPosition(getStartingPosition().x, getStartingPosition().y + 25, getStartingRotation() + Math.PI);
+        goToPosition(getStartingPosition().x, getStartingPosition().y + 29, getStartingRotation());
+        sleep(1000);
+        goToPosition(getStartingPosition().x, getStartingPosition().y + 29, getStartingRotation() + Math.PI);
+        sleep(1000);
+        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 29, getStartingRotation() + Math.PI);
+        sleep(1000);
+        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 32, getStartingRotation() + Math.PI);
+        sleep(3000);
+////        linearSlides.pivotTo(1.75);
+//        sleep(5000);
+////        linearSlides.extendTo(34);
+//        sleep(5000);
+////        claw.openClaw();
 //        sleep(1000);
-//        turn(3 * Math.PI / 2);
-        sleep(1000);
-        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 25, getStartingRotation() + Math.PI);
-        sleep(500);
-        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 27, getStartingRotation() + Math.PI);
-        sleep(1000);
+////        claw.closeClaw();
+//        sleep(5000);
+////        linearSlides.extendTo(19.0);
+//        sleep(5000);
+////        linearSlides.pivotTo(0);
+//        sleep(3000);
+        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 29, getStartingRotation() + Math.PI);
     }
 
     void movementTestSequence() {
