@@ -338,7 +338,18 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
             telemetry.addLine();
             mecanum.telemetry(telemetry);
+
+            if((odometry.getVelocity().x) * (odometry.getVelocity().x) + (odometry.getVelocity().y) * (odometry.getVelocity().y) < 0.1 && // If slow
+                    Math.abs(mecanum.FLMotor.getPower()) + Math.abs(mecanum.FRMotor.getPower()) + Math.abs(mecanum.BLMotor.getPower()) + Math.abs(mecanum.BRMotor.getPower()) > 0.1) { // If low power
+
+                telemetry.addLine("\n*Idle*");
+            }
+
+            checkForIdle(targetX, targetY);
+
             telemetry.update();
+
+
 
 
             atLocation = mecanum.driveTo(targetX, targetY, targetAngle, odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationRadians());
@@ -533,6 +544,9 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             while(coneTimer.getTime() < jerkStartTime + 0.1) {
                 coneTimer.updateTime();
                 mecanum.fieldOrientatedDrive(0.7 * (targetX - odometry.getXCoordinate()) / Math.abs(targetX - odometry.getXCoordinate()), 0.7 * (targetY - odometry.getYCoordinate()) / Math.abs(targetY - odometry.getYCoordinate()), 0.0, odometry.getRotationRadians());
+
+                telemetry.addLine("\n*Idle*");
+                telemetry.update();
             }
         }
     }

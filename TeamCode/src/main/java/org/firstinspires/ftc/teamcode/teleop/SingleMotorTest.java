@@ -12,6 +12,9 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 @TeleOp(name = "Single Motor Tester")
 public class SingleMotorTest extends OpMode {
     DcMotorEx motor;
+    public static int [] bounds = {0, 0};
+    public double presetLength = 0.0;
+    public static double inchesPerTick = 0.0;
 
     @Override
     public void init() {
@@ -20,38 +23,42 @@ public class SingleMotorTest extends OpMode {
         motor.setDirection(DcMotorSimple.Direction.REVERSE);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        motor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(1.0, 0.0, 0.0, 0.0));
-        zeroPosition = motor.getCurrentPosition();
     }
-
-    public double lastInput = 0.0;
-    public double hysteresisCoefficient = 0.5;
-    public double motorInput = 0.0;
-    int zeroPosition = 0;
 
     @Override
     public void loop() {
-//        motorInput = lastInput * hysteresisCoefficient + (1 - hysteresisCoefficient) * gamepad1.right_stick_x;
-//        motor.setPower(gamepad1.right_stick_y);
+        if(gamepad1.right_bumper){ // Extend to preset
+            motor.setTargetPosition((int) ((presetLength - 19.0) / inchesPerTick));
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motor.setPower(1.0);
 
-        if(motor.getCurrentPosition() > zeroPosition){
-            motor.setPower(gamepad1.right_stick_y);
         }else{
-            motor.setPower(Math.max(gamepad1.right_stick_y, 0));
-        }
-//        lastInput = motorInput;
-
-        if(gamepad1.x){
-            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motor.setPower(-gamepad1.right_stick_y);
+        }
+
+        if(gamepad1.x){ // Set bottom bound
+            bounds[0] = motor.getCurrentPosition();
+            if(bounds[1] != 0){
+                inchesPerTick = (34 - 19) / Math.abs(bounds[0] - bounds[1]);
+            }
+        }
+        if(gamepad1.y){ // Set top bound
+            bounds[1] = motor.getCurrentPosition();
+            if(bounds[0] != 0){
+                inchesPerTick = (34 - 19) / Math.abs(bounds[0] - bounds[1]);
+            }
         }
 
         if(gamepad1.dpad_up){
-            hysteresisCoefficient -= 0.001;
+            presetLength += 0.001;
         }else if(gamepad1.dpad_down){
-            hysteresisCoefficient += 0.001;
+            presetLength -= 0.001;
         }
 
         telemetry.addData("Motor position:", motor.getCurrentPosition());
-        telemetry.addData("Hysteresis coefficient:", hysteresisCoefficient);
+        telemetry.addData("Inches per tick:", inchesPerTick);
+        telemetry.addLine(String.format("Bounds: [%4d, %4d]", bounds[0], bounds[1]));
+        telemetry.addLine(String.format("Target length: %5.2f inches", presetLength));
     }
 }
