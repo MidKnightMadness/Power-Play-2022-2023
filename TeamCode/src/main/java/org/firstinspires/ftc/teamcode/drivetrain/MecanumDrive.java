@@ -182,7 +182,7 @@ public class MecanumDrive {
 
         double newx = Math.cos(rotato - currentAngle + Math.PI / 2); //drives without turning to the point
         double newy = Math.sin(rotato - currentAngle + Math.PI / 2);
-        double spd = Math.min(Math.hypot(dy, dx), 10) / 12;
+        double spd = Math.min(Math.hypot(dy, dx), 10) / 24;
         spd = Math.max(spd * Math.sqrt(spd) * .6, 0.2);
         // 3/2 power
 
@@ -199,10 +199,11 @@ public class MecanumDrive {
         }else{
             rotationInput = 0;
         }
+//        rotationInput /= 1.5;
 
         drive(XYInput[0], XYInput[1], rotationInput);
 
-        if((dx * dx) + (dy * dy) > 1 || Math.abs(pointTo(targetAngle, currentAngle)) > Math.PI / 180){
+        if((dx * dx) + (dy * dy) > 0.5 || Math.abs(pointTo(targetAngle, currentAngle)) > Math.PI / 180){
 
 //            drive(newx * spd, newy * spd, -0.6 * pointTo(targetAngle, currentAngle));
             return false;

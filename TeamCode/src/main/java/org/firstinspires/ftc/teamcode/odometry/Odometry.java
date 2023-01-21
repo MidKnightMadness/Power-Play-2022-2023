@@ -119,7 +119,7 @@ public class Odometry {
         netY = forwardMovement * sin + trueLateralMovement * cosine;
 
         rotationRadians += .5 * deltaRadians;
-
+        rotationRadians = rotationRadians % (Math.PI * 2);
         rotationalVelocity = deltaRadians / deltaTime;
 
 //        if (false) {

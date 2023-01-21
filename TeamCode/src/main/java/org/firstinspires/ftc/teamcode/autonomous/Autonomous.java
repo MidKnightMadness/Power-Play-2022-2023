@@ -187,12 +187,13 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
     }
 
     void scoreOneForward() {
-        double xOffset = (getStartingPos() == 1 || getStartingPos() == 3) ? 11 : -11;
+        double xOffset = (getStartingPos() == 1 || getStartingPos() == 3) ? 12 : -12;
 
         goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
         sleep(1000);
         goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
         sleep(1000);
+
         goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
         sleep(500);
         goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 55, getStartingRotation() + Math.PI);
