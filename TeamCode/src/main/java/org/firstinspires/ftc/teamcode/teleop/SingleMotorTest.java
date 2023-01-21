@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 public class SingleMotorTest extends OpMode {
     DcMotorEx motor;
     public static int [] bounds = {0, 0};
-    public double presetLength = 0.0;
+    public double presetLength = 19.0;
     public static double inchesPerTick = 0.0;
 
     @Override
