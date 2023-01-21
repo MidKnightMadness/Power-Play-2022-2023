@@ -107,7 +107,7 @@ public class Odometry {
         // 1 - 7 Restored +1/2 rotation trapezoidal integration method
         // angles
         deltaRadians = -getDeltaRotation(leftDistanceMoved, rightDistanceMoved);
-        rotationRadians += .5 * deltaRadians;
+        rotationRadians += .5 * deltaRadians;//我他西哇
 
         forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0;
         trueLateralMovement = -topDistanceMoved + deltaRadians * verticalWheelDistance;

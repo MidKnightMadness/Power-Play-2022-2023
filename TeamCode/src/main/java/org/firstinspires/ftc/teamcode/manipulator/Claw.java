@@ -22,17 +22,18 @@ public class Claw {
     public Servo rotationServo;
 //    public Servo rotationServo2;
 
-    double OPEN = 0.425;
-    double CLOSED = 0.750;
+    double OPEN = 0;
+    double CLOSED = 1;
 
     public Claw(HardwareMap hardwareMap) {
         servo = hardwareMap.get(Servo.class, "Claw");
 
         rotationServo = hardwareMap.get(Servo.class, "CP");
+        rotationServo.setDirection(Servo.Direction.REVERSE);
         rotationServo.resetDeviceConfigurationForOpMode();
 
-        servo.scaleRange(0.0, 1.0);
-        rotationServo.scaleRange(0.0, 1.0);
+//        servo.scaleRange(0.0, 1.0);
+//        rotationServo.scaleRange(0.0, 1.0);
 
 //        rotationServo.setPosition(0.0);
 

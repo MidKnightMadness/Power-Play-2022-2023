@@ -76,7 +76,7 @@ public class LinearSlides {
 //        seeSawMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); // set zero power behavior
 
         // Extension Motor specifics need to be edited ig
-        extensionMotor.setDirection(DcMotor.Direction.REVERSE); // set direction, probably need to change
+        extensionMotor.setDirection(DcMotor.Direction.FORWARD); // set direction, probably need to change
         extensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // set motor mode
         extensionMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER); // Run to position?
         extensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); // set zero power behavior
