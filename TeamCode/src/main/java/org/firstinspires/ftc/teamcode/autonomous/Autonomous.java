@@ -221,7 +221,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         sleep(1000);
         goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 29, getStartingRotation() + Math.PI);
         sleep(1000);
-        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 33, getStartingRotation() + Math.PI);
+        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 31.5, getStartingRotation() + Math.PI);
         sleep(3000);
 ////        linearSlides.pivotTo(1.75);
 //        sleep(5000);
@@ -320,6 +320,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             telemetry.addData("\nCone timer", coneTimer.getTime());
 
             telemetry.addLine(String.format("\nCurrent Coordinates: (%3.2f, %3.2f, %3.2f)", odometry.getXCoordinate(), odometry.getYCoordinate(), odometry.getRotationDegrees()));
+            telemetry.addData("Velocity", odometry.getVelocity().toString());
             telemetry.addLine(String.format("Target Coordinates: (%3.2f, %3.2f, %3.2f)", targetX, targetY, targetAngle * 180 / Math.PI));
             telemetry.addLine(String.format("Target - current: (%3.2f, %3.2f, %3.2f)", targetX - odometry.getXCoordinate(), targetY - odometry.getYCoordinate(), targetAngle * 180 / Math.PI - odometry.getRotationDegrees()));
 
@@ -336,13 +337,11 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             telemetry.addLine();
             mecanum.telemetry(telemetry);
 
-            if((odometry.getVelocity().x) * (odometry.getVelocity().x) + (odometry.getVelocity().y) * (odometry.getVelocity().y) < 0.1 && // If slow
-                    Math.abs(mecanum.FLMotor.getPower()) + Math.abs(mecanum.FRMotor.getPower()) + Math.abs(mecanum.BLMotor.getPower()) + Math.abs(mecanum.BRMotor.getPower()) > 0.1) { // If low power
-
-                telemetry.addLine("\n*Idle*");
-            }
-
-            checkForIdle(targetX, targetY);
+//            if((odometry.getVelocity().x) * (odometry.getVelocity().x) + (odometry.getVelocity().y) * (odometry.getVelocity().y) < 0.1 && // If slow
+//                    Math.abs(mecanum.FLMotor.getPower()) + Math.abs(mecanum.FRMotor.getPower()) + Math.abs(mecanum.BLMotor.getPower()) + Math.abs(mecanum.BRMotor.getPower()) > 0.1) { // If low power
+//
+//                telemetry.addLine("\n*Idle*");
+//            }
 
             telemetry.update();
 
