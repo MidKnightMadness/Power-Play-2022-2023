@@ -187,7 +187,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
     }
 
     void scoreOneForward() {
-        double xOffset = (getStartingPos() == 1 || getStartingPos() == 3) ? 23.5 / 2.0 : -23.5 / 2.0;
+        double xOffset = (getStartingPos() == 1 || getStartingPos() == 3) ? 11 : -11;
 
         goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
         sleep(1000);
@@ -221,7 +221,6 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         sleep(1000);
         goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 29, getStartingRotation() + Math.PI);
         sleep(1000);
-        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 32, getStartingRotation() + Math.PI);
         goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 31.5, getStartingRotation() + Math.PI);
         sleep(3000);
 ////        linearSlides.pivotTo(1.75);
