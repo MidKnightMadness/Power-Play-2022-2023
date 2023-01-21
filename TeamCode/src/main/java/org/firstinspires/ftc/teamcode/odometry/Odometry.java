@@ -22,6 +22,7 @@ public class Odometry {
 
     public Vector2 position = new Vector2();
     Vector2 velocity = new Vector2();
+    public double rotationalVelocity = 0.0;
 
     int lastLeftTicks = 0;
     int deltaLeftTicks = 0;
@@ -118,6 +119,8 @@ public class Odometry {
         netY = forwardMovement * sin + trueLateralMovement * cosine;
 
         rotationRadians += .5 * deltaRadians;
+
+        rotationalVelocity = deltaRadians / deltaTime;
 
 //        if (false) {
 //            netX = forwardMovement * Math.cos(rotationRadians);
