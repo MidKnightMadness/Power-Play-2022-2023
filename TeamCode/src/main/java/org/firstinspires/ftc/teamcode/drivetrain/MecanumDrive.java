@@ -174,6 +174,9 @@ public class MecanumDrive {
         drive(correctedX * .5, correctedY * .5, rotate * .5);
     }
 
+    double positionOffset = 0;
+    double angleOffset = 0;
+
     public boolean driveTo(double targetX, double targetY, double targetAngle, double currentX, double currentY, double currentAngle) {
         double dy = (targetY - currentY);
         double dx = (targetX - currentX);
@@ -194,7 +197,7 @@ public class MecanumDrive {
             XYInput[1] = 0;
         }
 
-        if(Math.abs(pointTo(targetAngle, currentAngle)) > Math.PI / 180){
+        if(Math.abs(pointTo(targetAngle, currentAngle)) > .05){
             rotationInput = -pointTo(targetAngle, currentAngle);
         }else{
             rotationInput = 0;
@@ -203,7 +206,9 @@ public class MecanumDrive {
 
         drive(XYInput[0], XYInput[1], rotationInput);
 
-        if((dx * dx) + (dy * dy) > 0.5 || Math.abs(pointTo(targetAngle, currentAngle)) > Math.PI / 180){
+        positionOffset = (dx * dx) + (dy * dy);
+        angleOffset = Math.abs(pointTo(targetAngle, currentAngle));
+        if((dx * dx) + (dy * dy) > 1 || Math.abs(pointTo(targetAngle, currentAngle)) > .05){
 
 //            drive(newx * spd, newy * spd, -0.6 * pointTo(targetAngle, currentAngle));
             return false;
@@ -253,6 +258,7 @@ public class MecanumDrive {
 
     public void telemetry(Telemetry telemetry) {
         telemetry.addLine("\nMECANUM WHEELS");
+        telemetry.addLine(String.format("Autonomous Offset: Position %f   Angle %f", positionOffset, angleOffset));
         telemetry.addLine(String.format("Front Motor Power: %f %f", FLMotor.getPower(), FRMotor.getPower()));
         telemetry.addLine(String.format(" Back Motor Power: %f %f", BLMotor.getPower(), BRMotor.getPower()));
         telemetry.addData("Corrected X", correctedX);
