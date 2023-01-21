@@ -183,7 +183,7 @@ public class MecanumDrive {
         double newx = Math.cos(rotato - currentAngle + Math.PI / 2); //drives without turning to the point
         double newy = Math.sin(rotato - currentAngle + Math.PI / 2);
         double spd = Math.min(Math.hypot(dy, dx), 10) / 12;
-        spd = Math.max(spd * Math.sqrt(spd) * .6, 0.2);
+        spd = Math.max(spd * Math.sqrt(spd) * .6, 0.4);
         // 3/2 power
 
         if((dx * dx) + (dy * dy) > 1){
