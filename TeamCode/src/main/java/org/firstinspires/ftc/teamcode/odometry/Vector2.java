@@ -11,9 +11,13 @@ public class Vector2 {
     public Vector2 times(double scalar) {
         return new Vector2(this.x * scalar, this.y * scalar);
     }
-
+    public Vector2 divide(double scalar) { return new Vector2(this.x / scalar, this.y / scalar); }
     public Vector2 minus(Vector2 vec) {
         return new Vector2(this.x - vec.x, this.y - vec.y);
+    }
+
+    public double getMagnitude() {
+        return Math.sqrt(this.x * this.x + this.y * this.y);
     }
 
     public double dot(Vector2 vec) {
@@ -23,7 +27,11 @@ public class Vector2 {
     public double dot(Vector2 vec1, Vector2 vec2) {
         return dot(vec1.minus(vec2));
     }
-//
+
+    public Vector2 getNormalized() {
+        return new Vector2(this.x, this.y).divide(this.getMagnitude());
+    }
+
 //    public Vector2 cross(Vector2 vec) {
 //        return
 //    }
