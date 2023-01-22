@@ -74,7 +74,7 @@ public class MainTeleOp extends OpMode {
         mecanum = new MecanumDrive(hardwareMap);
         odometry = new Odometry(hardwareMap, Math.PI / 2, new Vector2(7.5, 7.5));
         claw = new Claw(hardwareMap);
-        slides = new LinearSlides(hardwareMap, 41 * Math.PI / 180);
+        slides = new LinearSlides(hardwareMap, 0);//41 * Math.PI / 180);
     }
 
     double time;
@@ -315,7 +315,7 @@ public class MainTeleOp extends OpMode {
         slides.pivotBy(radians);
 
         // Needs something to get only 0.1, 0.2, 0.3, etc...
-        clawPivotInput =  slides.seesawAngle / Math.PI; // -1.0 (undefined position) if at 180˚, 0.0 if at 0˚ (backwards)
+        clawPivotInput =  slides.seesawAngle / Math.PI*.7; // -1.0 (undefined position) if at 180˚, 0.0 if at 0˚ (backwards)
         //clawPivotInput += 1; // 0.0 (backwards) if at 180˚, 1.0 (forwards) if at 0˚
 
         // Servo only takes inputs in intervals larger than a certain value
@@ -329,7 +329,7 @@ public class MainTeleOp extends OpMode {
         slides.pivotTo(angle);
 
         // Needs something to get only 0.1, 0.2, 0.3, etc...
-        clawPivotInput = slides.seesawAngle / Math.PI; // -1.0 (undefined position) if at 180˚, 0.0 if at 0˚ (backwards)
+        clawPivotInput = slides.seesawAngle / Math.PI*.7; // -1.0 (undefined position) if at 180˚, 0.0 if at 0˚ (backwards)
         //clawPivotInput += 1; // 0.0 (backwards) if at 180˚, 1.0 (forwards) if at 0˚
 
         // Servo only takes inputs in intervals of 0.1

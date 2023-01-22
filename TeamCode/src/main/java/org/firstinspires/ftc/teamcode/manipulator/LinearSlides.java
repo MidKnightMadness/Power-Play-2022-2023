@@ -38,12 +38,12 @@ public class LinearSlides {
     public static final double STARTING_EXTENDER_LENGTH = 19.0; // Starting length from pivot axle
     // Rotation
     private static final double SEESAW_MOTOR_RATIO = 100; // 60:1 or 40:1 motor?
-    public static final double SEESAW_OVERALL_RATIO = Math.PI / (2 * 1441); // Angle per tick
+    public static final double SEESAW_OVERALL_RATIO = Math.PI / (2 * 1330); // Angle per tick
     private static double STARTING_ANGLE = 0.0;// Temporary, for testing MainTeleOp w/ manipulator starting down
     // Extension
     private static final double EXTENDER_MOTOR_RATIO = 20; // 20:1 or 40:1 motor?
     private static final double EXTENDER_WINCH_RADIUS = 9.4 / 2;
-    public static final double EXTENDER_OVERALL_RATIO = 12.0 / 2048; // EXTENDER_WINCH_RADIUS * 2 * Math.PI / (560 * EXTENDER_MOTOR_RATIO); // Inches per tick
+    public static final double EXTENDER_OVERALL_RATIO = 13.4 / 2786.0; // EXTENDER_WINCH_RADIUS * 2 * Math.PI / (560 * EXTENDER_MOTOR_RATIO); // Inches per tick
 
     // Temporary stuff
     public static final double [] DEFAULT_INTAKE_DISPLACEMENT = {11.75, -11.75 / 2, -ROOT_HEIGHT};
@@ -113,7 +113,8 @@ public class LinearSlides {
     public static final double MANIPULATOR_BACKSET_DISTANCE = 3.5;
 
     public void extendTo(double inches){ // Inches
-        double distance1 = (inches - STARTING_EXTENDER_LENGTH)*1.25 / EXTENDER_OVERALL_RATIO-extensionMotor.getCurrentPosition();
+
+        double distance1 = (inches - STARTING_EXTENDER_LENGTH) / EXTENDER_OVERALL_RATIO-extensionMotor.getCurrentPosition();
         double power = distance1/Math.max(100, Math.abs(distance1));
         extensionMotor.setPower(power);
         extensionMotor2.setPower(power);
@@ -128,19 +129,17 @@ public class LinearSlides {
         double brake = 0.0002 * ((seesawExtensionLength - STARTING_EXTENDER_LENGTH) / 2);
         double truePower = 0.0;
 
-        if(Math.abs(power) < 0.1){
-            extensionMotor.setPower(brake);
-            extensionMotor2.setPower(brake);
-        }else{
-            if (seesawExtensionLength - STARTING_EXTENDER_LENGTH <= 0){
-                truePower = Math.max(power, 0);
-            }else{
-                truePower = power;
-            }
+//            if (seesawExtensionLength - STARTING_EXTENDER_LENGTH <= 0){
+//                truePower = Math.max(power, 0);
+//            } else if (seesawExtensionLength >= 34.0){
+//                truePower = Math.min(power, 0);
+//            } else {
+            truePower = power;
+//            }
 
             extensionMotor.setPower(truePower);
             extensionMotor2.setPower(truePower);
-        }
+
     }
 
     private int ticksDifference = 0;
@@ -183,7 +182,7 @@ public class LinearSlides {
     public void update(){ // Run this as much as applicable
         previousAngle = seesawAngle;
 
-        seesawExtensionLength = ((.5 * extensionMotor.getCurrentPosition() + .5 * extensionMotor2.getCurrentPosition()) * EXTENDER_OVERALL_RATIO) + STARTING_EXTENDER_LENGTH;
+        seesawExtensionLength = (extensionMotor.getCurrentPosition() * EXTENDER_OVERALL_RATIO) + STARTING_EXTENDER_LENGTH;
         seesawAngle = (seeSawMotor.getCurrentPosition() * SEESAW_OVERALL_RATIO) + STARTING_ANGLE;
     }
 
@@ -221,5 +220,11 @@ public class LinearSlides {
         telemetry.addLine(String.format("Extension Motors Velocities: %f %f", extensionMotor.getVelocity(), extensionMotor2.getVelocity()));
         telemetry.addLine(String.format("Extensions Current Positions: %d %d", extensionMotor.getCurrentPosition(), extensionMotor2.getCurrentPosition()));
         telemetry.addLine(String.format("Extensions Target Positions: %d %d", extensionMotor.getTargetPosition(), extensionMotor2.getTargetPosition()));
+
+        telemetry.addData("\nExtension Length", seesawExtensionLength);
+        telemetry.addData("Seesaw angle", seesawAngle * 180 / Math.PI);
+//        telemetry.addData("Relative calculated extender length, extension motor 1", (extensionMotor.getCurrentPosition() * EXTENDER_OVERALL_RATIO));
+//        telemetry.addData("Calculated extender length, extension motor 2", (extensionMotor2.getCurrentPosition() * EXTENDER_OVERALL_RATIO) + STARTING_EXTENDER_LENGTH);
+//        telemetry.addData("Calculated extender length, averaged", ((0.5 * extensionMotor2.getCurrentPosition() + 0. * extensionMotor.getCurrentPosition()) * EXTENDER_OVERALL_RATIO) + STARTING_EXTENDER_LENGTH);
     }
 }
