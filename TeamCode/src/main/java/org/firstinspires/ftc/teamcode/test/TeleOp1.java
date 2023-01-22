@@ -1,23 +1,16 @@
 package org.firstinspires.ftc.teamcode.test;
 
-import static org.firstinspires.ftc.teamcode.highlevel.Master.telemetry;
 
-
-//import org.firstinspires.ftc.teamcode.drivetrain.Vector;
+//import org.firstinspires.ftc.teamcode.archive.Vector;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.highlevel.Master;
-import org.firstinspires.ftc.teamcode.manipulator.LinearSlides;
-import org.firstinspires.ftc.teamcode.manipulator.Turntable;
-import org.firstinspires.ftc.teamcode.drivetrain.*;
-import org.firstinspires.ftc.teamcode.odometry.TestingOdometryAlgorithm;
+
+        import org.firstinspires.ftc.teamcode.drivetrain.*;
+import org.firstinspires.ftc.teamcode.archive.TestingOdometryAlgorithm;
 
 // Encoders, Motors
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.HardwareMap;
+
 
 @TeleOp
 @Disabled

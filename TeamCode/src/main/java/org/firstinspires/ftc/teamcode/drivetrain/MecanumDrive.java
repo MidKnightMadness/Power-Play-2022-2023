@@ -1,14 +1,9 @@
 package org.firstinspires.ftc.teamcode.drivetrain;
 
-import static org.firstinspires.ftc.teamcode.highlevel.Master.currentPosition;
-import static org.firstinspires.ftc.teamcode.highlevel.Master.invSqrt;
-import static org.firstinspires.ftc.teamcode.highlevel.Master.odometryAlg;
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -17,7 +12,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-import org.firstinspires.ftc.teamcode.odometry.Odometry;
 import org.firstinspires.ftc.teamcode.odometry.Vector2;
 
 /*

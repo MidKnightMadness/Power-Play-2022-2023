@@ -1,13 +1,10 @@
-package org.firstinspires.ftc.teamcode.manipulator;
-
-import static org.firstinspires.ftc.teamcode.highlevel.Master.odometryAlg;
+package org.firstinspires.ftc.teamcode.archive;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.highlevel.Master;
 
 @Deprecated
 public class Turntable {

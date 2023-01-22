@@ -1,15 +1,12 @@
-package org.firstinspires.ftc.teamcode.odometry;
+package org.firstinspires.ftc.teamcode.archive;
 
 // Auxillary
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-import static org.firstinspires.ftc.teamcode.highlevel.Master.STARTING_POSITION;
-import static org.firstinspires.ftc.teamcode.highlevel.Master.currentPosition;
-//import static org.firstinspires.ftc.teamcode.highlevel.Master.encoder1;
-//import static org.firstinspires.ftc.teamcode.highlevel.Master.encoder2;
-//import static org.firstinspires.ftc.teamcode.highlevel.Master.encoder3;
+import static org.firstinspires.ftc.teamcode.archive.Master.STARTING_POSITION;
+import static org.firstinspires.ftc.teamcode.archive.Master.currentPosition;
+//import static org.firstinspires.ftc.teamcode.archive.Master.encoder1;
+//import static org.firstinspires.ftc.teamcode.archive.Master.encoder2;
+//import static org.firstinspires.ftc.teamcode.archive.Master.encoder3;
 
-import org.firstinspires.ftc.teamcode.drivetrain.*;
-import org.firstinspires.ftc.teamcode.highlevel.*;
 import org.firstinspires.ftc.teamcode.test.TeleOp1;
 
 // Encoders

@@ -1,23 +1,20 @@
 // Add import statements as more data is added
 // Auxillary (driver hub, control hub, OD, etc...)
-package org.firstinspires.ftc.teamcode.highlevel;
+package org.firstinspires.ftc.teamcode.archive;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.highlevel.GridSystem;
 import org.firstinspires.ftc.teamcode.manipulator.Claw;
-import org.firstinspires.ftc.teamcode.manipulator.DoubleReverse4Bar;
+import org.firstinspires.ftc.teamcode.archive.DoubleReverse4Bar;
 import org.firstinspires.ftc.teamcode.manipulator.LinearSlides;
-import org.firstinspires.ftc.teamcode.manipulator.Turntable;
-import org.firstinspires.ftc.teamcode.odometry.TestingOdometryAlgorithm;
-import org.firstinspires.ftc.teamcode.drivetrain.*;
+import org.firstinspires.ftc.teamcode.archive.Turntable;
+import org.firstinspires.ftc.teamcode.archive.TestingOdometryAlgorithm;
 
 // Encoders, Motors
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-import java.util.Timer;
 
 // Servos
 

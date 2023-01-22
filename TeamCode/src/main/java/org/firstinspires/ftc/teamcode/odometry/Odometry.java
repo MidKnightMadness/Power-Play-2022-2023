@@ -107,7 +107,7 @@ public class Odometry {
         // 1 - 7 Restored +1/2 rotation trapezoidal integration method
         // angles
         deltaRadians = -getDeltaRotation(leftDistanceMoved, rightDistanceMoved);
-        rotationRadians += .5 * deltaRadians;//我他西哇
+        rotationRadians += .5 * deltaRadians; //我他西哇
 
         forwardMovement = (leftDistanceMoved + rightDistanceMoved) / 2.0;
         trueLateralMovement = -topDistanceMoved + deltaRadians * verticalWheelDistance;
@@ -122,16 +122,6 @@ public class Odometry {
         rotationRadians = rotationRadians % (Math.PI * 2);
         rotationalVelocity = deltaRadians / deltaTime;
 
-//        if (false) {
-//            netX = forwardMovement * Math.cos(rotationRadians);
-//            netY = forwardMovement * Math.sin(rotationRadians);
-////                 (D1 + D2) / 2      Orientation Vector
-//            // third wheel component
-//            netX -= (trueLateralMovement) * (Math.sin(rotationRadians));
-//            netY += (trueLateralMovement) * (Math.cos(rotationRadians));
-//            //       Horizontal movement       Normal Vector
-//        }
-
         // 1 - 7 Changed signs since was reversed, had to re-swap variables
         this.position.x -= netX;
         this.position.y -= netY;
@@ -143,10 +133,10 @@ public class Odometry {
 //        MainTeleOp.currentPosition[0] += netX;
 //        MainTeleOp.currentPosition[1] += netY;
 
-
-        velocity.x = netX / deltaTime;
-        velocity.y = netY / deltaTime;
-
+        if (deltaTime != 0) {
+            velocity.x = netX / deltaTime;
+            velocity.y = netY / deltaTime;
+        }
 
     }
 

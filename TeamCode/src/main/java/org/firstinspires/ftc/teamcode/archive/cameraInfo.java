@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.archive;
 
 public interface cameraInfo {
     final double FEET_PER_METER = 3.28084;
