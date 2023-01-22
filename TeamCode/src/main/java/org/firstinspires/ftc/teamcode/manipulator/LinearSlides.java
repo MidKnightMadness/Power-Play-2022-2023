@@ -129,13 +129,13 @@ public class LinearSlides {
         double brake = 0.0002 * ((seesawExtensionLength - STARTING_EXTENDER_LENGTH) / 2);
         double truePower = 0.0;
 
-//            if (seesawExtensionLength - STARTING_EXTENDER_LENGTH <= 0){
-//                truePower = Math.max(power, 0);
-//            } else if (seesawExtensionLength >= 34.0){
-//                truePower = Math.min(power, 0);
-//            } else {
+            if (seesawExtensionLength - STARTING_EXTENDER_LENGTH <= 0){
+                truePower = Math.max(power, 0);
+            } else if (seesawExtensionLength >= 34.0){
+                truePower = Math.min(power, 0);
+            } else {
             truePower = power;
-//            }
+            }
 
             extensionMotor.setPower(truePower);
             extensionMotor2.setPower(truePower);
