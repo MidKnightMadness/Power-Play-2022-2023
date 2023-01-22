@@ -44,6 +44,10 @@ public class MecanumDrive {
     private double gyro_radians;
     private double offAngle;
 
+    double p = 0.5;
+    double i = 0.01;
+    double iCap = 0.25;
+
     private Orientation angles;
 
     public MecanumDrive(HardwareMap hardwareMap) {
