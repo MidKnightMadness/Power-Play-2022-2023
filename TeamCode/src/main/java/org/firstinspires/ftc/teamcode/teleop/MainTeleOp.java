@@ -40,6 +40,7 @@ import org.firstinspires.ftc.teamcode.odometry.Vector2;
  * right_bumper     toggle      claw (drops cone)
  *
  * Player 2:
+ * left_stick_x     hold        turn
  * left_stick_y     hold        pivot arm
  * right_stick_y    hold        extend linear slides
  * right_bumper     toggle      claw (grabs cone)
