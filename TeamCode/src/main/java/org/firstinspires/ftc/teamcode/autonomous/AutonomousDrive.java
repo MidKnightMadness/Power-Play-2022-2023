@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
 import org.firstinspires.ftc.teamcode.odometry.Vector2;
@@ -24,6 +25,7 @@ public class AutonomousDrive {
         BRMotor = hardwareMap.get(DcMotorEx.class, "BR");
         BLMotor = hardwareMap.get(DcMotorEx.class, "BL");
 
+        FRMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, new PIDFCoefficients(0.5, 0.5, 0.5, 0.6));
         // Set Directions
         FRMotor.setDirection(DcMotor.Direction.REVERSE);
         FLMotor.setDirection(DcMotor.Direction.REVERSE);

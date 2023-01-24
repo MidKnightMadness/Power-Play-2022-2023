@@ -8,12 +8,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.archive.cameraInfo;
+import org.firstinspires.ftc.teamcode.archive.pickUpConeData;
 import org.firstinspires.ftc.teamcode.highlevel.GridSystem;
-import org.firstinspires.ftc.teamcode.manipulator.Claw;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.objectdetection.AprilTagDetection.AprilTagDetectionPipeline;
-import org.firstinspires.ftc.teamcode.manipulator.LinearSlides;
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
 import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
 import org.openftc.apriltag.AprilTagDetection;

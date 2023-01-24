@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.test;
 
-import static org.firstinspires.ftc.teamcode.odometry.TestingOdometryAlgorithm.DISTANCE_TO_BACK_WHEEL;
+import static org.firstinspires.ftc.teamcode.archive.TestingOdometryAlgorithm.DISTANCE_TO_BACK_WHEEL;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-import org.firstinspires.ftc.teamcode.drivetrain.Vector;
+import org.firstinspires.ftc.teamcode.archive.Vector;
 
 @TeleOp (group = "Test")
 @Disabled

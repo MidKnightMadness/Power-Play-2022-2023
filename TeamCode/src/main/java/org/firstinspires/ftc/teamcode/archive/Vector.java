@@ -1,12 +1,4 @@
-package org.firstinspires.ftc.teamcode.drivetrain;
-
-import static org.firstinspires.ftc.teamcode.highlevel.Master.invSqrt;
-import static org.firstinspires.ftc.teamcode.highlevel.Master.auxillaryNumber;
-
-import org.firstinspires.ftc.teamcode.highlevel.Master;
-
-import java.util.*;
-import java.math.*;
+package org.firstinspires.ftc.teamcode.archive;
 
 @Deprecated
 public class Vector { // Vector-based methods deprecated, use double []
