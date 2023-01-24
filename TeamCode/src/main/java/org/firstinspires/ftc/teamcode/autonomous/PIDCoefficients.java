@@ -6,13 +6,11 @@ public class PIDCoefficients {
     public double kiCap;
     public double kd;
 
-
     public PIDCoefficients(double kp, double ki, double kd) {
         this.kp = kp;
         this.ki = ki;
         this.kd = kd;
         this.kiCap = 0.25;
-
     }
 
     public PIDCoefficients(double kp, double ki, double kiCap, double kd) {

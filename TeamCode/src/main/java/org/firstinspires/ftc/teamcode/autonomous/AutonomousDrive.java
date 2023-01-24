@@ -14,10 +14,13 @@ public class AutonomousDrive {
     public DcMotorEx BRMotor;
     public DcMotorEx BLMotor;
 
+    public double maxMovementDistance = 1;
+
     PIDController controllerX;
     PIDController controllerY;
     PIDController controllerRotation;
-    PIDCoefficients pidCoefficients = new PIDCoefficients(0.5, 0.14, 0.3, 0.25);
+    PIDCoefficients pidCoefficientsMovement = new PIDCoefficients(0.5, 0.0, 0.3, 0.0);
+    PIDCoefficients pidCoefficientsRotation = new PIDCoefficients(0.5, 0.0, 0.3, 0.0);
 
     void initHardware(HardwareMap hardwareMap) {
         FRMotor = hardwareMap.get(DcMotorEx.class, "FR");
@@ -25,7 +28,6 @@ public class AutonomousDrive {
         BRMotor = hardwareMap.get(DcMotorEx.class, "BR");
         BLMotor = hardwareMap.get(DcMotorEx.class, "BL");
 
-        FRMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, new PIDFCoefficients(0.5, 0.5, 0.5, 0.6));
         // Set Directions
         FRMotor.setDirection(DcMotor.Direction.REVERSE);
         FLMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -51,12 +53,12 @@ public class AutonomousDrive {
         BLMotor.setPower(0);
     }
 
-    public void init(HardwareMap hardwareMap) {
+    public AutonomousDrive(HardwareMap hardwareMap) {
         initHardware(hardwareMap);
 
-        controllerX = new PIDController(pidCoefficients);
-        controllerY = new PIDController(pidCoefficients);
-        controllerRotation = new PIDController(pidCoefficients);
+        controllerX = new PIDController(pidCoefficientsMovement);
+        controllerY = new PIDController(pidCoefficientsMovement);
+        controllerRotation = new PIDController(pidCoefficientsRotation);
     }
 
     public void setPowers(double fr, double fl, double br, double bl) {
@@ -66,26 +68,33 @@ public class AutonomousDrive {
         BLMotor.setPower(bl);
     }
 
-    public void goToPose(Vector2 currentPosition, Vector2 target, double currentRotation, double targetRotation, double deltaTime) {
-        Vector2 error = target.minus(currentPosition);
+    public void setTargetState(Vector2 currentPosition, Vector2 target, double currentRotation, double targetRotation, double deltaTime) {
+        Vector2 errorPosition = target.minus(currentPosition);
+        double errorRotation = targetRotation - currentRotation;
 
-        Vector2 direction = error.getNormalized();
-        double errorMagnitude = error.getMagnitude();
+//        Vector2 errorDirection = errorPosition.getNormalized();
+//        double errorMagnitude = errorPosition.getMagnitude();
 
+        // relative to robot x and y
         double changeX = controllerX.calculate(target.x, currentPosition.x, deltaTime);
         double changeY = controllerY.calculate(target.y, currentPosition.y, deltaTime);
-        double changeRotation = controllerRotation.calculate(targetRotation, currentRotation, deltaTime);
+        double pidRotation = controllerRotation.calculate(targetRotation, currentRotation, deltaTime);
 
-        double averageRotation = currentRotation + changeRotation / 2.0;
+        double averageRotation = currentRotation + pidRotation / 2.0;
 
         double cos = Math.cos(averageRotation);
         double sin = Math.sin(averageRotation);
 
-        // cos 1, sin 0
-        double correctedX = changeX * cos + changeY * sin;
-        double correctedY = changeX * sin + changeY * cos;
+        // field x and y
+//        double correctedX = changeX * cos + changeY * sin;
+//        double correctedY = changeX * sin + changeY * cos;
 
-        drive(correctedX, correctedY, changeRotation);
+        Vector2 pidPosition = new Vector2(changeX, changeY);
+//        Vector2 pidDirection = pidPosition.getNormalized();
+//        double pidMagnitude = pidPosition.getMagnitude();
+
+
+        drive(pidPosition.x / errorPosition.x, pidPosition.y / errorPosition.y, pidRotation / errorRotation);
 
     }
 

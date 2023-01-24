@@ -86,6 +86,9 @@ public class Odometry {
 
     public int ticksPerSecon = 0;
 
+    public double getDeltaTime() {
+        return deltaTime;
+    }
     public void updatePosition() {
         leftTicks = leftEncoder.getCurrentPosition();
         rightTicks = -rightEncoder.getCurrentPosition();

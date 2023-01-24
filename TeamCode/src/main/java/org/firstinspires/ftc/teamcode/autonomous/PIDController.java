@@ -33,5 +33,10 @@ public class PIDController {
         return kp * error + integral + kd * derivative;
     }
 
+    public void resetError() {
+        lastError = 0;
+        errorSum = 0;
+    }
+
 
 }
