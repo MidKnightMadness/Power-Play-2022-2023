@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
 import org.firstinspires.ftc.teamcode.odometry.Vector2;
 
@@ -15,6 +16,7 @@ public class AutonomousDrive {
     public DcMotorEx BLMotor;
 
     public double maxMovementDistance = 1;
+    Telemetry telemetry;
 
     PIDController controllerX;
     PIDController controllerY;
@@ -68,10 +70,10 @@ public class AutonomousDrive {
         BLMotor.setPower(bl);
     }
 
-    public void setTargetState(Vector2 currentPosition, Vector2 target, double currentRotation, double targetRotation, double deltaTime) {
+    public void setTargetState(Telemetry telemetry, Vector2 currentPosition, Vector2 target, double currentRotation, double targetRotation, double deltaTime) {
         Vector2 errorPosition = target.minus(currentPosition);
         double errorRotation = targetRotation - currentRotation;
-
+        this.telemetry = telemetry;
 //        Vector2 errorDirection = errorPosition.getNormalized();
 //        double errorMagnitude = errorPosition.getMagnitude();
 
@@ -85,11 +87,15 @@ public class AutonomousDrive {
         double cos = Math.cos(averageRotation);
         double sin = Math.sin(averageRotation);
 
+        telemetry.addData("Error Position", errorPosition);
+        telemetry.addData("Error Rotation", errorRotation);
+
         // field x and y
 //        double correctedX = changeX * cos + changeY * sin;
 //        double correctedY = changeX * sin + changeY * cos;
 
         Vector2 pidPosition = new Vector2(changeX, changeY);
+        telemetry.addData("PID output", pidPosition);
 //        Vector2 pidDirection = pidPosition.getNormalized();
 //        double pidMagnitude = pidPosition.getMagnitude();
 
@@ -104,6 +110,5 @@ public class AutonomousDrive {
         BRMotor.setPower(-x - y + rotate);
         BLMotor.setPower( x - y - rotate);
     }
-
 
 }

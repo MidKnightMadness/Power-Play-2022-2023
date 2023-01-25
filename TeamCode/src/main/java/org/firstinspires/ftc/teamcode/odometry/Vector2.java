@@ -47,6 +47,6 @@ public class Vector2 {
     }
 
     public String toString() {
-        return String.format("(%f, %f)", this.x, this.y);
+        return String.format("(%.3f, %.3f)", this.x, this.y);
     }
 }
