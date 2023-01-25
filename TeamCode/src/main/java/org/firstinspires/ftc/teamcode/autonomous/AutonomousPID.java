@@ -34,7 +34,7 @@ public class AutonomousPID extends OpMode {
         odometry.updateTime();
         odometry.updatePosition();
 
-        autonomousDrive.setTargetState(odometry.position, new Vector2(0, 12), odometry.getRotationRadians(), 0.0, odometry.getDeltaTime());
+        autonomousDrive.setTargetState(telemetry, odometry.position, new Vector2(0, 12), odometry.getRotationRadians(), 0.0, odometry.getDeltaTime());
 
         telemetry();
 

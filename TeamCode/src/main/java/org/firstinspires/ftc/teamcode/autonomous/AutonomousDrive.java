@@ -99,6 +99,7 @@ public class AutonomousDrive {
 //        Vector2 pidDirection = pidPosition.getNormalized();
 //        double pidMagnitude = pidPosition.getMagnitude();
 
+        telemetry.addData("Powers", pidPosition.divide(errorRotation).toString());
 
         drive(pidPosition.x / errorPosition.x, pidPosition.y / errorPosition.y, pidRotation / errorRotation);
 
