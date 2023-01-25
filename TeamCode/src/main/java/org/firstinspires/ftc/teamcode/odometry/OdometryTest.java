@@ -71,8 +71,8 @@ public class OdometryTest extends OpMode{
 //            }
 //        }
 
-        double adjustedInputX = gamepad1.left_stick_x * (1 - drivePreviousInputWeight) + lastInputX * drivePreviousInputWeight;
-        double adjustedInputY = gamepad1.left_stick_y * (1 - drivePreviousInputWeight) + lastInputY * drivePreviousInputWeight;
+        double adjustedInputX = gamepad1.left_stick_x; //* (1 - drivePreviousInputWeight) + lastInputX * drivePreviousInputWeight;
+        double adjustedInputY = gamepad1.left_stick_y; //* (1 - drivePreviousInputWeight) + lastInputY * drivePreviousInputWeight;
 
 
         if (driveModeToggle) {
