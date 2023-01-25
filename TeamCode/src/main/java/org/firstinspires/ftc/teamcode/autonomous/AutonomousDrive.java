@@ -15,6 +15,8 @@ public class AutonomousDrive {
     public DcMotorEx BRMotor;
     public DcMotorEx BLMotor;
 
+    public double distanceToMaxPower = 24;
+
     public double maxMovementDistance = 1;
     Telemetry telemetry;
 
@@ -101,7 +103,7 @@ public class AutonomousDrive {
 
         telemetry.addData("Powers", pidPosition.divide(errorRotation).toString());
 
-        drive(pidPosition.x / errorPosition.x, pidPosition.y / errorPosition.y, pidRotation / errorRotation);
+        drive(pidPosition.x / distanceToMaxPower, pidPosition.y / distanceToMaxPower, pidRotation / errorRotation);
 
     }
 
