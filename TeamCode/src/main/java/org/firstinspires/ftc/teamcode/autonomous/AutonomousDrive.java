@@ -15,15 +15,14 @@ public class AutonomousDrive {
     public DcMotorEx BRMotor;
     public DcMotorEx BLMotor;
 
-    public double distanceToMaxPower = 24;
+    public double distanceToMaxPower = 6;
 
-    public double maxMovementDistance = 1;
     Telemetry telemetry;
 
     PIDController controllerX;
     PIDController controllerY;
     PIDController controllerRotation;
-    PIDCoefficients pidCoefficientsMovement = new PIDCoefficients(0.5, 0.0, 0.3, 0.0);
+    PIDCoefficients pidCoefficientsMovement = new PIDCoefficients(1, 0, 0, 0.0);
     PIDCoefficients pidCoefficientsRotation = new PIDCoefficients(0.5, 0.0, 0.3, 0.0);
 
     void initHardware(HardwareMap hardwareMap) {
@@ -101,9 +100,9 @@ public class AutonomousDrive {
 //        Vector2 pidDirection = pidPosition.getNormalized();
 //        double pidMagnitude = pidPosition.getMagnitude();
 
-        telemetry.addData("Powers", pidPosition.divide(errorRotation).toString());
+        telemetry.addData("Powers", pidPosition.divide(distanceToMaxPower).toString());
 
-        drive(pidPosition.x / distanceToMaxPower, pidPosition.y / distanceToMaxPower, pidRotation / errorRotation);
+        drive(0, Math.min(pidPosition.y, 0.5), 0);
 
     }
 

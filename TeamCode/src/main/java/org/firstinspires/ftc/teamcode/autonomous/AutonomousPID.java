@@ -22,8 +22,9 @@ public class AutonomousPID extends OpMode {
     @Override
     public void init() {
         timer = new Timer();
-        odometry = new Odometry(hardwareMap, 0, new Vector2(0, 0));
+        odometry = new Odometry(hardwareMap, Math.PI / 2, new Vector2(0, 0));
         odometry.resetEncoders();
+        odometry.setRotation(Math.PI / 2);
 
         autonomousDrive = new AutonomousDrive(hardwareMap);
     }
@@ -34,14 +35,14 @@ public class AutonomousPID extends OpMode {
         odometry.updateTime();
         odometry.updatePosition();
 
-        autonomousDrive.setTargetState(telemetry, odometry.position, new Vector2(0, 12), odometry.getRotationRadians(), 0.0, odometry.getDeltaTime());
+        autonomousDrive.setTargetState(telemetry, odometry.position, new Vector2(0, 24), odometry.getRotationRadians(), Math.PI / 2, odometry.getDeltaTime());
 
         telemetry();
 
     }
 
     public void telemetry() {
-        telemetry.addData("Target Pos", new Vector2(0, 12));
+        telemetry.addData("Target Pos", new Vector2(0, 24));
         telemetry.addData("Current Pos", odometry.position);
     }
 
