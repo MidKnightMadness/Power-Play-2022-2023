@@ -22,8 +22,8 @@ public class Claw {
     public Servo rotationServo;
 //    public Servo rotationServo2;
 
-    double OPEN = 0;
-    double CLOSED = 1;
+    public static double OPEN = 0.569;
+    public static double CLOSED = 0.838;
 
     public Claw(HardwareMap hardwareMap) {
         servo = hardwareMap.get(Servo.class, "Claw");
