@@ -23,7 +23,7 @@ public class AutonomousDrive {
     PIDController controllerX;
     PIDController controllerY;
     PIDController controllerRotation;
-    PIDCoefficients pidCoefficientsMovement = new PIDCoefficients(1, 0, 0, 0.0);
+    PIDCoefficients pidCoefficientsMovement = new PIDCoefficients(0.75, 0, 0, 0.5);
     PIDCoefficients pidCoefficientsRotation = new PIDCoefficients(0.5, 0.0, 0.3, 0.0);
 
     void initHardware(HardwareMap hardwareMap) {
@@ -103,7 +103,7 @@ public class AutonomousDrive {
 
         telemetry.addData("Powers", Math.min(maxPower, pidPosition.y / distanceToMaxPower));
 
-        drive(0, Math.min(maxPower, pidPosition.y / distanceToMaxPower), 0);
+        drive(0, pidPosition.y / distanceToMaxPower, 0);
 
     }
 

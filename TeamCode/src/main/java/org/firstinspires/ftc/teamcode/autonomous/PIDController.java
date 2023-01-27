@@ -30,7 +30,7 @@ public class PIDController {
 
         double integral = Math.min(ki * errorSum, kiCap);
 
-        return kp * error + integral + kd * derivative;
+        return kp * error - integral - kd * derivative;
     }
 
     public void resetError() {

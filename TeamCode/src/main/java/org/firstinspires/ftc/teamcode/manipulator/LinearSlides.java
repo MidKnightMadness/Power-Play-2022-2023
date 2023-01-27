@@ -119,19 +119,19 @@ public class LinearSlides {
     public void extendBy(double power){
 //        extensionMotor2.setTargetPosition(extensionMotor.getCurrentPosition());
 //        extensionMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        extensionMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        extensionMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        extensionMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         double brake = 0.0002 * ((seesawExtensionLength - STARTING_EXTENDER_LENGTH) / 2);
         double truePower = 0.0;
 
-            if (seesawExtensionLength - STARTING_EXTENDER_LENGTH <= 0){
-                truePower = Math.max(power, 0);
-            } else if (seesawExtensionLength >= 34.0){
-                truePower = Math.min(power, 0);
-            } else {
+//            if (seesawExtensionLength - STARTING_EXTENDER_LENGTH <= 0){
+//                truePower = Math.max(power, 0);
+//            } else if (seesawExtensionLength >= 34.0){
+//                truePower = Math.min(power, 0);
+//            } else {
             truePower = power;
-            }
+//            }
 
             extensionMotor.setPower(truePower);
             extensionMotor2.setPower(truePower);
