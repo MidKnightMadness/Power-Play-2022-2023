@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.manipulator;
-
 import static org.firstinspires.ftc.teamcode.archive.Turntable.turntableAngle;
+
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -39,7 +39,7 @@ public class LinearSlides {
     // Extension
     private static final double EXTENDER_MOTOR_RATIO = 20; // 20:1 or 40:1 motor?
     private static final double EXTENDER_WINCH_RADIUS = 9.4 / 2;
-    public static final double EXTENDER_OVERALL_RATIO = 13.4 / 2786.0; // EXTENDER_WINCH_RADIUS * 2 * Math.PI / (560 * EXTENDER_MOTOR_RATIO); // Inches per tick
+    public static final double EXTENDER_OVERALL_RATIO = 16.5 / 4554.0; // EXTENDER_WINCH_RADIUS * 2 * Math.PI / (560 * EXTENDER_MOTOR_RATIO); // Inches per tick
 
     // Temporary stuff
     public static final double [] DEFAULT_INTAKE_DISPLACEMENT = {11.75, -11.75 / 2, -ROOT_HEIGHT};
@@ -119,8 +119,8 @@ public class LinearSlides {
     public void extendBy(double power){
 //        extensionMotor2.setTargetPosition(extensionMotor.getCurrentPosition());
 //        extensionMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        extensionMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        extensionMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        extensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        extensionMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         double brake = 0.0002 * ((seesawExtensionLength - STARTING_EXTENDER_LENGTH) / 2);
         double truePower = 0.0;
@@ -130,28 +130,18 @@ public class LinearSlides {
 //            } else if (seesawExtensionLength >= 34.0){
 //                truePower = Math.min(power, 0);
 //            } else {
-            truePower = power;
+//            truePower = power;
 //            }
 
-            extensionMotor.setPower(truePower);
-            extensionMotor2.setPower(truePower);
+        extensionMotor.setPower(truePower);
+        extensionMotor2.setPower(truePower);
 
     }
 
     private int ticksDifference = 0;
 
     public void pivotTo(double targetAngle) { // Radians, zero is horizontal
-        // To account for play, ~10˚
-        // Note: only has significant play after 100˚
-
-        if(seesawAngle > Math.PI / 2){ // ~10˚ play, but at angle when at bottom of play range;
-            // so would go over ~10˚ when >90˚;
-            // this compensates
-            ticksDifference = (int) ((targetAngle - 10 * Math.PI / 180 - seesawAngle) / SEESAW_OVERALL_RATIO);
-        }
-        else{
-            ticksDifference = (int) ((targetAngle - seesawAngle) / SEESAW_OVERALL_RATIO);
-        }
+        ticksDifference = (int) ((targetAngle - seesawAngle) / SEESAW_OVERALL_RATIO);
         seeSawMotor.setPower(ticksDifference *.5 / Math.max(Math.abs(ticksDifference), 1000));
         seeSawMotor.setPower(ticksDifference *.5 / Math.max(Math.abs(ticksDifference), 1000));
 
