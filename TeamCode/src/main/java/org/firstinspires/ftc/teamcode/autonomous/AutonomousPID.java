@@ -19,6 +19,9 @@ public class AutonomousPID extends OpMode {
     Odometry odometry;
     AutonomousDrive autonomousDrive;
 
+    PIDCoefficients pidCoefficientsMovement = new PIDCoefficients(0.75, 0, 0, 0.5);
+    PIDCoefficients pidCoefficientsRotation = new PIDCoefficients(0.5, 0.0, 0.3, 0.0);
+
     @Override
     public void init() {
         timer = new Timer();
@@ -27,6 +30,7 @@ public class AutonomousPID extends OpMode {
         odometry.setRotation(Math.PI / 2);
 
         autonomousDrive = new AutonomousDrive(hardwareMap);
+        autonomousDrive.setPID(0.5, 24.0, pidCoefficientsMovement, pidCoefficientsRotation);
     }
 
     @Override

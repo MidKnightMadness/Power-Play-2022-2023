@@ -23,7 +23,7 @@ public class AutonomousDrive {
     PIDController controllerX;
     PIDController controllerY;
     PIDController controllerRotation;
-    PIDCoefficients pidCoefficientsMovement = new PIDCoefficients(0.75, 0, 0, 0.5);
+    PIDCoefficients pidCoefficientsMovement = new PIDCoefficients(0.75, 0, 0, 0.1);
     PIDCoefficients pidCoefficientsRotation = new PIDCoefficients(0.5, 0.0, 0.3, 0.0);
 
     void initHardware(HardwareMap hardwareMap) {
@@ -65,6 +65,13 @@ public class AutonomousDrive {
         controllerRotation = new PIDController(pidCoefficientsRotation);
     }
 
+    void setPID(double maxPower, double distanceToMaxPower, PIDCoefficients pidCoefficientsMovement, PIDCoefficients pidCoefficientsRotation) {
+        this.maxPower = maxPower;
+        this.distanceToMaxPower = distanceToMaxPower;
+        this.pidCoefficientsMovement = pidCoefficientsMovement;
+        this.pidCoefficientsRotation = pidCoefficientsRotation;
+    }
+
     public void setPowers(double fr, double fl, double br, double bl) {
         FRMotor.setPower(fr);
         FLMotor.setPower(fl);
@@ -103,7 +110,17 @@ public class AutonomousDrive {
 
         telemetry.addData("Powers", Math.min(maxPower, pidPosition.y / distanceToMaxPower));
 
-        drive(0, pidPosition.y / distanceToMaxPower, 0);
+        drive(0, limitPower(pidPosition.y / distanceToMaxPower), 0);
+
+    }
+
+    double limitPower(double power) {
+        if (power >= 0.0) {
+            return Math.min(maxPower, power);
+        }
+        else {
+            return Math.max(-maxPower, power);
+        }
 
     }
 
