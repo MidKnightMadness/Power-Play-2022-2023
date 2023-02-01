@@ -159,15 +159,14 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
 
 //        movementTestSequence();
-//        if (getScoringJunction() == 0) {
-//            scoreOneForward();
-//            park(51);
-//        }
-//        else {
-//            scoreOneMiddle();
-            goToPosition(getStartingPosition().x, getStartingPosition().y + 25, getStartingRotation());
+        if (getScoringJunction() == 0) {
+            scoreOneForward();
+            park(51);
+        }
+        else {
+            scoreOneMiddle();
             park(25);
-//        }
+        }
 
 
 //        if(startingPos == 2 || startingPos == 4) {
@@ -251,11 +250,11 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
     void park(double yPos) {
         if(mostRecentDetection == 1) {
-            goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + yPos, getStartingRotation());
+            goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + yPos, getStartingRotation() + Math.PI / 2);
         } else if (mostRecentDetection == 2) {
-            goToPosition(getStartingPosition().x, getStartingPosition().y + yPos, getStartingRotation());
+            goToPosition(getStartingPosition().x, getStartingPosition().y + yPos, getStartingRotation() + Math.PI / 2);
         } else if (mostRecentDetection == 3) {
-            goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + yPos, getStartingRotation());
+            goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + yPos, getStartingRotation() + Math.PI / 2);
         }
     }
 

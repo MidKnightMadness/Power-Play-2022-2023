@@ -12,8 +12,8 @@ import org.firstinspires.ftc.teamcode.common.Timer;
 /*
  * (Expansion Hub)
  * Servos:
- * 0    Claw    Servo
- * 1    CP      Servo
+ * 0    CP    Servo
+ * 1    Claw      Servo
  * 2    CP2     Servo // Deprecated
  */
 
@@ -29,7 +29,7 @@ public class Claw {
         servo = hardwareMap.get(Servo.class, "Claw");
 
         rotationServo = hardwareMap.get(Servo.class, "CP");
-        rotationServo.setDirection(Servo.Direction.REVERSE);
+        rotationServo.setDirection(Servo.Direction.FORWARD);
         rotationServo.resetDeviceConfigurationForOpMode();
 
 //        servo.scaleRange(0.0, 1.0);

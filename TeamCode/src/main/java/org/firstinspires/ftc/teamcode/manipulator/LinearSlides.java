@@ -77,7 +77,7 @@ public class LinearSlides {
         extensionMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER); // Run to position?
         extensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); // set zero power behavior
 
-        extensionMotor2.setDirection(DcMotor.Direction.FORWARD); // set direction, probably need to change
+        extensionMotor2.setDirection(DcMotor.Direction.REVERSE); // set direction, probably need to change
         extensionMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // set motor mode
         extensionMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER); // Run to position?
         extensionMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); // set zero power behavior
@@ -125,13 +125,13 @@ public class LinearSlides {
         double brake = 0.0002 * ((seesawExtensionLength - STARTING_EXTENDER_LENGTH) / 2);
         double truePower = 0.0;
 
-//            if (seesawExtensionLength - STARTING_EXTENDER_LENGTH <= 0){
-//                truePower = Math.max(power, 0);
-//            } else if (seesawExtensionLength >= 34.0){
-//                truePower = Math.min(power, 0);
-//            } else {
+            if (seesawExtensionLength - STARTING_EXTENDER_LENGTH <= 0){
+                truePower = Math.max(power, 0);
+            } else if (seesawExtensionLength >= 34.0){
+                truePower = Math.min(power, 0);
+            } else {
             truePower = power;
-//            }
+            }
 
             extensionMotor.setPower(truePower);
             extensionMotor2.setPower(truePower);
