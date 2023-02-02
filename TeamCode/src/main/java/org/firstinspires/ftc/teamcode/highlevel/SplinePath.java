@@ -88,3 +88,25 @@ public class SplinePath {
 		return interpolatedRoots;
 	}
 }
+
+class PathTracer{
+	public int positionParameter; // Place in list of points in path
+	public double pathSpeed;
+	public static final double LOW_PASS_COEFFICIENT = 0.75;
+	public static final double SPEED_COEFFICIENT = 20; // Multiplied to modified input, change in tick of
+
+	// Upon controller inputs, target position will accelerate at certain rate, will decelerate otherwise due to low-pass filter
+	// "Position" is just parameter t
+	public double [] targetOnPath;
+	public SplinePath path;
+	public PathTracer(double position, SplinePath path){ // Assumes that path is pre-generated
+
+	}
+
+	public double [] update(){
+
+
+		return this.targetOnPath;
+	}
+
+}
