@@ -13,6 +13,8 @@ import org.firstinspires.ftc.teamcode.archive.pickUpConeData;
 import org.firstinspires.ftc.teamcode.highlevel.GridSystem;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.manipulator.Claw;
+import org.firstinspires.ftc.teamcode.manipulator.LinearSlides;
 import org.firstinspires.ftc.teamcode.objectdetection.AprilTagDetection.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
 import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
@@ -43,9 +45,9 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
     AprilTagDetection tagOfInterest = null;
 
 
-//    Claw claw;
+    Claw claw;
     GridSystem gridSystem;
-//    LinearSlides linearSlides;
+    LinearSlides linearSlides;
 
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
@@ -101,7 +103,8 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
 
         mecanum = new MecanumDrive(hardwareMap);
-//        linearSlides = new LinearSlides(hardwareMap);
+        linearSlides = new LinearSlides(hardwareMap, 45);
+        claw = new Claw(hardwareMap);
         odometry = new Odometry(hardwareMap, getStartingRotation(), getStartingPosition());
         odometry.resetEncoders();
         odometry.setPostion(getStartingPosition());
@@ -161,11 +164,11 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 //        movementTestSequence();
         if (getScoringJunction() == 0) {
             scoreOneForward();
-            park(51);
+//            park(51);
         }
         else {
             scoreOneMiddle();
-            park(25);
+//            park(25);
         }
 
 
@@ -198,18 +201,18 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         sleep(500);
         goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 55, getStartingRotation() + Math.PI);
         sleep(3000);
-////        linearSlides.pivotTo(1.75);
-//        sleep(5000);
-////        linearSlides.extendTo(34);
-//        sleep(5000);
-////        claw.openClaw();
-//        sleep(1000);
-////        claw.closeClaw();
-//        sleep(5000);
-////        linearSlides.extendTo(19.0);
-//        sleep(5000);
-////        linearSlides.pivotTo(0);
-//        sleep(3000);
+        linearSlides.pivotTo(1.75);
+        sleep(5000);
+        linearSlides.extendTo(34);
+        sleep(5000);
+        claw.openClaw();
+        sleep(1000);
+        claw.closeClaw();
+        sleep(5000);
+        linearSlides.extendTo(19.0);
+        sleep(5000);
+        linearSlides.pivotTo(0);
+        sleep(3000);
     }
 
 
@@ -224,18 +227,18 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         sleep(1000);
         goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 31.5, getStartingRotation() + Math.PI);
         sleep(3000);
-////        linearSlides.pivotTo(1.75);
-//        sleep(5000);
-////        linearSlides.extendTo(34);
-//        sleep(5000);
-////        claw.openClaw();
-//        sleep(1000);
-////        claw.closeClaw();
-//        sleep(5000);
-////        linearSlides.extendTo(19.0);
-//        sleep(5000);
-////        linearSlides.pivotTo(0);
-//        sleep(3000);
+//        linearSlides.pivotTo(1.75);
+        sleep(5000);
+//        linearSlides.extendTo(34);
+        sleep(5000);
+//        claw.openClaw();
+        sleep(1000);
+//        claw.closeClaw();
+        sleep(5000);
+//        linearSlides.extendTo(19.0);
+        sleep(5000);
+//        linearSlides.pivotTo(0);
+        sleep(3000);
         goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 29, getStartingRotation() + Math.PI);
     }
 

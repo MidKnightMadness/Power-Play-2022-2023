@@ -52,7 +52,7 @@ import org.firstinspires.ftc.teamcode.odometry.Vector2;
  */
 
 
-@TeleOp(name="Main")
+@TeleOp(name="Mainඞඞඞඞඞඞඞඞඞඞඞඞ")
 public class MainTeleOp extends OpMode {
     MecanumDrive mecanum;
     Odometry odometry;
@@ -85,15 +85,15 @@ public class MainTeleOp extends OpMode {
     double previousInputWeight = 0.5;
     final double staticPowerMultiplier = 0.3;
     double powerMultiplier = staticPowerMultiplier;
-    double manualC = 0;
+    double manualC = -1;
 
     @Override
     public void loop() {
         drive();
         manipulate();
-        test();
+//        test();
 
-//        odometry.updatePosition();
+        odometry.updatePosition();
         slides.update();
         telemetry();
         telemetry.update();
@@ -173,8 +173,8 @@ public class MainTeleOp extends OpMode {
 
         while (gamepad2.circle) { // preset medium junction
             slides.update();
-            rotateArmTo(1.98);
-            slides.extendTo(26.5);
+            rotateArmTo(Math.PI / 180 * 116);
+            slides.extendTo(28.4);
             if ((gamepad2.right_bumper || gamepad1.right_bumper) && !lastPressedClawOpen) {
                 clawOpenToggle = !clawOpenToggle;
             }
@@ -189,8 +189,8 @@ public class MainTeleOp extends OpMode {
 
         while (gamepad2.triangle) { // preset high junction
             slides.update();
-            rotateArmTo(120 * Math.PI / 180);
-            slides.extendTo(34);
+            rotateArmTo(108 * Math.PI / 180);
+            slides.extendTo(38.1);
             if ((gamepad2.right_bumper || gamepad1.right_bumper) && !lastPressedClawOpen) {
                 clawOpenToggle = !clawOpenToggle;
             }
@@ -220,6 +220,22 @@ public class MainTeleOp extends OpMode {
             }
         }
 
+        while (gamepad2.square) { // preset 45 degree start angle
+            slides.update();
+            rotateArmTo(45 * Math.PI / 180);
+            slides.extendTo(19);
+            if ((gamepad2.right_bumper || gamepad1.right_bumper) && !lastPressedClawOpen) {
+                clawOpenToggle = !clawOpenToggle;
+            }
+            lastPressedClawOpen = (gamepad2.right_bumper || gamepad1.right_bumper);
+
+            if (clawOpenToggle) {
+                claw.openClaw();
+            } else {
+                claw.closeClaw();
+            }
+        }
+
 //         claw pivot
         if (gamepad2.dpad_up) {
             manualC = manualC +.01;
@@ -232,35 +248,35 @@ public class MainTeleOp extends OpMode {
     void test() {
 
 //         Adjusting extension length and angle
-//        if(gamepad2.square){
-//            adjustingExtensionLength = !adjustingExtensionLength;
-//        }
-//        if(gamepad2.dpad_up && adjustingExtensionLength){
-//            targetExtension += 0.1;
-//        }else if(gamepad2.dpad_down && adjustingExtensionLength){
-//            targetExtension -= 0.1;
-//        }else if(gamepad2.dpad_up && !adjustingExtensionLength){
-//            targetAngle += 0.1;
-//        }else if(gamepad2.dpad_down && !adjustingExtensionLength){
-//            targetAngle -= 0.1;
-//        }
+        if(gamepad2.square){
+            adjustingExtensionLength = !adjustingExtensionLength;
+        }
+        if(gamepad2.dpad_up && adjustingExtensionLength){
+            targetExtension += 0.1;
+        }else if(gamepad2.dpad_down && adjustingExtensionLength){
+            targetExtension -= 0.1;
+        }else if(gamepad2.dpad_up && !adjustingExtensionLength){
+            targetAngle += 0.1;
+        }else if(gamepad2.dpad_down && !adjustingExtensionLength){
+            targetAngle -= 0.1;
+        }
 
 
-//        while(gamepad2.right_trigger > 0.5){
-//            rotateArmTo(targetAngle);
-//            slides.extendTo(targetExtension);
-//            if ((gamepad2.right_bumper || gamepad1.right_bumper) && !lastPressedClawOpen) {
-//                clawOpenToggle = !clawOpenToggle;
-//            }
-//            lastPressedClawOpen = (gamepad2.right_bumper || gamepad1.right_bumper);
-//
-//            if (clawOpenToggle) {
-//                claw.openClaw();
-//            } else {
-//                claw.closeClaw();
-//            }
-//            slides.update();
-//        }
+        while(gamepad2.right_trigger > 0.5){
+            rotateArmTo(targetAngle);
+            slides.extendTo(targetExtension);
+            if ((gamepad2.right_bumper || gamepad1.right_bumper) && !lastPressedClawOpen) {
+                clawOpenToggle = !clawOpenToggle;
+            }
+            lastPressedClawOpen = (gamepad2.right_bumper || gamepad1.right_bumper);
+
+            if (clawOpenToggle) {
+                claw.openClaw();
+            } else {
+                claw.closeClaw();
+            }
+            slides.update();
+        }
 
 //        telemetry.addData("\nController target angle (degrees)", targetAngle * 180 / Math.PI);
 //        telemetry.addData("Controller target extension length", targetExtension);
@@ -349,7 +365,7 @@ public class MainTeleOp extends OpMode {
         slides.pivotTo(angle);
 
         // Needs something to get only 0.1, 0.2, 0.3, etc...
-        clawPivotInput = slides.seesawAngle / Math.PI*.9; // -1.0 (undefined position) if at 180˚, 0.0 if at 0˚ (backwards)
+        clawPivotInput = slides.seesawAngle / Math.PI; // -1.0 (undefined position) if at 180˚, 0.0 if at 0˚ (backwards)
         //clawPivotInput += 1; // 0.0 (backwards) if at 180˚, 1.0 (forwards) if at 0˚
 
         // Servo only takes inputs in intervals of 0.1

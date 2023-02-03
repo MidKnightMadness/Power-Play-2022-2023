@@ -96,12 +96,14 @@ public class AutonomousDrive {
         double cos = Math.cos(averageRotation);
         double sin = Math.sin(averageRotation);
 
-        telemetry.addData("Error Position", errorPosition);
-        telemetry.addData("Error Rotation", errorRotation);
+        telemetry.addData("Current Rotation", currentRotation);
+        telemetry.addData("Target Rotation", targetRotation);
+        telemetry.addData("Current Position", currentPosition);
+        telemetry.addData("Target Position", targetRotation);
 
         // field x and y
-//        double correctedX = changeX * cos + changeY * sin;
-//        double correctedY = changeX * sin + changeY * cos;
+        double correctedX = changeX * sin + changeY * cos;
+        double correctedY = changeX * cos + changeY * sin;
 
         Vector2 pidPosition = new Vector2(changeX, changeY);
         telemetry.addData("PID output", pidPosition);
@@ -110,7 +112,7 @@ public class AutonomousDrive {
 
         telemetry.addData("Powers", Math.min(maxPower, pidPosition.y / distanceToMaxPower));
 
-        drive(0, limitPower(pidPosition.y / distanceToMaxPower), 0);
+        drive(limitPower(correctedY/ distanceToMaxPower), limitPower(correctedX / distanceToMaxPower), 0);
 
     }
 

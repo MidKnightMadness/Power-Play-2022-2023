@@ -34,12 +34,12 @@ public class LinearSlides {
     public static final double STARTING_EXTENDER_LENGTH = 19.0; // Starting length from pivot axle
     // Rotation
     private static final double SEESAW_MOTOR_RATIO = 100; // 60:1 or 40:1 motor?
-    public static final double SEESAW_OVERALL_RATIO = Math.PI / (2 * 1330); // Angle per tick
+    public static final double SEESAW_OVERALL_RATIO = Math.PI / (2 * 1417); // Angle per tick
     private static double STARTING_ANGLE = 0.0;// Temporary, for testing MainTeleOp w/ manipulator starting down
     // Extension
     private static final double EXTENDER_MOTOR_RATIO = 20; // 20:1 or 40:1 motor?
     private static final double EXTENDER_WINCH_RADIUS = 9.4 / 2;
-    public static final double EXTENDER_OVERALL_RATIO = 13.4 / 2786.0; // EXTENDER_WINCH_RADIUS * 2 * Math.PI / (560 * EXTENDER_MOTOR_RATIO); // Inches per tick
+    public static final double EXTENDER_OVERALL_RATIO = 16.5 / 3132; // EXTENDER_WINCH_RADIUS * 2 * Math.PI / (560 * EXTENDER_MOTOR_RATIO); // Inches per tick
 
     // Temporary stuff
     public static final double [] DEFAULT_INTAKE_DISPLACEMENT = {11.75, -11.75 / 2, -ROOT_HEIGHT};
@@ -117,24 +117,21 @@ public class LinearSlides {
     }
 
     public void extendBy(double power){
-//        extensionMotor2.setTargetPosition(extensionMotor.getCurrentPosition());
-//        extensionMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         extensionMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         extensionMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        double brake = 0.0002 * ((seesawExtensionLength - STARTING_EXTENDER_LENGTH) / 2);
         double truePower = 0.0;
 
-            if (seesawExtensionLength - STARTING_EXTENDER_LENGTH <= 0){
-                truePower = Math.max(power, 0);
-            } else if (seesawExtensionLength >= 34.0){
-                truePower = Math.min(power, 0);
-            } else {
+        if (seesawExtensionLength - STARTING_EXTENDER_LENGTH <= 0){
+            truePower = Math.max(power, 0);
+        } else if (seesawExtensionLength >= 34.0){
+            truePower = Math.min(power, 0.1);
+        } else {
             truePower = power;
-            }
+        }
 
-            extensionMotor.setPower(truePower);
-            extensionMotor2.setPower(truePower);
+        extensionMotor.setPower(truePower);
+        extensionMotor2.setPower(truePower);
 
     }
 
@@ -166,11 +163,6 @@ public class LinearSlides {
             if (seesawAngle <= 0) power = Math.max(power, 0);
             seeSawMotor.setPower(power*.5+brake);
         }
-
-//        seeSawMotor.setTargetPosition((int)(power * 100 + seeSawMotor.getCurrentPosition()));
-//        seeSawMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        seeSawMotor.setPower(1);
-
     }
 
     private double previousAngle = 0.0;
@@ -180,23 +172,6 @@ public class LinearSlides {
 
         seesawExtensionLength = (extensionMotor.getCurrentPosition() * EXTENDER_OVERALL_RATIO) + STARTING_EXTENDER_LENGTH;
         seesawAngle = (seeSawMotor.getCurrentPosition() * SEESAW_OVERALL_RATIO) + STARTING_ANGLE;
-    }
-
-
-    // Temporary, first tournament
-    public void grabFromDefaultScoringPosition(){
-//        claw.openClaw();
-//        claw.waitForOpenClaw();
-//        this.goPointAt(DEFAULT_INTAKE_DISPLACEMENT);
-//        claw.closeClaw();
-    }
-
-    public void scoreFromDefaultScoringPosition() {
-//        if(Vector.lengthOf(Vector.add(Vector.neg(getClawCoordinates()), DEFAULT_SCORING_DISPLACEMENT)) > 0.1){
-//            this.goPointAt(DEFAULT_SCORING_DISPLACEMENT);
-//        }
-//
-//        claw.openClaw();
     }
 
     public void resetEncoders() {

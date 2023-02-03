@@ -27,6 +27,7 @@ public class PIDController {
         lastError = error;
 
         double integral;
+
         if (errorSum < 0) {
             integral = Math.min(ki * errorSum, kiCap);
         }
@@ -34,9 +35,7 @@ public class PIDController {
             integral = Math.max(ki * errorSum, kiCap);
         }
 
-
-
-        return kp * error - integral - kd * derivative;
+        return kp * error + integral - kd * derivative;
     }
 
     public void resetError() {
