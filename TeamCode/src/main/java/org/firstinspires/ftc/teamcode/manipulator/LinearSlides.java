@@ -31,7 +31,7 @@ public class LinearSlides {
 
     // Manipulator specifications in inches, radians
     public static final double ROOT_HEIGHT = 4.0 + .125 + 2.0; // From ground to linear slide mount
-    public static final double STARTING_EXTENDER_LENGTH = 19.0; // Starting length from pivot axle
+    public static final double STARTING_EXTENDER_LENGTH = 18.0; // Starting length from pivot axle
     // Rotation
     private static final double SEESAW_MOTOR_RATIO = 100; // 60:1 or 40:1 motor?
     public static final double SEESAW_OVERALL_RATIO = Math.PI / (2 * 1330); // Angle per tick
@@ -39,11 +39,12 @@ public class LinearSlides {
     // Extension
     private static final double EXTENDER_MOTOR_RATIO = 20; // 20:1 or 40:1 motor?
     private static final double EXTENDER_WINCH_RADIUS = 9.4 / 2;
-    public static final double EXTENDER_OVERALL_RATIO = 16.5 / 4554.0; // EXTENDER_WINCH_RADIUS * 2 * Math.PI / (560 * EXTENDER_MOTOR_RATIO); // Inches per tick
+    public static final double EXTENDER_OVERALL_RATIO = 17.5 / 3132.0; // EXTENDER_WINCH_RADIUS * 2 * Math.PI / (560 * EXTENDER_MOTOR_RATIO); // Inches per tick
 
     // Temporary stuff
     public static final double [] DEFAULT_INTAKE_DISPLACEMENT = {11.75, -11.75 / 2, -ROOT_HEIGHT};
     public static final double [] DEFAULT_SCORING_DISPLACEMENT = {-11.75, 11.75 / 2, 34.50-ROOT_HEIGHT};
+
 
     /* Manipulator diagram:
 
@@ -110,8 +111,9 @@ public class LinearSlides {
 
     public void extendTo(double inches){ // Inches
 
-        double distance1 = (inches - STARTING_EXTENDER_LENGTH) / EXTENDER_OVERALL_RATIO-extensionMotor.getCurrentPosition();
+        double distance1 = (inches - STARTING_EXTENDER_LENGTH) / EXTENDER_OVERALL_RATIO - extensionMotor.getCurrentPosition();
         double power = distance1/Math.max(100, Math.abs(distance1));
+
         extensionMotor.setPower(power);
         extensionMotor2.setPower(power);
     }

@@ -13,6 +13,8 @@ import org.firstinspires.ftc.teamcode.archive.pickUpConeData;
 import org.firstinspires.ftc.teamcode.highlevel.GridSystem;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.manipulator.Claw;
+import org.firstinspires.ftc.teamcode.manipulator.LinearSlides;
 import org.firstinspires.ftc.teamcode.objectdetection.AprilTagDetection.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.odometry.Odometry;
 import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
@@ -43,9 +45,9 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
     AprilTagDetection tagOfInterest = null;
 
 
-//    Claw claw;
+    Claw claw;
     GridSystem gridSystem;
-//    LinearSlides linearSlides;
+    LinearSlides linearSlides;
 
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
@@ -101,7 +103,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
 
         mecanum = new MecanumDrive(hardwareMap);
-//        linearSlides = new LinearSlides(hardwareMap);
+        linearSlides = new LinearSlides(hardwareMap, 0.0);
         odometry = new Odometry(hardwareMap, getStartingRotation(), getStartingPosition());
         odometry.resetEncoders();
         odometry.setPostion(getStartingPosition());
@@ -165,10 +167,11 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 //        }
 //        else {
 //            scoreOneMiddle();
-            goToPosition(getStartingPosition().x, getStartingPosition().y + 25, getStartingRotation());
-            park(25);
+//            goToPosition(getStartingPosition().x, getStartingPosition().y + 25, getStartingRotation());
+//            park(25);
 //        }
-
+        linearSlides.pivotTo(1.98);
+        linearSlides.extendTo(26.5);
 
 //        if(startingPos == 2 || startingPos == 4) {
 //            goToPosition(getStartingPosition().x, getStartingPosition().y + 51, -0.25 * Math.PI);

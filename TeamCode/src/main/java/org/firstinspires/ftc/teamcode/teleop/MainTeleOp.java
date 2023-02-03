@@ -337,7 +337,7 @@ public class MainTeleOp extends OpMode {
         slides.pivotBy(radians);
 
         // Needs something to get only 0.1, 0.2, 0.3, etc...
-        clawPivotInput =  slides.seesawAngle / Math.PI*.7; // -1.0 (undefined position) if at 180˚, 0.0 if at 0˚ (backwards)
+        clawPivotInput =  slides.seesawAngle / Math.PI *.9; // -1.0 (undefined position) if at 180˚, 0.0 if at 0˚ (backwards)
         //clawPivotInput += 1; // 0.0 (backwards) if at 180˚, 1.0 (forwards) if at 0˚
 
         // Servo only takes inputs in intervals larger than a certain value
