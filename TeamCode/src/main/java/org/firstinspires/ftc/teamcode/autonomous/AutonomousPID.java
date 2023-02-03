@@ -18,7 +18,6 @@ public class AutonomousPID extends OpMode {
     Timer timer;
     Odometry odometry;
     AutonomousDrive autonomousDrive;
-
     PIDCoefficients pidCoefficientsMovement = new PIDCoefficients(0.75, 0.5, 1, 0.5);
     PIDCoefficients pidCoefficientsRotation = new PIDCoefficients(0.5, 0.0, 0.3, 0.0);
 
