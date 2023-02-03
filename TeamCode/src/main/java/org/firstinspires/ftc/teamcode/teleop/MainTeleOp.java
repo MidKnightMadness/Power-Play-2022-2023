@@ -126,7 +126,7 @@ public class MainTeleOp extends OpMode {
 //            odometry.resetEncoders();
 //        }
 
-        powerMultiplier = staticPowerMultiplier + 0.4 * gamepad1.right_trigger; // speeds the driving as trigger is pressed
+        powerMultiplier = 1.0; // speeds the driving as trigger is pressed
 
         if (gamepad1.left_bumper && !lastPressedDriveMode) {
             driveModeToggle = !driveModeToggle;
