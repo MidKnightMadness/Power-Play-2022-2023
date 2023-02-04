@@ -93,9 +93,9 @@ public class AutonomousDrive {
 //        double errorMagnitude = errorPosition.getMagnitude();
 
         // relative to robot x and y
-        double changeX = controllerX.calculate(target.x, currentPosition.x, deltaTime);
-        double changeY = controllerY.calculate(target.y, currentPosition.y, deltaTime);
-        double pidRotation = controllerRotation.calculate(targetRotation, currentRotation, deltaTime);
+        double changeX = controllerX.calculate(target.x, currentPosition.x, deltaTime, telemetry);
+        double changeY = controllerY.calculate(target.y, currentPosition.y, deltaTime, telemetry);
+        double pidRotation = controllerRotation.calculate(targetRotation, currentRotation, deltaTime, telemetry);
 
         double cos = Math.cos(currentRotation);
         double sin = Math.sin(currentRotation);

@@ -40,7 +40,7 @@ public class TestSpline extends OpMode {
 
     @Override
     public void loop() {
-        targetCoords = splinePath.update(- gamepad1.left_stick_y, finalPath);
+        targetCoords = splinePath.update(-gamepad1.left_stick_y, finalPath);
 
         PIDdriver.setTargetState(telemetry, new Vector2(odometry.getXCoordinate(), odometry.getYCoordinate()),
                 new Vector2(targetCoords[0], targetCoords[1]), odometry.getRotationRadians(), odometry.getRotationRadians(),

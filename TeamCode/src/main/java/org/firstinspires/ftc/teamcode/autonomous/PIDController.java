@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class PIDController {
     private double kp, ki, kd;
     private double kiCap;
@@ -21,14 +23,16 @@ public class PIDController {
         this.kiCap = coefficients.kiCap;
     }
 
-    public double calculate(double target, double current, double deltaTime) {
+    public double calculate(double target, double current, double deltaTime, Telemetry telemetry) {
         double error = target - current;
         errorSum += error * deltaTime;
 
         double derivative = (error - lastError) / deltaTime;
         lastError = error;
 
-        double integral = ki * errorSum;
+        double integral = Math.min(ki * errorSum, kiCap);
+
+        telemetry.addLine(String.format("Proportional component: %4.2f\nDerivative component: %4.2f\nIntegral component: %4.2f", error * kp, kd * derivative, integral));
 
         return kp * error + integral + kd * derivative;
     }
