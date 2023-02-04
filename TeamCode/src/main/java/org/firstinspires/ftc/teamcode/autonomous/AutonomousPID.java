@@ -18,7 +18,8 @@ public class AutonomousPID extends OpMode {
     Timer timer;
     Odometry odometry;
     AutonomousDrive autonomousDrive;
-    PIDCoefficients pidCoefficientsMovement = new PIDCoefficients(0.75, 0.5, 1, 0.5);
+    PIDCoefficients pidCoefficientsY = new PIDCoefficients(0.75, 0.5, 1, 0.5);
+    PIDCoefficients pidCoefficientsX = new PIDCoefficients(1, 0.5, 1, 0.5);
     PIDCoefficients pidCoefficientsRotation = new PIDCoefficients(0.5, 0.0, 0.3, 0.0);
 
     @Override
@@ -29,7 +30,7 @@ public class AutonomousPID extends OpMode {
         odometry.setRotation(Math.PI / 2);
 
         autonomousDrive = new AutonomousDrive(hardwareMap);
-        autonomousDrive.setPID(0.2, 24.0, pidCoefficientsMovement, pidCoefficientsRotation);
+        autonomousDrive.setPID(0.2, 24.0, pidCoefficientsX, pidCoefficientsY, pidCoefficientsRotation);
     }
 
     Vector2 targetPos = new Vector2(6, 24);
@@ -46,7 +47,7 @@ public class AutonomousPID extends OpMode {
     }
 
     public void telemetry() {
-        telemetry.addData("Target Pos", targetPos);
+        telemetry.addData("Target Pos", targetPos.toString());
         telemetry.addData("Current Pos", odometry.position);
     }
 

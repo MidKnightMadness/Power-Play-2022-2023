@@ -4,6 +4,8 @@ public class PIDController {
     private double kp, ki, kd;
     private double kiCap;
     private double errorSum = 0, lastError = 0;
+
+
     public PIDController(double kp, double ki, double kd, double kiCap) {
         this.kp = kp;
         this.ki = ki;
@@ -26,16 +28,9 @@ public class PIDController {
         double derivative = (error - lastError) / deltaTime;
         lastError = error;
 
-        double integral;
+        double integral = ki * errorSum;
 
-        if (errorSum < 0) {
-            integral = Math.min(ki * errorSum, kiCap);
-        }
-        else {
-            integral = Math.max(ki * errorSum, kiCap);
-        }
-
-        return kp * error + integral - kd * derivative;
+        return kp * error + integral + kd * derivative;
     }
 
     public void resetError() {
