@@ -156,12 +156,18 @@ public class LinearSlides {
 
     public void pivotBy(double power) {
         double brake = 0.0002 * (seesawExtensionLength / 2) * Math.cos(seesawAngle);
+
         if(Math.abs(power) < 0.1){
             seeSawMotor.setPower(brake);
 
         }else{
-            if (seesawAngle <= 0) power = Math.max(power, 0);
-            seeSawMotor.setPower(power*.5+brake);
+            if (seesawAngle <= 0){
+                seeSawMotor.setPower(Math.max(power, 0) * 0.5 + brake);
+            } else if (seesawAngle >= 120 * Math.PI / 180) {
+                seeSawMotor.setPower(Math.min(power, 0) * 0.5 + brake);
+            }
+
+
         }
     }
 
