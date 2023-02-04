@@ -23,10 +23,10 @@ public class AutonomousDrive {
     PIDController controllerX;
     PIDController controllerY;
     PIDController controllerRotation;
-    PIDCoefficients pidCoefficientsX = new PIDCoefficients(0.75, 0, 0, 0.1);
 
-    PIDCoefficients pidCoefficientsY = new PIDCoefficients(0.75, 0, 0, 0.1);
-    PIDCoefficients pidCoefficientsRotation = new PIDCoefficients(0.5, 0.0, 0.3, 0.0);
+    PIDCoefficients pidCoefficientsX;
+    PIDCoefficients pidCoefficientsY;
+    PIDCoefficients pidCoefficientsRotation;
 
     void initHardware(HardwareMap hardwareMap) {
         FRMotor = hardwareMap.get(DcMotorEx.class, "FR");
@@ -61,18 +61,21 @@ public class AutonomousDrive {
 
     public AutonomousDrive(HardwareMap hardwareMap) {
         initHardware(hardwareMap);
+//        pidCoefficientsX = new PIDCoefficients(0.75, 0, 0, 0.1);
+//        pidCoefficientsY = new PIDCoefficients(0.75, 0, 0, 0.1);
+//        pidCoefficientsRotation = new PIDCoefficients(0.5, 0.0, 0.3, 0.0);
 
-        controllerX = new PIDController(pidCoefficientsX);
-        controllerY = new PIDController(pidCoefficientsY);
-        controllerRotation = new PIDController(pidCoefficientsRotation);
+//        controllerX = new PIDController(pidCoefficientsX);
+//        controllerY = new PIDController(pidCoefficientsY);
+//        controllerRotation = new PIDController(pidCoefficientsRotation);
     }
 
     void setPID(double maxPower, double distanceToMaxPower, PIDCoefficients pidCoefficientsX, PIDCoefficients pidCoefficientsY, PIDCoefficients pidCoefficientsRotation) {
         this.maxPower = maxPower;
         this.distanceToMaxPower = distanceToMaxPower;
-        this.pidCoefficientsX = pidCoefficientsX;
-        this.pidCoefficientsX = pidCoefficientsY;
-        this.pidCoefficientsRotation = pidCoefficientsRotation;
+        controllerX = new PIDController(pidCoefficientsX);
+        controllerY = new PIDController(pidCoefficientsY);
+        controllerRotation = new PIDController(pidCoefficientsRotation);
     }
 
     public void setPowers(double fr, double fl, double br, double bl) {
