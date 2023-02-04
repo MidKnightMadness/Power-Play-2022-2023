@@ -94,10 +94,8 @@ public class AutonomousDrive {
         double changeY = controllerY.calculate(target.y, currentPosition.y, deltaTime);
         double pidRotation = controllerRotation.calculate(targetRotation, currentRotation, deltaTime);
 
-        double averageRotation = currentRotation + (pidRotation / 2.0);
-
-        double cos = Math.cos(averageRotation);
-        double sin = Math.sin(averageRotation);
+        double cos = Math.cos(currentRotation);
+        double sin = Math.sin(currentRotation);
 
         telemetry.addData("Current Rotation", currentRotation);
         telemetry.addData("Target Rotation", targetRotation);
