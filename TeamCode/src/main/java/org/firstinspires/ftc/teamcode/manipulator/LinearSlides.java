@@ -161,12 +161,29 @@ public class LinearSlides {
             seeSawMotor.setPower(brake);
 
         }else{
-            if (seesawAngle <= 0){
-                seeSawMotor.setPower(Math.max(power, 0) * 0.5 + brake);
-            } else if (seesawAngle >= 120 * Math.PI / 180) {
-                seeSawMotor.setPower(Math.min(power, 0) * 0.5 + brake);
-            }
+//
+            // Power profiling:
+            //    | _____ |
+            //    |/     \|
+            // Should go to 0 for moving up when close to 120˚, multiplying just maxes out power
+            // Solves issue of impulse in short period of time causing flips
 
+            if(seesawAngle >= Math.PI / 3.0){ // Above halfway point
+                // Follows power profiling for going up to 120˚
+                if(power > 0){
+                    seeSawMotor.setPower(((1.20258137079 - (seesawAngle - ((Math.PI / 3.0) * (Math.PI / 3.0) * (Math.PI / 3.0) * (Math.PI / 3.0)))) /
+                            1.20258137079) * power);
+                } else { // If trying to go down, follows normal behavior
+                    seeSawMotor.setPower(power * 0.5 + brake);
+                }
+
+            }else{ // Below halfway point
+                if (seesawAngle <= 0) { // Prevents flexing top plate w/ motors pressing in
+                    seeSawMotor.setPower(Math.max(power, 0) * 0.5 + brake);
+                }else { // Normal range
+                    seeSawMotor.setPower(power * 0.5 + brake);
+                }
+            }
 
         }
     }

@@ -42,6 +42,13 @@ public class TestSpline extends OpMode {
     public void loop() {
         targetCoords = splinePath.update(-gamepad1.left_stick_y, finalPath);
 
+        telemetry.addLine(String.format("Target Coordinates: (%5.2f, %5.2f)", targetCoords[0], targetCoords[1]));
+        telemetry.addLine(String.format("Current Coordinates: (%5.2f, %5.2f)", odometry.getXCoordinate(), odometry.getYCoordinate()));
+        telemetry.addLine(String.format("∆Position: (%5.2f, %5.2f)", targetCoords[0] - odometry.getXCoordinate(), targetCoords[1] - odometry.getYCoordinate()));
+
+        telemetry.addLine(String.format("\nPID Data ==========================================\n" +
+                ""));
+
         PIDdriver.setTargetState(telemetry, new Vector2(odometry.getXCoordinate(), odometry.getYCoordinate()),
                 new Vector2(targetCoords[0], targetCoords[1]), odometry.getRotationRadians(), odometry.getRotationRadians(),
                 timer.getDeltaTime());

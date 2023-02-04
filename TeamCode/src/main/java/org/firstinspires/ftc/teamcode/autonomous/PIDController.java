@@ -32,7 +32,7 @@ public class PIDController {
 
         double integral = Math.min(ki * errorSum, kiCap);
 
-        telemetry.addLine(String.format("Proportional component: %4.2f\nDerivative component: %4.2f\nIntegral component: %4.2f", error * kp, kd * derivative, integral));
+        telemetry.addLine(String.format("\nProportional component: %4.2f\nDerivative component: %4.2f\nIntegral component: %4.2f\n", error * kp, kd * derivative, integral));
 
         return kp * error + integral + kd * derivative;
     }
