@@ -25,6 +25,9 @@ public class PIDController {
 
     public double calculate(double target, double current, double deltaTime, Telemetry telemetry) {
         double error = target - current;
+
+        // Decay function to keep integral component in check
+        errorSum *= 0.6;
         errorSum += error * deltaTime;
 
         double derivative = (error - lastError) / deltaTime;
