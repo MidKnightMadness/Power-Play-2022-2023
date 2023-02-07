@@ -138,17 +138,9 @@ public class LinearSlides {
     private int ticksDifference = 0;
 
     public void pivotTo(double targetAngle) { // Radians, zero is horizontal
-        // To account for play, ~10˚
-        // Note: only has significant play after 100˚
+        // Needs to not fling the robot over / flip it by going too fast, so implemented linear decrease in power as approaching target
+        ticksDifference = (int) ((targetAngle - seesawAngle) / SEESAW_OVERALL_RATIO); // Minimal play involved now
 
-        if(seesawAngle > Math.PI / 2){ // ~10˚ play, but at angle when at bottom of play range;
-            // so would go over ~10˚ when >90˚;
-            // this compensates
-            ticksDifference = (int) ((targetAngle - 10 * Math.PI / 180 - seesawAngle) / SEESAW_OVERALL_RATIO);
-        }
-        else{
-            ticksDifference = (int) ((targetAngle - seesawAngle) / SEESAW_OVERALL_RATIO);
-        }
         seeSawMotor.setPower(ticksDifference *.5 / Math.max(Math.abs(ticksDifference), 1000));
         seeSawMotor.setPower(ticksDifference *.5 / Math.max(Math.abs(ticksDifference), 1000));
 
