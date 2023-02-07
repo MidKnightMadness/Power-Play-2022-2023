@@ -33,7 +33,7 @@ public class PIDController {
         double derivative = (error - lastError) / deltaTime;
         lastError = error;
 
-        double integral = Math.min(ki * errorSum, kiCap);
+        double integral = ki * errorSum;
 
         telemetry.addLine(String.format("\nProportional component: %4.2f\nDerivative component: %4.2f\nIntegral component: %4.2f\n", error * kp, kd * derivative, integral));
 
