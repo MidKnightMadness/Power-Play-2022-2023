@@ -154,8 +154,13 @@ public class LinearSlides {
 
     }
 
+    double brake = 0.0;
+    double seesawPowerProfile = 0.0;
     public void pivotBy(double power) {
-        double brake = 0.0002 * (seesawExtensionLength / 2) * Math.cos(seesawAngle);
+        brake = 0.0002 * (seesawExtensionLength / 2) * Math.cos(seesawAngle);
+        seesawPowerProfile = (1 / (1 + Math.exp(seesawAngle * seesawAngle + Math.PI / 2)))
+                * (seesawAngle * seesawAngle + Math.PI / 2)
+                / 0.27027;
 
         if(Math.abs(power) < 0.1){
             seeSawMotor.setPower(brake);
@@ -163,26 +168,19 @@ public class LinearSlides {
         }else{
 //
             // Power profiling:
-            //    | _____ |
-            //    |/     \|
+            //    |____  | <- upper limit normalized
+            //    |    \_| <- 2π/3
             // Should go to 0 for moving up when close to 120˚, multiplying just maxes out power
             // Solves issue of impulse in short period of time causing flips
 
-            if(seesawAngle >= Math.PI / 3.0){ // Above halfway point
-                // Follows power profiling for going up to 120˚
-                if(power > 0){
-                    seeSawMotor.setPower(((1.20258137079 - (seesawAngle - ((Math.PI / 3.0) * (Math.PI / 3.0) * (Math.PI / 3.0) * (Math.PI / 3.0)))) /
-                            1.20258137079) * power);
-                } else { // If trying to go down, follows normal behavior
-                    seeSawMotor.setPower(power * 0.5 + brake);
-                }
+            // 2-6 Update - implemented logistic curve to solve issue, needs less power earlier due to lag in motor update rate
 
-            }else{ // Below halfway point
-                if (seesawAngle <= 0) { // Prevents flexing top plate w/ motors pressing in
-                    seeSawMotor.setPower(Math.max(power, 0) * 0.5 + brake);
-                }else { // Normal range
-                    seeSawMotor.setPower(power * 0.5 + brake);
-                }
+            if(seesawAngle >= Math.PI / 2){ // Above 90˚, max backwards (positive) power restricted below profile, but forwards (negative) power not
+                seeSawMotor.setPower(Math.min(power * seesawPowerProfile, power));
+            }else if(seesawAngle <= 0.0){ // Won't let manipulator press into top plate
+                seeSawMotor.setPower(Math.max(power * seesawPowerProfile, 0.0));
+            }else{
+                seeSawMotor.setPower(power * seesawPowerProfile);
             }
 
         }
