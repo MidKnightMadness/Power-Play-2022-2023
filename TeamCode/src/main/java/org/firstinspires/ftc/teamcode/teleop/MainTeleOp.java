@@ -13,10 +13,10 @@ import org.firstinspires.ftc.teamcode.odometry.Vector2;
 /*
  * Control Hub Configurations
  * Motors:f
- * 0    FL      REV Robotics 20:1 HD Hex Motor
- * 1    BR      REV Robotics 20:1 HD Hex Motor
+ * 0    FL      REV Robotics 20:1 HD Hex Motor      Left encoder
+ * 1    BR      REV Robotics 20:1 HD Hex Motor      Horizontal encoder
  * 2    BL      REV Robotics 20:1 HD Hex Motor
- * 3    FR      REV Robotics 20:1 HD Hex Motor
+ * 3    FR      REV Robotics 20:1 HD Hex Motor      Right encoder
  *
  * Expansion Hub Configurations
  * Motors:
@@ -26,7 +26,7 @@ import org.firstinspires.ftc.teamcode.odometry.Vector2;
  * Servos:
  * 0    CP    Servo
  * 1    Claw      Servo
- * 2    CP2     Servo
+                     * 2    CP2     Servo
  */
 
 /*
