@@ -85,7 +85,7 @@ public class MainTeleOp extends OpMode {
     double previousInputWeight = 0.5;
     final double staticPowerMultiplier = 0.3;
     double powerMultiplier = staticPowerMultiplier;
-    double manualC = -1;
+    double manualC = 0;
 
     @Override
     public void loop() {
@@ -173,8 +173,8 @@ public class MainTeleOp extends OpMode {
 
         while (gamepad2.circle) { // preset medium junction
             slides.update();
-            rotateArmTo(Math.PI / 180 * 116);
-            slides.extendTo(28.4);
+            rotateArmTo(109 * Math.PI / 180);
+            slides.extendTo(25.7);
             if ((gamepad2.right_bumper || gamepad1.right_bumper) && !lastPressedClawOpen) {
                 clawOpenToggle = !clawOpenToggle;
             }
@@ -189,8 +189,8 @@ public class MainTeleOp extends OpMode {
 
         while (gamepad2.triangle) { // preset high junction
             slides.update();
-            rotateArmTo(108 * Math.PI / 180);
-            slides.extendTo(38.1);
+            rotateArmTo(100.8 * Math.PI / 180);
+            slides.extendTo(33.5);
             if ((gamepad2.right_bumper || gamepad1.right_bumper) && !lastPressedClawOpen) {
                 clawOpenToggle = !clawOpenToggle;
             }
@@ -222,7 +222,7 @@ public class MainTeleOp extends OpMode {
 
         while (gamepad2.square) { // preset 45 degree start angle
             slides.update();
-            rotateArmTo(45 * Math.PI / 180);
+            rotateArmTo(47 * Math.PI / 180);
             slides.extendTo(19);
             if ((gamepad2.right_bumper || gamepad1.right_bumper) && !lastPressedClawOpen) {
                 clawOpenToggle = !clawOpenToggle;
@@ -351,14 +351,14 @@ public class MainTeleOp extends OpMode {
         slides.pivotBy(radians);
 
         // Needs something to get only 0.1, 0.2, 0.3, etc...
-        clawPivotInput =  slides.seesawAngle / Math.PI*.7; // -1.0 (undefined position) if at 180˚, 0.0 if at 0˚ (backwards)
+        clawPivotInput =  slides.seesawAngle / Math.PI; // -1.0 (undefined position) if at 180˚, 0.0 if at 0˚ (backwards)
         //clawPivotInput += 1; // 0.0 (backwards) if at 180˚, 1.0 (forwards) if at 0˚
 
         // Servo only takes inputs in intervals larger than a certain value
         //clawPivotInput = (int) (clawPivotInput * 700.0);
         //clawPivotInput /= 1000.0;
 
-        claw.rotateClaw(1-clawPivotInput + manualC);
+        claw.rotateClaw(1 - clawPivotInput + manualC);
     }
 
     public void rotateArmTo(double angle){
@@ -372,7 +372,7 @@ public class MainTeleOp extends OpMode {
         //clawPivotInput = (int) (clawPivotInput * 600.0);
         //clawPivotInput /= 1000.0;
 
-        claw.rotateClaw(clawPivotInput + manualC);
+        claw.rotateClaw(1 - clawPivotInput + manualC);
         // Upper may be 0.8 ish, NOT 1.0
     }
 

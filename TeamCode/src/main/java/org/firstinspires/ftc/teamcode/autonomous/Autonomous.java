@@ -201,9 +201,11 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         sleep(500);
         goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 55, getStartingRotation() + Math.PI);
         sleep(3000);
-        linearSlides.pivotTo(1.75);
+        linearSlides.pivotTo(100.8 * Math.PI / 180);
         sleep(5000);
-        linearSlides.extendTo(34);
+        linearSlides.extendTo(33.5);
+        sleep(5000);
+        claw.rotateClaw(linearSlides.seesawAngle / Math.PI);
         sleep(5000);
         claw.openClaw();
         sleep(1000);
