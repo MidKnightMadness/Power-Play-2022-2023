@@ -123,7 +123,7 @@ public class LinearSlides {
         double truePower = 0.0;
 
         if (seesawExtensionLength - STARTING_EXTENDER_LENGTH <= 0){
-            truePower = Math.max(power, 0);
+            truePower = Math.max(power, 0.1);
         } else if (seesawExtensionLength >= 34.0){
             truePower = Math.min(power, 0.1);
         } else {
@@ -150,9 +150,9 @@ public class LinearSlides {
     double seesawPowerProfile = 0.0;
     public void pivotBy(double power) {
         brake = 0.0002 * (seesawExtensionLength / 2) * Math.cos(seesawAngle);
-        seesawPowerProfile = (1 / (1 + Math.exp(seesawAngle * seesawAngle * seesawAngle +  100 * Math.PI / 180)))
-                * (seesawAngle * seesawAngle * seesawAngle + 100 * Math.PI / 180)
-                / 0.27027;
+        //seesawPowerProfile = (1 / (1 + Math.exp(seesawAngle * seesawAngle * seesawAngle + Math.PI / 2 + .35)))
+                //* (seesawAngle * seesawAngle * seesawAngle + Math.PI / 2 +.35)
+               // / 0.27027;
 
         if(Math.abs(power) < 0.1){
             seeSawMotor.setPower(brake);
@@ -167,12 +167,12 @@ public class LinearSlides {
 
             // 2-6 Update - implemented logistic curve to solve issue, needs less power earlier due to lag in motor update rate
 
-            if(seesawAngle >= Math.PI / 2){ // Above 90˚, max backwards (positive) power restricted below profile, but forwards (negative) power not
-                seeSawMotor.setPower(Math.min(power * seesawPowerProfile, power));
+            if(seesawAngle >= Math.PI / 2 + .35){ // Above 90˚, max backwards (positive) power restricted below profile, but forwards (negative) power not
+                seeSawMotor.setPower(Math.min(brake, power));
             }else if(seesawAngle <= 0.0){ // Won't let manipulator press into top plate
-                seeSawMotor.setPower(Math.max(power * seesawPowerProfile, 0.0));
+                seeSawMotor.setPower(Math.max(power, brake));
             }else{
-                seeSawMotor.setPower(power * seesawPowerProfile);
+                seeSawMotor.setPower(power * .5);
             }
 
         }
