@@ -103,7 +103,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
 
         mecanum = new MecanumDrive(hardwareMap);
-        linearSlides = new LinearSlides(hardwareMap, 45);
+        linearSlides = new LinearSlides(hardwareMap, 47 * Math.PI / 180);
         claw = new Claw(hardwareMap);
         odometry = new Odometry(hardwareMap, getStartingRotation(), getStartingPosition());
         odometry.resetEncoders();
@@ -319,7 +319,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         boolean atLocation = false;
 
         while (!atLocation) {
-//            linearSlides.update();
+            linearSlides.update();
             telemetry.addLine();
             if (mostRecentDetection != 0) { telemetry.addLine("SIGNAL TAG FOUND, GOING TO POSITION " + mostRecentDetection); }
             else { telemetry.addLine("SIGNAL TAG NOT FOUND, GOING TO POSITION 2"); }
@@ -335,13 +335,13 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
             telemetry.addLine("\n");
             mecanum.telemetry(telemetry);
+            linearSlides.telemetry(telemetry);
 
             if (mostRecentDetection != 0)
                 telemetry.addData("Signal location", mostRecentDetection);
             odometry.updatePosition();
 
             telemetry.addLine();
-            mecanum.telemetry(telemetry);
 
 //            if((odometry.getVelocity().x) * (odometry.getVelocity().x) + (odometry.getVelocity().y) * (odometry.getVelocity().y) < 0.1 && // If slow
 //                    Math.abs(mecanum.FLMotor.getPower()) + Math.abs(mecanum.FRMotor.getPower()) + Math.abs(mecanum.BLMotor.getPower()) + Math.abs(mecanum.BRMotor.getPower()) > 0.1) { // If low power
@@ -378,6 +378,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             telemetry.addData("Signal finds", "" + signalFinds[0], signalFinds[1], signalFinds[2]);
 
             telemetry.addLine("\n");
+            linearSlides.telemetry(telemetry);
             mecanum.telemetry(telemetry);
 
             if (mostRecentDetection != 0)
@@ -385,7 +386,6 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             odometry.updatePosition();
 
             telemetry.addLine();
-            mecanum.telemetry(telemetry);
             telemetry.update();
 
 
