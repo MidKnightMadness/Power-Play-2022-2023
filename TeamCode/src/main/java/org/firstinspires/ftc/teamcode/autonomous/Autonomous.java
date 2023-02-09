@@ -103,7 +103,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
 
         mecanum = new MecanumDrive(hardwareMap);
-        linearSlides = new LinearSlides(hardwareMap, 47 * Math.PI / 180);
+        linearSlides = new LinearSlides(hardwareMap, 0);
         claw = new Claw(hardwareMap);
         odometry = new Odometry(hardwareMap, getStartingRotation(), getStartingPosition());
         odometry.resetEncoders();
@@ -122,6 +122,10 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
                 telemetry.addData("ERROR", "Error code" + errorCode);
             }
         });
+
+        claw.closeClaw();
+        rotateArmTo(47 * Math.PI / 180, 19);
+        claw.rotateClaw(0);
 
 
 
@@ -201,20 +205,22 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         sleep(500);
         goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 55, getStartingRotation() + Math.PI);
         sleep(3000);
-        linearSlides.pivotTo(100.8 * Math.PI / 180);
-        sleep(5000);
-        linearSlides.extendTo(33.5);
-        sleep(5000);
-        claw.rotateClaw(linearSlides.seesawAngle / Math.PI);
-        sleep(5000);
+        rotateArmTo(105 * Math.PI / 180, 33.5);
         claw.openClaw();
-        sleep(1000);
-        claw.closeClaw();
-        sleep(5000);
-        linearSlides.extendTo(19.0);
-        sleep(5000);
-        linearSlides.pivotTo(0);
-        sleep(3000);
+
+        sleep(500);
+        rotateArmTo(Math.PI / 2.0, 33.5);
+        rotateArmTo(45 * Math.PI / 180, 19);
+//        claw.rotateClaw(linearSlides.seesawAngle / Math.PI);
+//        sleep(5000);
+//        claw.openClaw();
+//        sleep(1000);
+//        claw.closeClaw();
+//        sleep(5000);
+//        linearSlides.extendTo(19.0);
+//        sleep(5000);
+//        linearSlides.pivotTo(0);
+//        sleep(3000);
     }
 
 
@@ -554,6 +560,27 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         }
     }
 
+    double clawPivotInput = 0.0;
+    public void rotateArmTo(double angle, double length) {
+        while (!(Math.abs(linearSlides.seesawExtensionLength - length) < 0.5 &&
+                Math.abs(linearSlides.seesawAngle - angle) < 2 * Math.PI / 180)) {
+            linearSlides.update();
 
+            linearSlides.extendTo(length);
+            linearSlides.pivotTo(angle);
+
+            // Needs something to get only 0.1, 0.2, 0.3, etc...
+            clawPivotInput = linearSlides.seesawAngle / Math.PI; // -1.0 (undefined position) if at 180˚, 0.0 if at 0˚ (backwards)
+            //clawPivotInput += 1; // 0.0 (backwards) if at 180˚, 1.0 (forwards) if at 0˚
+
+            // Servo only takes inputs in intervals of 0.1
+            //clawPivotInput = (int) (clawPivotIn
+            // put * 600.0);
+            //clawPivotInput /= 1000.0;
+
+            claw.rotateClaw(1 - clawPivotInput);
+            // Upper may be 0.8 ish, NOT 1.0
+        }
+    }
 }
 

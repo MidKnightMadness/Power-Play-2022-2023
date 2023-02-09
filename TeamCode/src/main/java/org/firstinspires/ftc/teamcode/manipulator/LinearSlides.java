@@ -22,8 +22,8 @@ public class LinearSlides {
 
 
     public static double [] manipulatorPosition = {0.0, 0.0, 0.0};
-    public static double seesawAngle;
-    public static double seesawExtensionLength;
+    public double seesawAngle;
+    public double seesawExtensionLength;
 
     // Internal use variables
     private static double [] displacement;
@@ -69,7 +69,7 @@ public class LinearSlides {
         seeSawMotor.setDirection(DcMotor.Direction.FORWARD); // set direction, this was made for 1 gear transfer from drive to axle
         seeSawMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // set motor mode
         seeSawMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER); // Run to posi  tion?
-//        seeSawMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); // set zero power behavior
+        seeSawMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); // set zero power behavior
 
         // Extension Motor specifics need to be edited ig
         extensionMotor.setDirection(DcMotor.Direction.FORWARD); // set direction, probably need to change
@@ -139,17 +139,19 @@ public class LinearSlides {
 
     public void pivotTo(double targetAngle) { // Radians, zero is horizontal
         // Needs to not fling the robot over / flip it by going too fast, so implemented linear decrease in power as approaching target
+
+        brake = 0.00015 * (seesawExtensionLength / 2) * Math.cos(seesawAngle);
         ticksDifference = (int) ((targetAngle - seesawAngle) / SEESAW_OVERALL_RATIO); // Minimal play involved now
 
-        seeSawMotor.setPower(ticksDifference *.5 / Math.max(Math.abs(ticksDifference), 1000));
-        seeSawMotor.setPower(ticksDifference *.5 / Math.max(Math.abs(ticksDifference), 1000));
+        seeSawMotor.setPower(ticksDifference *.5 / Math.max(Math.abs(ticksDifference), 1000) + brake);
+        seeSawMotor.setPower(ticksDifference *.5 / Math.max(Math.abs(ticksDifference), 1000) + brake);
 
     }
 
     double brake = 0.0;
     double seesawPowerProfile = 0.0;
     public void pivotBy(double power) {
-        brake = 0.0002 * (seesawExtensionLength / 2) * Math.cos(seesawAngle);
+        brake = 0.00015 * (seesawExtensionLength / 2) * Math.cos(seesawAngle);
         seesawPowerProfile = (1 / (1 + Math.exp(seesawAngle * seesawAngle * seesawAngle + 90 * Math.PI / 180)))
                 * (seesawAngle * seesawAngle * seesawAngle + 90 * Math.PI / 180)
                 / 0.27027;
