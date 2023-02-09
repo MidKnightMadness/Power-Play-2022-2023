@@ -103,7 +103,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
 
         mecanum = new MecanumDrive(hardwareMap);
-        linearSlides = new LinearSlides(hardwareMap, 0);
+        linearSlides = new LinearSlides(hardwareMap, 47 * Math.PI / 180);
         claw = new Claw(hardwareMap);
         odometry = new Odometry(hardwareMap, getStartingRotation(), getStartingPosition());
         odometry.resetEncoders();

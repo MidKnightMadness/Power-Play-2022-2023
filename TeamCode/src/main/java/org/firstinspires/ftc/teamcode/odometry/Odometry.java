@@ -126,7 +126,7 @@ public class Odometry {
         rotationalVelocity = deltaRadians / deltaTime;
 
         // 1 - 7 Changed signs since was reversed, had to re-swap variables
-        this.position.x -= netX;
+        this.position.x += netX; // Changed this since had issue during lunch
         this.position.y -= netY;
 
 //        // Temporary
