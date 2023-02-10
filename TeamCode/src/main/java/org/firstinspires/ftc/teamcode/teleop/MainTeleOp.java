@@ -100,7 +100,13 @@ public class MainTeleOp extends OpMode {
     }
 
 
+    private boolean controlsReversed;
+
     void drive() {
+
+        if(gamepad1.triangle){
+            controlsReversed = !controlsReversed;
+        }
 
         // DRIVER ASSIST
 //        if (gamepad1.x || gamepad1.square) {
@@ -146,13 +152,23 @@ public class MainTeleOp extends OpMode {
                     gamepad1.right_stick_x * powerMultiplier, odometry.getRotationRadians());
 
         } else {
+            if(controlsReversed){
+                if(!(Math.abs(gamepad2.right_stick_y) > 0.1)){
+                    mecanum.drive(-adjustedInputX * powerMultiplier, adjustedInputY * powerMultiplier,
+                            (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier * 0.5); // normal drive
 
-            if(!(Math.abs(gamepad2.right_stick_y) > 0.1)){
-                mecanum.drive(adjustedInputX * powerMultiplier, -adjustedInputY * powerMultiplier,
-                        (gamepad1.right_stick_x) * powerMultiplier * 0.5); // normal drive
-            }else if(slides.seesawAngle <= Math.PI / 6){ // If extending, will prevent driving in y
-                mecanum.drive(0, -gamepad2.right_stick_y * powerMultiplier,
-                        (gamepad2.left_stick_x) * powerMultiplier * 0.5); // will drive forward w/ extension
+                }else if(slides.seesawAngle <= Math.PI / 36){ // If extending, will prevent driving in y
+                    mecanum.drive(-adjustedInputX * powerMultiplier, -gamepad2.right_stick_y * powerMultiplier,
+                            (gamepad2.left_stick_x) * powerMultiplier * 0.5); // will drive forward w/ extension
+                }
+            }else{
+                if(!(Math.abs(gamepad2.right_stick_y) > 0.1)){
+                    mecanum.drive(adjustedInputX * powerMultiplier, -adjustedInputY * powerMultiplier,
+                            (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier * 0.5); // normal drive
+                }else if(slides.seesawAngle <= Math.PI / 36){ // If extending, will prevent driving in y
+                    mecanum.drive(adjustedInputX * powerMultiplier, -gamepad2.right_stick_y * powerMultiplier,
+                            (gamepad2.left_stick_x) * powerMultiplier * 0.5); // will drive forward w/ extension
+                }
             }
         }
 
@@ -166,9 +182,9 @@ public class MainTeleOp extends OpMode {
         if(gamepad2.left_trigger >= 0.5){
             slides.extensionMotor2.setTargetPosition(slides.extensionMotor.getCurrentPosition());
             if(slides.extensionMotor2.getTargetPosition() > slides.extensionMotor2.getCurrentPosition()){
-                slides.extensionMotor2.setPower(.5);
-            }else{
                 slides.extensionMotor2.setPower(-.5);
+            }else{
+                slides.extensionMotor2.setPower(.5);
             }
         }else{
             slides.extendBy(-gamepad2.right_stick_y);
