@@ -148,7 +148,7 @@ public class MainTeleOp extends OpMode {
         } else {
 
             if(!(Math.abs(gamepad2.right_stick_y) > 0.1)){
-                mecanum.drive(adjustedInputX * powerMultiplier, -adjustedInputY * powerMultiplier,
+                mecanum.drive(adjustedInputX * powerMultiplier, adjustedInputY * powerMultiplier,
                         (gamepad1.right_stick_x) * powerMultiplier * 0.5); // normal drive
             }else if(slides.seesawAngle <= Math.PI / 6){ // If extending, will prevent driving in y
                 mecanum.drive(0, -gamepad2.right_stick_y * powerMultiplier,
