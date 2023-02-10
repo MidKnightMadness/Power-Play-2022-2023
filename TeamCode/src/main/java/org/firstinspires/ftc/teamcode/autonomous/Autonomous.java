@@ -197,9 +197,9 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         double xOffset = (getStartingPos() == 1 || getStartingPos() == 3) ? 12 : -12;
 
         goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
-        sleep(1000);
+        sleep(500);
         goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
-        sleep(1000);
+        sleep(500);
 
         goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
         sleep(500);
@@ -207,10 +207,11 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         sleep(3000);
         rotateArmTo(105 * Math.PI / 180, 33.5);
         claw.openClaw();
-
+        goToPosition(getStartingPosition().x - 1.5*xOffset, getStartingPosition().y + 51, getStartingRotation() + Math.PI/2);
         sleep(500);
         rotateArmTo(Math.PI / 2.0, 33.5);
         rotateArmTo(45 * Math.PI / 180, 19);
+
 //        claw.rotateClaw(linearSlides.seesawAngle / Math.PI);
 //        sleep(5000);
 //        claw.openClaw();
