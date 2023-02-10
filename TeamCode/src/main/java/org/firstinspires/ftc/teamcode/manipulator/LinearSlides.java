@@ -138,6 +138,7 @@ public class LinearSlides {
     private int ticksDifference = 0;
 
     public void pivotTo(double targetAngle) { // Radians, zero is horizontal
+
         // Needs to not fling the robot over / flip it by going too fast, so implemented linear decrease in power as approaching target
 
         brake = 0.00015 * (seesawExtensionLength / 2) * Math.cos(seesawAngle);
