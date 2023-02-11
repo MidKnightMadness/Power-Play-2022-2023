@@ -165,19 +165,20 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 //----------------START----------------------------------------------------------------------------------------------------
 
         telemetry.update();
+        rotateArmTo(Math.PI / 2.0, 19.0);
 
 
 //        movementTestSequence();
         if (getScoringJunction() == 0) {
             scoreOneForward();
-//            park(51);
+            park(51);
         }
         else {
             scoreOneMiddle();
 //            park(25);
         }
-        cycleToLeftConeStack();
-        sleep(100);
+//        cycleToLeftConeStack();
+//        sleep(100);
 //        switch(tagOfInterest.id){
 //            case 1
 //        }
@@ -204,8 +205,10 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         double xOffset = (getStartingPos() == 1 || getStartingPos() == 3) ? 12 : -12;
 
         // Go to and turn to face junction
-        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
+        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
         sleep(500);
+        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
+        sleep(100);
 
         // Back up into junction and score
         goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
@@ -289,6 +292,8 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         } else if (mostRecentDetection == 3) {
             goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + yPos, getStartingRotation() + Math.PI / 2);
         }
+
+        rotateArmTo(0.0, 20.0);
     }
 
     void tagToTelemetry(AprilTagDetection detection)
