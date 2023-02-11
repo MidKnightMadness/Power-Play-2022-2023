@@ -202,24 +202,27 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
         sleep(500);
         goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
-        sleep(1000);
+        sleep(500);
 
         // Back up into junction and score
         goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
-        sleep(1000);
+        sleep(500);
         goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 55, getStartingRotation() + Math.PI);
-        sleep(3000);
+        sleep(100);
+        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 55, getStartingRotation() + Math.PI);
+        sleep(500);
         rotateArmTo(105 * Math.PI / 180, 35);
+        sleep(500);
         claw.openClaw();
         rotateArmTo(65 * Math.PI / 180, 35);
         rotateArmTo(65 * Math.PI / 180, 19);
-        sleep(1000);
+        sleep(500);
 
         // Move back and then going back to cone stack
-        goToPosition(getStartingPosition().x - 1.5*xOffset, getStartingPosition().y + 51, getStartingRotation() + Math.PI/2);
-        sleep(500);
-        rotateArmTo(Math.PI / 2.0, 33.5);
-        rotateArmTo(45 * Math.PI / 180, 19);
+//        goToPosition(getStartingPosition().x - 1.5*xOffset, getStartingPosition().y + 51, getStartingRotation() + Math.PI/2);
+//        sleep(500);
+//        rotateArmTo(Math.PI / 2.0, 33.5);
+//        rotateArmTo(45 * Math.PI / 180, 19);
 
 //        claw.rotateClaw(linearSlides.seesawAngle / Math.PI);
 //        sleep(5000);
