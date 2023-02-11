@@ -152,7 +152,7 @@ public class LinearSlides {
     double seesawPowerProfile = 0.0;
     public void pivotBy(double power) {
         brake = 0.00015 * (seesawExtensionLength / 2) * Math.cos(seesawAngle);
-        seesawPowerProfile = (1 / (1 + Math.exp(seesawAngle * seesawAngle * seesawAngle + 80 * Math.PI / 180)))
+        seesawPowerProfile = (1 / (1 + Math.exp(seesawAngle * seesawAngle * seesawAngle + 70.0 * Math.PI / 180.0)))
                 * (seesawAngle * seesawAngle * seesawAngle + 80 * Math.PI / 180)
                 / 0.27027;
 
@@ -169,18 +169,18 @@ public class LinearSlides {
 
             // 2-6 Update - implemented logistic curve to solve issue, needs less power earlier due to lag in motor update rate
 
-            if(seesawAngle >= Math.PI / 2 + .35){ // Above 90˚, max backwards (positive) power restricted below profile, but forwards (negative) power not
+            if(seesawAngle >= 107 * Math.PI / 180){ // Above 90˚, max backwards (positive) power restricted below profile, but forwards (negative) power not
                 seeSawMotor.setPower(Math.min(brake, power));
             }else if(seesawAngle <= 0.0){ // Won't let manipulator press into top plate
                 seeSawMotor.setPower(Math.max(power, brake));
             }else{
-                seeSawMotor.setPower(power * .5);
+                seeSawMotor.setPower(power * .7);
             }
 
         }
     }
 
-    private double previousAngle = 0.0;
+    private double previousAngle = 0.00;
 
     public void update(){ // Run this as much as applicable
         previousAngle = seesawAngle;
