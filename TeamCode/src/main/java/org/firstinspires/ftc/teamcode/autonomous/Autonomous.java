@@ -171,6 +171,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 //        movementTestSequence();
         if (getScoringJunction() == 0) {
             scoreOneForward();
+            //cycleToConeStack();
             park(51);
         }
         else {
@@ -202,7 +203,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
     }
 
     void scoreOneForward() {
-        double xOffset = (getStartingPos() == 1 || getStartingPos() == 3) ? 12 : -12;
+        double xOffset = (getStartingPos() == 1 || getStartingPos() == 3) ? 9 : -14.5;
 
         // Go to and turn to face junction
         goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
@@ -222,7 +223,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         rotateArmTo(65 * Math.PI / 180, 19);
     }
 
-    void cycleToLeftConeStack(){ // Assumes starting when backed up to junction
+    void cycleToConeStack(){ // Assumes starting when backed up to junction
         double xOffset = (getStartingPos() == 1 || getStartingPos() == 3) ? 15: -(15);
         sleep(100);
 
@@ -286,11 +287,11 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 
     void park(double yPos) {
         if(mostRecentDetection == 1) {
-            goToPosition(getStartingPosition().x - 23.5, getStartingPosition().y + yPos, getStartingRotation() + Math.PI / 2);
+            goToPosition(getStartingPosition().x - 27, getStartingPosition().y + yPos, getStartingRotation() + Math.PI);
         } else if (mostRecentDetection == 2) {
-            goToPosition(getStartingPosition().x, getStartingPosition().y + yPos, getStartingRotation() + Math.PI / 2);
+            goToPosition(getStartingPosition().x, getStartingPosition().y + yPos, getStartingRotation() + Math.PI);
         } else if (mostRecentDetection == 3) {
-            goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + yPos, getStartingRotation() + Math.PI / 2);
+            goToPosition(getStartingPosition().x + 27, getStartingPosition().y + yPos, getStartingRotation() + Math.PI);
         }
 
         rotateArmTo(0.0, 19.0);

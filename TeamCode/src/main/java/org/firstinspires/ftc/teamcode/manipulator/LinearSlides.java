@@ -112,8 +112,8 @@ public class LinearSlides {
 
         double distance1 = (inches - STARTING_EXTENDER_LENGTH) / EXTENDER_OVERALL_RATIO-extensionMotor.getCurrentPosition();
         double power = distance1/Math.max(100, Math.abs(distance1));
-        extensionMotor.setPower(0.6 * power);
-        extensionMotor2.setPower(0.6 * power);
+        extensionMotor.setPower(power);
+        extensionMotor2.setPower(power);
     }
 
     public void extendBy(double power){
@@ -130,8 +130,8 @@ public class LinearSlides {
             truePower = power;
         }
 
-        extensionMotor.setPower(0.6 * truePower);
-        extensionMotor2.setPower(0.6 * truePower);
+        extensionMotor.setPower(truePower);
+        extensionMotor2.setPower(truePower);
 
     }
 
@@ -141,19 +141,19 @@ public class LinearSlides {
 
         // Needs to not fling the robot over / flip it by going too fast, so implemented linear decrease in power as approaching target
 
-        brake = 0.0; //0.00005 * (seesawExtensionLength / 2) * Math.cos(seesawAngle);
+        brake = 0.00015 * (seesawExtensionLength / 2) * Math.cos(seesawAngle);
         ticksDifference = (int) ((targetAngle - seesawAngle) / SEESAW_OVERALL_RATIO); // Minimal play involved now
 
-        seeSawMotor.setPower(ticksDifference * 0.4 / Math.max(Math.abs(ticksDifference), 1000) + brake);
+        seeSawMotor.setPower(ticksDifference * 0.5 / Math.max(Math.abs(ticksDifference), 1000) + brake);
 
     }
 
     double brake = 0.0;
     double seesawPowerProfile = 0.0;
     public void pivotBy(double power) {
-        brake = 0.0; // 0.00005 * (seesawExtensionLength / 2) * Math.cos(seesawAngle);
+        brake = 0.00015 * (seesawExtensionLength / 2) * Math.cos(seesawAngle);
         seesawPowerProfile = (1 / (1 + Math.exp(seesawAngle * seesawAngle * seesawAngle + 70.0 * Math.PI / 180.0)))
-                * (seesawAngle * seesawAngle * seesawAngle + 80 * Math.PI / 180)
+                * (seesawAngle * seesawAngle * seesawAngle + 70.0 * Math.PI / 180)
                 / 0.27027;
 
         if(Math.abs(power) < 0.1){
@@ -171,10 +171,11 @@ public class LinearSlides {
 
             if(seesawAngle >= 107 * Math.PI / 180){ // Above 90˚, max backwards (positive) power restricted below profile, but forwards (negative) power not
                 seeSawMotor.setPower(Math.min(brake, 0.5 * power));
-            }else if(seesawAngle <= 0.0){ // Won't let manipulator press into top plate
-                seeSawMotor.setPower(Math.max(0.5 * power, brake));
+//            }
+//            else if(seesawAngle <= 0.0){ // Won't let manipulator press into top plate
+//                seeSawMotor.setPower(Math.max(0.5 * power, brake));
             }else{
-                seeSawMotor.setPower(power * .5);
+                seeSawMotor.setPower(power * .7);
             }
 
         }

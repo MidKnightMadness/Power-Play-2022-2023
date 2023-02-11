@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
 import org.firstinspires.ftc.teamcode.highlevel.GridSystem;
@@ -100,13 +101,14 @@ public class MainTeleOp extends OpMode {
     }
 
 
-    private boolean controlsReversed;
+    private boolean controlsReversed = false;
+    private boolean controlsReversedLastPressed = false;
 
     void drive() {
 
-        if(gamepad1.triangle){
-            controlsReversed = !controlsReversed;
-        }
+//        if(gamepad1.triangle){
+//            controlsReversed = !controlsReversed;
+//        }
 
         // DRIVER ASSIST
 //        if (gamepad1.x || gamepad1.square) {
@@ -119,6 +121,12 @@ public class MainTeleOp extends OpMode {
             driveModeToggle = !driveModeToggle;
         }
         lastPressedDriveMode = gamepad1.left_bumper;
+
+
+        if (gamepad1.triangle && !controlsReversedLastPressed) {
+            controlsReversed = !controlsReversed;
+        }
+        controlsReversedLastPressed = gamepad1.triangle;
 
 //        if (gamepad1.a || gamepad1.cross) {
 //            drivePreviousInputWeight += 0.01;
@@ -154,20 +162,20 @@ public class MainTeleOp extends OpMode {
         } else {
             if(controlsReversed){
                 if(!(Math.abs(gamepad2.right_stick_y) > 0.1)){
-                    mecanum.drive(-adjustedInputX * powerMultiplier, adjustedInputY * powerMultiplier,
+                    mecanum.drive(adjustedInputX * powerMultiplier, -adjustedInputY * powerMultiplier,
                             (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier * 0.5); // normal drive
 
                 }else if(slides.seesawAngle <= Math.PI / 36){ // If extending, will prevent driving in y
-                    mecanum.drive(-adjustedInputX * powerMultiplier, (-gamepad2.right_stick_y * powerMultiplier * 0.5) + 0.5 * adjustedInputY * powerMultiplier,
-                            (gamepad2.left_stick_x) * powerMultiplier * 0.5); // will drive forward w/ extension
+                    mecanum.drive(adjustedInputX * powerMultiplier, (-gamepad2.right_stick_y * powerMultiplier * 0.5) - 0.5 * adjustedInputY * powerMultiplier,
+                            (gamepad2.left_stick_x + gamepad1.right_stick_x) * powerMultiplier * 0.5); // will drive forward w/ extension
                 }
             }else{
                 if(!(Math.abs(gamepad2.right_stick_y) > 0.1)){
-                    mecanum.drive(adjustedInputX * powerMultiplier, -adjustedInputY * powerMultiplier,
+                    mecanum.drive(-adjustedInputX * powerMultiplier, adjustedInputY * powerMultiplier,
                             (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier * 0.5); // normal drive
                 }else if(slides.seesawAngle <= Math.PI / 36){ // If extending, will prevent driving in y
-                    mecanum.drive(adjustedInputX * powerMultiplier, (-gamepad2.right_stick_y * powerMultiplier * 0.5) - 0.5 * adjustedInputY * powerMultiplier,
-                            (gamepad2.left_stick_x) * powerMultiplier * 0.5); // will drive forward w/ extension
+                    mecanum.drive(-adjustedInputX * powerMultiplier, (-gamepad2.right_stick_y * powerMultiplier * 0.5) + 0.5 * adjustedInputY * powerMultiplier,
+                            (gamepad2.left_stick_x + gamepad1.right_stick_x) * powerMultiplier * 0.5); // will drive forward w/ extension
                 }
             }
         }
@@ -238,19 +246,22 @@ public class MainTeleOp extends OpMode {
 
 
         while (gamepad2.cross) { // preset grab cone
-            slides.update();
-            rotateArmTo(0);
-            slides.extendTo(19);
-            if ((gamepad2.right_bumper || gamepad1.right_bumper) && !lastPressedClawOpen) {
-                clawOpenToggle = !clawOpenToggle;
-            }
-            lastPressedClawOpen = (gamepad2.right_bumper || gamepad1.right_bumper);
+//            slides.update();
+//            rotateArmTo(0);
+//            slides.extendTo(19);
+//            if ((gamepad2.right_bumper || gamepad1.right_bumper) && !lastPressedClawOpen) {
+//                clawOpenToggle = !clawOpenToggle;
+//            }
+//            lastPressedClawOpen = (gamepad2.right_bumper || gamepad1.right_bumper);
+//
+//            if (clawOpenToggle) {
+//                claw.openClaw();
+//            } else {
+//                claw.closeClaw();
 
-            if (clawOpenToggle) {
-                claw.openClaw();
-            } else {
-                claw.closeClaw();
-            }
+            LinearSlides.seeSawMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            slides.seesawAngle = 0.0;
+            LinearSlides.seeSawMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
         while (gamepad2.square) { // preset 45 degree start angle
