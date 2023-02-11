@@ -293,7 +293,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             goToPosition(getStartingPosition().x + 23.5, getStartingPosition().y + yPos, getStartingRotation() + Math.PI / 2);
         }
 
-        rotateArmTo(0.0, 20.0);
+        rotateArmTo(0.0, 19.0);
     }
 
     void tagToTelemetry(AprilTagDetection detection)
@@ -611,7 +611,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             claw.rotateClaw(1 - clawPivotInput);
             // Upper may be 0.8 ish, NOT 1.0
         }
-        seeSawMotor.setPower(0.0001 * (linearSlides.seesawExtensionLength / 2) * Math.cos(linearSlides.seesawAngle));
+        seeSawMotor.setPower(0.00005 * (linearSlides.seesawExtensionLength / 2) * Math.cos(linearSlides.seesawAngle));
     }
 }
 
