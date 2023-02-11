@@ -177,6 +177,10 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
 //            park(25);
         }
         cycleToLeftConeStack();
+        sleep(100);
+//        switch(tagOfInterest.id){
+//            case 1
+//        }
 
 
 //        if(startingPos == 2 || startingPos == 4) {
