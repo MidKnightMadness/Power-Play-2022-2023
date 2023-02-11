@@ -158,7 +158,7 @@ public class MainTeleOp extends OpMode {
                             (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier * 0.5); // normal drive
 
                 }else if(slides.seesawAngle <= Math.PI / 36){ // If extending, will prevent driving in y
-                    mecanum.drive(-adjustedInputX * powerMultiplier, -gamepad2.right_stick_y * powerMultiplier,
+                    mecanum.drive(-adjustedInputX * powerMultiplier, -gamepad2.right_stick_y,
                             (gamepad2.left_stick_x) * powerMultiplier * 0.5); // will drive forward w/ extension
                 }
             }else{
@@ -166,7 +166,7 @@ public class MainTeleOp extends OpMode {
                     mecanum.drive(adjustedInputX * powerMultiplier, -adjustedInputY * powerMultiplier,
                             (gamepad1.right_stick_x + gamepad2.left_stick_x) * powerMultiplier * 0.5); // normal drive
                 }else if(slides.seesawAngle <= Math.PI / 36){ // If extending, will prevent driving in y
-                    mecanum.drive(adjustedInputX * powerMultiplier, -gamepad2.right_stick_y * powerMultiplier,
+                    mecanum.drive(adjustedInputX * powerMultiplier, -gamepad2.right_stick_y,
                             (gamepad2.left_stick_x) * powerMultiplier * 0.5); // will drive forward w/ extension
                 }
             }

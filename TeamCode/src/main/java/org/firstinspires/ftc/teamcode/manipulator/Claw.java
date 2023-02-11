@@ -52,7 +52,7 @@ public class Claw {
 
     public void rotateClaw(double power) {
 //        rotationServo.setPosition((rotationServo.getPosition()+power+1)%2-1);
-        rotationServo.setPosition(power);
+        rotationServo.setPosition(power + 0.15);
     }
 
     public void waitForOpenClaw() {

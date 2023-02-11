@@ -126,7 +126,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         });
 
         claw.closeClaw();
-        rotateArmTo(55 * Math.PI / 180, 19);
+        rotateArmTo(45.0 * Math.PI / 180, 19);
         claw.rotateClaw(0);
 
 
@@ -176,6 +176,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             scoreOneMiddle();
 //            park(25);
         }
+        cycleToLeftConeStack();
 
 
 //        if(startingPos == 2 || startingPos == 4) {
@@ -199,41 +200,45 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         double xOffset = (getStartingPos() == 1 || getStartingPos() == 3) ? 12 : -12;
 
         // Go to and turn to face junction
-        goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation());
-        sleep(500);
         goToPosition(getStartingPosition().x, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
         sleep(500);
 
         // Back up into junction and score
         goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 51, getStartingRotation() + Math.PI);
-        sleep(500);
-        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 55, getStartingRotation() + Math.PI);
         sleep(100);
         goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 55, getStartingRotation() + Math.PI);
-        sleep(500);
-        rotateArmTo(105 * Math.PI / 180, 35);
+        sleep(100);
+        rotateArmTo(105 * Math.PI / 180, 34);
         sleep(500);
         claw.openClaw();
-        rotateArmTo(65 * Math.PI / 180, 35);
+        rotateArmTo(65 * Math.PI / 180, 34);
         rotateArmTo(65 * Math.PI / 180, 19);
+    }
+
+    void cycleToLeftConeStack(){ // Assumes starting when backed up to junction
+        double xOffset = (getStartingPos() == 1 || getStartingPos() == 3) ? 15: -(15);
+        sleep(100);
+
+        // Go back to location between cone stack and put manipulator in correct state
+        goToPosition(getStartingPosition().x - 11.75, getStartingPosition().y + 51, getStartingRotation() + Math.PI / 2);
+        sleep(100);
+        rotateArmTo(Math.atan((numberOfConesInStack * 1.40 - LinearSlides.ROOT_HEIGHT + 1.0) / 27.0),
+                Math.sqrt((numberOfConesInStack * 1.40 - LinearSlides.ROOT_HEIGHT + 1.0) * (numberOfConesInStack * 1.40 - LinearSlides.ROOT_HEIGHT + 1.0) + 27.0 * 27.0) - 3.0);
+        sleep(100);
+        claw.closeClaw();
+        sleep(500);
+        rotateArmTo(65 * Math.PI / 180, (numberOfConesInStack * 1.40 - LinearSlides.ROOT_HEIGHT + 1.0));
         sleep(500);
 
-        // Move back and then going back to cone stack
-//        goToPosition(getStartingPosition().x - 1.5*xOffset, getStartingPosition().y + 51, getStartingRotation() + Math.PI/2);
-//        sleep(500);
-//        rotateArmTo(Math.PI / 2.0, 33.5);
-//        rotateArmTo(45 * Math.PI / 180, 19);
+        // Move back to scoring state and score
+        goToPosition(getStartingPosition().x + xOffset, getStartingPosition().y + 51, getStartingRotation() + 3 * Math.PI / 4);
+        sleep(500);
+        rotateArmTo(105 * Math.PI / 180, 34.0);
+        sleep(100);
+        claw.openClaw();
+        rotateArmTo(65 * Math.PI / 180, 34);
+        rotateArmTo(65 * Math.PI / 180, 19);
 
-//        claw.rotateClaw(linearSlides.seesawAngle / Math.PI);
-//        sleep(5000);
-//        claw.openClaw();
-//        sleep(1000);
-//        claw.closeClaw();
-//        sleep(5000);
-//        linearSlides.extendTo(19.0);
-//        sleep(5000);
-//        linearSlides.pivotTo(0);
-//        sleep(3000);
     }
 
 
@@ -576,7 +581,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
     double clawPivotInput = 0.0;
     public void rotateArmTo(double angle, double length) {
         while (!(Math.abs(linearSlides.seesawExtensionLength - length) < 0.5 &&
-                Math.abs(linearSlides.seesawAngle - angle) < .5 * Math.PI / 180)) {
+                Math.abs(linearSlides.seesawAngle - angle) < 3.0 * Math.PI / 180)) {
             telemetry.addData("Angle of slides", linearSlides.seesawAngle * 180 / Math.PI);
             telemetry.addData("Slides extension length", linearSlides.seesawExtensionLength);
 
@@ -597,7 +602,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
             claw.rotateClaw(1 - clawPivotInput);
             // Upper may be 0.8 ish, NOT 1.0
         }
-        seeSawMotor.setPower(0.0);
+        seeSawMotor.setPower(0.0001 * (linearSlides.seesawExtensionLength / 2) * Math.cos(linearSlides.seesawAngle));
     }
 }
 

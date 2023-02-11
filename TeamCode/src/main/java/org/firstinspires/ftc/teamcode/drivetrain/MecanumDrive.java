@@ -183,11 +183,11 @@ public class MecanumDrive {
 
         double newx = Math.cos(rotato - currentAngle + Math.PI / 2); //drives without turning to the point
         double newy = Math.sin(rotato - currentAngle + Math.PI / 2);
-        double spd = Math.min(Math.hypot(dy, dx), 10) / 22;
+        double spd = Math.min(Math.hypot(dy, dx), 12.0) / 20.0;
         spd = Math.max(spd * Math.sqrt(spd), 0.2);
         // 3/2 power
 
-        if((dx * dx) + (dy * dy) > .7){
+        if((dx * dx) + (dy * dy) > 1){
             XYInput[0] = newx * spd;
             XYInput[1] = newy * spd;
         }else{
@@ -195,7 +195,7 @@ public class MecanumDrive {
             XYInput[1] = 0;
         }
 
-        if(Math.abs(pointTo(targetAngle, currentAngle)) > .03){
+        if(Math.abs(pointTo(targetAngle, currentAngle)) > 0.1){
             rotationInput = -pointTo(targetAngle, currentAngle);
         }else{
             rotationInput = 0;
@@ -206,7 +206,7 @@ public class MecanumDrive {
 
         positionOffset = (dx * dx) + (dy * dy);
         angleOffset = Math.abs(pointTo(targetAngle, currentAngle));
-        if((dx * dx) + (dy * dy) > 1 || Math.abs(pointTo(targetAngle, currentAngle)) > .05){
+        if((dx * dx) + (dy * dy) > 1 || Math.abs(pointTo(targetAngle, currentAngle)) > 0.1){
 
 //            drive(newx * spd, newy * spd, -0.6 * pointTo(targetAngle, currentAngle));
             return false;
@@ -220,32 +220,16 @@ public class MecanumDrive {
     double rotationInput = 0.0;
 
     public boolean rotateTo(double targetAngle, double currentAngle) {
-        if(Math.abs(pointTo(targetAngle, currentAngle)) > Math.PI / 180){
+        if (Math.abs(pointTo(targetAngle, currentAngle)) > Math.PI / 180) {
             rotationInput = -pointTo(targetAngle, currentAngle);
             drive(0, 0, rotationInput);
             return false;
-        }else{
+        } else {
             rotationInput = 0;
             drive(0, 0, 0);
             return true;
         }
     }
-
-//    public void pointTo(double x, double y) {
-//        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-//        gyro_degrees = angles.firstAngle;
-//        gyro_radians = (gyro_degrees * Math.PI / 180);
-//        double newAngle = Math.acos(x);
-//        if (y < 0) newAngle = 0-newAngle;
-//        double rotato = (newAngle-gyro_radians+3.1416)%6.283-3.1416;//reference angle
-//        if (rotato < -3.1416) rotato += 6.283;
-//        rotato = Math.cbrt(3.1416/rotato);
-//        //double amt = rotato-gyro_radians;
-//        //if (Math.abs(amt) > 3.1416) {//if difference > 180 degrees
-//            //amt = 0-amt;//flip direction
-//        //}
-//
-//    }
 
     public double pointTo(double targetAngle, double currentAngle) { //forward is 0
         double rotato = (targetAngle - currentAngle + Math.PI) % (Math.PI * 2) - Math.PI; //reference angle

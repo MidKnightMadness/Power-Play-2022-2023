@@ -144,8 +144,7 @@ public class LinearSlides {
         brake = 0.00015 * (seesawExtensionLength / 2) * Math.cos(seesawAngle);
         ticksDifference = (int) ((targetAngle - seesawAngle) / SEESAW_OVERALL_RATIO); // Minimal play involved now
 
-        seeSawMotor.setPower(ticksDifference *.5 / Math.max(Math.abs(ticksDifference), 1000) + brake);
-        seeSawMotor.setPower(ticksDifference *.5 / Math.max(Math.abs(ticksDifference), 1000) + brake);
+        seeSawMotor.setPower(ticksDifference * 0.75 / Math.max(Math.abs(ticksDifference), 1000) + brake);
 
     }
 
