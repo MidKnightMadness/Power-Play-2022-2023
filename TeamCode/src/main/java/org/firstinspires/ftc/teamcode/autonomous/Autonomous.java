@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.manipulator.LinearSlides.seeSawMoto
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -111,6 +112,7 @@ public class Autonomous extends LinearOpMode implements cameraInfo, fieldData, p
         odometry.resetEncoders();
         odometry.setPostion(getStartingPosition());
         odometry.setRotation(getStartingRotation());
+
 
         camera.setPipeline(aprilTagDetectionPipeline);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
